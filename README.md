@@ -1,5 +1,8 @@
 # Antigravity Kit CN
 
+> [!NOTE]
+> **本仓库说明**：本仓库跟踪上游原仓库 [vudovn/antigravity-kit](https://github.com/vudovn/antigravity-kit) 的变更。主要进行全量汉化处理，并对 `GEMINI.md` 及相关指令进行了逻辑调整，以确立系统的中文原生地位。
+
 > 包含技能 (Skills)、智能体 (Agents) 和工作流 (Workflows) 的 AI Agent 模版
 
 <div  align="center">
