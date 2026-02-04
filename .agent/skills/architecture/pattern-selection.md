@@ -1,68 +1,72 @@
-# Pattern Selection Guidelines
+---
+description: 选择即架构模式的决策树
+---
 
-> Decision trees for choosing architectural patterns.
+# 模式选择指南 (Pattern Selection)
 
-## Main Decision Tree
+> 架构决策树：帮助你根据关注点选择合适的模式。
+
+## 主决策树
 
 ```
-START: What's your MAIN concern?
+开始: 你最关心的核心问题是什么？
 
-┌─ Data Access Complexity?
-│  ├─ HIGH (complex queries, testing needed)
-│  │  → Repository Pattern + Unit of Work
-│  │  VALIDATE: Will data source change frequently?
-│  │     ├─ YES → Repository worth the indirection
-│  │     └─ NO  → Consider simpler ORM direct access
-│  └─ LOW (simple CRUD, single database)
-│     → ORM directly (Prisma, Drizzle)
-│     Simpler = Better, Faster
+┌─ 数据访问复杂度？
+│  ├─ 高 (复杂查询，需要测试)
+│  │  → Repository Pattern (仓储模式) + Unit of Work
+│  │  验证: 数据源会经常变吗？
+│  │     ├─ 是 → Repository 的间接层是值得的
+│  │     └─ 否 → 考虑直接使用 ORM
+│  └─ 低 (简单 CRUD，单一数据库)
+│     → 直接使用 ORM (Prisma, Drizzle)
+│     简单 = 更好，更快
 │
-├─ Business Rules Complexity?
-│  ├─ HIGH (domain logic, rules vary by context)
-│  │  → Domain-Driven Design
-│  │  VALIDATE: Do you have domain experts on team?
-│  │     ├─ YES → Full DDD (Aggregates, Value Objects)
-│  │     └─ NO  → Partial DDD (rich entities, clear boundaries)
-│  └─ LOW (mostly CRUD, simple validation)
-│     → Transaction Script pattern
-│     Simpler = Better, Faster
+├─ 业务规则复杂度？
+│  ├─ 高 (领域逻辑复杂，规则随上下文变化)
+│  │  → Domain-Driven Design (DDD)
+│  │  验证: 团队有领域专家吗？
+│  │     ├─ 是 → 完整 DDD (聚合根，值对象)
+│  │     └─ 否 → 轻量 DDD (丰富的实体，清晰的边界)
+│  └─ 低 (主要是 CRUD，简单的校验)
+│     → 事务脚本 (Transaction Script)
+│     简单 = 更好，更快
 │
-├─ Independent Scaling Needed?
-│  ├─ YES (different components scale differently)
-│  │  → Microservices WORTH the complexity
-│  │  REQUIREMENTS (ALL must be true):
-│  │    - Clear domain boundaries
-│  │    - Team > 10 developers
-│  │    - Different scaling needs per service
-│  │  IF NOT ALL MET → Modular Monolith instead
-│  └─ NO (everything scales together)
-│     → Modular Monolith
-│     Can extract services later when proven needed
+├─ 需要独立扩展吗？
+│  ├─ 是 (不同组件的扩展需求差异巨大)
+│  │  → 微服务 (Microservices) 值得其复杂性
+│  │  要求 (必须全部满足):
+│  │    - 清晰的领域边界
+│  │    - 团队 > 10 人
+│  │    - 服务间扩展需求不同
+│  │  如果未满足 → 模块化单体
+│  └─ 否 (整体一起扩展)
+│     → 模块化单体
+│     需要时再拆分服务
 │
-└─ Real-time Requirements?
-   ├─ HIGH (immediate updates, multi-user sync)
-   │  → Event-Driven Architecture
-   │  → Message Queue (RabbitMQ, Redis, Kafka)
-   │  VALIDATE: Can you handle eventual consistency?
-   │     ├─ YES → Event-driven valid
-   │     └─ NO  → Synchronous with polling
-   └─ LOW (eventual consistency acceptable)
-      → Synchronous (REST/GraphQL)
-      Simpler = Better, Faster
+└─ 实时性要求？
+   ├─ 高 (即时更新，多用户同步)
+   │  → 事件驱动架构 (Event-Driven)
+   │  → 消息队列 (RabbitMQ, Redis, Kafka)
+   │  验证: 能接受最终一致性吗？
+   │     ├─ 是 → 事件驱动有效
+   │     └─ 否 → 同步轮询
+   └─ 低 (最终一致性可接受)
+      → 同步调用 (REST/GraphQL)
+      简单 = 更好，更快
 ```
 
-## The 3 Questions (Before ANY Pattern)
+## 三个灵魂拷问 (在选择任何模式前)
 
-1. **Problem Solved**: What SPECIFIC problem does this pattern solve?
-2. **Simpler Alternative**: Is there a simpler solution?
-3. **Deferred Complexity**: Can we add this LATER when needed?
+1.  **解决什么问题**: 这个模式具体解决了什么痛点？
+2.  **有更简单的吗**: 有没有更简单的替代方案？
+3.  **推迟复杂度**: 我们能不能以后需要的时候再加？
 
-## Red Flags (Anti-patterns)
+## 反模式警示
 
-| Pattern | Anti-pattern | Simpler Alternative |
-|---------|-------------|-------------------|
-| Microservices | Premature splitting | Start monolith, extract later |
-| Clean/Hexagonal | Over-abstraction | Concrete first, interfaces later |
-| Event Sourcing | Over-engineering | Append-only audit log |
-| CQRS | Unnecessary complexity | Single model |
-| Repository | YAGNI for simple CRUD | ORM direct access |
+| 模式                      | 反模式 (Anti-pattern)  | 简单的替代               |
+| :------------------------ | :--------------------- | :----------------------- |
+| 微服务                    | 过早拆分               | 从单体开始，稍后提取     |
+| 清洁/六边形架构           | 过度抽象               | 先写具体实现，后提取接口 |
+| 事件溯源 (Event Sourcing) | 过度设计               | 仅使用追加式审计日志     |
+| CQRS                      | 不必要的复杂性         | 单一模型                 |
+| Repository                | 对简单 CRUD 的过度封装 | 直接使用 ORM             |

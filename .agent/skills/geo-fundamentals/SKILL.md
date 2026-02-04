@@ -1,156 +1,31 @@
 ---
-name: geo-fundamentals
-description: Generative Engine Optimization for AI search engines (ChatGPT, Claude, Perplexity).
-allowed-tools: Read, Glob, Grep
+description: 生成引擎优化 (GEO) 基础 - 针对 AI 搜索引擎优化内容
 ---
 
-# GEO Fundamentals
+# GEO 基础 (Generative Engine Optimization)
 
-> Optimization for AI-powered search engines.
+**SEO 是给 Google 看的，GEO 是给 ChatGPT/Claude 看的。**
 
----
+## 核心策略
 
-## 1. What is GEO?
+1.  **权威性引用 (Authoritative Citations)**
+    - 大语言模型倾向于引用它认为"权威"的来源。
+    - 添加统计数据、专家语录、学术引用。
 
-**GEO** = Generative Engine Optimization
+2.  **结构化数据 (Structured Data)**
+    - 使用清晰的 Markdown 格式 (H1, H2, List)。
+    - 提供`JSON-LD` 数据。
+    - 包含清晰的"问答对" (FAQ)。
 
-| Goal | Platform |
-|------|----------|
-| Be cited in AI responses | ChatGPT, Claude, Perplexity, Gemini |
+3.  **直接答案 (Direct Answers)**
+    - 在文章开头直接给出简练的答案，方便 AI 提取摘要。
 
-### SEO vs GEO
+4.  **去重与独特性**
+    - 不要只是复制粘贴。提供独特的见解或数据分析。
 
-| Aspect | SEO | GEO |
-|--------|-----|-----|
-| Goal | #1 ranking | AI citations |
-| Platform | Google | AI engines |
-| Metrics | Rankings, CTR | Citation rate |
-| Focus | Keywords | Entities, data |
+## 检查清单
 
----
-
-## 2. AI Engine Landscape
-
-| Engine | Citation Style | Opportunity |
-|--------|----------------|-------------|
-| **Perplexity** | Numbered [1][2] | Highest citation rate |
-| **ChatGPT** | Inline/footnotes | Custom GPTs |
-| **Claude** | Contextual | Long-form content |
-| **Gemini** | Sources section | SEO crossover |
-
----
-
-## 3. RAG Retrieval Factors
-
-How AI engines select content to cite:
-
-| Factor | Weight |
-|--------|--------|
-| Semantic relevance | ~40% |
-| Keyword match | ~20% |
-| Authority signals | ~15% |
-| Freshness | ~10% |
-| Source diversity | ~15% |
-
----
-
-## 4. Content That Gets Cited
-
-| Element | Why It Works |
-|---------|--------------|
-| **Original statistics** | Unique, citable data |
-| **Expert quotes** | Authority transfer |
-| **Clear definitions** | Easy to extract |
-| **Step-by-step guides** | Actionable value |
-| **Comparison tables** | Structured info |
-| **FAQ sections** | Direct answers |
-
----
-
-## 5. GEO Content Checklist
-
-### Content Elements
-
-- [ ] Question-based titles
-- [ ] Summary/TL;DR at top
-- [ ] Original data with sources
-- [ ] Expert quotes (name, title)
-- [ ] FAQ section (3-5 Q&A)
-- [ ] Clear definitions
-- [ ] "Last updated" timestamp
-- [ ] Author with credentials
-
-### Technical Elements
-
-- [ ] Article schema with dates
-- [ ] Person schema for author
-- [ ] FAQPage schema
-- [ ] Fast loading (< 2.5s)
-- [ ] Clean HTML structure
-
----
-
-## 6. Entity Building
-
-| Action | Purpose |
-|--------|---------|
-| Google Knowledge Panel | Entity recognition |
-| Wikipedia (if notable) | Authority source |
-| Consistent info across web | Entity consolidation |
-| Industry mentions | Authority signals |
-
----
-
-## 7. AI Crawler Access
-
-### Key AI User-Agents
-
-| Crawler | Engine |
-|---------|--------|
-| GPTBot | ChatGPT/OpenAI |
-| Claude-Web | Claude |
-| PerplexityBot | Perplexity |
-| Googlebot | Gemini (shared) |
-
-### Access Decision
-
-| Strategy | When |
-|----------|------|
-| Allow all | Want AI citations |
-| Block GPTBot | Don't want OpenAI training |
-| Selective | Allow some, block others |
-
----
-
-## 8. Measurement
-
-| Metric | How to Track |
-|--------|--------------|
-| AI citations | Manual monitoring |
-| "According to [Brand]" mentions | Search in AI |
-| Competitor citations | Compare share |
-| AI-referred traffic | UTM parameters |
-
----
-
-## 9. Anti-Patterns
-
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Publish without dates | Add timestamps |
-| Vague attributions | Name sources |
-| Skip author info | Show credentials |
-| Thin content | Comprehensive coverage |
-
----
-
-> **Remember:** AI cites content that's clear, authoritative, and easy to extract. Be the best answer.
-
----
-
-## Script
-
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `scripts/geo_checker.py` | GEO audit (AI citation readiness) | `python scripts/geo_checker.py <project_path>` |
-
+- [ ] 是否有清晰的结构 (Header 层次)？
+- [ ] 关键事实是否有数据支持？
+- [ ] 语言是否简洁客观？
+- [ ] 是否包含比较表 (Comparison Tables)？(AI 特别喜欢表格)

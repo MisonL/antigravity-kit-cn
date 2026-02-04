@@ -1,43 +1,37 @@
-# Context Discovery
+---
+description: 如何发现和定义系统的限界上下文 (Bounded Contexts)
+---
 
-> Before suggesting any architecture, gather context.
+# 上下文发现 (Context Discovery)
 
-## Question Hierarchy (Ask User FIRST)
+## 什么是限界上下文？
 
-1. **Scale**
-   - How many users? (10, 1K, 100K, 1M+)
-   - Data volume? (MB, GB, TB)
-   - Transaction rate? (per second/minute)
+在领域驱动设计 (DDD) 中，限界上下文是特定领域模型适用的边界。
+例如："用户"在**销售上下文**中是"买家"，而在**发货上下文**中是"收件人"。
 
-2. **Team**
-   - Solo developer or team?
-   - Team size and expertise?
-   - Distributed or co-located?
+## 发现步骤
 
-3. **Timeline**
-   - MVP/Prototype or long-term product?
-   - Time to market pressure?
+1.  **事件风暴 (Event Storming)**:
+    - 召集领域专家和开发者。
+    - 列出所有发生的"领域事件" (Domain Events, 橙色便利贴)。
+    - 按时间线排序。
+    - 寻找事件聚集的区域，这些通常是上下文的边界。
 
-4. **Domain**
-   - CRUD-heavy or business logic complex?
-   - Real-time requirements?
-   - Compliance/regulations?
+2.  **语言分析**:
+    - 注意语言的变化。
+    - 如果在讨论"订单"时，销售团队关注价格，物流团队关注重量，那么这是两个不同的上下文。
 
-5. **Constraints**
-   - Budget limitations?
-   - Legacy systems to integrate?
-   - Technology stack preferences?
+## 上下文映射 (Context Mapping)
 
-## Project Classification Matrix
+定义上下文之间的关系：
 
-```
-                    MVP              SaaS           Enterprise
-┌─────────────────────────────────────────────────────────────┐
-│ Scale        │ <1K           │ 1K-100K      │ 100K+        │
-│ Team         │ Solo          │ 2-10         │ 10+          │
-│ Timeline     │ Fast (weeks)  │ Medium (months)│ Long (years)│
-│ Architecture │ Simple        │ Modular      │ Distributed  │
-│ Patterns     │ Minimal       │ Selective    │ Comprehensive│
-│ Example      │ Next.js API   │ NestJS       │ Microservices│
-└─────────────────────────────────────────────────────────────┘
-```
+- **合作关系 (Partnership)**: 两个团队紧密合作，一起失败或成功。
+- **共享内核 (Shared Kernel)**: 共享一部分代码或数据库（慎用）。
+- **客户/供应商 (Customer/Supplier)**: 上游决定下游。
+- **防腐层 (Anticorruption Layer)**: 下游通过适配器隔离上游的变化（推荐）。
+- **各行其道 (Separate Ways)**: 无关联。
+
+## 关键产出
+
+- **上下文映射图**: 这种图展示了系统的高层结构。
+- **统一语言 (Ubiquitous Language)**: 每个上下文内部的词汇表。

@@ -1,190 +1,184 @@
----
-name: game-audio
-description: Game audio principles. Sound design, music integration, adaptive audio systems.
-allowed-tools: Read, Glob, Grep
----
+# 游戏音频原则 (Game Audio Principles)
 
-# Game Audio Principles
-
-> Sound design and music integration for immersive game experiences.
+> 沉浸式游戏体验的声音设计和音乐集成。
 
 ---
 
-## 1. Audio Category System
+## 1. 音频分类系统
 
-### Category Definitions
+### 分类定义
 
-| Category | Behavior | Examples |
-|----------|----------|----------|
-| **Music** | Looping, crossfade, ducking | BGM, combat music |
-| **SFX** | One-shot, 3D positioned | Footsteps, impacts |
-| **Ambient** | Looping, background layer | Wind, crowd, forest |
-| **UI** | Immediate, non-3D | Button clicks, notifications |
-| **Voice** | Priority, ducking trigger | Dialogue, announcer |
+| 分类               | 行为                               | 示例           |
+| ------------------ | ---------------------------------- | -------------- |
+| **Music (音乐)**   | 循环，交叉淡入淡出，闪避 (ducking) | BGM，战斗音乐  |
+| **SFX (音效)**     | 单次触发，3D 定位                  | 脚步声，撞击声 |
+| **Ambient (环境)** | 循环，背景层                       | 风，人群，森林 |
+| **UI**             | 立即，非 3D                        | 按钮点击，通知 |
+| **Voice (语音)**   | 优先级，闪避触发器                 | 对话，播音员   |
 
-### Priority Hierarchy
+### 优先级层级
 
 ```
-When sounds compete for channels:
+当声音争夺通道时:
 
-1. Voice (highest - always audible)
-2. Player SFX (feedback critical)
-3. Enemy SFX (gameplay important)
-4. Music (mood, but duckable)
-5. Ambient (lowest - can drop)
+1. Voice (最高 - 始终可听)
+2. Player SFX (反馈关键)
+3. Enemy SFX (玩法重要)
+4. Music (情绪，但可闪避)
+5. Ambient (最低 - 可丢弃)
 ```
 
 ---
 
-## 2. Sound Design Decisions
+## 2. 声音设计决策
 
-### SFX Creation Approach
+### SFX 创作方法
 
-| Approach | When to Use | Trade-offs |
-|----------|-------------|------------|
-| **Recording** | Realistic needs | High quality, time intensive |
-| **Synthesis** | Sci-fi, retro, UI | Unique, requires skill |
-| **Library samples** | Fast production | Common sounds, licensing |
-| **Layering** | Complex sounds | Best results, more work |
+| 方法                | 何时使用       | 权衡               |
+| ------------------- | -------------- | ------------------ |
+| **录音**            | 真实需求       | 高质量，耗时       |
+| **合成**            | 科幻，复古，UI | 独特，需要技能     |
+| **库采样**          | 快速制作       | 常见声音，许可     |
+| **分层 (Layering)** | 复杂声音       | 最佳结果，更多工作 |
 
-### Layering Structure
+### 分层结构
 
-| Layer | Purpose | Example: Gunshot |
-|-------|---------|------------------|
-| **Attack** | Initial transient | Click, snap |
-| **Body** | Main character | Boom, blast |
-| **Tail** | Decay, room | Reverb, echo |
-| **Sweetener** | Special sauce | Shell casing, mechanical |
+| 层                   | 目的       | 示例: 枪声     |
+| -------------------- | ---------- | -------------- |
+| **Attack (起音)**    | 初始瞬态   | 咔哒声，啪声   |
+| **Body (主体)**      | 主要特征   | 轰鸣，爆炸     |
+| **Tail (尾音)**      | 衰减，空间 | 混响，回声     |
+| **Sweetener (润色)** | 特殊调料   | 弹壳声，机械声 |
 
 ---
 
-## 3. Music Integration
+## 3. 音乐集成
 
-### Music State System
+### 音乐状态系统
 
 ```
-Game State → Music Response
+游戏状态 → 音乐响应
 │
-├── Menu → Calm, loopable theme
-├── Exploration → Ambient, atmospheric
-├── Combat detected → Transition to tension
-├── Combat engaged → Full battle music
-├── Victory → Stinger + calm transition
-├── Defeat → Somber stinger
-└── Boss → Unique, multi-phase track
+├── 菜单 → 平静，可循环主题
+├── 探索 → 环境，大气
+├── 检测到战斗 → 过渡到紧张
+├── 战斗进行中 → 完整战斗音乐
+├── 胜利 → 音效短句 (Stinger) + 平静过渡
+├── 失败 → 忧郁短句
+└── Boss → 独特，多阶段轨道
 ```
 
-### Transition Techniques
+### 过渡技术
 
-| Technique | Use When | Feel |
-|-----------|----------|------|
-| **Crossfade** | Smooth mood shift | Gradual |
-| **Stinger** | Immediate event | Dramatic |
-| **Stem mixing** | Dynamic intensity | Seamless |
-| **Beat-synced** | Rhythmic gameplay | Musical |
-| **Queue point** | Next natural break | Clean |
-
----
-
-## 4. Adaptive Audio Decisions
-
-### Intensity Parameters
-
-| Parameter | Affects | Example |
-|-----------|---------|---------|
-| **Threat level** | Music intensity | Enemy count |
-| **Health** | Filter, reverb | Low health = muffled |
-| **Speed** | Tempo, energy | Racing speed |
-| **Environment** | Reverb, EQ | Cave vs outdoor |
-| **Time of day** | Mood, volume | Night = quieter |
-
-### Vertical vs Horizontal
-
-| System | What Changes | Best For |
-|--------|--------------|----------|
-| **Vertical (layers)** | Add/remove instrument layers | Intensity scaling |
-| **Horizontal (segments)** | Different music sections | State changes |
-| **Combined** | Both | AAA adaptive scores |
+| 技术                         | 何时使用       | 感觉   |
+| ---------------------------- | -------------- | ------ |
+| **Crossfade (交叉淡入淡出)** | 平滑情绪转变   | 渐进   |
+| **Stinger (短句)**           | 立即事件       | 戏剧性 |
+| **Stem mixing (分轨混合)**   | 动态强度       | 无缝   |
+| **Beat-synced (节拍同步)**   | 节奏玩法       | 音乐性 |
+| **Queue point (队列点)**     | 下一个自然中断 | 以此   |
 
 ---
 
-## 5. 3D Audio Decisions
+## 4. 自适应音频决策
 
-### Spatialization
+### 强度参数
 
-| Element | 3D Positioned? | Reason |
-|---------|----------------|--------|
-| Player footsteps | No (or subtle) | Always audible |
-| Enemy footsteps | Yes | Directional awareness |
-| Gunfire | Yes | Combat awareness |
-| Music | No | Mood, non-diegetic |
-| Ambient zone | Yes (area) | Environmental |
-| UI sounds | No | Interface feedback |
+| 参数             | 影响               | 示例          |
+| ---------------- | ------------------ | ------------- |
+| **威胁等级**     | 音乐强度           | 敌人数量      |
+| **健康**         | 滤波器，混响       | 低血量 = 闷响 |
+| **速度**         | 速度 (Tempo)，能量 | 赛车速度      |
+| **环境**         | 混响，EQ           | 洞穴 vs 户外  |
+| **一天中的时间** | 情绪，音量         | 夜晚 = 更安静 |
 
-### Distance Behavior
+### 垂直 vs 水平
 
-| Distance | Sound Behavior |
-|----------|----------------|
-| **Near** | Full volume, full frequency |
-| **Medium** | Volume falloff, high-freq rolloff |
-| **Far** | Low volume, low-pass filter |
-| **Max** | Silent or ambient hint |
+| 系统          | 变化内容        | 最适合         |
+| ------------- | --------------- | -------------- |
+| **垂直 (层)** | 添加/移除乐器层 | 强度缩放       |
+| **水平 (段)** | 不同的音乐段落  | 状态变化       |
+| **组合**      | 两者都有        | AAA 自适应配乐 |
 
 ---
 
-## 6. Platform Considerations
+## 5. 3D 音频决策
 
-### Format Selection
+### 空间化
 
-| Platform | Recommended Format | Reason |
-|----------|-------------------|--------|
-| PC | OGG Vorbis, WAV | Quality, no licensing |
-| Console | Platform-specific | Certification |
-| Mobile | MP3, AAC | Size, compatibility |
-| Web | WebM/Opus, MP3 fallback | Browser support |
+| 元素       | 3D 定位?    | 原因           |
+| ---------- | ----------- | -------------- |
+| 玩家脚步声 | 否 (或微妙) | 始终可听       |
+| 敌人脚步声 | 是          | 方向感知       |
+| 枪声       | 是          | 战斗感知       |
+| 音乐       | 否          | 情绪，非叙事性 |
+| 环境区域   | 是 (区域)   | 环境           |
+| UI 声音    | 否          | 界面反馈       |
 
-### Memory Budget
+### 距离行为
 
-| Game Type | Audio Budget | Strategy |
-|-----------|--------------|----------|
-| Mobile casual | 10-50 MB | Compressed, fewer variants |
-| PC indie | 100-500 MB | Quality focus |
-| AAA | 1+ GB | Full quality, many variants |
-
----
-
-## 7. Mix Hierarchy
-
-### Volume Balance Reference
-
-| Category | Relative Level | Notes |
-|----------|----------------|-------|
-| **Voice** | 0 dB (reference) | Always clear |
-| **Player SFX** | -3 to -6 dB | Prominent but not harsh |
-| **Music** | -6 to -12 dB | Foundation, ducks for voice |
-| **Enemy SFX** | -6 to -9 dB | Important but not dominant |
-| **Ambient** | -12 to -18 dB | Subtle background |
-
-### Ducking Rules
-
-| When | Duck What | Amount |
-|------|-----------|--------|
-| Voice plays | Music, Ambient | -6 to -9 dB |
-| Explosion | All except explosion | Brief duck |
-| Menu open | Gameplay audio | -3 to -6 dB |
+| 距离     | 声音行为           |
+| -------- | ------------------ |
+| **近**   | 全音量，全频率     |
+| **中**   | 音量衰减，高频滚降 |
+| **远**   | 低音量，低通滤波器 |
+| **最大** | 寂静或环境提示     |
 
 ---
 
-## 8. Anti-Patterns
+## 6. 平台考量
 
-| Don't | Do |
-|-------|-----|
-| Play same sound repeatedly | Use variations (3-5 per sound) |
-| Max volume everything | Use proper mix hierarchy |
-| Ignore silence | Silence creates contrast |
-| One music track loops forever | Provide variety, transitions |
-| Skip audio in prototype | Placeholder audio matters |
+### 格式选择
+
+| 平台   | 推荐格式            | 原因             |
+| ------ | ------------------- | ---------------- |
+| PC     | OGG Vorbis, WAV     | 质量，无许可限制 |
+| 主机   | 平台特定            | 认证             |
+| 移动端 | MP3, AAC            | 大小，兼容性     |
+| Web    | WebM/Opus, MP3 回退 | 浏览器支持       |
+
+### 内存预算
+
+| 游戏类型 | 音频预算   | 策略             |
+| -------- | ---------- | ---------------- |
+| 移动休闲 | 10-50 MB   | 压缩，变体较少   |
+| PC 独立  | 100-500 MB | 质量优先         |
+| AAA      | 1+ GB      | 全质量，许多变体 |
 
 ---
 
-> **Remember:** 50% of the game experience is audio. A muted game loses half its soul.
+## 7. 混音层级
+
+### 音量平衡参考
+
+| 分类           | 相对电平      | 备注             |
+| -------------- | ------------- | ---------------- |
+| **Voice**      | 0 dB (参考)   | 始终清晰         |
+| **Player SFX** | -3 到 -6 dB   | 突出但不刺耳     |
+| **Music**      | -6 到 -12 dB  | 基础，为语音避让 |
+| **Enemy SFX**  | -6 到 -9 dB   | 重要但不主导     |
+| **Ambient**    | -12 到 -18 dB | 微妙背景         |
+
+### 闪避 (Ducking) 规则
+
+| 何时     | 闪避什么       | 量          |
+| -------- | -------------- | ----------- |
+| 语音播放 | 音乐，环境     | -6 到 -9 dB |
+| 爆炸     | 除爆炸外的所有 | 短暂闪避    |
+| 菜单打开 | 游戏音频       | -3 到 -6 dB |
+
+---
+
+## 8. 反模式
+
+| 错误                 | 正确                       |
+| -------------------- | -------------------------- |
+| 重复播放相同的声音   | 使用变体 (每个声音 3-5 个) |
+| 所有内容最大音量     | 使用适当的混音层级         |
+| 忽略寂静             | 寂静创造对比               |
+| 一首音乐轨道永远循环 | 提供变化，过渡             |
+| 原型中跳过音频       | 占位音频很重要             |
+
+---
+
+> **记住:** 50% 的游戏体验是音频。静音的游戏失去了灵魂的一半。

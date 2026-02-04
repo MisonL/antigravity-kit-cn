@@ -1,26 +1,26 @@
-# API Documentation Principles
+# API 文档原则 (Documentation Principles)
 
-> Good docs = happy developers = API adoption.
+> 好的文档 = 快乐的开发者 = API 被广泛采用。
 
-## OpenAPI/Swagger Essentials
-
-```
-Include:
-├── All endpoints with examples
-├── Request/response schemas
-├── Authentication requirements
-├── Error response formats
-└── Rate limiting info
-```
-
-## Good Documentation Has
+## OpenAPI/Swagger 精要
 
 ```
-Essentials:
-├── Quick start / Getting started
-├── Authentication guide
-├── Complete API reference
-├── Error handling guide
-├── Code examples (multiple languages)
-└── Changelog
+应包含:
+├── 所有端点 (Endpoints) 及其示例
+├── 请求/响应 Schema
+├── 认证要求
+├── 错误响应格式
+└── 速率限制信息
+```
+
+## 优质文档包含
+
+```
+核心要素:
+├── 快速开始 / 入门指南
+├── 认证指南
+├── 完整的 API 参考手册
+├── 错误处理指南
+├── 代码示例 (多种语言)
+└── 更新日志 (Changelog)
 ```

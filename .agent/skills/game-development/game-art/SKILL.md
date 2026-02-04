@@ -1,159 +1,154 @@
----
-name: game-art
-description: Game art principles. Visual style selection, asset pipeline, animation workflow.
-allowed-tools: Read, Glob, Grep
----
+# 游戏美术原则 (Game Art Principles)
 
-# Game Art Principles
-
-> Visual design thinking for games - style selection, asset pipelines, and art direction.
+> 游戏的视觉设计思维 - 风格选择，资产管线和美术指导。
 
 ---
 
-## 1. Art Style Selection
+## 1. 美术风格选择
 
-### Decision Tree
+### 决策树
 
 ```
-What feeling should the game evoke?
+游戏应该唤起什么感觉？
 │
-├── Nostalgic / Retro
-│   ├── Limited palette? → Pixel Art
-│   └── Hand-drawn feel? → Vector / Flash style
+├── 怀旧 / 复古
+│   ├── 有限调色板？ → 像素艺术 (Pixel Art)
+│   └── 手绘感？ → 矢量 / Flash 风格
 │
-├── Realistic / Immersive
-│   ├── High budget? → PBR 3D
-│   └── Stylized realism? → Hand-painted textures
+├── 真实 / 沉浸
+│   ├── 高预算？ → PBR 3D
+│   └── 风格化真实？ → 手绘纹理
 │
-├── Approachable / Casual
-│   ├── Clean shapes? → Flat / Minimalist
-│   └── Soft feel? → Gradient / Soft shadows
+├── 亲切 / 休闲
+│   ├── 干净的形状？ → 扁平 / 极简主义
+│   └── 柔和感？ → 渐变 / 软阴影
 │
-└── Unique / Experimental
-    └── Define custom style guide
+└── 独特 / 实验性
+    └── 定义自定义风格指南
 ```
 
-### Style Comparison Matrix
+### 风格比较矩阵
 
-| Style | Production Speed | Skill Floor | Scalability | Best For |
-|-------|------------------|-------------|-------------|----------|
-| **Pixel Art** | Medium | Medium | Hard to hire | Indie, retro |
-| **Vector/Flat** | Fast | Low | Easy | Mobile, casual |
-| **Hand-painted** | Slow | High | Medium | Fantasy, stylized |
-| **PBR 3D** | Slow | High | AAA pipeline | Realistic games |
-| **Low-poly** | Fast | Medium | Easy | Indie 3D |
-| **Cel-shaded** | Medium | Medium | Medium | Anime, cartoon |
-
----
-
-## 2. Asset Pipeline Decisions
-
-### 2D Pipeline
-
-| Phase | Tool Options | Output |
-|-------|--------------|--------|
-| **Concept** | Paper, Procreate, Photoshop | Reference sheet |
-| **Creation** | Aseprite, Photoshop, Krita | Individual sprites |
-| **Atlas** | TexturePacker, Aseprite | Spritesheet |
-| **Animation** | Spine, DragonBones, Frame-by-frame | Animation data |
-| **Integration** | Engine import | Game-ready assets |
-
-### 3D Pipeline
-
-| Phase | Tool Options | Output |
-|-------|--------------|--------|
-| **Concept** | 2D art, Blockout | Reference |
-| **Modeling** | Blender, Maya, 3ds Max | High-poly mesh |
-| **Retopology** | Blender, ZBrush | Game-ready mesh |
-| **UV/Texturing** | Substance Painter, Blender | Texture maps |
-| **Rigging** | Blender, Maya | Skeletal rig |
-| **Animation** | Blender, Maya, Mixamo | Animation clips |
-| **Export** | FBX, glTF | Engine-ready |
+| 风格                      | 制作速度 | 技能门槛 | 可扩展性 | 最适合       |
+| ------------------------- | -------- | -------- | -------- | ------------ |
+| **像素艺术**              | 中       | 中       | 难招人   | 独立，复古   |
+| **矢量/扁平**             | 快       | 低       | 易       | 移动端，休闲 |
+| **手绘**                  | 慢       | 高       | 中       | 奇幻，风格化 |
+| **PBR 3D**                | 慢       | 高       | AAA 管线 | 真实游戏     |
+| **低多边形 (Low-poly)**   | 快       | 中       | 易       | 独立 3D      |
+| **卡通渲染 (Cel-shaded)** | 中       | 中       | 中       | 动漫，卡通   |
 
 ---
 
-## 3. Color Theory Decisions
+## 2. 资产管线决策
 
-### Palette Selection
+### 2D 管线
 
-| Goal | Strategy | Example |
-|------|----------|---------|
-| **Harmony** | Complementary or analogous | Nature games |
-| **Contrast** | High saturation differences | Action games |
-| **Mood** | Warm/cool temperature | Horror, cozy |
-| **Readability** | Value contrast over hue | Gameplay clarity |
+| 阶段     | 工具选项                   | 输出         |
+| -------- | -------------------------- | ------------ |
+| **概念** | 纸, Procreate, Photoshop   | 参考图       |
+| **创作** | Aseprite, Photoshop, Krita | 单个精灵     |
+| **图集** | TexturePacker, Aseprite    | 精灵表       |
+| **动画** | Spine, DragonBones, 逐帧   | 动画数据     |
+| **集成** | 引擎导入                   | 游戏就绪资产 |
 
-### Color Principles
+### 3D 管线
 
-- **Hierarchy:** Important elements should pop
-- **Consistency:** Same object = same color family
-- **Context:** Colors read differently on backgrounds
-- **Accessibility:** Don't rely only on color
-
----
-
-## 4. Animation Principles
-
-### The 12 Principles (Applied to Games)
-
-| Principle | Game Application |
-|-----------|------------------|
-| **Squash & Stretch** | Jump arcs, impacts |
-| **Anticipation** | Wind-up before attack |
-| **Staging** | Clear silhouettes |
-| **Follow-through** | Hair, capes after movement |
-| **Slow in/out** | Easing on transitions |
-| **Arcs** | Natural movement paths |
-| **Secondary Action** | Breathing, blinking |
-| **Timing** | Frame count = weight/speed |
-| **Exaggeration** | Readable from distance |
-| **Appeal** | Memorable design |
-
-### Frame Count Guidelines
-
-| Action Type | Typical Frames | Feel |
-|-------------|----------------|------|
-| Idle breathing | 4-8 | Subtle |
-| Walk cycle | 6-12 | Smooth |
-| Run cycle | 4-8 | Energetic |
-| Attack | 3-6 | Snappy |
-| Death | 8-16 | Dramatic |
+| 阶段        | 工具选项                   | 输出         |
+| ----------- | -------------------------- | ------------ |
+| **概念**    | 2D 美术, 白模 (Blockout)   | 参考         |
+| **建模**    | Blender, Maya, 3ds Max     | 高模         |
+| **拓扑**    | Blender, ZBrush            | 游戏就绪网格 |
+| **UV/纹理** | Substance Painter, Blender | 纹理贴图     |
+| **绑定**    | Blender, Maya              | 骨骼绑定     |
+| **动画**    | Blender, Maya, Mixamo      | 动画片段     |
+| **导出**    | FBX, glTF                  | 引擎就绪     |
 
 ---
 
-## 5. Resolution & Scale Decisions
+## 3. 色彩理论决策
 
-### 2D Resolution by Platform
+### 调色板选择
 
-| Platform | Base Resolution | Sprite Scale |
-|----------|-----------------|--------------|
-| Mobile | 1080p | 64-128px characters |
-| Desktop | 1080p-4K | 128-256px characters |
-| Pixel art | 320x180 to 640x360 | 16-32px characters |
+| 目标       | 策略             | 示例           |
+| ---------- | ---------------- | -------------- |
+| **和谐**   | 互补或类比       | 自然游戏       |
+| **对比**   | 高饱和度差异     | 动作游戏       |
+| **情绪**   | 暖/冷色温        | 恐怖，舒适     |
+| **可读性** | 明度对比优于色相 | 游戏玩法清晰度 |
 
-### Consistency Rule
+### 色彩原则
 
-Choose a base unit and stick to it:
-- Pixel art: Work at 1x, scale up (never down)
-- HD art: Define DPI, maintain ratio
-- 3D: 1 unit = 1 meter (industry standard)
+- **层级:** 重要元素应该突出
+- **一致性:** 相同对象 = 相同色系
+- **上下文:** 颜色在背景上读取不同
+- **无障碍:** 不要仅依赖颜色
 
 ---
 
-## 6. Asset Organization
+## 4. 动画原则
 
-### Naming Convention
+### 12 原则 (应用于游戏)
+
+| 原则           | 游戏应用           |
+| -------------- | ------------------ |
+| **挤压与拉伸** | 跳跃弧线，撞击     |
+| **预备动作**   | 攻击前的蓄力       |
+| **舞台设计**   | 清晰的剪影         |
+| **跟随动作**   | 移动后的头发，披风 |
+| **慢进/慢出**  | 过渡的缓动         |
+| **弧线**       | 自然移动路径       |
+| **次要动作**   | 呼吸，眨眼         |
+| **时间控制**   | 帧数 = 重量/速度   |
+| **夸张**       | 远距离可读         |
+| **吸引力**     | 令人难忘的设计     |
+
+### 帧数指南
+
+| 动作类型 | 典型帧数 | 感觉     |
+| -------- | -------- | -------- |
+| 待机呼吸 | 4-8      | 微妙     |
+| 行走循环 | 6-12     | 平滑     |
+| 跑步循环 | 4-8      | 充满活力 |
+| 攻击     | 3-6      | 爽快     |
+| 死亡     | 8-16     | 戏剧性   |
+
+---
+
+## 5. 分辨率与比例决策
+
+### 2D 分辨率 (按平台)
+
+| 平台     | 基础分辨率         | 精灵比例       |
+| -------- | ------------------ | -------------- |
+| 移动端   | 1080p              | 64-128px 角色  |
+| 桌面     | 1080p-4K           | 128-256px 角色 |
+| 像素艺术 | 320x180 到 640x360 | 16-32px 角色   |
+
+### 一致性规则
+
+选择一个基准单位并坚持：
+
+- 像素艺术: 在 1x 下工作，放大 (从不缩小)
+- 高清美术: 定义 DPI，保持比例
+- 3D: 1 单位 = 1 米 (行业标准)
+
+---
+
+## 6. 资产组织
+
+### 命名规范
 
 ```
 [type]_[object]_[variant]_[state].[ext]
 
-Examples:
+示例:
 spr_player_idle_01.png
 tex_stone_wall_normal.png
 mesh_tree_oak_lod2.fbx
 ```
 
-### Folder Structure Principle
+### 文件夹结构原则
 
 ```
 assets/
@@ -170,16 +165,16 @@ assets/
 
 ---
 
-## 7. Anti-Patterns
+## 7. 反模式
 
-| Don't | Do |
-|-------|-----|
-| Mix art styles randomly | Define and follow style guide |
-| Work at final resolution only | Create at source resolution |
-| Ignore silhouette readability | Test at gameplay distance |
-| Over-detail background | Focus detail on player area |
-| Skip color testing | Test on target display |
+| ❌ 错误              | ✅ 正确              |
+| -------------------- | -------------------- |
+| 随机混合美术风格     | 定义并遵循风格指南   |
+| 仅在最终分辨率下工作 | 在源分辨率下创建     |
+| 忽略剪影可读性       | 在游戏距离测试       |
+| 过度细化背景         | 将细节集中在玩家区域 |
+| 跳过颜色测试         | 在目标显示器上测试   |
 
 ---
 
-> **Remember:** Art serves gameplay. If it doesn't help the player, it's decoration.
+> **记住:** 美术服务于玩法。如果它不能帮助玩家，它就是装饰。

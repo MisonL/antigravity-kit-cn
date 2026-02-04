@@ -1,34 +1,34 @@
-# Project Type Detection
+# 项目类型检测 (Project Type Detection)
 
-> Analyze user requests to determine project type and template.
+> 分析用户请求以确定项目类型和模版。
 
-## Keyword Matrix
+## 关键词矩阵
 
-| Keywords | Project Type | Template |
-|----------|--------------|----------|
-| blog, post, article | Blog | astro-static |
-| e-commerce, product, cart, payment | E-commerce | nextjs-saas |
-| dashboard, panel, management | Admin Dashboard | nextjs-fullstack |
-| api, backend, service, rest | API Service | express-api |
-| python, fastapi, django | Python API | python-fastapi |
-| mobile, android, ios, react native | Mobile App (RN) | react-native-app |
-| flutter, dart | Mobile App (Flutter) | flutter-app |
-| portfolio, personal, cv | Portfolio | nextjs-static |
-| crm, customer, sales | CRM | nextjs-fullstack |
-| saas, subscription, stripe | SaaS | nextjs-saas |
-| landing, promotional, marketing | Landing Page | nextjs-static |
-| docs, documentation | Documentation | astro-static |
-| extension, plugin, chrome | Browser Extension | chrome-extension |
-| desktop, electron | Desktop App | electron-desktop |
-| cli, command line, terminal | CLI Tool | cli-tool |
-| monorepo, workspace | Monorepo | monorepo-turborepo |
+| 关键词                                         | 项目类型             | 模版               |
+| ---------------------------------------------- | -------------------- | ------------------ |
+| blog, post, article, 博客, 文章                | Blog                 | astro-static       |
+| e-commerce, product, cart, payment, 电商, 支付 | E-commerce           | nextjs-saas        |
+| dashboard, panel, management, 仪表盘, 后台     | Admin Dashboard      | nextjs-fullstack   |
+| api, backend, service, rest, 接口, 服务        | API Service          | express-api        |
+| python, fastapi, django                        | Python API           | python-fastapi     |
+| mobile, android, ios, react native, 移动端     | Mobile App (RN)      | react-native-app   |
+| flutter, dart                                  | Mobile App (Flutter) | flutter-app        |
+| portfolio, personal, cv, 作品集, 简历          | Portfolio            | nextjs-static      |
+| crm, customer, sales, 客户管理                 | CRM                  | nextjs-fullstack   |
+| saas, subscription, stripe, 订阅               | SaaS                 | nextjs-saas        |
+| landing, promotional, marketing, 落地页        | Landing Page         | nextjs-static      |
+| docs, documentation, 文档                      | Documentation        | astro-static       |
+| extension, plugin, chrome, 插件, 扩展          | Browser Extension    | chrome-extension   |
+| desktop, electron, 桌面应用                    | Desktop App          | electron-desktop   |
+| cli, command line, terminal, 命令行            | CLI Tool             | cli-tool           |
+| monorepo, workspace, 工作区                    | Monorepo             | monorepo-turborepo |
 
-## Detection Process
+## 检测流程
 
 ```
-1. Tokenize user request
-2. Extract keywords
-3. Determine project type
-4. Detect missing information → forward to conversation-manager
-5. Suggest tech stack
+1. 标记化用户请求
+2. 提取关键词
+3. 确定项目类型
+4. 检测缺失信息 → 转发给 conversation-manager
+5. 建议技术栈
 ```

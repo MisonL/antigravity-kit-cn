@@ -1,306 +1,243 @@
-# Motion Graphics Reference
+---
+description: Lottie, GSAP, SVG, 3D, 粒子等高级动效技术
+---
 
-> Advanced animation techniques for premium web experiences - Lottie, GSAP, SVG, 3D, Particles.
-> **Learn the principles, create WOW effects.**
+# 动态图形参考 (Motion Graphics Reference)
+
+> 优质 Web 体验的高级动画技术 - Lottie, GSAP, SVG, 3D, 粒子。
+> **学习原则，创造 WOW 效果。**
 
 ---
 
-## 1. Lottie Animations
+## 1. Lottie 动画
 
-### What is Lottie?
+### 什么是 Lottie?
 
 ```
-JSON-based vector animations:
-├── Exported from After Effects via Bodymovin
-├── Lightweight (smaller than GIF/video)
-├── Scalable (vector-based, no pixelation)
-├── Interactive (control playback, segments)
-└── Cross-platform (web, iOS, Android, React Native)
+基于 JSON 的矢量动画:
+├── 通过 Bodymovin 从 After Effects 导出
+├── 轻量 (比 GIF/视频小)
+├── 可缩放 (矢量，无像素化)
+├── 可交互 (控制播放、片段)
+└── 跨平台 (Web, iOS, Android, React Native)
 ```
 
-### When to Use Lottie
+### 何时使用 Lottie
 
-| Use Case | Why Lottie? |
-|----------|-------------|
-| **Loading animations** | Branded, smooth, lightweight |
-| **Empty states** | Engaging illustrations |
-| **Onboarding flows** | Complex multi-step animations |
-| **Success/Error feedback** | Delightful micro-interactions |
-| **Animated icons** | Consistent cross-platform |
+| 用例              | 为什么选 Lottie?   |
+| :---------------- | :----------------- |
+| **加载动画**      | 品牌化, 平滑, 轻量 |
+| **空状态**        | 吸引人的插画       |
+| **引导流程**      | 复杂的多步动画     |
+| **成功/错误反馈** | 令人愉悦的微交互   |
+| **动画图标**      | 跨平台一致性       |
 
-### Principles
+### 原则
 
-- Keep file size under 100KB for performance
-- Use loop sparingly (avoid distraction)
-- Provide static fallback for reduced-motion
-- Lazy load animation files when possible
-
-### Sources
-
-- LottieFiles.com (free library)
-- After Effects + Bodymovin (custom)
-- Figma plugins (export from design)
+- 文件大小保持在 100KB 以下以保证性能
+- 谨慎使用循环 (避免干扰)
+- 为减弱动态模式提供静态降级
+- 尽可能懒加载动画文件
 
 ---
 
 ## 2. GSAP (GreenSock)
 
-### What Makes GSAP Different
+### GSAP 强在哪里
 
 ```
-Professional timeline-based animation:
-├── Precise control over sequences
-├── ScrollTrigger for scroll-driven animations
-├── MorphSVG for shape transitions
-├── Physics-based easing
-└── Works with any DOM element
+专业的时间轴动画:
+├── 对序列的精确控制
+├── ScrollTrigger 用于滚动驱动动画
+├── MorphSVG 用于形状变形
+├── 基于物理的缓动
+└── 适用于任何 DOM 元素
 ```
 
-### Core Concepts
+### 核心概念
 
-| Concept | Purpose |
-|---------|---------|
-| **Tween** | Single A→B animation |
-| **Timeline** | Sequenced/overlapping animations |
-| **ScrollTrigger** | Scroll position controls playback |
-| **Stagger** | Cascade effect across elements |
+| 概念              | 目的              |
+| :---------------- | :---------------- |
+| **Tween**         | 单个 A→B 动画     |
+| **Timeline**      | 序列化/重叠的动画 |
+| **ScrollTrigger** | 滚动位置控制播放  |
+| **Stagger**       | 元素间的级联效果  |
 
-### When to Use GSAP
+### 何时使用 GSAP
 
-- ✅ Complex sequenced animations
-- ✅ Scroll-triggered reveals
-- ✅ Precise timing control needed
-- ✅ SVG morphing effects
-- ❌ Simple hover/focus effects (use CSS)
-- ❌ Performance-critical mobile (heavier)
-
-### Principles
-
-- Use timeline for orchestration (not individual tweens)
-- Stagger delay: 0.05-0.15s between items
-- ScrollTrigger: start at 70-80% viewport entry
-- Kill animations on unmount (prevent memory leaks)
+- ✅ 复杂的序列动画
+- ✅ 滚动触发的揭示
+- ✅ 需要精确的时间控制
+- ✅ SVG 变形效果
+- ❌ 简单的 Hover/Focus 效果 (用 CSS)
+- ❌ 性能敏感的移动端 (较重)
 
 ---
 
-## 3. SVG Animations
+## 3. SVG 动画
 
-### Types of SVG Animation
+### SVG 动画类型
 
-| Type | Technique | Use Case |
-|------|-----------|----------|
-| **Line Drawing** | stroke-dashoffset | Logo reveals, signatures |
-| **Morph** | Path interpolation | Icon transitions |
-| **Transform** | rotate, scale, translate | Interactive icons |
-| **Color** | fill/stroke transition | State changes |
+| 类型                 | 技术                     | 用例            |
+| :------------------- | :----------------------- | :-------------- |
+| **线条描绘**         | stroke-dashoffset        | Logo 揭示, 签名 |
+| **变形 (Morph)**     | 路径插值                 | 图标过渡        |
+| **变换 (Transform)** | rotate, scale, translate | 交互图标        |
+| **颜色**             | fill/stroke 过渡         | 状态变化        |
 
-### Line Drawing Principles
+### 线条描绘原则
 
 ```
-How stroke-dashoffset drawing works:
-├── Set dasharray to path length
-├── Set dashoffset equal to dasharray (hidden)
-├── Animate dashoffset to 0 (revealed)
-└── Create "drawing" effect
+stroke-dashoffset 描绘原理:
+├── 设置 dasharray 为路径长度
+├── 设置 dashoffset 等于 dasharray (隐藏)
+├── 动画 dashoffset 到 0 (揭示)
+└── 创造"正在绘制"的效果
 ```
-
-### When to Use SVG Animations
-
-- ✅ Logo reveals, brand moments
-- ✅ Icon state transitions (hamburger ↔ X)
-- ✅ Infographics, data visualization
-- ✅ Interactive illustrations
-- ❌ Photo-realistic content (use video)
-- ❌ Very complex scenes (performance)
-
-### Principles
-
-- Get path length dynamically for accuracy
-- Duration: 1-3s for full drawings
-- Easing: ease-out for natural feel
-- Simple fills complement, don't compete
 
 ---
 
 ## 4. 3D CSS Transforms
 
-### Core Properties
+### 核心属性
 
 ```
-CSS 3D Space:
-├── perspective: depth of 3D field (500-1500px typical)
-├── transform-style: preserve-3d (enable children 3D)
-├── rotateX/Y/Z: rotation per axis
-├── translateZ: move toward/away from viewer
-└── backface-visibility: show/hide back side
+CSS 3D 空间:
+├── perspective: 3D 场深度 (500-1500px 典型值)
+├── transform-style: preserve-3d (启用子元素 3D)
+├── rotateX/Y/Z: 轴向旋转
+├── translateZ: 向观众移近/移远
+└── backface-visibility: 显示/隐藏背面
 ```
 
-### Common 3D Patterns
+### 常见 3D 模式
 
-| Pattern | Use Case |
-|---------|----------|
-| **Card flip** | Reveals, flashcards, product views |
-| **Tilt on hover** | Interactive cards, 3D depth |
-| **Parallax layers** | Hero sections, immersive scrolling |
-| **3D carousel** | Image galleries, sliders |
-
-### Principles
-
-- Perspective: 800-1200px for subtle, 400-600px for dramatic
-- Keep transforms simple (rotate + translate)
-- Ensure backface-visibility: hidden for flips
-- Test on Safari (different rendering)
+| 模式         | 用例                  |
+| :----------- | :-------------------- |
+| **卡片翻转** | 揭示, 闪卡, 产品视图  |
+| **悬停倾斜** | 交互卡片, 3D 深度     |
+| **视差层**   | Hero 区域, 沉浸式滚动 |
+| **3D 轮播**  | 以此画廊, 滑块        |
 
 ---
 
-## 5. Particle Effects
+## 5. 粒子效果 (Particle Effects)
 
-### Types of Particle Systems
+### 粒子系统类型
 
-| Type | Feel | Use Case |
-|------|------|----------|
-| **Geometric** | Tech, network | SaaS, tech sites |
-| **Confetti** | Celebration | Success moments |
-| **Snow/Rain** | Atmospheric | Seasonal, mood |
-| **Dust/Bokeh** | Dreamy | Photography, luxury |
-| **Fireflies** | Magical | Games, fantasy |
+| 类型          | 感觉       | 用例           |
+| :------------ | :--------- | :------------- |
+| **几何**      | 科技, 网络 | SaaS, 科技网站 |
+| **纸屑**      | 庆祝       | 成功时刻       |
+| **雪/雨**     | 氛围       | 季节性, 情绪   |
+| **灰尘/光斑** | 梦幻       | 摄影, 奢华     |
+| **萤火虫**    | 魔法       | 游戏, 奇幻     |
 
-### Libraries
+### 库
 
-| Library | Best For |
-|---------|----------|
-| **tsParticles** | Configurable, lightweight |
-| **particles.js** | Simple backgrounds |
-| **Canvas API** | Custom, maximum control |
-| **Three.js** | Complex 3D particles |
+| 库               | 适合               |
+| :--------------- | :----------------- |
+| **tsParticles**  | 可配置, 轻量       |
+| **particles.js** | 简单背景           |
+| **Canvas API**   | 自定义, 最大控制权 |
+| **Three.js**     | 复杂 3D 粒子       |
 
-### Principles
+### 原则
 
-- Default: 30-50 particles (not overwhelming)
-- Movement: slow, organic (speed 0.5-2)
-- Opacity: 0.3-0.6 (don't compete with content)
-- Connections: subtle lines for "network" feel
-- ⚠️ Disable or reduce on mobile
-
-### When to Use
-
-- ✅ Hero backgrounds (atmospheric)
-- ✅ Success celebrations (confetti burst)
-- ✅ Tech visualization (connected nodes)
-- ❌ Content-heavy pages (distraction)
-- ❌ Low-powered devices (battery drain)
+- 默认: 30-50 个粒子 (不要过多)
+- 运动: 慢, 有机 (速度 0.5-2)
+- 不透明度: 0.3-0.6 (不要抢内容)
+- 连线: 微妙的线条营造"网络"感
+- ⚠️ 在移动端禁用或减少
 
 ---
 
-## 6. Scroll-Driven Animations
+## 6. 滚动驱动动画 (Scroll-Driven Animations)
 
-### Native CSS (Modern)
+### 原生 CSS (现代)
 
 ```
-CSS Scroll Timelines:
-├── animation-timeline: scroll() - document scroll
-├── animation-timeline: view() - element in viewport
-├── animation-range: entry/exit thresholds
-└── No JavaScript required
+CSS 滚动时间轴:
+├── animation-timeline: scroll() - 文档滚动
+├── animation-timeline: view() - 元素在视口中
+├── animation-range: 进入/退出 阈值
+└── 无需 JavaScript
 ```
 
-### Principles
+### 最佳实践
 
-| Trigger Point | Use Case |
-|---------------|----------|
-| **Entry 0%** | When element starts entering |
-| **Entry 50%** | When half visible |
-| **Cover 50%** | When centered in viewport |
-| **Exit 100%** | When fully exited |
-
-### Best Practices
-
-- Reveal animations: start at ~25% entry
-- Parallax: continuous scroll progress
-- Sticky elements: use cover range
-- Always test scroll performance
+- 揭示动画: 在 ~25% 进入时开始
+- 视差: 连续滚动进度
+- 粘性元素: 使用 cover 范围
+- 始终测试滚动性能
 
 ---
 
-## 7. Performance Principles
+## 7. 性能原则
 
-### GPU vs CPU Animation
+### GPU vs CPU 动画
 
 ```
-CHEAP (GPU-accelerated):
+便宜 (GPU 加速):
 ├── transform (translate, scale, rotate)
 ├── opacity
-└── filter (use sparingly)
+└── filter (慎用)
 
-EXPENSIVE (triggers reflow):
+昂贵 (触发重排 Reflow):
 ├── width, height
 ├── top, left, right, bottom
 ├── padding, margin
-└── complex box-shadow
+└── 复杂的 box-shadow
 ```
 
-### Optimization Checklist
+### 优化检查清单
 
-- [ ] Animate only transform/opacity
-- [ ] Use `will-change` before heavy animations (remove after)
-- [ ] Test on low-end devices
-- [ ] Implement `prefers-reduced-motion`
-- [ ] Lazy load animation libraries
-- [ ] Throttle scroll-based calculations
+- [ ] 只动画 transform/opacity
+- [ ] 在重动画前使用 `will-change` (之后移除)
+- [ ] 在低端设备上测试
+- [ ] 实现 `prefers-reduced-motion`
+- [ ] 懒加载动画库
+- [ ] 节流 (Throttle) 基于滚动的计算
 
 ---
 
-## 8. Motion Graphics Decision Tree
+## 8. 动效决策树
 
 ```
-What animation do you need?
+你需要什么动画？
 │
-├── Complex branded animation?
-│   └── Lottie (After Effects export)
+├── 复杂的品牌动画？
+│   └── Lottie (AE 导出)
 │
-├── Sequenced scroll-triggered?
+├── 序列化的滚动触发？
 │   └── GSAP + ScrollTrigger
 │
-├── Logo/icon animation?
-│   └── SVG animation (stroke or morph)
+├── Logo/图标动画？
+│   └── SVG 动画 (描边或变形)
 │
-├── Interactive 3D effect?
-│   └── CSS 3D Transforms (simple) or Three.js (complex)
+├── 交互式 3D 效果？
+│   └── CSS 3D Transforms (简单) 或 Three.js (复杂)
 │
-├── Atmospheric background?
-│   └── tsParticles or Canvas
+├── 氛围背景？
+│   └── tsParticles 或 Canvas
 │
-└── Simple entrance/hover?
-    └── CSS @keyframes or Framer Motion
+└── 简单的入场/悬停？
+    └── CSS @keyframes 或 Framer Motion
 ```
 
 ---
 
-## 9. Anti-Patterns
+## 9. 反模式
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Animate everything at once | Stagger and sequence |
-| Use heavy libraries for simple effects | Start with CSS |
-| Ignore reduced-motion | Always provide fallback |
-| Block main thread | Optimize for 60fps |
-| Same particles every project | Match brand/context |
-| Complex effects on mobile | Feature detection |
-
----
-
-## 10. Quick Reference
-
-| Effect | Tool | Performance |
-|--------|------|-------------|
-| Loading spinner | CSS/Lottie | Light |
-| Staggered reveal | GSAP/Framer | Medium |
-| SVG path draw | CSS stroke | Light |
-| 3D card flip | CSS transforms | Light |
-| Particle background | tsParticles | Heavy |
-| Scroll parallax | GSAP ScrollTrigger | Medium |
-| Shape morphing | GSAP MorphSVG | Medium |
+| ❌ 别做              | ✅ 做           |
+| :------------------- | :-------------- |
+| 同时动画所有东西     | 错开和序列化    |
+| 用重型库做简单效果   | 从 CSS 开始     |
+| 忽略减弱动态         | 总是提供降级    |
+| 阻塞主线程           | 优化至 60fps    |
+| 每个项目用一样的粒子 | 匹配品牌/上下文 |
+| 移动端上搞复杂特效   | 功能检测        |
 
 ---
 
-> **Remember**: Motion graphics should enhance, not distract. Every animation must serve a PURPOSE—feedback, guidance, delight, or storytelling.
+> **记住**: 动态图形应该增强而不是干扰。每一个动画必须服务于一个**目的**——反馈、引导、愉悦或叙事。

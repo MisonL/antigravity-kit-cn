@@ -1,39 +1,39 @@
-# Indexing Principles
+# 索引原则 (Indexing Principles)
 
-> When and how to create indexes effectively.
+> 何时以及如何有效地创建索引。
 
-## When to Create Indexes
-
-```
-Index these:
-├── Columns in WHERE clauses
-├── Columns in JOIN conditions
-├── Columns in ORDER BY
-├── Foreign key columns
-└── Unique constraints
-
-Don't over-index:
-├── Write-heavy tables (slower inserts)
-├── Low-cardinality columns
-├── Columns rarely queried
-```
-
-## Index Type Selection
-
-| Type | Use For |
-|------|---------|
-| **B-tree** | General purpose, equality & range |
-| **Hash** | Equality only, faster |
-| **GIN** | JSONB, arrays, full-text |
-| **GiST** | Geometric, range types |
-| **HNSW/IVFFlat** | Vector similarity (pgvector) |
-
-## Composite Index Principles
+## 何时创建索引
 
 ```
-Order matters for composite indexes:
-├── Equality columns first
-├── Range columns last
-├── Most selective first
-└── Match query pattern
+为这些列创建索引:
+├── WHERE 子句中的列
+├── JOIN 条件中的列
+├── ORDER BY 中的列
+├── 外键列
+└── 唯一约束列
+
+不要过度索引:
+├── 写入频繁的表 (会降低插入速度)
+├── 区分度低 (Low-cardinality) 的列
+├── 极少被查询的列
+```
+
+## 索引类型选择
+
+| 类型             | 用途                     |
+| :--------------- | :----------------------- |
+| **B-tree**       | 通用目的，等值和范围查询 |
+| **Hash**         | 仅等值查询，更快         |
+| **GIN**          | JSONB, 数组, 全文搜索    |
+| **GiST**         | 几何类型, 范围类型       |
+| **HNSW/IVFFlat** | 向量相似度 (pgvector)    |
+
+## 复合索引原则
+
+```
+复合索引的顺序很重要:
+├── 等值列在前 (Equality)
+├── 范围列在后 (Range)
+├── 区分度高的在前 (Most selective)
+└── 匹配查询模式
 ```

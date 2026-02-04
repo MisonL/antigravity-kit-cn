@@ -1,48 +1,48 @@
-# Migration Principles
+# 迁移原则 (Migration Principles)
 
-> Safe migration strategy for zero-downtime changes.
+> 零停机变更的安全迁移策略。
 
-## Safe Migration Strategy
+## 安全迁移策略
 
 ```
-For zero-downtime changes:
+为了零停机变更:
 │
-├── Adding column
-│   └── Add as nullable → backfill → add NOT NULL
+├── 添加列
+│   └── 添加为 nullable → 回填数据 → 添加 NOT NULL 约束
 │
-├── Removing column
-│   └── Stop using → deploy → remove column
+├── 移除列
+│   └── 停止使用该列 → 部署代码 → 移除列
 │
-├── Adding index
-│   └── CREATE INDEX CONCURRENTLY (non-blocking)
+├── 添加索引
+│   └── CREATE INDEX CONCURRENTLY (非阻塞)
 │
-└── Renaming column
-    └── Add new → migrate data → deploy → drop old
+└── 重命名列
+    └── 添加新列 → 迁移数据 → 部署代码 → 删除旧列
 ```
 
-## Migration Philosophy
+## 迁移哲学
 
-- Never make breaking changes in one step
-- Test migrations on data copy first
-- Have rollback plan
-- Run in transaction when possible
+- 绝不一步完成破坏性变更 (Breaking changes)
+- 先在数据副本上测试迁移
+- 拥有回滚计划
+- 尽可能在事务中运行
 
-## Serverless Databases
+## Serverless 数据库
 
 ### Neon (Serverless PostgreSQL)
 
-| Feature | Benefit |
-|---------|---------|
-| Scale to zero | Cost savings |
-| Instant branching | Dev/preview |
-| Full PostgreSQL | Compatibility |
-| Autoscaling | Traffic handling |
+| 特性                  | 优势          |
+| :-------------------- | :------------ |
+| **Scale to zero**     | 节省成本      |
+| **Instant branching** | 开发/预览环境 |
+| **Full PostgreSQL**   | 完全兼容      |
+| **Autoscaling**       | 流量处理      |
 
-### Turso (Edge SQLite)
+### Turso (边缘 SQLite)
 
-| Feature | Benefit |
-|---------|---------|
-| Edge locations | Ultra-low latency |
-| SQLite compatible | Simple |
-| Generous free tier | Cost |
-| Global distribution | Performance |
+| 特性                    | 优势     |
+| :---------------------- | :------- |
+| **Edge locations**      | 超低延迟 |
+| **SQLite compatible**   | 简单     |
+| **Generous free tier**  | 成本     |
+| **Global distribution** | 性能     |

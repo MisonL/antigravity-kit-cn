@@ -1,109 +1,36 @@
 ---
-name: code-review-checklist
-description: Code review guidelines covering code quality, security, and best practices.
-allowed-tools: Read, Glob, Grep
+description: 代码审查指南，涵盖质量、安全和最佳实践
 ---
 
-# Code Review Checklist
+# 代码审查清单 (Code Review Checklist)
 
-## Quick Review Checklist
+在 `review` 模式下，对照此清单检查代码。
 
-### Correctness
-- [ ] Code does what it's supposed to do
-- [ ] Edge cases handled
-- [ ] Error handling in place
-- [ ] No obvious bugs
+## 1. 功能性 (Functionality)
 
-### Security
-- [ ] Input validated and sanitized
-- [ ] No SQL/NoSQL injection vulnerabilities
-- [ ] No XSS or CSRF vulnerabilities
-- [ ] No hardcoded secrets or sensitive credentials
-- [ ] **AI-Specific:** Protection against Prompt Injection (if applicable)
-- [ ] **AI-Specific:** Outputs are sanitized before being used in critical sinks
+- [ ] 代码是否实现了预期的功能？
+- [ ] 边界情况 (空值、最大值、负值) 是否处理？
+- [ ] 是否有并发问题 (Race Condition)？
 
-### Performance
-- [ ] No N+1 queries
-- [ ] No unnecessary loops
-- [ ] Appropriate caching
-- [ ] Bundle size impact considered
+## 2. 清晰度 (Readability)
 
-### Code Quality
-- [ ] Clear naming
-- [ ] DRY - no duplicate code
-- [ ] SOLID principles followed
-- [ ] Appropriate abstraction level
+- [ ] 命名是否清晰易懂？
+- [ ] 逻辑是否过于复杂？能否简化？
+- [ ] 是否存在魔法数字 (Magic Numbers)？
 
-### Testing
-- [ ] Unit tests for new code
-- [ ] Edge cases tested
-- [ ] Tests readable and maintainable
+## 3. 安全性 (Security)
 
-### Documentation
-- [ ] Complex logic commented
-- [ ] Public APIs documented
-- [ ] README updated if needed
+- [ ] 输入是否经过校验？
+- [ ] 是否有 SQL 注入或 XSS 风险？
+- [ ] 敏感信息 (API Key) 是否硬编码？
 
-## AI & LLM Review Patterns (2025)
+## 4. 性能 (Performance)
 
-### Logic & Hallucinations
-- [ ] **Chain of Thought:** Does the logic follow a verifiable path?
-- [ ] **Edge Cases:** Did the AI account for empty states, timeouts, and partial failures?
-- [ ] **External State:** Is the code making safe assumptions about file systems or networks?
+- [ ] 是否有 N+1 查询问题？
+- [ ] 循环中是否有昂贵的操作？
+- [ ] 资源是否正确释放 (文件句柄、数据库连接)？
 
-### Prompt Engineering Review
-```markdown
-// ❌ Vague prompt in code
-const response = await ai.generate(userInput);
+## 5. 测试 (Tests)
 
-// ✅ Structured & Safe prompt
-const response = await ai.generate({
-  system: "You are a specialized parser...",
-  input: sanitize(userInput),
-  schema: ResponseSchema
-});
-```
-
-## Anti-Patterns to Flag
-
-```typescript
-// ❌ Magic numbers
-if (status === 3) { ... }
-
-// ✅ Named constants
-if (status === Status.ACTIVE) { ... }
-
-// ❌ Deep nesting
-if (a) { if (b) { if (c) { ... } } }
-
-// ✅ Early returns
-if (!a) return;
-if (!b) return;
-if (!c) return;
-// do work
-
-// ❌ Long functions (100+ lines)
-// ✅ Small, focused functions
-
-// ❌ any type
-const data: any = ...
-
-// ✅ Proper types
-const data: UserData = ...
-```
-
-## Review Comments Guide
-
-```
-// Blocking issues use 🔴
-🔴 BLOCKING: SQL injection vulnerability here
-
-// Important suggestions use 🟡
-🟡 SUGGESTION: Consider using useMemo for performance
-
-// Minor nits use 🟢
-🟢 NIT: Prefer const over let for immutable variable
-
-// Questions use ❓
-❓ QUESTION: What happens if user is null here?
-```
+- [ ] 是否有对应的单元测试？
+- [ ] 测试用例是否覆盖了分支逻辑？

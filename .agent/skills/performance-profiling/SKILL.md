@@ -1,143 +1,36 @@
 ---
-name: performance-profiling
-description: Performance profiling principles. Measurement, analysis, and optimization techniques.
-allowed-tools: Read, Glob, Grep, Bash
+description: 性能分析原则、Lighthouse 指标优化与 Bundle 分析
 ---
 
-# Performance Profiling
+# 性能分析 (Performance Profiling)
 
-> Measure, analyze, optimize - in that order.
+## 核心指标 (Web Vitals)
 
-## 🔧 Runtime Scripts
+1.  **LCP (Largest Contentful Paint)**: 最大内容渲染时间。
+    - 目标: < 2.5s
+    - 优化: 预加载关键图片，优化服务器响应 (TTFB)。
 
-**Execute these for automated profiling:**
+2.  **INP (Interaction to Next Paint)**: 交互响应延迟。
+    - 目标: < 200ms
+    - 优化: 减少主线程阻塞，使用 `useTransition`。
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `scripts/lighthouse_audit.py` | Lighthouse performance audit | `python scripts/lighthouse_audit.py https://example.com` |
+3.  **CLS (Cumulative Layout Shift)**: 累积布局偏移。
+    - 目标: < 0.1
+    - 优化: 给图片/视频设定明确的宽高。
 
----
+## 分析工具
 
-## 1. Core Web Vitals
+1.  **Chrome User Performance**:
+    - 记录 Performance Profile。
+    - 查找 "长任务" (Long Tasks, >50ms)。
 
-### Targets
+2.  **Bundle Analysis**:
+    - `webpack-bundle-analyzer` 或 `rollup-plugin-visualizer`。
+    - 检查是否有意外引入的大库 (如整个 lodash, moment.js)。
 
-| Metric | Good | Poor | Measures |
-|--------|------|------|----------|
-| **LCP** | < 2.5s | > 4.0s | Loading |
-| **INP** | < 200ms | > 500ms | Interactivity |
-| **CLS** | < 0.1 | > 0.25 | Stability |
+## 优化策略 (RAIL 模型)
 
-### When to Measure
-
-| Stage | Tool |
-|-------|------|
-| Development | Local Lighthouse |
-| CI/CD | Lighthouse CI |
-| Production | RUM (Real User Monitoring) |
-
----
-
-## 2. Profiling Workflow
-
-### The 4-Step Process
-
-```
-1. BASELINE → Measure current state
-2. IDENTIFY → Find the bottleneck
-3. FIX → Make targeted change
-4. VALIDATE → Confirm improvement
-```
-
-### Profiling Tool Selection
-
-| Problem | Tool |
-|---------|------|
-| Page load | Lighthouse |
-| Bundle size | Bundle analyzer |
-| Runtime | DevTools Performance |
-| Memory | DevTools Memory |
-| Network | DevTools Network |
-
----
-
-## 3. Bundle Analysis
-
-### What to Look For
-
-| Issue | Indicator |
-|-------|-----------|
-| Large dependencies | Top of bundle |
-| Duplicate code | Multiple chunks |
-| Unused code | Low coverage |
-| Missing splits | Single large chunk |
-
-### Optimization Actions
-
-| Finding | Action |
-|---------|--------|
-| Big library | Import specific modules |
-| Duplicate deps | Dedupe, update versions |
-| Route in main | Code split |
-| Unused exports | Tree shake |
-
----
-
-## 4. Runtime Profiling
-
-### Performance Tab Analysis
-
-| Pattern | Meaning |
-|---------|---------|
-| Long tasks (>50ms) | UI blocking |
-| Many small tasks | Possible batching opportunity |
-| Layout/paint | Rendering bottleneck |
-| Script | JavaScript execution |
-
-### Memory Tab Analysis
-
-| Pattern | Meaning |
-|---------|---------|
-| Growing heap | Possible leak |
-| Large retained | Check references |
-| Detached DOM | Not cleaned up |
-
----
-
-## 5. Common Bottlenecks
-
-### By Symptom
-
-| Symptom | Likely Cause |
-|---------|--------------|
-| Slow initial load | Large JS, render blocking |
-| Slow interactions | Heavy event handlers |
-| Jank during scroll | Layout thrashing |
-| Growing memory | Leaks, retained refs |
-
----
-
-## 6. Quick Win Priorities
-
-| Priority | Action | Impact |
-|----------|--------|--------|
-| 1 | Enable compression | High |
-| 2 | Lazy load images | High |
-| 3 | Code split routes | High |
-| 4 | Cache static assets | Medium |
-| 5 | Optimize images | Medium |
-
----
-
-## 7. Anti-Patterns
-
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Guess at problems | Profile first |
-| Micro-optimize | Fix biggest issue |
-| Optimize early | Optimize when needed |
-| Ignore real users | Use RUM data |
-
----
-
-> **Remember:** The fastest code is code that doesn't run. Remove before optimizing.
+- **R**esponse: < 100ms
+- **A**nimation: 60fps (16ms)
+- **I**dle: 利用空闲时间 (requestIdleCallback)
+- **L**oad: 首次加载 < 5s (3G)

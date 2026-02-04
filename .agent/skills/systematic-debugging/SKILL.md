@@ -1,109 +1,34 @@
 ---
-name: systematic-debugging
-description: 4-phase systematic debugging methodology with root cause analysis and evidence-based verification. Use when debugging complex issues.
-allowed-tools: Read, Glob, Grep
+description: 系统化调试方法论、根因分析
 ---
 
-# Systematic Debugging
+# 系统化调试 (Systematic Debugging)
 
-> Source: obra/superpowers
+## 调试心法
 
-## Overview
-This skill provides a structured approach to debugging that prevents random guessing and ensures problems are properly understood before solving.
+**不仅是修复 Bug，而是理解系统。**
 
-## 4-Phase Debugging Process
+如果只是试错修好了 Bug，但不知道原因，这个 Bug 还会回来。
 
-### Phase 1: Reproduce
-Before fixing, reliably reproduce the issue.
+## 调试四步法
 
-```markdown
-## Reproduction Steps
-1. [Exact step to reproduce]
-2. [Next step]
-3. [Expected vs actual result]
+1.  **复现 (Reproduce)**
+    - 找到导致 Bug 的最小输入集合。
+    - 自动化复现步骤（编写一个脚本）。
 
-## Reproduction Rate
-- [ ] Always (100%)
-- [ ] Often (50-90%)
-- [ ] Sometimes (10-50%)
-- [ ] Rare (<10%)
-```
+2.  **定位 (Locate)**
+    - **二分法 (Binary Search)**:
+        - 时间二分：Git Bisect。
+        - 空间二分：注释掉一半代码。
 
-### Phase 2: Isolate
-Narrow down the source.
+3.  **理解 (Understand)**
+    - 阅读代码，画出状态流转图。
+    - 解释为什么现在的输入导致了错误输出。
 
-```markdown
-## Isolation Questions
-- When did this start happening?
-- What changed recently?
-- Does it happen in all environments?
-- Can we reproduce with minimal code?
-- What's the smallest change that triggers it?
-```
+4.  **修复 (Fix)**
+    - 修复根本原因。
+    - 添加回归测试 (Regression Test)。
 
-### Phase 3: Understand
-Find the root cause, not just symptoms.
+## 橡皮鸭调试法 (Rubber Ducking)
 
-```markdown
-## Root Cause Analysis
-### The 5 Whys
-1. Why: [First observation]
-2. Why: [Deeper reason]
-3. Why: [Still deeper]
-4. Why: [Getting closer]
-5. Why: [Root cause]
-```
-
-### Phase 4: Fix & Verify
-Fix and verify it's truly fixed.
-
-```markdown
-## Fix Verification
-- [ ] Bug no longer reproduces
-- [ ] Related functionality still works
-- [ ] No new issues introduced
-- [ ] Test added to prevent regression
-```
-
-## Debugging Checklist
-
-```markdown
-## Before Starting
-- [ ] Can reproduce consistently
-- [ ] Have minimal reproduction case
-- [ ] Understand expected behavior
-
-## During Investigation
-- [ ] Check recent changes (git log)
-- [ ] Check logs for errors
-- [ ] Add logging if needed
-- [ ] Use debugger/breakpoints
-
-## After Fix
-- [ ] Root cause documented
-- [ ] Fix verified
-- [ ] Regression test added
-- [ ] Similar code checked
-```
-
-## Common Debugging Commands
-
-```bash
-# Recent changes
-git log --oneline -20
-git diff HEAD~5
-
-# Search for pattern
-grep -r "errorPattern" --include="*.ts"
-
-# Check logs
-pm2 logs app-name --err --lines 100
-```
-
-## Anti-Patterns
-
-❌ **Random changes** - "Maybe if I change this..."
-❌ **Ignoring evidence** - "That can't be the cause"
-❌ **Assuming** - "It must be X" without proof
-❌ **Not reproducing first** - Fixing blindly
-❌ **Stopping at symptoms** - Not finding root cause
+对着桌子上的橡皮鸭（或者我）一行一行解释你的代码。通常讲到一半你就发现问题了。

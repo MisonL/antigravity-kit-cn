@@ -1,22 +1,22 @@
-# Versioning Strategies
+# 版本控制策略 (Versioning Strategies)
 
-> Plan for API evolution from day one.
+> 从第一天起就为 API 的演进做规划。
 
-## Decision Factors
+## 决策因素
 
-| Strategy | Implementation | Trade-offs |
-|----------|---------------|------------|
-| **URI** | /v1/users | Clear, easy caching |
-| **Header** | Accept-Version: 1 | Cleaner URLs, harder discovery |
-| **Query** | ?version=1 | Easy to add, messy |
-| **None** | Evolve carefully | Best for internal, risky for public |
+| 策略          | 实现方式          | 权衡 (Trade-offs)               |
+| :------------ | :---------------- | :------------------------------ |
+| **URI**       | /v1/users         | 清晰，易于缓存                  |
+| **Header**    | Accept-Version: 1 | URL 更整洁，但更难发现版本      |
+| **Query**     | ?version=1        | 易于添加，但显得凌乱            |
+| **无 (None)** | 小心演进          | 适合内部使用，对公共 API 风险高 |
 
-## Versioning Philosophy
+## 版本哲学
 
 ```
-Consider:
-├── Public API? → Version in URI
-├── Internal only? → May not need versioning
-├── GraphQL? → Typically no versions (evolve schema)
-├── tRPC? → Types enforce compatibility
+考量:
+├── 公共 API? → 在 URI 中包含版本
+├── 仅内部使用? → 可能不需要版本控制
+├── GraphQL? → 通常无版本 (演进 Schema)
+├── tRPC? → 类型系统强制兼容性
 ```

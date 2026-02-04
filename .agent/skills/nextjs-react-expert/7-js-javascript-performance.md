@@ -1,210 +1,204 @@
-# 7. JavaScript Performance
+# 7. JavaScript 性能 (JavaScript Performance)
 
-> **Impact:** LOW-MEDIUM
-> **Focus:** Micro-optimizations for hot paths can add up to meaningful improvements.
-
----
-
-## Overview
-
-This section contains **12 rules** focused on javascript performance.
+> **影响:** 中低 (LOW-MEDIUM)
+> **重点:** 针对热点路径的微优化可以累积成有意义的改进。
 
 ---
 
-## Rule 7.1: Avoid Layout Thrashing
+## 概览
 
-**Impact:** MEDIUM  
-**Tags:** javascript, dom, css, performance, reflow, layout-thrashing  
+本节包含 **12 条规则**，专注于 JavaScript 性能。
 
-## Avoid Layout Thrashing
+---
 
-Avoid interleaving style writes with layout reads. When you read a layout property (like `offsetWidth`, `getBoundingClientRect()`, or `getComputedStyle()`) between style changes, the browser is forced to trigger a synchronous reflow.
+## 规则 7.1: 避免布局抖动 (Layout Thrashing)
 
-**This is OK (browser batches style changes):**
+**影响:** 中 (MEDIUM)
+**标签:** javascript, dom, css, performance, reflow, layout-thrashing
+
+## 避免布局抖动
+
+避免将样式写入与布局读取交错进行。当你在样式更改之间读取布局属性 (如 `offsetWidth`, `getBoundingClientRect()`, 或 `getComputedStyle()`) 时，浏览器被迫触发同步重排 (Reflow)。
+
+**正确 (浏览器批处理样式更改):**
+
 ```typescript
 function updateElementStyles(element: HTMLElement) {
-  // Each line invalidates style, but browser batches the recalculation
-  element.style.width = '100px'
-  element.style.height = '200px'
-  element.style.backgroundColor = 'blue'
-  element.style.border = '1px solid black'
+    // 每一行都使样式无效，但浏览器会批处理重新计算
+    element.style.width = "100px";
+    element.style.height = "200px";
+    element.style.backgroundColor = "blue";
+    element.style.border = "1px solid black";
 }
 ```
 
-**Incorrect (interleaved reads and writes force reflows):**
+**错误 (交错的读写强制重排):**
+
 ```typescript
 function layoutThrashing(element: HTMLElement) {
-  element.style.width = '100px'
-  const width = element.offsetWidth  // Forces reflow
-  element.style.height = '200px'
-  const height = element.offsetHeight  // Forces another reflow
+    element.style.width = "100px";
+    const width = element.offsetWidth; // 强制重排
+    element.style.height = "200px";
+    const height = element.offsetHeight; // 强制另一次重排
 }
 ```
 
-**Correct (batch writes, then read once):**
+**正确 (批处理写入，然后读取一次):**
+
 ```typescript
 function updateElementStyles(element: HTMLElement) {
-  // Batch all writes together
-  element.style.width = '100px'
-  element.style.height = '200px'
-  element.style.backgroundColor = 'blue'
-  element.style.border = '1px solid black'
-  
-  // Read after all writes are done (single reflow)
-  const { width, height } = element.getBoundingClientRect()
+    // 批处理所有写入
+    element.style.width = "100px";
+    element.style.height = "200px";
+    element.style.backgroundColor = "blue";
+    element.style.border = "1px solid black";
+
+    // 在所有写入完成后读取 (单次重排)
+    const { width, height } = element.getBoundingClientRect();
 }
 ```
 
-**Correct (batch reads, then writes):**
+**正确 (批处理读取，然后写入):**
+
 ```typescript
 function avoidThrashing(element: HTMLElement) {
-  // Read phase - all layout queries first
-  const rect1 = element.getBoundingClientRect()
-  const offsetWidth = element.offsetWidth
-  const offsetHeight = element.offsetHeight
-  
-  // Write phase - all style changes after
-  element.style.width = '100px'
-  element.style.height = '200px'
+    // 读取阶段 - 先进行所有布局查询
+    const rect1 = element.getBoundingClientRect();
+    const offsetWidth = element.offsetWidth;
+    const offsetHeight = element.offsetHeight;
+
+    // 写入阶段 - 之后进行所有样式更改
+    element.style.width = "100px";
+    element.style.height = "200px";
 }
 ```
 
-**Better: use CSS classes**
-```css
-.highlighted-box {
-  width: 100px;
-  height: 200px;
-  background-color: blue;
-  border: 1px solid black;
-}
-```
+**更好: 使用 CSS 类**
+
 ```typescript
 function updateElementStyles(element: HTMLElement) {
-  element.classList.add('highlighted-box')
-  
-  const { width, height } = element.getBoundingClientRect()
+    element.classList.add("highlighted-box");
+
+    const { width, height } = element.getBoundingClientRect();
 }
 ```
 
-**React example:**
+**React 示例:**
+
 ```tsx
-// Incorrect: interleaving style changes with layout queries
+// 错误: 将样式更改与布局查询交错
 function Box({ isHighlighted }: { isHighlighted: boolean }) {
-  const ref = useRef<HTMLDivElement>(null)
-  
-  useEffect(() => {
-    if (ref.current && isHighlighted) {
-      ref.current.style.width = '100px'
-      const width = ref.current.offsetWidth // Forces layout
-      ref.current.style.height = '200px'
-    }
-  }, [isHighlighted])
-  
-  return <div ref={ref}>Content</div>
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (ref.current && isHighlighted) {
+            ref.current.style.width = "100px";
+            const width = ref.current.offsetWidth; // 强制布局
+            ref.current.style.height = "200px";
+        }
+    }, [isHighlighted]);
+
+    return <div ref={ref}>Content</div>;
 }
 
-// Correct: toggle class
+// 正确: 切换类
 function Box({ isHighlighted }: { isHighlighted: boolean }) {
-  return (
-    <div className={isHighlighted ? 'highlighted-box' : ''}>
-      Content
-    </div>
-  )
+    return (
+        <div className={isHighlighted ? "highlighted-box" : ""}>Content</div>
+    );
 }
 ```
 
-Prefer CSS classes over inline styles when possible. CSS files are cached by the browser, and classes provide better separation of concerns and are easier to maintain.
-
-See [this gist](https://gist.github.com/paulirish/5d52fb081b3570c81e3a) and [CSS Triggers](https://csstriggers.com/) for more information on layout-forcing operations.
+尽可能优先使用 CSS 类而不是内联样式。
 
 ---
 
-## Rule 7.2: Build Index Maps for Repeated Lookups
+## 规则 7.2: 为重复查找建立索引 Map
 
-**Impact:** LOW-MEDIUM  
-**Tags:** javascript, map, indexing, optimization, performance  
+**影响:** 中低 (LOW-MEDIUM)
+**标签:** javascript, map, indexing, optimization, performance
 
-## Build Index Maps for Repeated Lookups
+## 为重复查找建立索引 Map
 
-Multiple `.find()` calls by the same key should use a Map.
+按相同键进行的多次 `.find()` 调用应使用 Map。
 
-**Incorrect (O(n) per lookup):**
-
-```typescript
-function processOrders(orders: Order[], users: User[]) {
-  return orders.map(order => ({
-    ...order,
-    user: users.find(u => u.id === order.userId)
-  }))
-}
-```
-
-**Correct (O(1) per lookup):**
+**错误 (每次查找 O(n)):**
 
 ```typescript
 function processOrders(orders: Order[], users: User[]) {
-  const userById = new Map(users.map(u => [u.id, u]))
-
-  return orders.map(order => ({
-    ...order,
-    user: userById.get(order.userId)
-  }))
+    return orders.map((order) => ({
+        ...order,
+        user: users.find((u) => u.id === order.userId),
+    }));
 }
 ```
 
-Build map once (O(n)), then all lookups are O(1).
-For 1000 orders × 1000 users: 1M ops → 2K ops.
+**正确 (每次查找 O(1)):**
+
+```typescript
+function processOrders(orders: Order[], users: User[]) {
+    const userById = new Map(users.map((u) => [u.id, u]));
+
+    return orders.map((order) => ({
+        ...order,
+        user: userById.get(order.userId),
+    }));
+}
+```
+
+建立 Map 一次 (O(n))，然后所有查找都是 O(1)。
+对于 1000 个订单 × 1000 个用户: 1M 次操作 → 2K 次操作。
 
 ---
 
-## Rule 7.3: Cache Property Access in Loops
+## 规则 7.3: 在循环中缓存属性访问
 
-**Impact:** LOW-MEDIUM  
-**Tags:** javascript, loops, optimization, caching  
+**影响:** 中低 (LOW-MEDIUM)
+**标签:** javascript, loops, optimization, caching
 
-## Cache Property Access in Loops
+## 在循环中缓存属性访问
 
-Cache object property lookups in hot paths.
+在热点路径中缓存对象属性查找。
 
-**Incorrect (3 lookups × N iterations):**
+**错误 (3 次查找 × N 次迭代):**
 
 ```typescript
 for (let i = 0; i < arr.length; i++) {
-  process(obj.config.settings.value)
+    process(obj.config.settings.value);
 }
 ```
 
-**Correct (1 lookup total):**
+**正确 (总共 1 次查找):**
 
 ```typescript
-const value = obj.config.settings.value
-const len = arr.length
+const value = obj.config.settings.value;
+const len = arr.length;
 for (let i = 0; i < len; i++) {
-  process(value)
+    process(value);
 }
 ```
 
 ---
 
-## Rule 7.4: Cache Repeated Function Calls
+## 规则 7.4: 缓存重复的函数调用
 
-**Impact:** MEDIUM  
-**Tags:** javascript, cache, memoization, performance  
+**影响:** 中 (MEDIUM)
+**标签:** javascript, cache, memoization, performance
 
-## Cache Repeated Function Calls
+## 缓存重复的函数调用
 
-Use a module-level Map to cache function results when the same function is called repeatedly with the same inputs during render.
+当在渲染期间使用相同的输入重复调用相同的函数时，使用模块级 Map 来缓存函数结果。
 
-**Incorrect (redundant computation):**
+**错误 (已计算过):**
 
 ```typescript
 function ProjectList({ projects }: { projects: Project[] }) {
   return (
     <div>
       {projects.map(project => {
-        // slugify() called 100+ times for same project names
+        // 对于相同的项目名称，slugify() 被调用 100+ 次
         const slug = slugify(project.name)
-        
+
         return <ProjectCard key={project.id} slug={slug} />
       })}
     </div>
@@ -212,10 +206,10 @@ function ProjectList({ projects }: { projects: Project[] }) {
 }
 ```
 
-**Correct (cached results):**
+**正确 (缓存结果):**
 
 ```typescript
-// Module-level cache
+// 模块级缓存
 const slugifyCache = new Map<string, string>()
 
 function cachedSlugify(text: string): string {
@@ -231,9 +225,9 @@ function ProjectList({ projects }: { projects: Project[] }) {
   return (
     <div>
       {projects.map(project => {
-        // Computed only once per unique project name
+        // 每个唯一项目名称只计算一次
         const slug = cachedSlugify(project.name)
-        
+
         return <ProjectCard key={project.id} slug={slug} />
       })}
     </div>
@@ -241,247 +235,224 @@ function ProjectList({ projects }: { projects: Project[] }) {
 }
 ```
 
-**Simpler pattern for single-value functions:**
+**单值函数的更简单模式:**
 
 ```typescript
-let isLoggedInCache: boolean | null = null
+let isLoggedInCache: boolean | null = null;
 
 function isLoggedIn(): boolean {
-  if (isLoggedInCache !== null) {
-    return isLoggedInCache
-  }
-  
-  isLoggedInCache = document.cookie.includes('auth=')
-  return isLoggedInCache
+    if (isLoggedInCache !== null) {
+        return isLoggedInCache;
+    }
+
+    isLoggedInCache = document.cookie.includes("auth=");
+    return isLoggedInCache;
 }
 
-// Clear cache when auth changes
+// 当 auth 变更时清除缓存
 function onAuthChange() {
-  isLoggedInCache = null
+    isLoggedInCache = null;
 }
 ```
 
-Use a Map (not a hook) so it works everywhere: utilities, event handlers, not just React components.
-
-Reference: [How we made the Vercel Dashboard twice as fast](https://vercel.com/blog/how-we-made-the-vercel-dashboard-twice-as-fast)
-
 ---
 
-## Rule 7.5: Cache Storage API Calls
+## 规则 7.5: 缓存 Storage API 调用
 
-**Impact:** LOW-MEDIUM  
-**Tags:** javascript, localStorage, storage, caching, performance  
+**影响:** 中低 (LOW-MEDIUM)
+**标签:** javascript, localStorage, storage, caching, performance
 
-## Cache Storage API Calls
+## 缓存 Storage API 调用
 
-`localStorage`, `sessionStorage`, and `document.cookie` are synchronous and expensive. Cache reads in memory.
+`localStorage`, `sessionStorage`, 和 `document.cookie` 是同步且昂贵的。在内存中缓存读取。
 
-**Incorrect (reads storage on every call):**
+**错误 (每次调用都读取 storage):**
 
 ```typescript
 function getTheme() {
-  return localStorage.getItem('theme') ?? 'light'
+    return localStorage.getItem("theme") ?? "light";
 }
-// Called 10 times = 10 storage reads
+// 调用 10 次 = 10 次 storage 读取
 ```
 
-**Correct (Map cache):**
+**正确 (Map 缓存):**
 
 ```typescript
-const storageCache = new Map<string, string | null>()
+const storageCache = new Map<string, string | null>();
 
 function getLocalStorage(key: string) {
-  if (!storageCache.has(key)) {
-    storageCache.set(key, localStorage.getItem(key))
-  }
-  return storageCache.get(key)
+    if (!storageCache.has(key)) {
+        storageCache.set(key, localStorage.getItem(key));
+    }
+    return storageCache.get(key);
 }
 
 function setLocalStorage(key: string, value: string) {
-  localStorage.setItem(key, value)
-  storageCache.set(key, value)  // keep cache in sync
+    localStorage.setItem(key, value);
+    storageCache.set(key, value); // 保持缓存同步
 }
 ```
 
-Use a Map (not a hook) so it works everywhere: utilities, event handlers, not just React components.
-
-**Cookie caching:**
+**Cookie 缓存:**
 
 ```typescript
-let cookieCache: Record<string, string> | null = null
+let cookieCache: Record<string, string> | null = null;
 
 function getCookie(name: string) {
-  if (!cookieCache) {
-    cookieCache = Object.fromEntries(
-      document.cookie.split('; ').map(c => c.split('='))
-    )
-  }
-  return cookieCache[name]
+    if (!cookieCache) {
+        cookieCache = Object.fromEntries(
+            document.cookie.split("; ").map((c) => c.split("=")),
+        );
+    }
+    return cookieCache[name];
 }
 ```
 
-**Important (invalidate on external changes):**
+**重要 (在外部变更时失效):**
 
-If storage can change externally (another tab, server-set cookies), invalidate cache:
+如果 storage 可以在外部变更 (另一个标签页，服务器设置的 cookies)，使缓存失效:
 
 ```typescript
-window.addEventListener('storage', (e) => {
-  if (e.key) storageCache.delete(e.key)
-})
+window.addEventListener("storage", (e) => {
+    if (e.key) storageCache.delete(e.key);
+});
 
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    storageCache.clear()
-  }
-})
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        storageCache.clear();
+    }
+});
 ```
 
 ---
 
-## Rule 7.6: Combine Multiple Array Iterations
+## 规则 7.6: 合并多个数组迭代
 
-**Impact:** LOW-MEDIUM  
-**Tags:** javascript, arrays, loops, performance  
+**影响:** 中低 (LOW-MEDIUM)
+**标签:** javascript, arrays, loops, performance
 
-## Combine Multiple Array Iterations
+## 合并多个数组迭代
 
-Multiple `.filter()` or `.map()` calls iterate the array multiple times. Combine into one loop.
+多个 `.filter()` 或 `.map()` 调用会多次迭代数组。合并为一个循环。
 
-**Incorrect (3 iterations):**
+**错误 (3 次迭代):**
 
 ```typescript
-const admins = users.filter(u => u.isAdmin)
-const testers = users.filter(u => u.isTester)
-const inactive = users.filter(u => !u.isActive)
+const admins = users.filter((u) => u.isAdmin);
+const testers = users.filter((u) => u.isTester);
+const inactive = users.filter((u) => !u.isActive);
 ```
 
-**Correct (1 iteration):**
+**正确 (1 次迭代):**
 
 ```typescript
-const admins: User[] = []
-const testers: User[] = []
-const inactive: User[] = []
+const admins: User[] = [];
+const testers: User[] = [];
+const inactive: User[] = [];
 
 for (const user of users) {
-  if (user.isAdmin) admins.push(user)
-  if (user.isTester) testers.push(user)
-  if (!user.isActive) inactive.push(user)
+    if (user.isAdmin) admins.push(user);
+    if (user.isTester) testers.push(user);
+    if (!user.isActive) inactive.push(user);
 }
 ```
 
 ---
 
-## Rule 7.7: Early Length Check for Array Comparisons
+## 规则 7.7: 数组比较的早期长度检查
 
-**Impact:** MEDIUM-HIGH  
-**Tags:** javascript, arrays, performance, optimization, comparison  
+**影响:** 中高 (MEDIUM-HIGH)
+**标签:** javascript, arrays, performance, optimization, comparison
 
-## Early Length Check for Array Comparisons
+## 数组比较的早期长度检查
 
-When comparing arrays with expensive operations (sorting, deep equality, serialization), check lengths first. If lengths differ, the arrays cannot be equal.
+当使用昂贵的操作 (排序、深层相等、序列化) 比较数组时，首先检查长度。如果长度不同，数组不可能相等。
 
-In real-world applications, this optimization is especially valuable when the comparison runs in hot paths (event handlers, render loops).
-
-**Incorrect (always runs expensive comparison):**
+**错误 (总是运行昂贵的比较):**
 
 ```typescript
 function hasChanges(current: string[], original: string[]) {
-  // Always sorts and joins, even when lengths differ
-  return current.sort().join() !== original.sort().join()
+    // 即使长度不同，也总是排序和连接
+    return current.sort().join() !== original.sort().join();
 }
 ```
 
-Two O(n log n) sorts run even when `current.length` is 5 and `original.length` is 100. There is also overhead of joining the arrays and comparing the strings.
-
-**Correct (O(1) length check first):**
+**正确 (首先进行 O(1) 长度检查):**
 
 ```typescript
 function hasChanges(current: string[], original: string[]) {
-  // Early return if lengths differ
-  if (current.length !== original.length) {
-    return true
-  }
-  // Only sort when lengths match
-  const currentSorted = current.toSorted()
-  const originalSorted = original.toSorted()
-  for (let i = 0; i < currentSorted.length; i++) {
-    if (currentSorted[i] !== originalSorted[i]) {
-      return true
+    // 如果长度不同，提前返回
+    if (current.length !== original.length) {
+        return true;
     }
-  }
-  return false
-}
-```
-
-This new approach is more efficient because:
-- It avoids the overhead of sorting and joining the arrays when lengths differ
-- It avoids consuming memory for the joined strings (especially important for large arrays)
-- It avoids mutating the original arrays
-- It returns early when a difference is found
-
----
-
-## Rule 7.8: Early Return from Functions
-
-**Impact:** LOW-MEDIUM  
-**Tags:** javascript, functions, optimization, early-return  
-
-## Early Return from Functions
-
-Return early when result is determined to skip unnecessary processing.
-
-**Incorrect (processes all items even after finding answer):**
-
-```typescript
-function validateUsers(users: User[]) {
-  let hasError = false
-  let errorMessage = ''
-  
-  for (const user of users) {
-    if (!user.email) {
-      hasError = true
-      errorMessage = 'Email required'
+    // 仅在长度匹配时排序
+    const currentSorted = current.toSorted();
+    const originalSorted = original.toSorted();
+    for (let i = 0; i < currentSorted.length; i++) {
+        if (currentSorted[i] !== originalSorted[i]) {
+            return true;
+        }
     }
-    if (!user.name) {
-      hasError = true
-      errorMessage = 'Name required'
-    }
-    // Continues checking all users even after error found
-  }
-  
-  return hasError ? { valid: false, error: errorMessage } : { valid: true }
-}
-```
-
-**Correct (returns immediately on first error):**
-
-```typescript
-function validateUsers(users: User[]) {
-  for (const user of users) {
-    if (!user.email) {
-      return { valid: false, error: 'Email required' }
-    }
-    if (!user.name) {
-      return { valid: false, error: 'Name required' }
-    }
-  }
-
-  return { valid: true }
+    return false;
 }
 ```
 
 ---
 
-## Rule 7.9: Hoist RegExp Creation
+## 规则 7.8: 从函数提前返回
 
-**Impact:** LOW-MEDIUM  
-**Tags:** javascript, regexp, optimization, memoization  
+**影响:** 中低 (LOW-MEDIUM)
+**标签:** javascript, functions, optimization, early-return
 
-## Hoist RegExp Creation
+## 从函数提前返回
 
-Don't create RegExp inside render. Hoist to module scope or memoize with `useMemo()`.
+当确定结果时提前返回，以跳过不必要的处理。
 
-**Incorrect (new RegExp every render):**
+**错误 (即使找到答案后也处理所有项目):**
+
+```typescript
+function validateUsers(users: User[]) {
+    let hasError = false;
+    let errorMessage = "";
+
+    for (const user of users) {
+        if (!user.email) {
+            hasError = true;
+            errorMessage = "Email required";
+        }
+        // 即使发现错误也继续检查所有用户
+    }
+
+    return hasError ? { valid: false, error: errorMessage } : { valid: true };
+}
+```
+
+**正确 (在第一个错误时立即返回):**
+
+```typescript
+function validateUsers(users: User[]) {
+    for (const user of users) {
+        if (!user.email) {
+            return { valid: false, error: "Email required" };
+        }
+    }
+
+    return { valid: true };
+}
+```
+
+---
+
+## 规则 7.9: 提升 RegExp 创建
+
+**影响:** 中低 (LOW-MEDIUM)
+**标签:** javascript, regexp, optimization, memoization
+
+## 提升 RegExp 创建
+
+不要在渲染内部创建 RegExp。提升到模块作用域或使用 `useMemo()` 进行记忆化。
+
+**错误 (每次渲染都创建新 RegExp):**
 
 ```tsx
 function Highlighter({ text, query }: Props) {
@@ -491,7 +462,7 @@ function Highlighter({ text, query }: Props) {
 }
 ```
 
-**Correct (memoize or hoist):**
+**正确 (记忆化或提升):**
 
 ```tsx
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -506,118 +477,67 @@ function Highlighter({ text, query }: Props) {
 }
 ```
 
-**Warning (global regex has mutable state):**
+**警告 (全局 regex 具有可变状态):**
 
-Global regex (`/g`) has mutable `lastIndex` state:
-
-```typescript
-const regex = /foo/g
-regex.test('foo')  // true, lastIndex = 3
-regex.test('foo')  // false, lastIndex = 0
-```
+全局 regex (`/g`) 具有可变的 `lastIndex` 状态，请小心使用。
 
 ---
 
-## Rule 7.10: Use Loop for Min/Max Instead of Sort
+## 规则 7.10: 使用循环进行 Min/Max 而不是 Sort
 
-**Impact:** LOW  
-**Tags:** javascript, arrays, performance, sorting, algorithms  
+**影响:** 低 (LOW)
+**标签:** javascript, arrays, performance, sorting, algorithms
 
-## Use Loop for Min/Max Instead of Sort
+## 使用循环进行 Min/Max 而不是 Sort
 
-Finding the smallest or largest element only requires a single pass through the array. Sorting is wasteful and slower.
+找到最小或最大元素只需要遍历数组一次。排序既浪费又慢。
 
-**Incorrect (O(n log n) - sort to find latest):**
-
-```typescript
-interface Project {
-  id: string
-  name: string
-  updatedAt: number
-}
-
-function getLatestProject(projects: Project[]) {
-  const sorted = [...projects].sort((a, b) => b.updatedAt - a.updatedAt)
-  return sorted[0]
-}
-```
-
-Sorts the entire array just to find the maximum value.
-
-**Incorrect (O(n log n) - sort for oldest and newest):**
-
-```typescript
-function getOldestAndNewest(projects: Project[]) {
-  const sorted = [...projects].sort((a, b) => a.updatedAt - b.updatedAt)
-  return { oldest: sorted[0], newest: sorted[sorted.length - 1] }
-}
-```
-
-Still sorts unnecessarily when only min/max are needed.
-
-**Correct (O(n) - single loop):**
+**错误 (O(n log n) - 排序以找到最新):**
 
 ```typescript
 function getLatestProject(projects: Project[]) {
-  if (projects.length === 0) return null
-  
-  let latest = projects[0]
-  
-  for (let i = 1; i < projects.length; i++) {
-    if (projects[i].updatedAt > latest.updatedAt) {
-      latest = projects[i]
+    const sorted = [...projects].sort((a, b) => b.updatedAt - a.updatedAt);
+    return sorted[0];
+}
+```
+
+**正确 (O(n) - 单次循环):**
+
+```typescript
+function getLatestProject(projects: Project[]) {
+    if (projects.length === 0) return null;
+
+    let latest = projects[0];
+
+    for (let i = 1; i < projects.length; i++) {
+        if (projects[i].updatedAt > latest.updatedAt) {
+            latest = projects[i];
+        }
     }
-  }
-  
-  return latest
-}
 
-function getOldestAndNewest(projects: Project[]) {
-  if (projects.length === 0) return { oldest: null, newest: null }
-  
-  let oldest = projects[0]
-  let newest = projects[0]
-  
-  for (let i = 1; i < projects.length; i++) {
-    if (projects[i].updatedAt < oldest.updatedAt) oldest = projects[i]
-    if (projects[i].updatedAt > newest.updatedAt) newest = projects[i]
-  }
-  
-  return { oldest, newest }
+    return latest;
 }
 ```
-
-Single pass through the array, no copying, no sorting.
-
-**Alternative (Math.min/Math.max for small arrays):**
-
-```typescript
-const numbers = [5, 2, 8, 1, 9]
-const min = Math.min(...numbers)
-const max = Math.max(...numbers)
-```
-
-This works for small arrays, but can be slower or just throw an error for very large arrays due to spread operator limitations. Maximal array length is approximately 124000 in Chrome 143 and 638000 in Safari 18; exact numbers may vary - see [the fiddle](https://jsfiddle.net/qw1jabsx/4/). Use the loop approach for reliability.
 
 ---
 
-## Rule 7.11: Use Set/Map for O(1) Lookups
+## 规则 7.11: 使用 Set/Map 进行 O(1) 查找
 
-**Impact:** LOW-MEDIUM  
-**Tags:** javascript, set, map, data-structures, performance  
+**影响:** 中低 (LOW-MEDIUM)
+**标签:** javascript, set, map, data-structures, performance
 
-## Use Set/Map for O(1) Lookups
+## 使用 Set/Map 进行 O(1) 查找
 
-Convert arrays to Set/Map for repeated membership checks.
+将数组转换为 Set/Map 以进行重复的成员资格检查。
 
-**Incorrect (O(n) per check):**
+**错误 (每次检查 O(n)):**
 
 ```typescript
 const allowedIds = ['a', 'b', 'c', ...]
 items.filter(item => allowedIds.includes(item.id))
 ```
 
-**Correct (O(1) per check):**
+**正确 (每次检查 O(1)):**
 
 ```typescript
 const allowedIds = new Set(['a', 'b', 'c', ...])
@@ -626,20 +546,20 @@ items.filter(item => allowedIds.has(item.id))
 
 ---
 
-## Rule 7.12: Use toSorted() Instead of sort() for Immutability
+## 规则 7.12: 使用 toSorted() 代替 sort() 以保持不可变性
 
-**Impact:** MEDIUM-HIGH  
-**Tags:** javascript, arrays, immutability, react, state, mutation  
+**影响:** 中高 (MEDIUM-HIGH)
+**标签:** javascript, arrays, immutability, react, state, mutation
 
-## Use toSorted() Instead of sort() for Immutability
+## 使用 toSorted() 代替 sort() 以保持不可变性
 
-`.sort()` mutates the array in place, which can cause bugs with React state and props. Use `.toSorted()` to create a new sorted array without mutation.
+`.sort()` 会就地改变数组，这在使用 React state 和 props 时可能会导致 Bug。使用 `.toSorted()` 创建一个新的排序数组而不进行突变。
 
-**Incorrect (mutates original array):**
+**错误 (突变原始数组):**
 
 ```typescript
 function UserList({ users }: { users: User[] }) {
-  // Mutates the users prop array!
+  // 突变 users prop 数组！
   const sorted = useMemo(
     () => users.sort((a, b) => a.name.localeCompare(b.name)),
     [users]
@@ -648,11 +568,11 @@ function UserList({ users }: { users: User[] }) {
 }
 ```
 
-**Correct (creates new array):**
+**正确 (创建新数组):**
 
 ```typescript
 function UserList({ users }: { users: User[] }) {
-  // Creates new sorted array, original unchanged
+  // 创建新的排序数组，原始不变
   const sorted = useMemo(
     () => users.toSorted((a, b) => a.name.localeCompare(b.name)),
     [users]
@@ -661,24 +581,4 @@ function UserList({ users }: { users: User[] }) {
 }
 ```
 
-**Why this matters in React:**
-
-1. Props/state mutations break React's immutability model - React expects props and state to be treated as read-only
-2. Causes stale closure bugs - Mutating arrays inside closures (callbacks, effects) can lead to unexpected behavior
-
-**Browser support (fallback for older browsers):**
-
-`.toSorted()` is available in all modern browsers (Chrome 110+, Safari 16+, Firefox 115+, Node.js 20+). For older environments, use spread operator:
-
-```typescript
-// Fallback for older browsers
-const sorted = [...items].sort((a, b) => a.value - b.value)
-```
-
-**Other immutable array methods:**
-
-- `.toSorted()` - immutable sort
-- `.toReversed()` - immutable reverse
-- `.toSpliced()` - immutable splice
-- `.with()` - immutable element replacement
-
+`.toSorted()` 在所有现代浏览器 (Chrome 110+, Safari 16+, Firefox 115+, Node.js 20+) 中都可用。对于旧环境，使用展开运算符: `[...items].sort(...)`。

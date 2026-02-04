@@ -1,122 +1,131 @@
 ---
 name: nextjs-saas
-description: Next.js SaaS template principles (2026 Standards). React 19, Server Actions, Auth.js v6.
+description: Next.js SaaS 模版原则 (2026 标准)。React 19, Server Actions, Auth.js v6。
 ---
 
-# Next.js SaaS Template (Updated 2026)
+# Next.js SaaS 模版 (2026 更新)
 
-## Tech Stack
+## 技术栈
 
-| Component | Technology | Version / Notes |
-|-----------|------------|-----------------|
-| Framework | Next.js | v16+ (App Router, React Compiler) |
-| Runtime | Node.js | v24 (Krypton LTS) |
-| Auth | Auth.js | v6 (formerly NextAuth) |
-| Payments | Stripe API | Latest |
-| Database | PostgreSQL | Prisma v6 (Serverless Driver) |
-| Email | Resend | React Email |
-| UI | Tailwind CSS | v4 (Oxide Engine, no config file) |
+| 组件   | 技术            | 版本 / 备注                              |
+| ------ | --------------- | ---------------------------------------- |
+| 核心   | Next.js 16+     | App Router, Turbopack, 部分预渲染 (PPR)  |
+| UI     | React 19        | Server Actions, useActionState, Compiler |
+| 语言   | TypeScript      | 严格模式, TS 5.7+                        |
+| 样式   | Tailwind CSS v4 | 使用 Oxide 引擎进行超快构建              |
+| 数据库 | Postgres        | 托管在 Supabase 或 Neon                  |
+| ORM    | Prisma          | 类型安全查询                             |
+| 认证   | Auth.js v6      | (前身为 NextAuth), 无密码, OAuth         |
+| 支付   | Stripe          | Embedded Checkout, Webhooks              |
+| 邮件   | Resend          | 事务性邮件                               |
 
 ---
 
-## Directory Structure
+## 目录结构
+
+针对 Server Actions 和基于功能的组织进行了优化。
 
 ```
 project-name/
 ├── prisma/
-│   └── schema.prisma    # Database Schema
+│   └── schema.prisma    # 数据库 Schema
 ├── src/
-│   ├── actions/         # NEW: Server Actions (Replaces API Routes for data mutation)
+│   ├── actions/         # NEW: Server Actions (替代用于数据变更的 API Routes)
 │   │   ├── auth-actions.ts
 │   │   ├── billing-actions.ts
 │   │   └── user-actions.ts
 │   ├── app/
-│   │   ├── (auth)/      # Route Group: Login, register
-│   │   ├── (dashboard)/ # Route Group: Protected routes (App Layout)
-│   │   ├── (marketing)/ # Route Group: Landing, pricing (Marketing Layout)
-│   │   └── api/         # Only used for Webhooks or Edge cases
+│   │   ├── (auth)/      # 路由组: 登录, 注册
+│   │   ├── (dashboard)/ # 路由组: 受保护路由 (应用布局)
+│   │   ├── (marketing)/ # 路由组: 落地页, 定价 (营销布局)
+│   │   └── api/         # 仅用于 Webhooks 或 Edge 情况
 │   │       └── webhooks/stripe/
 │   ├── components/
-│   │   ├── emails/      # React Email templates
-│   │   ├── forms/       # Client components using useActionState (React 19)
+│   │   ├── emails/      # React Email 模版
+│   │   ├── forms/       # 使用 useActionState 的客户端组件 (React 19)
 │   │   └── ui/          # Shadcn UI
 │   ├── lib/
-│   │   ├── auth.ts      # Auth.js v6 config
-│   │   ├── db.ts        # Prisma Singleton
-│   │   └── stripe.ts    # Stripe Singleton
+│   │   ├── auth.ts      # Auth.js v6 配置
+│   │   ├── db.ts        # Prisma 单例
+│   │   └── stripe.ts    # Stripe 单例
 │   └── styles/
-│       └── globals.css  # Tailwind v4 imports (CSS only)
+│       └── globals.css  # Tailwind v4 导入 (仅 CSS)
 └── package.json
 ```
 
 ---
 
-## SaaS Features
+## SaaS 功能
 
-| Feature | Implementation |
-|---------|---------------|
-| Auth | Auth.js v6 + Passkeys + OAuth |
-| Data Mutation | Server Actions (No API routes) |
+| 功能          | 实现                              |
+| ------------- | --------------------------------- |
+| Auth          | Auth.js v6 + Passkeys + OAuth     |
+| Data Mutation | Server Actions (无 API routes)    |
 | Subscriptions | Stripe Checkout & Customer Portal |
-| Webhooks | Asynchronous Stripe event handling |
-| Email | Transactional via Resend |
-| Validation | Zod (Server-side validation) |
+| Webhooks      | 异步 Stripe 事件处理              |
+| Email         | 通过 Resend 发送事务性邮件        |
+| Validation    | Zod (服务端验证)                  |
 
 ---
 
-## Database Schema
+## 数据库 Schema
 
-| Model | Fields (Key fields) |
-|-------|---------------------|
-| User | id, email, stripeCustomerId, subscriptionId, plan |
-| Account | OAuth provider data (Google, GitHub...) |
-| Session | User sessions (Database strategy) |
-
----
-
-## Environment Variables
-
-| Variable | Purpose |
-|----------|---------|
-| DATABASE_URL | Prisma connection string (Postgres) |
-| AUTH_SECRET | Replaces NEXTAUTH_SECRET (Auth.js v6) |
-| STRIPE_SECRET_KEY | Payments (Server-side) |
-| STRIPE_WEBHOOK_SECRET | Webhook verification |
-| RESEND_API_KEY | Email sending |
-| NEXT_PUBLIC_APP_URL | Application Canonical URL |
+| 模型    | 字段 (关键字段)                                   |
+| ------- | ------------------------------------------------- |
+| User    | id, email, stripeCustomerId, subscriptionId, plan |
+| Account | OAuth 提供商数据 (Google, GitHub...)              |
+| Session | 用户会话 (数据库策略)                             |
 
 ---
 
-## Setup Steps
+## 环境变量
 
-1. Initialize project (Node 24):
-   ```bash
-   npx create-next-app@latest {{name}} --typescript --eslint
-   ```
+| 变量                  | 目的                              |
+| --------------------- | --------------------------------- |
+| DATABASE_URL          | Prisma 连接字符串 (Postgres)      |
+| AUTH_SECRET           | 替代 NEXTAUTH_SECRET (Auth.js v6) |
+| STRIPE_SECRET_KEY     | 支付 (服务端)                     |
+| STRIPE_WEBHOOK_SECRET | Webhook 验证                      |
+| RESEND_API_KEY        | 邮件发送                          |
+| NEXT_PUBLIC_APP_URL   | 应用程序规范 URL                  |
 
-2. Install core libraries:
-   ```bash
-   npm install next-auth@beta stripe resend @prisma/client
-   ```
+---
 
-3. Install Tailwind v4 (Add to globals.css):
-   ```css
-   @import "tailwindcss";
-   ```
+## 设置步骤
 
-4. Configure environment (.env.local)
+1. 初始化项目 (Node 24):
 
-5. Sync Database:
-   ```bash
-   npx prisma db push
-   ```
+    ```bash
+    npx create-next-app@latest {{name}} --typescript --eslint
+    ```
 
-6. Run local Webhook:
-   ```bash
-   npm run stripe:listen
-   ```
+2. 安装核心库:
 
-7. Run project:
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm install next-auth@beta stripe resend @prisma/client
+    ```
+
+3. 安装 Tailwind v4 (添加到 globals.css):
+
+    ```css
+    @import "tailwindcss";
+    ```
+
+4. 配置环境 (.env.local)
+
+5. 同步数据库:
+
+    ```bash
+    npx prisma db push
+    ```
+
+6. 运行本地 Webhook:
+
+    ```bash
+    npm run stripe:listen
+    ```
+
+7. 运行项目:
+    ```bash
+    npm run dev
+    ```

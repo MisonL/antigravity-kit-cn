@@ -1,24 +1,24 @@
 ---
 name: flutter-app
-description: Flutter mobile app template principles. Riverpod, Go Router, clean architecture.
+description: Flutter 移动应用模版原则。Riverpod, Go Router, clean architecture。
 ---
 
-# Flutter App Template
+# Flutter 应用模版
 
-## Tech Stack
+## 技术栈
 
-| Component | Technology |
-|-----------|------------|
-| Framework | Flutter 3.x |
-| Language | Dart 3.x |
-| State | Riverpod 2.0 |
-| Navigation | Go Router |
-| HTTP | Dio |
-| Storage | Hive |
+| 组件 | 技术         |
+| ---- | ------------ |
+| 框架 | Flutter 3.x  |
+| 语言 | Dart 3.x     |
+| 状态 | Riverpod 2.0 |
+| 导航 | Go Router    |
+| HTTP | Dio          |
+| 存储 | Hive         |
 
 ---
 
-## Directory Structure
+## 目录结构
 
 ```
 project_name/
@@ -48,43 +48,43 @@ project_name/
 
 ---
 
-## Architecture Layers
+## 架构层
 
-| Layer | Contents |
-|-------|----------|
-| Presentation | Screens, Widgets, Providers |
-| Domain | Entities, Use Cases |
-| Data | Repositories, Models |
-
----
-
-## Key Packages
-
-| Package | Purpose |
-|---------|---------|
-| flutter_riverpod | State management |
-| riverpod_annotation | Code generation |
-| go_router | Navigation |
-| dio | HTTP client |
-| freezed | Immutable models |
-| hive | Local storage |
+| 层                    | 内容                      |
+| --------------------- | ------------------------- |
+| Presentation (表现层) | 屏幕, Widgets, Providers  |
+| Domain (领域层)       | 实体, 用例                |
+| Data (数据层)         | 仓库 (Repositories), 模型 |
 
 ---
 
-## Setup Steps
+## 关键包
+
+| 包                  | 目的        |
+| ------------------- | ----------- |
+| flutter_riverpod    | 状态管理    |
+| riverpod_annotation | 代码生成    |
+| go_router           | 导航        |
+| dio                 | HTTP 客户端 |
+| freezed             | 不可变模型  |
+| hive                | 本地存储    |
+
+---
+
+## 设置步骤
 
 1. `flutter create {{name}} --org com.{{bundle}}`
-2. Update `pubspec.yaml`
+2. 更新 `pubspec.yaml`
 3. `flutter pub get`
-4. Run code generation: `dart run build_runner build`
+4. 运行代码生成: `dart run build_runner build`
 5. `flutter run`
 
 ---
 
-## Best Practices
+## 最佳实践
 
-- Feature-first folder structure
-- Riverpod for state, React Query pattern for server state
-- Freezed for immutable data classes
-- Go Router for declarative navigation
-- Material 3 theming
+- 特性优先 (Feature-first) 的文件夹结构
+- Riverpod 用于状态，React Query 模式用于服务端状态
+- Freezed 用于不可变数据类
+- Go Router 用于声明式导航
+- Material 3 主题

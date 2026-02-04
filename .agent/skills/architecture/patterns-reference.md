@@ -1,50 +1,54 @@
-# Architecture Patterns Reference
+---
+description: 常见架构模式与使用场景参考
+---
 
-> Quick reference for common patterns with usage guidance.
+# 架构模式参考 (Architecture Patterns Reference)
 
-## Data Access Patterns
+> 常用模式及其适用场景速查表。
 
-| Pattern | When to Use | When NOT to Use | Complexity |
-|---------|-------------|-----------------|------------|
-| **Active Record** | Simple CRUD, rapid prototyping | Complex queries, multiple sources | Low |
-| **Repository** | Testing needed, multiple sources | Simple CRUD, single database | Medium |
-| **Unit of Work** | Complex transactions | Simple operations | High |
-| **Data Mapper** | Complex domain, performance | Simple CRUD, rapid dev | High |
+## 数据访问模式
 
-## Domain Logic Patterns
+| 模式              | 适用场景                | 不适用场景            | 复杂度 |
+| :---------------- | :---------------------- | :-------------------- | :----- |
+| **Active Record** | 简单 CRUD，快速原型开发 | 复杂查询，多数据源    | 低     |
+| **Repository**    | 需要测试，多数据源更换  | 简单 CRUD，单一数据库 | 中     |
+| **Unit of Work**  | 复杂事务管理            | 简单操作              | 高     |
+| **Data Mapper**   | 复杂领域模型，追求性能  | 简单 CRUD，求快       | 高     |
 
-| Pattern | When to Use | When NOT to Use | Complexity |
-|---------|-------------|-----------------|------------|
-| **Transaction Script** | Simple CRUD, procedural | Complex business rules | Low |
-| **Table Module** | Record-based logic | Rich behavior needed | Low |
-| **Domain Model** | Complex business logic | Simple CRUD | Medium |
-| **DDD (Full)** | Complex domain, domain experts | Simple domain, no experts | High |
+## 领域逻辑模式
 
-## Distributed System Patterns
+| 模式                   | 适用场景               | 不适用场景         | 复杂度 |
+| :--------------------- | :--------------------- | :----------------- | :----- |
+| **Transaction Script** | 简单 CRUD，过程式代码  | 复杂业务规则       | 低     |
+| **Table Module**       | 基于记录集的批量逻辑   | 需要丰富行为的对象 | 低     |
+| **Domain Model**       | 复杂业务逻辑，面向对象 | 简单 CRUD          | 中     |
+| **DDD (完整)**         | 复杂领域，有领域专家   | 简单领域，无专家   | 高     |
 
-| Pattern | When to Use | When NOT to Use | Complexity |
-|---------|-------------|-----------------|------------|
-| **Modular Monolith** | Small teams, unclear boundaries | Clear contexts, different scales | Medium |
-| **Microservices** | Different scales, large teams | Small teams, simple domain | Very High |
-| **Event-Driven** | Real-time, loose coupling | Simple workflows, strong consistency | High |
-| **CQRS** | Read/write performance diverges | Simple CRUD, same model | High |
-| **Saga** | Distributed transactions | Single database, simple ACID | High |
+## 分布式系统模式
 
-## API Patterns
+| 模式           | 适用场景             | 不适用场景               | 复杂度 |
+| :------------- | :------------------- | :----------------------- | :----- |
+| **模块化单体** | 小团队，边界不清晰时 | 边界清晰，扩展需求差异大 | 中     |
+| **微服务**     | 扩展需求不同，大团队 | 小团队，简单领域         | 极高   |
+| **事件驱动**   | 实时性，松耦合       | 简单流程，强一致性       | 高     |
+| **CQRS**       | 读写性能需求差异极大 | 简单 CRUD，模型一致      | 高     |
+| **Saga**       | 分布式长事务         | 单数据库，简单 ACID      | 高     |
 
-| Pattern | When to Use | When NOT to Use | Complexity |
-|---------|-------------|-----------------|------------|
-| **REST** | Standard CRUD, resources | Real-time, complex queries | Low |
-| **GraphQL** | Flexible queries, multiple clients | Simple CRUD, caching needs | Medium |
-| **gRPC** | Internal services, performance | Public APIs, browser clients | Medium |
-| **WebSocket** | Real-time updates | Simple request/response | Medium |
+## API 模式
+
+| 模式          | 适用场景               | 不适用场景             | 复杂度 |
+| :------------ | :--------------------- | :--------------------- | :----- |
+| **REST**      | 标准 CRUD，资源导向    | 实时，复杂嵌套查询     | 低     |
+| **GraphQL**   | 灵活查询，多客户端适配 | 简单 CRUD，需简单缓存  | 中     |
+| **gRPC**      | 内部服务通信，高性能   | 公开 API，浏览器客户端 | 中     |
+| **WebSocket** | 实时双向通信           | 简单请求/响应          | 中     |
 
 ---
 
-## Simplicity Principle
+## 简单原则 (Simplicity Principle)
 
-**"Start simple, add complexity only when proven necessary."**
+**"从简单开始，只有在证明有必要时才增加复杂性。"**
 
-- You can always add patterns later
-- Removing complexity is MUCH harder than adding it
-- When in doubt, choose simpler option
+- 你可以随时添加模式。
+- 移除复杂性比添加复杂性难得多。
+- 当有疑问时，选择更简单的选项。

@@ -1,407 +1,411 @@
-# iOS Platform Guidelines
+---
+description: 人机交互指南 (HIG) 精要、iOS 设计惯例、SF Pro 排版与原生模式
+---
 
-> Human Interface Guidelines (HIG) essentials, iOS design conventions, SF Pro typography, and native patterns.
-> **Read this file when building for iPhone/iPad.**
+# iOS 平台指南 (iOS Platform Guidelines)
+
+> 人机交互指南 (HIG) 精要、iOS 设计惯例、SF Pro 排版与原生模式。
+> **为 iPhone/iPad 构建应用时必读。**
 
 ---
 
-## 1. Human Interface Guidelines Philosophy
+## 1. 人机交互指南 (HIG) 哲学
 
-### Core Apple Design Principles
+### 核心 Apple 设计原则
 
 ```
-CLARITY:
-├── Text is legible at every size
-├── Icons are precise and lucid
-├── Adornments are subtle and appropriate
-└── Focus on functionality drives design
+清晰 (CLARITY):
+├── 文本在任何尺寸下都清晰易读
+├── 图标精确且易懂
+├── 装饰微妙且恰当
+└── 功能驱动设计
 
-DEFERENCE:
-├── UI helps people understand and interact
-├── Content fills the screen
-├── UI never competes with content
-└── Translucency hints at more content
+遵从 (DEFERENCE):
+├── UI 帮助人们理解和交互
+├── 内容充满屏幕
+├── UI 及其操作从不与内容竞争
+└── 半透明效果暗示更多内容
 
-DEPTH:
-├── Distinct visual layers convey hierarchy
-├── Transitions provide sense of depth
-├── Touch reveals functionality
-└── Content is elevated over UI
+深度 (DEPTH):
+├── 独特的视觉层级传达结构
+├── 过渡动画提供深度感
+├── 触摸揭示功能
+└── 内容层级高于 UI
 ```
 
-### iOS Design Values
+### iOS 设计价值观
 
-| Value | Implementation |
-|-------|----------------|
-| **Aesthetic Integrity** | Design matches function (game ≠ productivity) |
-| **Consistency** | Use system controls, familiar patterns |
-| **Direct Manipulation** | Touch directly affects content |
-| **Feedback** | Actions are acknowledged |
-| **Metaphors** | Real-world comparisons aid understanding |
-| **User Control** | User initiates actions, can cancel |
+| 价值观         | 实现方式                           |
+| :------------- | :--------------------------------- |
+| **审美完整性** | 设计与功能匹配 (游戏 ≠ 生产力工具) |
+| **一致性**     | 使用系统控件，熟悉的模式           |
+| **直接操作**   | 触摸直接影响内容                   |
+| **反馈**       | 操作得到确认                       |
+| **隐喻**       | 现实世界的类比辅助理解             |
+| **用户控制**   | 用户发起操作，可以取消             |
 
 ---
 
-## 2. iOS Typography
+## 2. iOS 排版 (Typography)
 
-### SF Pro Font Family
+### SF Pro 字体家族
 
 ```
-iOS System Fonts:
-├── SF Pro Text: Body text (< 20pt)
-├── SF Pro Display: Large titles (≥ 20pt)
-├── SF Pro Rounded: Friendly contexts
-├── SF Mono: Code, tabular data
-└── SF Compact: Apple Watch, smaller screens
+iOS 系统字体:
+├── SF Pro Text: 正文文本 (< 20pt)
+├── SF Pro Display: 大标题 (≥ 20pt)
+├── SF Pro Rounded: 友好/圆润的场景
+├── SF Mono: 代码、表格数据
+└── SF Compact: Apple Watch, 小屏幕
 ```
 
-### iOS Type Scale (Dynamic Type)
+### iOS 字阶 (Dynamic Type)
 
-| Style | Default Size | Weight | Usage |
-|-------|--------------|--------|-------|
-| **Large Title** | 34pt | Bold | Navigation bar (scroll collapse) |
-| **Title 1** | 28pt | Bold | Page titles |
-| **Title 2** | 22pt | Bold | Section headers |
-| **Title 3** | 20pt | Semibold | Subsection headers |
-| **Headline** | 17pt | Semibold | Emphasized body |
-| **Body** | 17pt | Regular | Primary content |
-| **Callout** | 16pt | Regular | Secondary content |
-| **Subhead** | 15pt | Regular | Tertiary content |
-| **Footnote** | 13pt | Regular | Caption, timestamps |
-| **Caption 1** | 12pt | Regular | Annotations |
-| **Caption 2** | 11pt | Regular | Fine print |
+| 样式            | 默认大小 | 字重     | 用途              |
+| :-------------- | :------- | :------- | :---------------- |
+| **Large Title** | 34pt     | Bold     | 导航栏 (滚动折叠) |
+| **Title 1**     | 28pt     | Bold     | 页面标题          |
+| **Title 2**     | 22pt     | Bold     | 章节标题          |
+| **Title 3**     | 20pt     | Semibold | 子章节标题        |
+| **Headline**    | 17pt     | Semibold | 强调正文          |
+| **Body**        | 17pt     | Regular  | 主要内容          |
+| **Callout**     | 16pt     | Regular  | 次要内容          |
+| **Subhead**     | 15pt     | Regular  | 第三级内容        |
+| **Footnote**    | 13pt     | Regular  | 说明、时间戳      |
+| **Caption 1**   | 12pt     | Regular  | 标注              |
+| **Caption 2**   | 11pt     | Regular  | 小字说明          |
 
-### Dynamic Type Support (MANDATORY)
+### 动态字体支持 (强制)
 
 ```swift
-// ❌ WRONG: Fixed font size
+// ❌ 错误: 固定字号
 Text("Hello")
     .font(.system(size: 17))
 
-// ✅ CORRECT: Dynamic Type
+// ✅ 正确: 动态字体 (Dynamic Type)
 Text("Hello")
-    .font(.body) // Scales with user settings
+    .font(.body) // 随用户设置缩放
 
-// React Native equivalent
-<Text style={{ fontSize: 17 }}> // ❌ Fixed
-<Text style={styles.body}> // Use a dynamic scale system
+// React Native 等效
+<Text style={{ fontSize: 17 }}> // ❌ 固定
+<Text style={styles.body}> // 使用动态缩放系统
 ```
 
-### Font Weight Usage
+### 字重用法
 
-| Weight | iOS Constant | Use Case |
-|--------|--------------|----------|
-| Regular (400) | `.regular` | Body text |
-| Medium (500) | `.medium` | Buttons, emphasis |
-| Semibold (600) | `.semibold` | Subheadings |
-| Bold (700) | `.bold` | Titles, key info |
-| Heavy (800) | `.heavy` | Rarely, marketing |
+| 字重           | iOS 常量    | 用途           |
+| :------------- | :---------- | :------------- |
+| Regular (400)  | `.regular`  | 正文文本       |
+| Medium (500)   | `.medium`   | 按钮、强调     |
+| Semibold (600) | `.semibold` | 副标题         |
+| Bold (700)     | `.bold`     | 标题、关键信息 |
+| Heavy (800)    | `.heavy`    | 极少使用，营销 |
 
 ---
 
-## 3. iOS Color System
+## 3. iOS 色彩系统
 
-### System Colors (Semantic)
-
-```
-Use semantic colors for automatic dark mode:
-
-Primary:
-├── .label → Primary text
-├── .secondaryLabel → Secondary text
-├── .tertiaryLabel → Tertiary text
-├── .quaternaryLabel → Watermarks
-
-Backgrounds:
-├── .systemBackground → Main background
-├── .secondarySystemBackground → Grouped content
-├── .tertiarySystemBackground → Elevated content
-
-Fills:
-├── .systemFill → Large shapes
-├── .secondarySystemFill → Medium shapes
-├── .tertiarySystemFill → Small shapes
-├── .quaternarySystemFill → Subtle shapes
-```
-
-### System Accent Colors
-
-| Color | Light Mode | Dark Mode | Usage |
-|-------|------------|-----------|-------|
-| Blue | #007AFF | #0A84FF | Links, highlights, default tint |
-| Green | #34C759 | #30D158 | Success, positive |
-| Red | #FF3B30 | #FF453A | Errors, destructive |
-| Orange | #FF9500 | #FF9F0A | Warnings |
-| Yellow | #FFCC00 | #FFD60A | Attention |
-| Purple | #AF52DE | #BF5AF2 | Special features |
-| Pink | #FF2D55 | #FF375F | Affection, favorites |
-| Teal | #5AC8FA | #64D2FF | Information |
-
-### Dark Mode Considerations
+### 系统颜色 (语义化)
 
 ```
-iOS Dark Mode is not inverted light mode:
+使用语义颜色以支持自动深色模式：
 
-LIGHT MODE:              DARK MODE:
-├── White backgrounds    ├── True black (#000) or near-black
-├── High saturation      ├── Desaturated colors
-├── Black text           ├── White/light gray text
-└── Drop shadows         └── Glows or no shadows
+主要内容:
+├── .label → 主要文本
+├── .secondaryLabel → 次要文本
+├── .tertiaryLabel → 第三级文本
+├── .quaternaryLabel → 水印/极淡文本
 
-RULE: Always use semantic colors for automatic adaptation.
+背景:
+├── .systemBackground → 主背景
+├── .secondarySystemBackground → 分组内容背景
+├── .tertiarySystemBackground → 抬升内容背景
+
+填充 (Fills):
+├── .systemFill → 大形状
+├── .secondarySystemFill → 中等形状
+├── .tertiarySystemFill → 小形状
+├── .quaternarySystemFill → 微妙形状
+```
+
+### 系统强调色 (Accent Colors)
+
+| 颜色   | 浅色模式 | 深色模式 | 用途                  |
+| :----- | :------- | :------- | :-------------------- |
+| Blue   | #007AFF  | #0A84FF  | 链接、高亮、默认 Tint |
+| Green  | #34C759  | #30D158  | 成功、积极            |
+| Red    | #FF3B30  | #FF453A  | 错误、破坏性操作      |
+| Orange | #FF9500  | #FF9F0A  | 警告                  |
+| Yellow | #FFCC00  | #FFD60A  | 引起注意              |
+| Purple | #AF52DE  | #BF5AF2  | 特殊功能              |
+| Pink   | #FF2D55  | #FF375F  | 喜爱、收藏            |
+| Teal   | #5AC8FA  | #64D2FF  | 信息                  |
+
+### 深色模式考量
+
+```
+iOS 深色模式不是简单的浅色反转：
+
+浅色模式 (LIGHT MODE):   深色模式 (DARK MODE):
+├── 白色背景             ├── 纯黑 (#000) 或近黑
+├── 高饱和度             ├──去饱和颜色
+├── 黑色文本             ├── 白色/浅灰文本
+└── 投影 (Shadows)       └── 发光或无投影
+
+规则: 始终使用语义颜色以自动适配。
 ```
 
 ---
 
-## 4. iOS Layout & Spacing
+## 4. iOS 布局与间距
 
-### Safe Areas
+### 安全区域 (Safe Areas)
 
 ```
 ┌─────────────────────────────────────┐
-│░░░░░░░░░░░ Status Bar ░░░░░░░░░░░░░│ ← Top safe area inset
+│░░░░░░░░░░░ 状态栏 ░░░░░░░░░░░░░░░░░│ ← 顶部安全区插图
 ├─────────────────────────────────────┤
 │                                     │
 │                                     │
-│         Safe Content Area           │
+│         安全内容区域                │
 │                                     │
 │                                     │
 ├─────────────────────────────────────┤
-│░░░░░░░░░ Home Indicator ░░░░░░░░░░░│ ← Bottom safe area inset
+│░░░░░░░░░ Home 指示器 ░░░░░░░░░░░░░│ ← 底部安全区插图
 └─────────────────────────────────────┘
 
-RULE: Never place interactive content in unsafe areas.
+规则: 绝不要将交互内容放在不安全区域。
 ```
 
-### Standard Margins & Padding
+### 标准边距与填充
 
-| Element | Margin | Notes |
-|---------|--------|-------|
-| Screen edge → content | 16pt | Standard horizontal margin |
-| Grouped table sections | 16pt top/bottom | Breathing room |
-| List item padding | 16pt horizontal | Standard cell padding |
-| Card internal padding | 16pt | Content within cards |
-| Button internal padding | 12pt vertical, 16pt horizontal | Minimum |
+| 元素            | 边距                 | 备注           |
+| :-------------- | :------------------- | :------------- |
+| 屏幕边缘 → 内容 | 16pt                 | 标准水平边距   |
+| 分组表格章节    | 16pt 上/下           | 呼吸空间       |
+| 列表项填充      | 16pt 水平            | 标准单元格填充 |
+| 卡片内部填充    | 16pt                 | 卡片内内容     |
+| 按钮内部填充    | 12pt 垂直, 16pt 水平 | 最小值         |
 
-### iOS Grid System
+### iOS 网格系统
 
 ```
-iPhone Grid (Standard):
-├── 16pt margins (left/right)
-├── 8pt minimum spacing
-├── Content in 8pt multiples
+iPhone 网格 (标准):
+├── 16pt 边距 (左/右)
+├── 8pt 最小间距
+├── 内容按 8pt 倍数排列
 
-iPhone Grid (Compact):
-├── 8pt margins (when needed)
-├── 4pt minimum spacing
+iPhone 网格 (紧凑):
+├── 8pt 边距 (需要时)
+├── 4pt 最小间距
 
-iPad Grid:
-├── 20pt margins (or more)
-├── Consider multi-column layouts
+iPad 网格:
+├── 20pt 边距 (或更多)
+├── 考虑多列布局
 ```
 
 ---
 
-## 5. iOS Navigation Patterns
+## 5. iOS 导航模式
 
-### Navigation Types
+### 导航类型
 
-| Pattern | Use Case | Implementation |
-|---------|----------|----------------|
-| **Tab Bar** | 3-5 top-level sections | Bottom, always visible |
-| **Navigation Controller** | Hierarchical drill-down | Stack-based, back button |
-| **Modal** | Focused task, interruption | Sheet or full-screen |
-| **Sidebar** | iPad, multi-column | Left sidebar (iPad) |
+| 模式                      | 用途           | 实现            |
+| :------------------------ | :------------- | :-------------- |
+| **Tab Bar**               | 3-5 个顶级板块 | 底部，始终可见  |
+| **Navigation Controller** | 层级钻取       | 栈式，返回按钮  |
+| **Modal**                 | 聚焦任务，中断 | Sheet 或 全屏   |
+| **Sidebar**               | iPad，多列     | 左侧边栏 (iPad) |
 
-### Tab Bar Guidelines
-
-```
-┌─────────────────────────────────────┐
-│                                     │
-│         Content Area                │
-│                                     │
-├─────────────────────────────────────┤
-│  🏠     🔍     ➕     ❤️     👤    │ ← Tab bar (49pt height)
-│ Home   Search  New   Saved  Profile │
-└─────────────────────────────────────┘
-
-Rules:
-├── 3-5 items maximum
-├── Icons: SF Symbols or custom (25×25pt)
-├── Labels: Always include (accessibility)
-├── Active state: Filled icon + tint color
-└── Tab bar always visible (don't hide on scroll)
-```
-
-### Navigation Bar Guidelines
+### 标签栏 (Tab Bar) 指南
 
 ```
 ┌─────────────────────────────────────┐
-│ < Back     Page Title      Edit    │ ← Navigation bar (44pt)
+│                                     │
+│         内容区域                    │
+│                                     │
+├─────────────────────────────────────┤
+│  🏠     🔍     ➕     ❤️     👤    │ ← Tab bar (49pt 高)
+│ 首页    搜索    新建   收藏    个人  │
+└─────────────────────────────────────┘
+
+规则:
+├── 最多 5 项
+├── 图标: SF Symbols 或自定义 (25×25pt)
+├── 标签: 始终包含 (可访问性)
+├── 激活状态: 实心图标 + Tint 颜色
+└── Tab bar 始终可见 (不要在滚动时隐藏)
+```
+
+### 导航栏 (Navigation Bar) 指南
+
+```
+┌─────────────────────────────────────┐
+│ < 返回     页面标题        编辑    │ ← 导航栏 (44pt)
 ├─────────────────────────────────────┤
 │                                     │
-│         Content Area                │
+│         内容区域                    │
 │                                     │
 └─────────────────────────────────────┘
 
-Rules:
-├── Back button: System chevron + previous title (or "Back")
-├── Title: Centered, dynamic font
-├── Right actions: Max 2 items
-├── Large title: Collapses on scroll (optional)
-└── Prefer text buttons over icons (clarity)
+规则:
+├── 返回按钮: 系统箭头 + 上一页标题 (或 "Back")
+├── 标题: 居中，动态字体
+├── 右侧操作: 最多 2 项
+├── 大标题: 滚动时折叠 (可选)
+└── 优先使用文本按钮而非图标 (清晰度)
 ```
 
-### Modal Presentations
+### 模态展示 (Modal Presentations)
 
-| Style | Use Case | Appearance |
-|-------|----------|------------|
-| **Sheet (default)** | Secondary tasks | Card slides up, parent visible |
-| **Full Screen** | Immersive tasks | Covers entire screen |
-| **Popover** | iPad, quick info | Arrow-pointed bubble |
-| **Alert** | Critical interruption | Centered dialog |
-| **Action Sheet** | Choices from context | Bottom sheet with options |
+| 样式             | 用途           | 外观                     |
+| :--------------- | :------------- | :----------------------- |
+| **Sheet (默认)** | 次要任务       | 卡片从底部滑起，父级可见 |
+| **Full Screen**  | 沉浸式任务     | 覆盖整个屏幕             |
+| **Popover**      | iPad, 快速信息 | 带箭头的气泡             |
+| **Alert**        | 关键中断       | 居中对话框               |
+| **Action Sheet** | 上下文选择     | 底部选项菜单             |
 
-### Gestures
+### 手势 (Gestures)
 
-| Gesture | iOS Convention |
-|---------|----------------|
-| **Edge swipe (left)** | Navigate back |
-| **Pull down (sheet)** | Dismiss modal |
-| **Long press** | Context menu |
-| **Deep press** | Peek/Pop (legacy) |
-| **Two-finger swipe** | Scroll in nested scroll |
+| 手势               | iOS 惯例         |
+| :----------------- | :--------------- |
+| **边缘滑动 (左)**  | 导航返回 (Back)  |
+| **向下拉 (Sheet)** | 关闭模态         |
+| **长按**           | 上下文菜单       |
+| **重按**           | Peek/Pop (遗留)  |
+| **双指滑动**       | 嵌套滚动中的滚动 |
 
 ---
 
-## 6. iOS Components
+## 6. iOS 组件
 
-### Buttons
+### 按钮
 
 ```
-Button Styles (UIKit/SwiftUI):
+按钮样式 (UIKit/SwiftUI):
 
 ┌──────────────────────────────┐
-│         Tinted               │ ← Primary action (filled)
+│         Tinted               │ ← 主要操作 (填充)
 ├──────────────────────────────┤
-│         Bordered             │ ← Secondary action (outline)
+│         Bordered             │ ← 次要操作 (边框)
 ├──────────────────────────────┤
-│         Plain                │ ← Tertiary action (text only)
+│         Plain                │ ← 第三级操作 (纯文本)
 └──────────────────────────────┘
 
-Sizes:
-├── Mini: Tight spaces
-├── Small: Compact UI
-├── Medium: Inline actions
-├── Large: Primary CTAs (44pt minimum height)
+尺寸:
+├── Mini: 狭窄空间
+├── Small: 紧凑 UI
+├── Medium: 行内操作
+├── Large: 主要 CTA (44pt 最小高度)
 ```
 
-### Lists & Tables
+### 列表与表格 (Lists & Tables)
 
 ```
-List Styles:
+列表样式:
 
-.plain         → No separators, edge-to-edge
-.insetGrouped  → Rounded cards (default iOS 14+)
-.grouped       → Full-width sections
-.sidebar       → iPad sidebar navigation
+.plain         → 无分隔线，边缘到边缘
+.insetGrouped  → 圆角卡片 (iOS 14+ 默认)
+.grouped       → 全宽章节
+.sidebar       → iPad 侧边栏导航
 
-Cell Accessories:
-├── Disclosure indicator (>) → Navigates to detail
-├── Detail button (i) → Shows info without navigation
-├── Checkmark (✓) → Selection
-├── Reorder (≡) → Drag to reorder
-└── Delete (-) → Swipe/edit mode delete
+单元格附件:
+├── Disclosure indicator (>) → 导航到详情
+├── Detail button (i) → 显示信息但不导航
+├── Checkmark (✓) → 选择
+├── Reorder (≡) → 拖拽排序
+└── Delete (-) → 滑动/编辑模式删除
 ```
 
-### Text Fields
+### 文本输入框 (Text Fields)
 
 ```
-iOS Text Field Anatomy:
+iOS 文本框解剖:
 
 ┌─────────────────────────────────────┐
-│ 🔍 Search...                    ✕  │
+│ 🔍 搜索...                      ✕  │
 └─────────────────────────────────────┘
   ↑                               ↑
-  Leading icon                   Clear button
+  前置图标                        清除按钮
 
-Borders: Rounded rectangle
-Height: 36pt minimum
-Placeholder: Secondary text color
-Clear button: Appears when has text
+边框: 圆角矩形
+高度: 36pt 最小
+占位符: 次要文本颜色
+清除按钮: 有文本时出现
 ```
 
-### Segmented Controls
+### 分段控件 (Segmented Controls)
 
 ```
-When to Use:
-├── 2-5 related options
-├── Filter content
-├── Switch views
+何时使用:
+├── 2-5 个相关选项
+├── 过滤内容
+├── 切换视图
 
 ┌───────┬───────┬───────┐
-│  All  │ Active│ Done  │
+│ 全部  │ 进行中 │ 完成  │
 └───────┴───────┴───────┘
 
-Rules:
-├── Equal width segments
-├── Text or icons (not both mixed)
-├── Max 5 segments
-└── Consider tabs if more complex
+规则:
+├── 等宽分段
+├── 文本或图标 (不要混用)
+├── 最多 5 个分段
+└── 如果更复杂，考虑 Tabs
 ```
 
 ---
 
-## 7. iOS Specific Patterns
+## 7. iOS 特定模式
 
-### Pull to Refresh
-
-```
-Native UIRefreshControl behavior:
-├── Pull beyond threshold → Spinner appears
-├── Release → Refresh action triggered
-├── Loading state → Spinner spins
-├── Complete → Spinner disappears
-
-RULE: Always use native UIRefreshControl (don't custom build).
-```
-
-### Swipe Actions
+### 下拉刷新 (Pull to Refresh)
 
 ```
-iOS swipe actions:
+原生 UIRefreshControl 行为:
+├── 下拉超过阈值 → 出现 Spinner
+├── 释放 → 触发刷新操作
+├── 加载状态 → Spinner 旋转
+├── 完成 → Spinner 消失
 
-← Swipe Left (Destructive)      Swipe Right (Constructive) →
+规则: 始终使用原生 UIRefreshControl (不要自定义构建)。
+```
+
+### 滑动操作 (Swipe Actions)
+
+```
+iOS 滑动操作:
+
+← 左滑 (破坏性)                右滑 (建设性) →
 ┌─────────────────────────────────────────────────────────────┐
-│                    List Item Content                        │
+│                    列表项内容                               │
 └─────────────────────────────────────────────────────────────┘
 
-Left swipe reveals: Archive, Delete, Flag
-Right swipe reveals: Pin, Star, Mark as Read
+左滑显示: 归档, 删除, 标记
+右滑显示: 置顶, 收藏, 标为已读
 
-Full swipe: Triggers first action
+全滑 (Full swipe): 触发第一个操作
 ```
 
-### Context Menus
+### 上下文菜单 (Context Menus)
 
 ```
-Long press → Context menu appears
+长按 → 出现上下文菜单
 
 ┌─────────────────────────────┐
-│       Preview Card          │
+│       预览卡片              │
 ├─────────────────────────────┤
-│  📋 Copy                    │
-│  📤 Share                   │
-│  ➕ Add to...               │
+│  📋 复制                    │
+│  📤 分享                    │
+│  ➕ 添加到...               │
 ├─────────────────────────────┤
-│  🗑️ Delete          (Red)   │
+│  🗑️ 删除            (红)    │
 └─────────────────────────────┘
 
-Rules:
-├── Preview: Show enlarged content
-├── Actions: Related to content
-├── Destructive: Last, in red
-└── Max ~8 actions (scrollable if more)
+规则:
+├── 预览: 显示放大的内容
+├── 操作: 与内容相关
+├── 破坏性: 最后，红色
+└── 最多 ~8 个操作 (更多则需滚动)
 ```
 
 ### Sheets & Half-Sheets
@@ -411,151 +415,127 @@ iOS 15+ Sheets:
 
 ┌─────────────────────────────────────┐
 │                                     │
-│        Parent View (dimmed)          │
+│        父视图 (变暗)                 │
 │                                     │
 ├─────────────────────────────────────┤
-│  ═══  (Grabber)                     │ ← Drag to resize
+│  ═══  (抓手)                        │ ← 拖拽调整大小
 │                                     │
-│        Sheet Content                │
+│        Sheet 内容                   │
 │                                     │
 │                                     │
 └─────────────────────────────────────┘
 
-Detents:
-├── .medium → Half screen
-├── .large → Full screen (with safe area)
-├── Custom → Specific height
+Detents (停靠点):
+├── .medium → 半屏
+├── .large → 全屏 (带安全区)
+├── Custom → 特定高度
 ```
 
 ---
 
 ## 8. SF Symbols
 
-### Usage Guidelines
+### 使用指南
 
 ```
-SF Symbols: Apple's icon library (5000+ icons)
+SF Symbols: Apple 的图标库 (5000+ 图标)
 
-Weights: Match text weight
+字重: 匹配文本字重
 ├── Ultralight / Thin / Light
 ├── Regular / Medium / Semibold
 ├── Bold / Heavy / Black
 
-Scales:
-├── .small → Inline with small text
-├── .medium → Standard UI
-├── .large → Emphasis, standalone
+缩放:
+├── .small → 与小文本内联
+├── .medium → 标准 UI
+├── .large → 强调，独立
 ```
 
-### Symbol Configurations
+### Symbol 最佳实践
 
-```swift
-// SwiftUI
-Image(systemName: "star.fill")
-    .font(.title2)
-    .foregroundStyle(.yellow)
-
-// With rendering mode
-Image(systemName: "heart.fill")
-    .symbolRenderingMode(.multicolor)
-
-// Animated (iOS 17+)
-Image(systemName: "checkmark.circle")
-    .symbolEffect(.bounce)
-```
-
-### Symbol Best Practices
-
-| Guideline | Implementation |
-|-----------|----------------|
-| Match text weight | Symbol weight = font weight |
-| Use standard symbols | Users recognize them |
-| Multicolor when meaningful | Not just decoration |
-| Fallback for older iOS | Check availability |
+| 指南             | 实现                |
+| :--------------- | :------------------ |
+| 匹配文本字重     | 图标字重 = 字体字重 |
+| 使用标准图标     | 用户能识别它们      |
+| 有意义时使用多色 | 不只是为了装饰      |
+| 旧版 iOS 回退    | 检查可用性          |
 
 ---
 
-## 9. iOS Accessibility
+## 9. iOS 可访问性 (Accessibility)
 
-### VoiceOver Requirements
+### VoiceOver 需求
 
 ```
-Every interactive element needs:
-├── Accessibility label (what it is)
-├── Accessibility hint (what it does) - optional
-├── Accessibility traits (button, link, etc.)
-└── Accessibility value (current state)
+每个交互元素需要:
+├── Accessibility label (是什么)
+├── Accessibility hint (做什么) - 可选
+├── Accessibility traits (按钮, 链接等)
+└── Accessibility value (当前状态)
 
 SwiftUI:
-.accessibilityLabel("Play")
-.accessibilityHint("Plays the selected track")
+.accessibilityLabel("播放")
+.accessibilityHint("播放选中的曲目")
 
 React Native:
-accessibilityLabel="Play"
-accessibilityHint="Plays the selected track"
+accessibilityLabel="播放"
+accessibilityHint="播放选中的曲目"
 accessibilityRole="button"
 ```
 
-### Dynamic Type Scaling
+### 动态字体缩放
 
 ```
-MANDATORY: Support Dynamic Type
+强制: 支持 Dynamic Type
 
-Users can set text size from:
+用户可以将文字大小设置为:
 ├── xSmall → 14pt body
 ├── Small → 15pt body
 ├── Medium → 16pt body
-├── Large (Default) → 17pt body
+├── Large (默认) → 17pt body
 ├── xLarge → 19pt body
 ├── xxLarge → 21pt body
 ├── xxxLarge → 23pt body
-├── Accessibility sizes → up to 53pt
+├── 辅助功能尺寸 → 最大 53pt
 
-Your app MUST scale gracefully at all sizes.
+你的 App 必须在所有尺寸下优雅地缩放。
 ```
 
-### Reduce Motion
+### 减少动态 (Reduce Motion)
 
 ```
-Respect motion preferences:
+尊重主要动态偏好:
 
-@Environment(\.accessibilityReduceMotion) var reduceMotion
-
-if reduceMotion {
-    // Use instant transitions
-} else {
-    // Use animations
-}
-
-React Native:
-import { AccessibilityInfo } from 'react-native';
-AccessibilityInfo.isReduceMotionEnabled()
+如果开启 Reduce Motion:
+    使用即时过渡/淡入淡出
+否则:
+    使用标准动画
 ```
 
 ---
 
-## 10. iOS Checklist
+## 10. iOS 检查清单
 
-### Before Every iOS Screen
+### 每个 iOS 屏幕前
 
-- [ ] Using SF Pro or SF Symbols
-- [ ] Dynamic Type supported
-- [ ] Safe areas respected
-- [ ] Navigation follows HIG (back gesture works)
-- [ ] Tab bar items ≤ 5
-- [ ] Touch targets ≥ 44pt
+- [ ] 使用 SF Pro 或 SF Symbols
+- [ ] 支持动态字体 (Dynamic Type)
+- [ ] 尊重安全区域
+- [ ] 导航遵循 HIG (返回手势有效)
+- [ ] Tab bar 项目 ≤ 5
+- [ ] 触摸目标 ≥ 44pt
 
-### Before iOS Release
+### iOS 发布前
 
-- [ ] Dark mode tested
-- [ ] All text sizes tested (Accessibility Inspector)
-- [ ] VoiceOver tested
-- [ ] Edge swipe back works everywhere
-- [ ] Keyboard avoidance implemented
-- [ ] Notch/Dynamic Island handled
-- [ ] Home indicator area respected
-- [ ] Native components used where possible
+- [ ] 测试深色模式
+- [ ] 测试所有字体尺寸 (Accessibility Inspector)
+- [ ] 测试 VoiceOver
+- [ ] 边缘右滑返回在所有地方有效
+- [ ] 键盘避让已实现
+- [ ] 刘海/灵动岛已处理
+- [ ] 尊重 Home 指示器区域
+- [ ] 尽可能使用原生组件
 
 ---
 
-> **Remember:** iOS users have strong expectations from other iOS apps. Deviating from HIG patterns feels "broken" to them. When in doubt, use the native component.
+> **记住:** iOS 用户对应用有很强的预期。偏离 HIG 模式会让应用感觉"坏掉了"。如有疑问，使用原生组件。

@@ -1,37 +1,37 @@
 ---
 name: chrome-extension
-description: Chrome Extension template principles. Manifest V3, React, TypeScript.
+description: Chrome 扩展模版原则。Manifest V3, React, TypeScript。
 ---
 
-# Chrome Extension Template
+# Chrome 扩展模版
 
-## Tech Stack
+## 技术栈
 
-| Component | Technology |
-|-----------|------------|
-| Manifest | V3 |
-| UI | React 18 |
-| Language | TypeScript |
-| Styling | Tailwind CSS |
-| Bundler | Vite |
-| Storage | Chrome Storage API |
+| 组件     | 技术               |
+| -------- | ------------------ |
+| Manifest | V3                 |
+| UI       | React 18           |
+| 语言     | TypeScript         |
+| 样式     | Tailwind CSS       |
+| 打包器   | Vite               |
+| 存储     | Chrome Storage API |
 
 ---
 
-## Directory Structure
+## 目录结构
 
 ```
 project-name/
 ├── src/
-│   ├── popup/           # Extension popup
-│   ├── options/         # Options page
+│   ├── popup/           # 扩充弹出窗口
+│   ├── options/         # 选项页面
 │   ├── background/      # Service worker
-│   ├── content/         # Content scripts
+│   ├── content/         # 内容脚本
 │   ├── components/
 │   ├── hooks/
 │   └── lib/
-│       ├── storage.ts   # Chrome storage helpers
-│       └── messaging.ts # Message passing
+│       ├── storage.ts   # Chrome storage 助手
+│       └── messaging.ts # 消息传递
 ├── public/
 │   ├── icons/
 │   └── manifest.json
@@ -40,53 +40,53 @@ project-name/
 
 ---
 
-## Manifest V3 Concepts
+## Manifest V3 概念
 
-| Component | Purpose |
-|-----------|---------|
-| Service Worker | Background processing |
-| Content Scripts | Page injection |
-| Popup | User interface |
-| Options Page | Settings |
-
----
-
-## Permissions
-
-| Permission | Use |
-|------------|-----|
-| storage | Save user data |
-| activeTab | Current tab access |
-| scripting | Inject scripts |
-| host_permissions | Site access |
+| 组件                       | 目的     |
+| -------------------------- | -------- |
+| Service Worker             | 后台处理 |
+| Content Scripts (内容脚本) | 页面注入 |
+| Popup (弹窗)               | 用户界面 |
+| Options Page (选项页)      | 设置     |
 
 ---
 
-## Setup Steps
+## 权限
+
+| 权限             | 用途           |
+| ---------------- | -------------- |
+| storage          | 保存用户数据   |
+| activeTab        | 当前标签页访问 |
+| scripting        | 注入脚本       |
+| host_permissions | 站点访问       |
+
+---
+
+## 设置步骤
 
 1. `npm create vite {{name}} -- --template react-ts`
-2. Add Chrome types: `npm install -D @types/chrome`
-3. Configure Vite for multi-entry
-4. Create manifest.json
-5. `npm run dev` (watch mode)
-6. Load in Chrome: `chrome://extensions` → Load unpacked
+2. 添加 Chrome 类型: `npm install -D @types/chrome`
+3. 配置 Vite 用于多入口
+4. 创建 manifest.json
+5. `npm run dev` (监视模式)
+6. 在 Chrome 中加载: `chrome://extensions` → 加载已解压的扩展程序
 
 ---
 
-## Development Tips
+## 开发提示
 
-| Task | Method |
-|------|--------|
-| Debug Popup | Right-click icon → Inspect |
-| Debug Background | Extensions page → Service worker |
-| Debug Content | DevTools console on page |
-| Hot Reload | `npm run dev` with watch |
+| 任务            | 方法                      |
+| --------------- | ------------------------- |
+| 调试 Popup      | 右键图标 → 检查           |
+| 调试 Background | 扩展页面 → Service worker |
+| 调试 Content    | 页面上的 DevTools 控制台  |
+| 热重载          | 带监视的 `npm run dev`    |
 
 ---
 
-## Best Practices
+## 最佳实践
 
-- Use type-safe messaging
-- Wrap Chrome APIs in promises
-- Minimize permissions
-- Handle offline gracefully
+- 使用类型安全的消息传递
+- 将 Chrome API 包装在 Promise 中
+- 最小化权限
+- 优雅处理离线

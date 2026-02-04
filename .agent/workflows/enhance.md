@@ -1,63 +1,41 @@
 ---
-description: Add or update features in existing application. Used for iterative development.
+description: 改进现有代码，添加功能或重构
 ---
 
-# /enhance - Update Application
+# 增强 (Enhance Workflow)
 
-$ARGUMENTS
+**触发命令**: `/enhance [instruction]`
 
----
+## 目的
 
-## Task
+在现有项目中修改代码、添加新功能或进行重构。与 `/create` 不同，它必须小心不破坏现有逻辑。
 
-This command adds features or makes updates to existing application.
+## 步骤流程
 
-### Steps:
+1. **上下文理解**:
+    - 阅读 `task.md` (如果存在)。
+    - 分析用户指定的代码文件。
+    - 理解现有代码风格。
 
-1. **Understand Current State**
-   - Load project state with `python .agent/scripts/session_manager.py info`
-   - Understand existing features, tech stack
+2. **影响分析**:
+    - 如果你要修改 A 文件，会不会影响 B 文件？
+    - 检查类型定义和导出。
 
-2. **Plan Changes**
-   - Determine what will be added/changed
-   - Detect affected files
-   - Check dependencies
+3. **实施计划**:
+    - 描述将要进行的修改。
+    - 使用 `render_diffs` 或统一展示修改点。
 
-3. **Present Plan to User** (for major changes)
-   ```
-   "To add admin panel:
-   - I'll create 15 new files
-   - Update 8 files
-   - Takes ~10 minutes
-   
-   Should I start?"
-   ```
+4. **代码编写**:
+    - 使用 `replace_file_content` 或 `multi_replace_file_content` 进行编辑。
+    - 保持代码风格一致。
 
-4. **Apply**
-   - Call relevant agents
-   - Make changes
-   - Test
+5. **验证**:
+    - 运行 Lint 检查。
+    - 运行相关测试。
 
-5. **Update Preview**
-   - Hot reload or restart
+## 示例
+
+> User: /enhance 给登录按钮添加 loading 状态
+> AI: 好的，我会修改 `LoginForm.tsx`，添加 `isSubmitting` 状态并更新按钮 UI。
 
 ---
-
-## Usage Examples
-
-```
-/enhance add dark mode
-/enhance build admin panel
-/enhance integrate payment system
-/enhance add search feature
-/enhance edit profile page
-/enhance make responsive
-```
-
----
-
-## Caution
-
-- Get approval for major changes
-- Warn on conflicting requests (e.g., "use Firebase" when project uses PostgreSQL)
-- Commit each change with git

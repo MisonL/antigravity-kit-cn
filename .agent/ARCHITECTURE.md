@@ -1,288 +1,115 @@
-# Antigravity Kit Architecture
+# 🏗️ 架构文档 (Architecture)
 
-> Comprehensive AI Agent Capability Expansion Toolkit
-
----
-
-## 📋 Overview
-
-Antigravity Kit is a modular system consisting of:
-
-- **20 Specialist Agents** - Role-based AI personas
-- **36 Skills** - Domain-specific knowledge modules
-- **11 Workflows** - Slash command procedures
+> **Antigravity Kit** - 核心架构与设计原则
 
 ---
 
-## 🏗️ Directory Structure
+## 1. 核心设计理念
 
-```plaintext
+Antigravity Kit 不是一个简单的"提示词库"，而是一个**模块化的智能体操作系统**。它遵循以下核心原则：
+
+### 🧱 模块化 (Modularity)
+
+一切皆模块。
+
+- **Agent (智能体)**：只有"人格"和"职责"，不包含具体知识。
+- **Skill (技能)**：独立的知识单元，可被多个 Agent 复用。
+- **Workflow (工作流)**：串联 Agent 和 Skill 的标准化流程。
+
+### 🔌 动态加载 (Lazy Loading)
+
+**硬盘全量安装，内存按需加载。**
+系统不会一次性把所有 Prompt 塞给 AI。只有当用户触发特定领域时，相关的文件才会被读取。
+
+- **P0 级**：`GEMINI.md` (始终激活)
+- **P1 级**：`Agent.md` (根据请求路由激活)
+- **P2 级**：`Skill.md` (根据 Agent 需求激活)
+
+### 🤖 智能路由 (Intelligent Routing)
+
+用户不需要知道系统里有什么 Agent。
+
+- 用户说："帮我修个 Bug" -> 路由到 `debugger`
+- 用户说："设计个网页" -> 路由到 `frontend-specialist`
+- 用户说："部署服务器" -> 路由到 `devops-engineer`
+
+---
+
+## 2. 目录结构说明
+
+```
 .agent/
-├── ARCHITECTURE.md          # This file
-├── agents/                  # 20 Specialist Agents
-├── skills/                  # 36 Skills
-├── workflows/               # 11 Slash Commands
-├── rules/                   # Global Rules
-└── scripts/                 # Master Validation Scripts
+├── ARHCITECTURE.md       # 本文件
+├── agents/               # 智能体定义 (Persona)
+│   ├── frontend-specialist.md
+│   ├── backend-specialist.md
+│   └── ...
+├── skills/               # 技能库 (Knowledge)
+│   ├── react-best-practices/
+│   ├── api-patterns/
+│   └── ...
+├── workflows/            # 工作流 (Slash Commands)
+│   ├── brainstorm.md
+│   ├── create.md
+│   └── ...
+└── scripts/              # 自动化脚本 (Python/Shell)
+    ├── checklist.py
+    └── ...
 ```
 
 ---
 
-## 🤖 Agents (20)
+## 3. 核心协议 (Protocol)
 
-Specialist AI personas for different domains.
+### 3.1 技能加载协议
 
-| Agent                    | Focus                      | Skills Used                                              |
-| ------------------------ | -------------------------- | -------------------------------------------------------- |
-| `orchestrator`           | Multi-agent coordination   | parallel-agents, behavioral-modes                        |
-| `project-planner`        | Discovery, task planning   | brainstorming, plan-writing, architecture                |
-| `frontend-specialist`    | Web UI/UX                  | frontend-design, react-best-practices, tailwind-patterns |
-| `backend-specialist`     | API, business logic        | api-patterns, nodejs-best-practices, database-design     |
-| `database-architect`     | Schema, SQL                | database-design, prisma-expert                           |
-| `mobile-developer`       | iOS, Android, RN           | mobile-design                                            |
-| `game-developer`         | Game logic, mechanics      | game-development                                         |
-| `devops-engineer`        | CI/CD, Docker              | deployment-procedures, docker-expert                     |
-| `security-auditor`       | Security compliance        | vulnerability-scanner, red-team-tactics                  |
-| `penetration-tester`     | Offensive security         | red-team-tactics                                         |
-| `test-engineer`          | Testing strategies         | testing-patterns, tdd-workflow, webapp-testing           |
-| `debugger`               | Root cause analysis        | systematic-debugging                                     |
-| `performance-optimizer`  | Speed, Web Vitals          | performance-profiling                                    |
-| `seo-specialist`         | Ranking, visibility        | seo-fundamentals, geo-fundamentals                       |
-| `documentation-writer`   | Manuals, docs              | documentation-templates                                  |
-| `product-manager`        | Requirements, user stories | plan-writing, brainstorming                              |
-| `product-owner`          | Strategy, backlog, MVP     | plan-writing, brainstorming                              |
-| `qa-automation-engineer` | E2E testing, CI pipelines  | webapp-testing, testing-patterns                         |
-| `code-archaeologist`     | Legacy code, refactoring   | clean-code, code-review-checklist                        |
-| `explorer-agent`         | Codebase analysis          | -                                                        |
+每个 Agent 的头部 frontmatter 定义了它具备的技能：
 
+```yaml
 ---
-
-## 🧩 Skills (36)
-
-Modular knowledge domains that agents can load on-demand. based on task context.
-
-### Frontend & UI
-
-| Skill                   | Description                                                           |
-| ----------------------- | --------------------------------------------------------------------- |
-| `react-best-practices`  | React & Next.js performance optimization (Vercel - 57 rules)          |
-| `web-design-guidelines` | Web UI audit - 100+ rules for accessibility, UX, performance (Vercel) |
-| `tailwind-patterns`     | Tailwind CSS v4 utilities                                             |
-| `frontend-design`       | UI/UX patterns, design systems                                        |
-| `ui-ux-pro-max`         | 50 styles, 21 palettes, 50 fonts                                      |
-
-### Backend & API
-
-| Skill                   | Description                    |
-| ----------------------- | ------------------------------ |
-| `api-patterns`          | REST, GraphQL, tRPC            |
-| `nestjs-expert`         | NestJS modules, DI, decorators |
-| `nodejs-best-practices` | Node.js async, modules         |
-| `python-patterns`       | Python standards, FastAPI      |
-
-### Database
-
-| Skill             | Description                 |
-| ----------------- | --------------------------- |
-| `database-design` | Schema design, optimization |
-| `prisma-expert`   | Prisma ORM, migrations      |
-
-### TypeScript/JavaScript
-
-| Skill               | Description                         |
-| ------------------- | ----------------------------------- |
-| `typescript-expert` | Type-level programming, performance |
-
-### Cloud & Infrastructure
-
-| Skill                   | Description               |
-| ----------------------- | ------------------------- |
-| `docker-expert`         | Containerization, Compose |
-| `deployment-procedures` | CI/CD, deploy workflows   |
-| `server-management`     | Infrastructure management |
-
-### Testing & Quality
-
-| Skill                   | Description              |
-| ----------------------- | ------------------------ |
-| `testing-patterns`      | Jest, Vitest, strategies |
-| `webapp-testing`        | E2E, Playwright          |
-| `tdd-workflow`          | Test-driven development  |
-| `code-review-checklist` | Code review standards    |
-| `lint-and-validate`     | Linting, validation      |
-
-### Security
-
-| Skill                   | Description              |
-| ----------------------- | ------------------------ |
-| `vulnerability-scanner` | Security auditing, OWASP |
-| `red-team-tactics`      | Offensive security       |
-
-### Architecture & Planning
-
-| Skill           | Description                |
-| --------------- | -------------------------- |
-| `app-builder`   | Full-stack app scaffolding |
-| `architecture`  | System design patterns     |
-| `plan-writing`  | Task planning, breakdown   |
-| `brainstorming` | Socratic questioning       |
-
-### Mobile
-
-| Skill           | Description           |
-| --------------- | --------------------- |
-| `mobile-design` | Mobile UI/UX patterns |
-
-### Game Development
-
-| Skill              | Description           |
-| ------------------ | --------------------- |
-| `game-development` | Game logic, mechanics |
-
-### SEO & Growth
-
-| Skill              | Description                   |
-| ------------------ | ----------------------------- |
-| `seo-fundamentals` | SEO, E-E-A-T, Core Web Vitals |
-| `geo-fundamentals` | GenAI optimization            |
-
-### Shell/CLI
-
-| Skill                | Description               |
-| -------------------- | ------------------------- |
-| `bash-linux`         | Linux commands, scripting |
-| `powershell-windows` | Windows PowerShell        |
-
-### Other
-
-| Skill                     | Description               |
-| ------------------------- | ------------------------- |
-| `clean-code`              | Coding standards (Global) |
-| `behavioral-modes`        | Agent personas            |
-| `parallel-agents`         | Multi-agent patterns      |
-| `mcp-builder`             | Model Context Protocol    |
-| `documentation-templates` | Doc formats               |
-| `i18n-localization`       | Internationalization      |
-| `performance-profiling`   | Web Vitals, optimization  |
-| `systematic-debugging`    | Troubleshooting           |
-
+description: 前端开发专家
+skills:
+    - frontend-design
+    - react-best-practices
+    - tailwind-patterns
 ---
-
-## 🔄 Workflows (11)
-
-Slash command procedures. Invoke with `/command`.
-
-| Command          | Description              |
-| ---------------- | ------------------------ |
-| `/brainstorm`    | Socratic discovery       |
-| `/create`        | Create new features      |
-| `/debug`         | Debug issues             |
-| `/deploy`        | Deploy application       |
-| `/enhance`       | Improve existing code    |
-| `/orchestrate`   | Multi-agent coordination |
-| `/plan`          | Task breakdown           |
-| `/preview`       | Preview changes          |
-| `/status`        | Check project status     |
-| `/test`          | Run tests                |
-| `/ui-ux-pro-max` | Design with 50 styles    |
-
----
-
-## 🎯 Skill Loading Protocol
-
-```plaintext
-User Request → Skill Description Match → Load SKILL.md
-                                            ↓
-                                    Read references/
-                                            ↓
-                                    Read scripts/
 ```
 
-### Skill Structure
+当 `frontend-specialist` 被激活时，它**必须**读取 `skills` 列表中的 `SKILL.md` 文件。
 
-```plaintext
-skill-name/
-├── SKILL.md           # (Required) Metadata & instructions
-├── scripts/           # (Optional) Python/Bash scripts
-├── references/        # (Optional) Templates, docs
-└── assets/            # (Optional) Images, logos
-```
+### 3.2 脚本执行协议
 
-### Enhanced Skills (with scripts/references)
+Agent 可以调用 `scripts/` 下的脚本，但必须遵循：
 
-| Skill               | Files | Coverage                            |
-| ------------------- | ----- | ----------------------------------- |
-| `ui-ux-pro-max`     | 27    | 50 styles, 21 palettes, 50 fonts    |
-| `app-builder`       | 20    | Full-stack scaffolding              |
+1. **安全第一**：如果是破坏性操作，必须先询问用户。
+2. **环境检查**：先检查用户环境 (Node, Python 等)。
+3. **透明化**：告知用户正在执行什么脚本。
 
 ---
 
-## � Scripts (2)
+## 4. 扩展指南
 
-Master validation scripts that orchestrate skill-level scripts.
+### 如何添加新 Agent？
 
-### Master Scripts
+1. 在 `agents/` 下创建 `new-agent.md`。
+2. 定义 frontmatter (description, skills)。
+3. 编写 System Prompt (角色设定、规则)。
 
-| Script          | Purpose                                 | When to Use              |
-| --------------- | --------------------------------------- | ------------------------ |
-| `checklist.py`  | Priority-based validation (Core checks) | Development, pre-commit  |
-| `verify_all.py` | Comprehensive verification (All checks) | Pre-deployment, releases |
+### 如何添加新 Skill？
 
-### Usage
+1. 在 `skills/` 下创建新目录 `new-skill/`。
+2. 创建 `SKILL.md` (核心指令)。
+3. (可选) 添加 `scripts/` 或 `rules/`。
 
-```bash
-# Quick validation during development
-python .agent/scripts/checklist.py .
+### 如何添加新 Workflow？
 
-# Full verification before deployment
-python .agent/scripts/verify_all.py . --url http://localhost:3000
-```
-
-### What They Check
-
-**checklist.py** (Core checks):
-
-- Security (vulnerabilities, secrets)
-- Code Quality (lint, types)
-- Schema Validation
-- Test Suite
-- UX Audit
-- SEO Check
-
-**verify_all.py** (Full suite):
-
-- Everything in checklist.py PLUS:
-- Lighthouse (Core Web Vitals)
-- Playwright E2E
-- Bundle Analysis
-- Mobile Audit
-- i18n Check
-
-For details, see [scripts/README.md](scripts/README.md)
+1. 在 `workflows/` 下创建 `new-flow.md`。
+2. 定义触发命令 (如 `/newflow`)。
+3. 编写步骤说明。
 
 ---
 
-## 📊 Statistics
+## 5. 版本控制
 
-| Metric              | Value                         |
-| ------------------- | ----------------------------- |
-| **Total Agents**    | 20                            |
-| **Total Skills**    | 36                            |
-| **Total Workflows** | 11                            |
-| **Total Scripts**   | 2 (master) + 18 (skill-level) |
-| **Coverage**        | ~90% web/mobile development   |
-
----
-
-## 🔗 Quick Reference
-
-| Need     | Agent                 | Skills                                |
-| -------- | --------------------- | ------------------------------------- |
-| Web App  | `frontend-specialist` | react-best-practices, frontend-design |
-| API      | `backend-specialist`  | api-patterns, nodejs-best-practices   |
-| Mobile   | `mobile-developer`    | mobile-design                         |
-| Database | `database-architect`  | database-design, prisma-expert        |
-| Security | `security-auditor`    | vulnerability-scanner                 |
-| Testing  | `test-engineer`       | testing-patterns, webapp-testing      |
-| Debug    | `debugger`            | systematic-debugging                  |
-| Plan     | `project-planner`     | brainstorming, plan-writing           |
+- **Version**: 2.0.1
+- **Last Updated**: 2026-02-04

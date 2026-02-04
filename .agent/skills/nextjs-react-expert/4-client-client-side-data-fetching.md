@@ -1,264 +1,273 @@
-# 4. Client-Side Data Fetching
+# 4. 客户端数据获取 (Client-Side Data Fetching)
 
-> **Impact:** MEDIUM-HIGH
-> **Focus:** Automatic deduplication and efficient data fetching patterns reduce redundant network requests.
-
----
-
-## Overview
-
-This section contains **4 rules** focused on client-side data fetching.
+> **影响:** 中高 (MEDIUM-HIGH)
+> **重点:** 自动去重和高效的数据获取模式可减少多余的网络请求。
 
 ---
 
-## Rule 4.1: Deduplicate Global Event Listeners
+## 概览
 
-**Impact:** LOW  
-**Tags:** client, swr, event-listeners, subscription  
+本节包含 **4 条规则**，专注于客户端数据获取。
 
-## Deduplicate Global Event Listeners
+---
 
-Use `useSWRSubscription()` to share global event listeners across component instances.
+## 规则 4.1: 去重全局事件监听器
 
-**Incorrect (N instances = N listeners):**
+**影响:** 低 (LOW)
+**标签:** client, swr, event-listeners, subscription
+
+## 去重全局事件监听器
+
+使用 `useSWRSubscription()` 在组件实例之间共享全局事件监听器。
+
+**错误示范 (N 个实例 = N 个监听器):**
 
 ```tsx
 function useKeyboardShortcut(key: string, callback: () => void) {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.metaKey && e.key === key) {
-        callback()
-      }
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [key, callback])
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if (e.metaKey && e.key === key) {
+                callback();
+            }
+        };
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+    }, [key, callback]);
 }
 ```
 
-When using the `useKeyboardShortcut` hook multiple times, each instance will register a new listener.
+当多次使用 `useKeyboardShortcut` hook 时，每个实例都会注册一个新的监听器。
 
-**Correct (N instances = 1 listener):**
+**正确示范 (N 个实例 = 1 个监听器):**
 
 ```tsx
-import useSWRSubscription from 'swr/subscription'
+import useSWRSubscription from "swr/subscription";
 
-// Module-level Map to track callbacks per key
-const keyCallbacks = new Map<string, Set<() => void>>()
+// 模块级 Map 跟踪每个按键的回调
+const keyCallbacks = new Map<string, Set<() => void>>();
 
 function useKeyboardShortcut(key: string, callback: () => void) {
-  // Register this callback in the Map
-  useEffect(() => {
-    if (!keyCallbacks.has(key)) {
-      keyCallbacks.set(key, new Set())
-    }
-    keyCallbacks.get(key)!.add(callback)
-
-    return () => {
-      const set = keyCallbacks.get(key)
-      if (set) {
-        set.delete(callback)
-        if (set.size === 0) {
-          keyCallbacks.delete(key)
+    // 在 Map 中注册此回调
+    useEffect(() => {
+        if (!keyCallbacks.has(key)) {
+            keyCallbacks.set(key, new Set());
         }
-      }
-    }
-  }, [key, callback])
+        keyCallbacks.get(key)!.add(callback);
 
-  useSWRSubscription('global-keydown', () => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.metaKey && keyCallbacks.has(e.key)) {
-        keyCallbacks.get(e.key)!.forEach(cb => cb())
-      }
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  })
+        return () => {
+            const set = keyCallbacks.get(key);
+            if (set) {
+                set.delete(callback);
+                if (set.size === 0) {
+                    keyCallbacks.delete(key);
+                }
+            }
+        };
+    }, [key, callback]);
+
+    useSWRSubscription("global-keydown", () => {
+        const handler = (e: KeyboardEvent) => {
+            if (e.metaKey && keyCallbacks.has(e.key)) {
+                keyCallbacks.get(e.key)!.forEach((cb) => cb());
+            }
+        };
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+    });
 }
 
 function Profile() {
-  // Multiple shortcuts will share the same listener
-  useKeyboardShortcut('p', () => { /* ... */ }) 
-  useKeyboardShortcut('k', () => { /* ... */ })
-  // ...
+    // 多个快捷键将共享同一个监听器
+    useKeyboardShortcut("p", () => {
+        /* ... */
+    });
+    useKeyboardShortcut("k", () => {
+        /* ... */
+    });
+    // ...
 }
 ```
 
 ---
 
-## Rule 4.2: Use Passive Event Listeners for Scrolling Performance
+## 规则 4.2: 为了滚动性能使用被动事件监听器 (Passive Event Listeners)
 
-**Impact:** MEDIUM  
-**Tags:** client, event-listeners, scrolling, performance, touch, wheel  
+**影响:** 中 (MEDIUM)
+**标签:** client, event-listeners, scrolling, performance, touch, wheel
 
-## Use Passive Event Listeners for Scrolling Performance
+## 为了滚动性能使用被动事件监听器
 
-Add `{ passive: true }` to touch and wheel event listeners to enable immediate scrolling. Browsers normally wait for listeners to finish to check if `preventDefault()` is called, causing scroll delay.
+向 touch 和 wheel 事件监听器添加 `{ passive: true }` 以启用立即滚动。浏览器通常会等待监听器完成以检查是否调用了 `preventDefault()`，这会导致滚动延迟。
 
-**Incorrect:**
-
-```typescript
-useEffect(() => {
-  const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX)
-  const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
-  
-  document.addEventListener('touchstart', handleTouch)
-  document.addEventListener('wheel', handleWheel)
-  
-  return () => {
-    document.removeEventListener('touchstart', handleTouch)
-    document.removeEventListener('wheel', handleWheel)
-  }
-}, [])
-```
-
-**Correct:**
+**错误示范:**
 
 ```typescript
 useEffect(() => {
-  const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX)
-  const handleWheel = (e: WheelEvent) => console.log(e.deltaY)
-  
-  document.addEventListener('touchstart', handleTouch, { passive: true })
-  document.addEventListener('wheel', handleWheel, { passive: true })
-  
-  return () => {
-    document.removeEventListener('touchstart', handleTouch)
-    document.removeEventListener('wheel', handleWheel)
-  }
-}, [])
+    const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX);
+    const handleWheel = (e: WheelEvent) => console.log(e.deltaY);
+
+    document.addEventListener("touchstart", handleTouch);
+    document.addEventListener("wheel", handleWheel);
+
+    return () => {
+        document.removeEventListener("touchstart", handleTouch);
+        document.removeEventListener("wheel", handleWheel);
+    };
+}, []);
 ```
 
-**Use passive when:** tracking/analytics, logging, any listener that doesn't call `preventDefault()`.
+**正确示范:**
 
-**Don't use passive when:** implementing custom swipe gestures, custom zoom controls, or any listener that needs `preventDefault()`.
+```typescript
+useEffect(() => {
+    const handleTouch = (e: TouchEvent) => console.log(e.touches[0].clientX);
+    const handleWheel = (e: WheelEvent) => console.log(e.deltaY);
+
+    document.addEventListener("touchstart", handleTouch, { passive: true });
+    document.addEventListener("wheel", handleWheel, { passive: true });
+
+    return () => {
+        document.removeEventListener("touchstart", handleTouch);
+        document.removeEventListener("wheel", handleWheel);
+    };
+}, []);
+```
+
+**何时使用 passive:** 追踪/分析、日志记录、任何不调用 `preventDefault()` 的监听器。
+
+**何时不使用 passive:** 实现自定义滑动手势、自定义缩放控制或任何需要 `preventDefault()` 的监听器。
 
 ---
 
-## Rule 4.3: Use SWR for Automatic Deduplication
+## 规则 4.3: 使用 SWR 进行自动去重
 
-**Impact:** MEDIUM-HIGH  
-**Tags:** client, swr, deduplication, data-fetching  
+**影响:** 中高 (MEDIUM-HIGH)
+**标签:** client, swr, deduplication, data-fetching
 
-## Use SWR for Automatic Deduplication
+## 使用 SWR 进行自动去重
 
-SWR enables request deduplication, caching, and revalidation across component instances.
+SWR 支持跨组件实例的请求去重、缓存和重新验证。
 
-**Incorrect (no deduplication, each instance fetches):**
+**错误示范 (无去重，每个实例都 fetch):**
 
 ```tsx
 function UserList() {
-  const [users, setUsers] = useState([])
-  useEffect(() => {
-    fetch('/api/users')
-      .then(r => r.json())
-      .then(setUsers)
-  }, [])
+    const [users, setUsers] = useState([]);
+    useEffect(() => {
+        fetch("/api/users")
+            .then((r) => r.json())
+            .then(setUsers);
+    }, []);
 }
 ```
 
-**Correct (multiple instances share one request):**
+**正确示范 (多个实例共享一个请求):**
 
 ```tsx
-import useSWR from 'swr'
+import useSWR from "swr";
 
 function UserList() {
-  const { data: users } = useSWR('/api/users', fetcher)
+    const { data: users } = useSWR("/api/users", fetcher);
 }
 ```
 
-**For immutable data:**
+**对于不可变数据:**
 
 ```tsx
-import { useImmutableSWR } from '@/lib/swr'
+import { useImmutableSWR } from "@/lib/swr";
 
 function StaticContent() {
-  const { data } = useImmutableSWR('/api/config', fetcher)
+    const { data } = useImmutableSWR("/api/config", fetcher);
 }
 ```
 
-**For mutations:**
+**对于变更 (Mutations):**
 
 ```tsx
-import { useSWRMutation } from 'swr/mutation'
+import { useSWRMutation } from "swr/mutation";
 
 function UpdateButton() {
-  const { trigger } = useSWRMutation('/api/user', updateUser)
-  return <button onClick={() => trigger()}>Update</button>
+    const { trigger } = useSWRMutation("/api/user", updateUser);
+    return <button onClick={() => trigger()}>Update</button>;
 }
 ```
 
-Reference: [https://swr.vercel.app](https://swr.vercel.app)
+参考: [https://swr.vercel.app](https://swr.vercel.app)
 
 ---
 
-## Rule 4.4: Version and Minimize localStorage Data
+## 规则 4.4: 对 localStorage 数据进行版本控制和最小化
 
-**Impact:** MEDIUM  
-**Tags:** client, localStorage, storage, versioning, data-minimization  
+**影响:** 中 (MEDIUM)
+**标签:** client, localStorage, storage, versioning, data-minimization
 
-## Version and Minimize localStorage Data
+## 对 localStorage 数据进行版本控制和最小化
 
-Add version prefix to keys and store only needed fields. Prevents schema conflicts and accidental storage of sensitive data.
+为 key 添加版本前缀，只存储需要的字段。防止 Schema 冲突和意外存储敏感数据。
 
-**Incorrect:**
+**错误示范:**
 
 ```typescript
-// No version, stores everything, no error handling
-localStorage.setItem('userConfig', JSON.stringify(fullUserObject))
-const data = localStorage.getItem('userConfig')
+// 无版本，存储所有内容，无错误处理
+localStorage.setItem("userConfig", JSON.stringify(fullUserObject));
+const data = localStorage.getItem("userConfig");
 ```
 
-**Correct:**
+**正确示范:**
 
 ```typescript
-const VERSION = 'v2'
+const VERSION = "v2";
 
 function saveConfig(config: { theme: string; language: string }) {
-  try {
-    localStorage.setItem(`userConfig:${VERSION}`, JSON.stringify(config))
-  } catch {
-    // Throws in incognito/private browsing, quota exceeded, or disabled
-  }
+    try {
+        localStorage.setItem(`userConfig:${VERSION}`, JSON.stringify(config));
+    } catch {
+        // 在隐身/隐私浏览模式、配额超出或禁用时抛出异常
+    }
 }
 
 function loadConfig() {
-  try {
-    const data = localStorage.getItem(`userConfig:${VERSION}`)
-    return data ? JSON.parse(data) : null
-  } catch {
-    return null
-  }
+    try {
+        const data = localStorage.getItem(`userConfig:${VERSION}`);
+        return data ? JSON.parse(data) : null;
+    } catch {
+        return null;
+    }
 }
 
-// Migration from v1 to v2
+// 从 v1 迁移到 v2
 function migrate() {
-  try {
-    const v1 = localStorage.getItem('userConfig:v1')
-    if (v1) {
-      const old = JSON.parse(v1)
-      saveConfig({ theme: old.darkMode ? 'dark' : 'light', language: old.lang })
-      localStorage.removeItem('userConfig:v1')
-    }
-  } catch {}
+    try {
+        const v1 = localStorage.getItem("userConfig:v1");
+        if (v1) {
+            const old = JSON.parse(v1);
+            saveConfig({
+                theme: old.darkMode ? "dark" : "light",
+                language: old.lang,
+            });
+            localStorage.removeItem("userConfig:v1");
+        }
+    } catch {}
 }
 ```
 
-**Store minimal fields from server responses:**
+**仅存储服务器响应中的最小字段:**
 
 ```typescript
-// User object has 20+ fields, only store what UI needs
+// 用户对象有 20+ 个字段，只存储 UI 需要的
 function cachePrefs(user: FullUser) {
-  try {
-    localStorage.setItem('prefs:v1', JSON.stringify({
-      theme: user.preferences.theme,
-      notifications: user.preferences.notifications
-    }))
-  } catch {}
+    try {
+        localStorage.setItem(
+            "prefs:v1",
+            JSON.stringify({
+                theme: user.preferences.theme,
+                notifications: user.preferences.notifications,
+            }),
+        );
+    } catch {}
 }
 ```
 
-**Always wrap in try-catch:** `getItem()` and `setItem()` throw in incognito/private browsing (Safari, Firefox), when quota exceeded, or when disabled.
+**始终包裹在 try-catch 中:** `getItem()` 和 `setItem()` 在隐身/隐私浏览模式 (Safari, Firefox)、配额超出或被禁用时会抛出异常。
 
-**Benefits:** Schema evolution via versioning, reduced storage size, prevents storing tokens/PII/internal flags.
-
+**益处:** 通过版本控制进行 Schema 演进、减少存储大小、防止存储令牌/PII/内部标志。

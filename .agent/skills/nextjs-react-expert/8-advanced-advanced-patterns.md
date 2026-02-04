@@ -1,150 +1,149 @@
-# 8. Advanced Patterns
+# 8. 高级模式 (Advanced Patterns)
 
-> **Impact:** VARIABLE
-> **Focus:** Advanced patterns for specific cases that require careful implementation.
-
----
-
-## Overview
-
-This section contains **3 rules** focused on advanced patterns.
+> **影响:** 可变 (VARIABLE)
+> **重点:** 针对需要仔细实现的特定情况的高级模式。
 
 ---
 
-## Rule 8.1: Initialize App Once, Not Per Mount
+## 概览
 
-**Impact:** LOW-MEDIUM  
-**Tags:** initialization, useEffect, app-startup, side-effects  
+本节包含 **3 条规则**，专注于高级模式。
 
-## Initialize App Once, Not Per Mount
+---
 
-Do not put app-wide initialization that must run once per app load inside `useEffect([])` of a component. Components can remount and effects will re-run. Use a module-level guard or top-level init in the entry module instead.
+## 规则 8.1: 初始化应用一次，而不是每次挂载
 
-**Incorrect (runs twice in dev, re-runs on remount):**
+**影响:** 中低 (LOW-MEDIUM)
+**标签:** initialization, useEffect, app-startup, side-effects
+
+## 初始化应用一次，而不是每次挂载
+
+不要将必须在每个应用加载时运行一次的应用级初始化放在组件的 `useEffect([])` 内部。组件可以重新挂载，effect 会重新运行。请改用模块级守卫或入口模块中的顶层初始化。
+
+**错误 (在开发环境中运行两次，在重新挂载时重新运行):**
 
 ```tsx
 function Comp() {
-  useEffect(() => {
-    loadFromStorage()
-    checkAuthToken()
-  }, [])
+    useEffect(() => {
+        loadFromStorage();
+        checkAuthToken();
+    }, []);
 
-  // ...
+    // ...
 }
 ```
 
-**Correct (once per app load):**
+**正确 (每个应用加载一次):**
 
 ```tsx
-let didInit = false
+let didInit = false;
 
 function Comp() {
-  useEffect(() => {
-    if (didInit) return
-    didInit = true
-    loadFromStorage()
-    checkAuthToken()
-  }, [])
+    useEffect(() => {
+        if (didInit) return;
+        didInit = true;
+        loadFromStorage();
+        checkAuthToken();
+    }, []);
 
-  // ...
+    // ...
 }
 ```
 
-Reference: [Initializing the application](https://react.dev/learn/you-might-not-need-an-effect#initializing-the-application)
+参考: [初始化应用](https://react.dev/learn/you-might-not-need-an-effect#initializing-the-application)
 
 ---
 
-## Rule 8.2: Store Event Handlers in Refs
+## 规则 8.2: 将事件处理程序存储在 Ref 中
 
-**Impact:** LOW  
-**Tags:** advanced, hooks, refs, event-handlers, optimization  
+**影响:** 低 (LOW)
+**标签:** advanced, hooks, refs, event-handlers, optimization
 
-## Store Event Handlers in Refs
+## 将事件处理程序存储在 Ref 中
 
-Store callbacks in refs when used in effects that shouldn't re-subscribe on callback changes.
+当在不应能在回调更改时重新订阅的 effect 中使用回调时，将回调存储在 ref 中。
 
-**Incorrect (re-subscribes on every render):**
-
-```tsx
-function useWindowEvent(event: string, handler: (e) => void) {
-  useEffect(() => {
-    window.addEventListener(event, handler)
-    return () => window.removeEventListener(event, handler)
-  }, [event, handler])
-}
-```
-
-**Correct (stable subscription):**
+**错误 (每次渲染都重新订阅):**
 
 ```tsx
 function useWindowEvent(event: string, handler: (e) => void) {
-  const handlerRef = useRef(handler)
-  useEffect(() => {
-    handlerRef.current = handler
-  }, [handler])
-
-  useEffect(() => {
-    const listener = (e) => handlerRef.current(e)
-    window.addEventListener(event, listener)
-    return () => window.removeEventListener(event, listener)
-  }, [event])
+    useEffect(() => {
+        window.addEventListener(event, handler);
+        return () => window.removeEventListener(event, handler);
+    }, [event, handler]);
 }
 ```
 
-**Alternative: use `useEffectEvent` if you're on latest React:**
+**正确 (稳定订阅):**
 
 ```tsx
-import { useEffectEvent } from 'react'
-
 function useWindowEvent(event: string, handler: (e) => void) {
-  const onEvent = useEffectEvent(handler)
+    const handlerRef = useRef(handler);
+    useEffect(() => {
+        handlerRef.current = handler;
+    }, [handler]);
 
-  useEffect(() => {
-    window.addEventListener(event, onEvent)
-    return () => window.removeEventListener(event, onEvent)
-  }, [event])
+    useEffect(() => {
+        const listener = (e) => handlerRef.current(e);
+        window.addEventListener(event, listener);
+        return () => window.removeEventListener(event, listener);
+    }, [event]);
 }
 ```
 
-`useEffectEvent` provides a cleaner API for the same pattern: it creates a stable function reference that always calls the latest version of the handler.
+**替代方案: 如果你使用的是最新 React，请使用 `useEffectEvent`:**
+
+```tsx
+import { useEffectEvent } from "react";
+
+function useWindowEvent(event: string, handler: (e) => void) {
+    const onEvent = useEffectEvent(handler);
+
+    useEffect(() => {
+        window.addEventListener(event, onEvent);
+        return () => window.removeEventListener(event, onEvent);
+    }, [event]);
+}
+```
+
+`useEffectEvent` 为相同的模式提供了更清晰的 API：它创建一个稳定的函数引用，始终调用处理程序的最新版本。
 
 ---
 
-## Rule 8.3: useEffectEvent for Stable Callback Refs
+## 规则 8.3: 用于稳定回调 Ref 的 useEffectEvent
 
-**Impact:** LOW  
-**Tags:** advanced, hooks, useEffectEvent, refs, optimization  
+**影响:** 低 (LOW)
+**标签:** advanced, hooks, useEffectEvent, refs, optimization
 
-## useEffectEvent for Stable Callback Refs
+## 用于稳定回调 Ref 的 useEffectEvent
 
-Access latest values in callbacks without adding them to dependency arrays. Prevents effect re-runs while avoiding stale closures.
+在回调中访问最新值，而无需将其添加到依赖数组中。防止 Effect 重新运行，同时避免过时的闭包。
 
-**Incorrect (effect re-runs on every callback change):**
+**错误 (effect 在每次回调更改时重新运行):**
 
 ```tsx
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
-  const [query, setQuery] = useState('')
+    const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    const timeout = setTimeout(() => onSearch(query), 300)
-    return () => clearTimeout(timeout)
-  }, [query, onSearch])
+    useEffect(() => {
+        const timeout = setTimeout(() => onSearch(query), 300);
+        return () => clearTimeout(timeout);
+    }, [query, onSearch]);
 }
 ```
 
-**Correct (using React's useEffectEvent):**
+**正确 (使用 React 的 useEffectEvent):**
 
 ```tsx
-import { useEffectEvent } from 'react';
+import { useEffectEvent } from "react";
 
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
-  const [query, setQuery] = useState('')
-  const onSearchEvent = useEffectEvent(onSearch)
+    const [query, setQuery] = useState("");
+    const onSearchEvent = useEffectEvent(onSearch);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => onSearchEvent(query), 300)
-    return () => clearTimeout(timeout)
-  }, [query])
+    useEffect(() => {
+        const timeout = setTimeout(() => onSearchEvent(query), 300);
+        return () => clearTimeout(timeout);
+    }, [query]);
 }
 ```
-

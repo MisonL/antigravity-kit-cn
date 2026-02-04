@@ -1,41 +1,41 @@
-# tRPC Principles
+# tRPC 原则
 
-> End-to-end type safety for TypeScript monorepos.
+> 为 TypeScript Monorepo 打造的端到端类型安全。
 
-## When to Use
-
-```
-✅ Perfect fit:
-├── TypeScript on both ends
-├── Monorepo structure
-├── Internal tools
-├── Rapid development
-└── Type safety critical
-
-❌ Poor fit:
-├── Non-TypeScript clients
-├── Public API
-├── Need REST conventions
-└── Multiple language backends
-```
-
-## Key Benefits
+## 何时使用
 
 ```
-Why tRPC:
-├── Zero schema maintenance
-├── End-to-end type inference
-├── IDE autocomplete across stack
-├── Instant API changes reflected
-└── No code generation step
+✅ 完美契合:
+├── 前后端均为 TypeScript
+├── Monorepo 项目结构
+├── 内部工具开发
+├── 快速开发迭代
+└── 类型安全至关重要
+
+❌ 不契合:
+├── 非 TypeScript 客户端
+├── 公共 API 服务
+├── 需要遵循 REST 惯例
+└── 多语言后端环境
 ```
 
-## Integration Patterns
+## 核心优势
 
 ```
-Common setups:
-├── Next.js + tRPC (most common)
-├── Monorepo with shared types
+为什么要用 tRPC:
+├── 零 Schema 维护成本
+├── 端到端类型推断
+├── 跨技术栈的 IDE 自动补全
+├── API 变更即时反映在前端
+└── 无需代码生成步骤
+```
+
+## 集成模式
+
+```
+常见配置:
+├── Next.js + tRPC (最常见)
+├── Monorepo 共享类型定义
 ├── Remix + tRPC
-└── Any TS frontend + backend
+└── 任意 TS 前端 + 后端
 ```

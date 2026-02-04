@@ -1,132 +1,126 @@
----
-name: multiplayer
-description: Multiplayer game development principles. Architecture, networking, synchronization.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
----
+# 多人游戏开发 (Multiplayer Game Development)
 
-# Multiplayer Game Development
-
-> Networking architecture and synchronization principles.
+> 网络架构和同步原则。
 
 ---
 
-## 1. Architecture Selection
+## 1. 架构选择
 
-### Decision Tree
+### 决策树
 
 ```
-What type of multiplayer?
+什么类型的多人游戏？
 │
-├── Competitive / Real-time
-│   └── Dedicated Server (authoritative)
+├── 竞技 / 实时
+│   └── 专用服务器 (Dedicated Server) (权威)
 │
-├── Cooperative / Casual
-│   └── Host-based (one player is server)
+├── 合作 / 休闲
+│   └── 基于主机 (Host-based) (一个玩家作为服务器)
 │
-├── Turn-based
-│   └── Client-server (simple)
+├── 回合制
+│   └── 客户端-服务器 (Client-server) (简单)
 │
-└── Massive (MMO)
-    └── Distributed servers
+└── 大型 (MMO)
+    └── 分布式服务器
 ```
 
-### Comparison
+### 比较
 
-| Architecture | Latency | Cost | Security |
-|--------------|---------|------|----------|
-| **Dedicated** | Low | High | Strong |
-| **P2P** | Variable | Low | Weak |
-| **Host-based** | Medium | Low | Medium |
-
----
-
-## 2. Synchronization Principles
-
-### State vs Input
-
-| Approach | Sync What | Best For |
-|----------|-----------|----------|
-| **State Sync** | Game state | Simple, few objects |
-| **Input Sync** | Player inputs | Action games |
-| **Hybrid** | Both | Most games |
-
-### Lag Compensation
-
-| Technique | Purpose |
-|-----------|---------|
-| **Prediction** | Client predicts server |
-| **Interpolation** | Smooth remote players |
-| **Reconciliation** | Fix mispredictions |
-| **Lag compensation** | Rewind for hit detection |
+| 架构           | 延迟 | 成本 | 安全性 |
+| -------------- | ---- | ---- | ------ |
+| **Dedicated**  | 低   | 高   | 强     |
+| **P2P**        | 可变 | 低   | 弱     |
+| **Host-based** | 中   | 低   | 中     |
 
 ---
 
-## 3. Network Optimization
+## 2. 同步原则
 
-### Bandwidth Reduction
+### 状态 vs 输入
 
-| Technique | Savings |
-|-----------|---------|
-| **Delta compression** | Send only changes |
-| **Quantization** | Reduce precision |
-| **Priority** | Important data first |
-| **Area of interest** | Only nearby entities |
+| 方法                      | 同步什么 | 最适合       |
+| ------------------------- | -------- | ------------ |
+| **State Sync (状态同步)** | 游戏状态 | 简单，对象少 |
+| **Input Sync (输入同步)** | 玩家输入 | 动作游戏     |
+| **Hybrid (混合)**         | 两者     | 大多数游戏   |
 
-### Update Rates
+### 延迟补偿 (Lag Compensation)
 
-| Type | Rate |
-|------|------|
-| Position | 20-60 Hz |
-| Health | On change |
-| Inventory | On change |
-| Chat | On send |
+| 技术                            | 目的             |
+| ------------------------------- | ---------------- |
+| **Prediction (预测)**           | 客户端预测服务器 |
+| **Interpolation (插值)**        | 平滑远程玩家     |
+| **Reconciliation (和解)**       | 修正错误预测     |
+| **Lag compensation (延迟补偿)** | 回滚以进击中检测 |
 
 ---
 
-## 4. Security Principles
+## 3. 网络优化
 
-### Server Authority
+### 带宽减少
+
+| 技术                              | 节省         |
+| --------------------------------- | ------------ |
+| **Delta compression (增量压缩)**  | 仅发送变化   |
+| **Quantization (量化)**           | 降低精度     |
+| **Priority (优先级)**             | 重要数据优先 |
+| **Area of interest (感兴趣区域)** | 仅附近实体   |
+
+### 更新率
+
+| 类型   | 速率     |
+| ------ | -------- |
+| 位置   | 20-60 Hz |
+| 生命值 | 变化时   |
+| 库存   | 变化时   |
+| 聊天   | 发送时   |
+
+---
+
+## 4. 安全原则
+
+### 服务器权威
 
 ```
-Client: "I hit the enemy"
-Server: Validate → did projectile actually hit?
-         → was player in valid state?
-         → was timing possible?
+客户端: "我击中了敌人"
+服务器: 验证 → 抛射物真的击中了吗？
+         → 玩家处于有效状态吗？
+         → 时间上可能吗？
 ```
 
-### Anti-Cheat
+### 反作弊
 
-| Cheat | Prevention |
-|-------|------------|
-| Speed hack | Server validates movement |
-| Aimbot | Server validates sight line |
-| Item dupe | Server owns inventory |
-| Wall hack | Don't send hidden data |
-
----
-
-## 5. Matchmaking
-
-### Considerations
-
-| Factor | Impact |
-|--------|--------|
-| **Skill** | Fair matches |
-| **Latency** | Playable connection |
-| **Wait time** | Player patience |
-| **Party size** | Group play |
+| 作弊                 | 预防           |
+| -------------------- | -------------- |
+| 速度挂 (Speed hack)  | 服务器验证移动 |
+| 自瞄 (Aimbot)        | 服务器验证视线 |
+| 复制物品 (Item dupe) | 服务器拥有库存 |
+| 透视 (Wall hack)     | 不发送隐藏数据 |
 
 ---
 
-## 6. Anti-Patterns
+## 5. 匹配 (Matchmaking)
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Trust the client | Server is authority |
-| Send everything | Send only necessary |
-| Ignore latency | Design for 100-200ms |
-| Sync exact positions | Interpolate/predict |
+### 考量因素
+
+| 因素         | 影响       |
+| ------------ | ---------- |
+| **技能**     | 公平比赛   |
+| **延迟**     | 可玩的连接 |
+| **等待时间** | 玩家耐心   |
+| **队伍大小** | 组队游玩   |
 
 ---
 
-> **Remember:** Never trust the client. The server is the source of truth.
+## 6. 反模式
+
+| ❌ 错误      | ✅ 正确           |
+| ------------ | ----------------- |
+| 信任客户端   | 服务器是权威      |
+| 发送一切     | 仅发送必要的      |
+| 忽略延迟     | 为 100-200ms 设计 |
+| 同步精确位置 | 插值/预测         |
+
+---
+
+> **记住:** 永远不要信任客户端。服务器是真理之源。

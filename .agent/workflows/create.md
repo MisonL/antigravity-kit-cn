@@ -1,59 +1,40 @@
 ---
-description: Create new application command. Triggers App Builder skill and starts interactive dialogue with user.
+description: 创建新项目或新功能，包含脚手架生成
 ---
 
-# /create - Create Application
+# 创建 (Create Workflow)
 
-$ARGUMENTS
+**触发命令**: `/create [description]`
 
----
+## 目的
 
-## Task
+这是"将想法转化为代码"的第一步。它负责初始化项目结构、选择技术栈，并生成最初的脚手架代码。
 
-This command starts a new application creation process.
+## 步骤流程
 
-### Steps:
+1. **意图识别**:
+    - 是**新项目** (New Project) 还是**新功能** (New Feature)？
+    - 分析所需领域 (Frontend/Backend/Database/Mobile)。
 
-1. **Request Analysis**
-   - Understand what the user wants
-   - If information is missing, use `conversation-manager` skill to ask
+2. **技术栈确认**:
+    - 如果是新项目，推荐 Next.js + Tailwind (Web) 或 Hono (API)。
+    - 确认是否需要 Docker、CI/CD 等基础设施。
 
-2. **Project Planning**
-   - Use `project-planner` agent for task breakdown
-   - Determine tech stack
-   - Plan file structure
-   - Create plan file and proceed to building
+3. **生成计划**:
+    - 在开始写代码前，先列出将要创建/修改的文件列表。
+    - 让用户确认。
 
-3. **Application Building (After Approval)**
-   - Orchestrate with `app-builder` skill
-   - Coordinate expert agents:
-     - `database-architect` → Schema
-     - `backend-specialist` → API
-     - `frontend-specialist` → UI
+4. **代码生成**:
+    - 调用 `app-builder` 技能。
+    - 顺序创建文件：配置文件 -> 基础组件 -> 业务逻辑 -> 页面。
 
-4. **Preview**
-   - Start with `auto_preview.py` when complete
-   - Present URL to user
+5. **初步验证**:
+    - 运行 Lint 检查。
+    - 提醒用户安装依赖 (`npm install`)。
 
----
+## 示例
 
-## Usage Examples
-
-```
-/create blog site
-/create e-commerce app with product listing and cart
-/create todo app
-/create Instagram clone
-/create crm system with customer management
-```
+> User: /create 一个带有登录页面的 Next.js 仪表盘
+> AI: 收到。我建议使用 Next.js App Router + shadcn/ui。这是生成计划...
 
 ---
-
-## Before Starting
-
-If request is unclear, ask these questions:
-- What type of application?
-- What are the basic features?
-- Who will use it?
-
-Use defaults, add details later.

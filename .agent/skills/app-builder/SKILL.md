@@ -1,75 +1,42 @@
 ---
-name: app-builder
-description: Main application building orchestrator. Creates full-stack applications from natural language requests. Determines project type, selects tech stack, coordinates agents.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
+description: 应用程序构建编排器，负责项目初始化和脚手架生成
 ---
 
-# App Builder - Application Building Orchestrator
+# 应用构建器 (App Builder)
 
-> Analyzes user's requests, determines tech stack, plans structure, and coordinates agents.
+此技能是 `/create` 工作流的核心引擎。它负责根据用户需求选择正确的技术栈并生成初始代码。
 
-## 🎯 Selective Reading Rule
+## 支持的模版类型
 
-**Read ONLY files relevant to the request!** Check the content map, find what you need.
+### 1. Web 应用 (Web App)
 
-| File | Description | When to Read |
-|------|-------------|--------------|
-| `project-detection.md` | Keyword matrix, project type detection | Starting new project |
-| `tech-stack.md` | 2026 default stack, alternatives | Choosing technologies |
-| `agent-coordination.md` | Agent pipeline, execution order | Coordinating multi-agent work |
-| `scaffolding.md` | Directory structure, core files | Creating project structure |
-| `feature-building.md` | Feature analysis, error handling | Adding features to existing project |
-| `templates/SKILL.md` | **Project templates** | Scaffolding new project |
+- **Stack**: Next.js (App Router) + Tailwind CSS + Shadcn/UI
+- **适用**: 仪表盘、SaaS、官网。
 
----
+### 2. API 服务 (Backend API)
 
-## 📦 Templates (13)
+- **Stack**: ElysiaJS (Bun) 或 NestJS
+- **适用**: 微服务、独立后端。
 
-Quick-start scaffolding for new projects. **Read the matching template only!**
+### 3. 移动应用 (Mobile App)
 
-| Template | Tech Stack | When to Use |
-|----------|------------|-------------|
-| [nextjs-fullstack](templates/nextjs-fullstack/TEMPLATE.md) | Next.js + Prisma | Full-stack web app |
-| [nextjs-saas](templates/nextjs-saas/TEMPLATE.md) | Next.js + Stripe | SaaS product |
-| [nextjs-static](templates/nextjs-static/TEMPLATE.md) | Next.js + Framer | Landing page |
-| [nuxt-app](templates/nuxt-app/TEMPLATE.md) | Nuxt 3 + Pinia | Vue full-stack app |
-| [express-api](templates/express-api/TEMPLATE.md) | Express + JWT | REST API |
-| [python-fastapi](templates/python-fastapi/TEMPLATE.md) | FastAPI | Python API |
-| [react-native-app](templates/react-native-app/TEMPLATE.md) | Expo + Zustand | Mobile app |
-| [flutter-app](templates/flutter-app/TEMPLATE.md) | Flutter + Riverpod | Cross-platform mobile |
-| [electron-desktop](templates/electron-desktop/TEMPLATE.md) | Electron + React | Desktop app |
-| [chrome-extension](templates/chrome-extension/TEMPLATE.md) | Chrome MV3 | Browser extension |
-| [cli-tool](templates/cli-tool/TEMPLATE.md) | Node.js + Commander | CLI app |
-| [monorepo-turborepo](templates/monorepo-turborepo/TEMPLATE.md) | Turborepo + pnpm | Monorepo |
+- **Stack**: React Native (Expo)
+- **适用**: iOS/Android 原生应用。
 
----
+### 4. 命令行工具 (CLI)
 
-## 🔗 Related Agents
+- **Stack**: Node.js + Commander + Inquirer
+- **适用**: 开发者工具、脚本。
 
-| Agent | Role |
-|-------|------|
-| `project-planner` | Task breakdown, dependency graph |
-| `frontend-specialist` | UI components, pages |
-| `backend-specialist` | API, business logic |
-| `database-architect` | Schema, migrations |
-| `devops-engineer` | Deployment, preview |
+## 构建步骤
 
----
+1. **结构生成**: 创建文件夹结构。
+2. **依赖配置**: 生成 `package.json`。
+3. **配置初始化**: 生成 `tsconfig.json`, `.eslintrc`, `tailwind.config.js`。
+4. **基础代码**: 写入 `main.ts` 或 `app/page.tsx`。
 
-## Usage Example
+## 最佳实践
 
-```
-User: "Make an Instagram clone with photo sharing and likes"
-
-App Builder Process:
-1. Project type: Social Media App
-2. Tech stack: Next.js + Prisma + Cloudinary + Clerk
-3. Create plan:
-   ├─ Database schema (users, posts, likes, follows)
-   ├─ API routes (12 endpoints)
-   ├─ Pages (feed, profile, upload)
-   └─ Components (PostCard, Feed, LikeButton)
-4. Coordinate agents
-5. Report progress
-6. Start preview
-```
+- **Bun 优先**: 默认使用 Bun 作为运行时和包管理器。
+- **TypeScript**: 默认开启严格模式。
+- **Monorepo**: 如果涉及多个包，推荐使用 Workspaces。

@@ -1,122 +1,130 @@
-# Mobile Debugging Guide
+# 移动端调试指南 (Mobile Debugging Guide)
 
-> **Stop console.log() debugging!**
-> Mobile apps have complex native layers. Text logs are not enough.
-> **This file teaches effective mobile debugging strategies.**
+> **停止使用 console.log() 调试！**
+> 移动应用拥有复杂的原生层。文本日志是不够的。
+> **本文档教授有效的移动端调试策略。**
 
 ---
 
-## 🧠 MOBILE DEBUGGING MINDSET
+## 🧠 移动端调试思维 (Mobile Debugging Mindset)
 
 ```
-Web Debugging:      Mobile Debugging:
+Web 调试:           移动端调试:
 ┌──────────────┐    ┌──────────────┐
-│  Browser     │    │  JS Bridge   │
-│  DevTools    │    │  Native UI   │
-│  Network Tab │    │  GPU/Memory  │
-└──────────────┘    │  Threads     │
+│  浏览器      │    │  JS Bridge   │
+│  DevTools    │    │  原生 UI     │
+│  网络面板    │    │  GPU/内存    │
+└──────────────┘    │  线程        │
                     └──────────────┘
 ```
 
-**Key Differences:**
-1.  **Native Layer:** JS code works, but app crashes? It's likely native (Java/Obj-C).
-2.  **Deployment:** You can't just "refresh". State gets lost or stuck.
-3.  **Network:** SSL Pinning, proxy settings are harder.
-4.  **Device Logs:** `adb logcat` and `Console.app` are your truth.
+**关键区别:**
+
+1.  **原生层 (Native Layer):** 如果 JS 代码没问题但应用崩溃，很可能是原生代码 (Java/Obj-C) 的问题。
+2.  **部署 (Deployment):** 你不能简单地"刷新"。状态可能会丢失或卡住。
+3.  **网络 (Network):** SSL Pinning 和代理设置更难处理。
+4.  **设备日志 (Device Logs):** `adb logcat` 和 `Console.app` 是你的真理来源。
 
 ---
 
-## 🚫 AI DEBUGGING ANTI-PATTERNS
+## 🚫 AI 调试反模式
 
-| ❌ Default | ✅ Mobile-Correct |
-|------------|-------------------|
-| "Add console.logs" | Use Flipper / Reactotron |
-| "Check network tab" | Use Charles Proxy / Proxyman |
-| "It works on simulator" | **Test on Real Device** (HW specific bugs) |
-| "Reinstall node_modules" | **Clean Native Build** (Gradle/Pod cache) |
-| Ignored native logs | Read `logcat` / Xcode logs |
+| ❌ 默认做法             | ✅ 移动端正确做法                   |
+| ----------------------- | ----------------------------------- |
+| "添加 console.logs"     | 使用 Flipper / Reactotron           |
+| "检查网络面板"          | 使用 Charles Proxy / Proxyman       |
+| "在模拟器上可以运行"    | **在真机上测试** (硬件特定 Bug)     |
+| "重新安装 node_modules" | **清理原生构建** (Gradle/Pod cache) |
+| 忽略原生日志            | 阅读 `logcat` / Xcode logs          |
 
 ---
 
-## 1. The Toolset
+## 1. 工具集 (The Toolset)
 
 ### ⚡ React Native & Expo
 
-| Tool | Purpose | Best For |
-|------|---------|----------|
-| **Reactotron** | State/API/Redux | JS side debugging |
-| **Flipper** | Layout/Network/db | Native + JS bridge |
-| **Expo Tools** | Element inspector | Quick UI checks |
+| 工具           | 目的           | 最适合场景     |
+| -------------- | -------------- | -------------- |
+| **Reactotron** | 状态/API/Redux | JS 端调试      |
+| **Flipper**    | 布局/网络/DB   | 原生 + JS 桥接 |
+| **Expo Tools** | 元素检查器     | 快速 UI 检查   |
 
-### 🛠️ Native Layer (The Deep Dive)
+### 🛠️ 原生层 (The Deep Dive)
 
-| Tool | Platform | Command | Why Use? |
-|------|----------|---------|----------|
-| **Logcat** | Android | `adb logcat` | Native crashes, ANRs |
-| **Console** | iOS | via Xcode | Native exceptions, memory |
-| **Layout Insp.** | Android | Android Studio | UI hierarchy bugs |
-| **View Insp.** | iOS | Xcode | UI hierarchy bugs |
-
----
-
-## 2. Common Debugging Workflows
-
-### 🕵️ "The App Just Crashed" (Red Screen vs Crash to Home)
-
-**Scenario A: Red Screen (JS Error)**
-- **Cause:** Undefined is not an object, import error.
-- **Fix:** Read the stack trace on screen. It's usually clear.
-
-**Scenario B: Crash to Home Screen (Native Crash)**
-- **Cause:** Native module failure, memory OOM, permission usage without declaration.
-- **Tools:**
-    - **Android:** `adb logcat *:E` (Filter for Errors)
-    - **iOS:** Open Xcode → Window → Devices → View Device Logs
-
-> **💡 Pro Tip:** If app crashes immediately on launch, it's almost 100% a native configuration issue (Info.plist, AndroidManifest.xml).
-
-### 🌐 "API Request Failed" (Network)
-
-**Web:** Open Chrome DevTools → Network.
-**Mobile:** *You usually can't see this easily.*
-
-**Solution 1: Reactotron/Flipper**
-- View network requests in the monitoring app.
-
-**Solution 2: Proxy (Charles/Proxyman)**
-- **Hard but powerful.** See ALL traffic even from native SDKs.
-- Requires installing SSL cert on device.
-
-### 🐢 "The UI is Laggy" (Performance)
-
-**Don't guess.** measure.
-- **React Native:** Performance Monitor (Shake menu).
-- **Android:** "Profile GPU Rendering" in Developer Options.
-- **Issues:**
-    - **JS FPS drop:** Heavy calculation in JS thread.
-    - **UI FPS drop:** Too many views, intricate hierarchy, heavy images.
+| 工具             | 平台    | 命令           | 为何使用?      |
+| ---------------- | ------- | -------------- | -------------- |
+| **Logcat**       | Android | `adb logcat`   | 原生崩溃, ANRs |
+| **Console**      | iOS     | via Xcode      | 原生异常, 内存 |
+| **Layout Insp.** | Android | Android Studio | UI 层级 Bug    |
+| **View Insp.**   | iOS     | Xcode          | UI 层级 Bug    |
 
 ---
 
-## 3. Platform-Specific Nightmares
+## 2. 常见调试工作流
+
+### 🕵️ "应用刚刚崩溃了" (红屏 vs 闪退到桌面)
+
+**场景 A: 红屏 (Red Screen - JS 错误)**
+
+- **原因:** Undefined is not an object, import error.
+- **修复:** 阅读屏幕上的堆栈跟踪。通常很清晰。
+
+**场景 B: 闪退到桌面 (Native Crash)**
+
+- **原因:** 原生模块失败, OOM (内存溢出), 权限使用未声明。
+- **工具:**
+    - **Android:** `adb logcat *:E` (过滤错误)
+    - **iOS:** 打开 Xcode → Window → Devices → View Device Logs
+
+> **💡 专家提示:** 如果应用启动即崩溃，几乎 100% 是原生配置问题 (Info.plist, AndroidManifest.xml)。
+
+### 🌐 "API 请求失败" (网络)
+
+**Web:** 打开 Chrome DevTools → Network.
+**Mobile:** _你通常无法直接看到。_
+
+**方案 1: Reactotron/Flipper**
+
+- 在监控应用中查看网络请求。
+
+**方案 2: Proxy (Charles/Proxyman)**
+
+- **困难但强大。** 这里的甚至可以看到原生 SDK 的所有流量。
+- 需要在设备上安装 SSL 证书。
+
+### 🐢 "UI 卡顿" (性能)
+
+**不要猜。** 测量它。
+
+- **React Native:** Performance Monitor (摇晃菜单).
+- **Android:** 开发者选项中的 "GPU 呈现模式分析" (Profile GPU Rendering).
+- **问题:**
+    - **JS FPS 下降:** JavaScript 线程中计算过重。
+    - **UI FPS 下降:** 视图过多, 层级过于复杂, 图片过大。
+
+---
+
+## 3. 平台特定噩梦
 
 ### Android
-- **Gradle Sync Fail:** Usually Java version mismatch or duplicate classes.
-- **Emulator Network:** Emulator `localhost` is `10.0.2.2`, NOT `127.0.0.1`.
-- **Cached Builds:** `./gradlew clean` is your best friend.
+
+- **Gradle Sync Fail:** 通常是 Java 版本不匹配或重复的类。
+- **Emulator Network:** 模拟器的 `localhost` 是 `10.0.2.2`, **不是** `127.0.0.1`。
+- **Cached Builds:** `./gradlew clean` 是你最好的朋友。
 
 ### iOS
-- **Pod Issues:** `pod deintegrate && pod install`.
-- **Signing Errors:** Check Team ID and Bundle Identifier.
-- **Cache:** Xcode → Product → Clean Build Folder.
+
+- **Pod Issues:** `pod deintegrate && pod install`。
+- **Signing Errors:** 检查 Team ID 和 Bundle Identifier。
+- **Cache:** Xcode → Product → Clean Build Folder。
 
 ---
 
-## 📝 DEBUGGING CHECKLIST
+## 📝 调试检查清单
 
-- [ ] **Is it a JS or Native crash?** (Red screen or home screen?)
-- [ ] **Did you clean build?** (Native caches are aggressive)
-- [ ] **Are you on a real device?** (Simulators hide concurrency bugs)
-- [ ] **Did you check the native logs?** (Not just terminal output)
+- [ ] **是 JS 崩溃还是原生崩溃?** (红屏还是桌面?)
+- [ ] **你清理构建了吗?** (原生缓存非常顽固)
+- [ ] **你在真机上吗?** (模拟器会隐藏并发 Bug)
+- [ ] **你检查原生日志了吗?** (不仅仅是终端输出)
 
-> **Remember:** If JavaScript looks perfect but the app fails, look closer at the Native side.
+> **记住:** 如果 JavaScript 看起来完美但应用失败，请仔细检查原生端。

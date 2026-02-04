@@ -1,154 +1,32 @@
 ---
-name: i18n-localization
-description: Internationalization and localization patterns. Detecting hardcoded strings, managing translations, locale files, RTL support.
-allowed-tools: Read, Glob, Grep
+description: 国际化与本地化模式，RTL 支持
 ---
 
-# i18n & Localization
+# 国际化 (i18n & l10n)
 
-> Internationalization (i18n) and Localization (L10n) best practices.
+## 核心原则
 
----
+1.  **不要硬编码字符串**
+    - ❌ `<h1>Welcome</h1>`
+    - ✅ `<h1>{t('welcome')}</h1>`
 
-## 1. Core Concepts
+2.  **不仅是翻译**
+    - **日期格式**: MM/DD/YYYY vs DD/MM/YYYY。
+    - **货币**: $ vs ¥ vs € (符号位置不同)。
+    - **数字**: 1,000.00 vs 1.000,00。
+    - **复数**: 英语只有单复数，某些语言有 3-4 种复数形式。
 
-| Term | Meaning |
-|------|---------|
-| **i18n** | Internationalization - making app translatable |
-| **L10n** | Localization - actual translations |
-| **Locale** | Language + Region (en-US, tr-TR) |
-| **RTL** | Right-to-left languages (Arabic, Hebrew) |
+3.  **RTL 支持 (右到左)**
+    - 阿拉伯语、希伯来语。
+    - 使用 `margin-inline-start` 代替 `margin-left`。
+    - 使用 `flex-direction` 的逻辑属性。
 
----
+## 技术栈推荐
 
-## 2. When to Use i18n
+- **React**: `react-i18next` 或 `next-intl`。
+- **Key 命名**: 使用层级结构 `home.hero.title`。
 
-| Project Type | i18n Needed? |
-|--------------|--------------|
-| Public web app | ✅ Yes |
-| SaaS product | ✅ Yes |
-| Internal tool | ⚠️ Maybe |
-| Single-region app | ⚠️ Consider future |
-| Personal project | ❌ Optional |
+## 常见坑点
 
----
-
-## 3. Implementation Patterns
-
-### React (react-i18next)
-
-```tsx
-import { useTranslation } from 'react-i18next';
-
-function Welcome() {
-  const { t } = useTranslation();
-  return <h1>{t('welcome.title')}</h1>;
-}
-```
-
-### Next.js (next-intl)
-
-```tsx
-import { useTranslations } from 'next-intl';
-
-export default function Page() {
-  const t = useTranslations('Home');
-  return <h1>{t('title')}</h1>;
-}
-```
-
-### Python (gettext)
-
-```python
-from gettext import gettext as _
-
-print(_("Welcome to our app"))
-```
-
----
-
-## 4. File Structure
-
-```
-locales/
-├── en/
-│   ├── common.json
-│   ├── auth.json
-│   └── errors.json
-├── tr/
-│   ├── common.json
-│   ├── auth.json
-│   └── errors.json
-└── ar/          # RTL
-    └── ...
-```
-
----
-
-## 5. Best Practices
-
-### DO ✅
-
-- Use translation keys, not raw text
-- Namespace translations by feature
-- Support pluralization
-- Handle date/number formats per locale
-- Plan for RTL from the start
-- Use ICU message format for complex strings
-
-### DON'T ❌
-
-- Hardcode strings in components
-- Concatenate translated strings
-- Assume text length (German is 30% longer)
-- Forget about RTL layout
-- Mix languages in same file
-
----
-
-## 6. Common Issues
-
-| Issue | Solution |
-|-------|----------|
-| Missing translation | Fallback to default language |
-| Hardcoded strings | Use linter/checker script |
-| Date format | Use Intl.DateTimeFormat |
-| Number format | Use Intl.NumberFormat |
-| Pluralization | Use ICU message format |
-
----
-
-## 7. RTL Support
-
-```css
-/* CSS Logical Properties */
-.container {
-  margin-inline-start: 1rem;  /* Not margin-left */
-  padding-inline-end: 1rem;   /* Not padding-right */
-}
-
-[dir="rtl"] .icon {
-  transform: scaleX(-1);
-}
-```
-
----
-
-## 8. Checklist
-
-Before shipping:
-
-- [ ] All user-facing strings use translation keys
-- [ ] Locale files exist for all supported languages
-- [ ] Date/number formatting uses Intl API
-- [ ] RTL layout tested (if applicable)
-- [ ] Fallback language configured
-- [ ] No hardcoded strings in components
-
----
-
-## Script
-
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `scripts/i18n_checker.py` | Detect hardcoded strings & missing translations | `python scripts/i18n_checker.py <project_path>` |
+- 字符串拼接：不同语言语序不同。不要用 `You have ` + count + ` messages`。使用插值 `{count, plural, ...}`。
+- 文本长度：德语单词通常比英语长 30%，预留 UI 空间。

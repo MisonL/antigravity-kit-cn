@@ -1,56 +1,56 @@
-# Schema Design Principles
+# Schema 设计原则 (Schema Design Principles)
 
-> Normalization, primary keys, timestamps, relationships.
+> 范式化 (Normalization)、主键、时间戳、关系。
 
-## Normalization Decision
-
-```
-When to normalize (separate tables):
-├── Data is repeated across rows
-├── Updates would need multiple changes
-├── Relationships are clear
-└── Query patterns benefit
-
-When to denormalize (embed/duplicate):
-├── Read performance critical
-├── Data rarely changes
-├── Always fetched together
-└── Simpler queries needed
-```
-
-## Primary Key Selection
-
-| Type | Use When |
-|------|----------|
-| **UUID** | Distributed systems, security |
-| **ULID** | UUID + sortable by time |
-| **Auto-increment** | Simple apps, single database |
-| **Natural key** | Rarely (business meaning) |
-
-## Timestamp Strategy
+## 范式化决策
 
 ```
-For every table:
-├── created_at → When created
-├── updated_at → Last modified
-└── deleted_at → Soft delete (if needed)
+何时范式化 (拆分表):
+├── 数据在多行中重复
+├── 更新需要修改多处
+├── 关系清晰
+└── 查询模式受益于范式化
 
-Use TIMESTAMPTZ (with timezone) not TIMESTAMP
+何时反范式化 (嵌入/复制):
+├── 读取性能至关重要
+├── 数据极少变更
+├── 总是被一起获取
+└── 需要更简单的查询
 ```
 
-## Relationship Types
+## 主键选择
 
-| Type | When | Implementation |
-|------|------|----------------|
-| **One-to-One** | Extension data | Separate table with FK |
-| **One-to-Many** | Parent-children | FK on child table |
-| **Many-to-Many** | Both sides have many | Junction table |
+| 类型                         | 适用场景                |
+| :--------------------------- | :---------------------- |
+| **UUID**                     | 分布式系统、安全性      |
+| **ULID**                     | UUID + 按时间排序       |
+| **自增 ID (Auto-increment)** | 简单应用、单数据库      |
+| **自然键 (Natural key)**     | 极少使用 (具有业务含义) |
 
-## Foreign Key ON DELETE
+## 时间戳策略
 
 ```
-├── CASCADE → Delete children with parent
-├── SET NULL → Children become orphans
-├── RESTRICT → Prevent delete if children exist
-└── SET DEFAULT → Children get default value
+每个表都应包含:
+├── created_at → 创建时间
+├── updated_at → 最后修改时间
+└── deleted_at → 软删除 (如果需要)
+
+⚠️ 使用 TIMESTAMPTZ (带时区) 而不是 TIMESTAMP
+```
+
+## 关系类型
+
+| 类型                      | 场景         | 实现                    |
+| :------------------------ | :----------- | :---------------------- |
+| **一对一 (One-to-One)**   | 扩展数据     | 独立表 + 外键           |
+| **一对多 (One-to-Many)**  | 父子关系     | 子表上的外键            |
+| **多对多 (Many-to-Many)** | 双方都有多个 | 关联表 (Junction table) |
+
+## 外键删除策略 (ON DELETE)
+
+```
+├── CASCADE → 随父记录一起删除子记录
+├── SET NULL → 子记录变孤儿
+├── RESTRICT → 如果存在子记录则阻止删除
+└── SET DEFAULT → 子记录设为默认值
 ```

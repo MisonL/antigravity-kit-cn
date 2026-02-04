@@ -1,42 +1,42 @@
-# API Style Selection (2025)
+# API 风格选择 (API Style Selection)
 
-> REST vs GraphQL vs tRPC - Hangi durumda hangisi?
+> REST vs GraphQL vs tRPC - 何时选择哪一个？
 
-## Decision Tree
+## 决策树
 
 ```
-Who are the API consumers?
+API 消费者是谁？
 │
-├── Public API / Multiple platforms
-│   └── REST + OpenAPI (widest compatibility)
+├── 公共 API / 多个平台 (Web, Mobile, 3rd party)
+│   └── REST + OpenAPI (兼容性最广)
 │
-├── Complex data needs / Multiple frontends
-│   └── GraphQL (flexible queries)
+├── 复杂数据需求 / 多个前端
+│   └── GraphQL (灵活查询)
 │
-├── TypeScript frontend + backend (monorepo)
-│   └── tRPC (end-to-end type safety)
+├── TypeScript 前端 + 后端 (Monorepo)
+│   └── tRPC (端到端类型安全)
 │
-├── Real-time / Event-driven
+├── 实时 / 事件驱动
 │   └── WebSocket + AsyncAPI
 │
-└── Internal microservices
-    └── gRPC (performance) or REST (simplicity)
+└── 内部微服务
+    └── gRPC (高性能) 或 REST (简单)
 ```
 
-## Comparison
+## 对比
 
-| Factor | REST | GraphQL | tRPC |
-|--------|------|---------|------|
-| **Best for** | Public APIs | Complex apps | TS monorepos |
-| **Learning curve** | Low | Medium | Low (if TS) |
-| **Over/under fetching** | Common | Solved | Solved |
-| **Type safety** | Manual (OpenAPI) | Schema-based | Automatic |
-| **Caching** | HTTP native | Complex | Client-based |
+| 因素              | REST           | GraphQL     | tRPC                |
+| :---------------- | :------------- | :---------- | :------------------ |
+| **最佳适用**      | 公共 API       | 复杂应用    | TS Monorepos        |
+| **学习曲线**      | 低             | 中          | 低 (如果是 TS 用户) |
+| **过度/不足获取** | 常见           | 已解决      | 已解决              |
+| **类型安全**      | 手动 (OpenAPI) | 基于 Schema | 自动                |
+| **缓存**          | HTTP 原生支持  | 复杂        | 基于客户端          |
 
-## Selection Questions
+## 选择问题
 
-1. Who are the API consumers?
-2. Is the frontend TypeScript?
-3. How complex are the data relationships?
-4. Is caching critical?
-5. Public or internal API?
+1.  谁是 API 消费者？
+2.  前端是 TypeScript 吗？
+3.  数据关系有多复杂？
+4.  缓存是否至关重要？
+5.  是公共 API 还是内部 API？

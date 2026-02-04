@@ -1,150 +1,144 @@
----
-name: web-games
-description: Web browser game development principles. Framework selection, WebGPU, optimization, PWA.
-allowed-tools: Read, Write, Edit, Glob, Grep
----
+# Web 浏览器游戏开发 (Web Browser Game Development)
 
-# Web Browser Game Development
-
-> Framework selection and browser-specific principles.
+> 框架选择和浏览器特定原则。
 
 ---
 
-## 1. Framework Selection
+## 1. 框架选择
 
-### Decision Tree
+### 决策树
 
 ```
-What type of game?
+什么类型的游戏？
 │
-├── 2D Game
-│   ├── Full game engine features? → Phaser
-│   └── Raw rendering power? → PixiJS
+├── 2D 游戏
+│   ├── 完整的游戏引擎功能？ → Phaser
+│   └── 原始渲染能力？ → PixiJS
 │
-├── 3D Game
-│   ├── Full engine (physics, XR)? → Babylon.js
-│   └── Rendering focused? → Three.js
+├── 3D 游戏
+│   ├── 完整引擎 (物理, XR)？ → Babylon.js
+│   └── 渲染聚焦？ → Three.js
 │
-└── Hybrid / Canvas
-    └── Custom → Raw Canvas/WebGL
+└── 混合 / Canvas
+    └── 自定义 → Raw Canvas/WebGL
 ```
 
-### Comparison (2025)
+### 比较 (2025)
 
-| Framework | Type | Best For |
-|-----------|------|----------|
-| **Phaser 4** | 2D | Full game features |
-| **PixiJS 8** | 2D | Rendering, UI |
-| **Three.js** | 3D | Visualizations, lightweight |
-| **Babylon.js 7** | 3D | Full engine, XR |
-
----
-
-## 2. WebGPU Adoption
-
-### Browser Support (2025)
-
-| Browser | Support |
-|---------|---------|
-| Chrome | ✅ Since v113 |
-| Edge | ✅ Since v113 |
-| Firefox | ✅ Since v131 |
-| Safari | ✅ Since 18.0 |
-| **Total** | **~73%** global |
-
-### Decision
-
-- **New projects**: Use WebGPU with WebGL fallback
-- **Legacy support**: Start with WebGL
-- **Feature detection**: Check `navigator.gpu`
+| 框架             | 类型 | 最适合         |
+| ---------------- | ---- | -------------- |
+| **Phaser 4**     | 2D   | 完整游戏功能   |
+| **PixiJS 8**     | 2D   | 渲染, UI       |
+| **Three.js**     | 3D   | 可视化, 轻量级 |
+| **Babylon.js 7** | 3D   | 完整引擎, XR   |
 
 ---
 
-## 3. Performance Principles
+## 2. WebGPU 采用
 
-### Browser Constraints
+### 浏览器支持 (2025)
 
-| Constraint | Strategy |
-|------------|----------|
-| No local file access | Asset bundling, CDN |
-| Tab throttling | Pause when hidden |
-| Mobile data limits | Compress assets |
-| Audio autoplay | Require user interaction |
+| 浏览器   | 支持          |
+| -------- | ------------- |
+| Chrome   | ✅ 自 v113 起 |
+| Edge     | ✅ 自 v113 起 |
+| Firefox  | ✅ 自 v131 起 |
+| Safari   | ✅ 自 18.0 起 |
+| **总计** | **~73%** 全球 |
 
-### Optimization Priority
+### 决策
 
-1. **Asset compression** - KTX2, Draco, WebP
-2. **Lazy loading** - Load on demand
-3. **Object pooling** - Avoid GC
-4. **Draw call batching** - Reduce state changes
-5. **Web Workers** - Offload heavy computation
-
----
-
-## 4. Asset Strategy
-
-### Compression Formats
-
-| Type | Format |
-|------|--------|
-| Textures | KTX2 + Basis Universal |
-| Audio | WebM/Opus (fallback: MP3) |
-| 3D Models | glTF + Draco/Meshopt |
-
-### Loading Strategy
-
-| Phase | Load |
-|-------|------|
-| Startup | Core assets, <2MB |
-| Gameplay | Stream on demand |
-| Background | Prefetch next level |
+- **新项目**: 使用 WebGPU 并带有 WebGL 回退
+- **遗留支持**: 从 WebGL 开始
+- **特性检测**: 检查 `navigator.gpu`
 
 ---
 
-## 5. PWA for Games
+## 3. 性能原则
 
-### Benefits
+### 浏览器限制
 
-- Offline play
-- Install to home screen
-- Full screen mode
-- Push notifications
+| 限制           | 策略                     |
+| -------------- | ------------------------ |
+| 无本地文件访问 | 资产打包 (Bundling), CDN |
+| 标签页节流     | 隐藏时暂停               |
+| 移动数据限制   | 压缩资产                 |
+| 音频自动播放   | 需要用户交互             |
 
-### Requirements
+### 优化优先级
 
-- Service worker for caching
+1. **资产压缩** - KTX2, Draco, WebP
+2. **懒加载** -按需加载
+3. **对象池** - 避免 GC
+4. **绘制调用合批** - 减少状态变更
+5. **Web Workers** - 卸载繁重计算
+
+---
+
+## 4. 资产策略
+
+### 压缩格式
+
+| 类型    | 格式                   |
+| ------- | ---------------------- |
+| 纹理    | KTX2 + Basis Universal |
+| 音频    | WebM/Opus (回退: MP3)  |
+| 3D 模型 | glTF + Draco/Meshopt   |
+
+### 加载策略
+
+| 阶段     | 加载           |
+| -------- | -------------- |
+| 启动     | 核心资产, <2MB |
+| 游戏过程 | 按需流式传输   |
+| 后台     | 预取下一关     |
+
+---
+
+## 5. 游戏的 PWA
+
+### 优势
+
+- 离线游玩
+- 安装到主屏幕
+- 全屏模式
+- 推送通知
+
+### 要求
+
+- Service worker 用于缓存
 - Web app manifest
 - HTTPS
 
 ---
 
-## 6. Audio Handling
+## 6. 音频处理
 
-### Browser Requirements
+### 浏览器要求
 
-- Audio context requires user interaction
-- Create AudioContext on first click/tap
-- Resume context if suspended
+- 音频上下文需要用户交互
+- 在首次点击/轻触时创建 AudioContext
+- 如果挂起则恢复上下文
 
-### Best Practices
+### 最佳实践
 
-- Use Web Audio API
-- Pool audio sources
-- Preload common sounds
-- Compress with WebM/Opus
-
----
-
-## 7. Anti-Patterns
-
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Load all assets upfront | Progressive loading |
-| Ignore tab visibility | Pause when hidden |
-| Block on audio load | Lazy load audio |
-| Skip compression | Compress everything |
-| Assume fast connection | Handle slow networks |
+- 使用 Web Audio API
+- 池化音频源
+- 预加载常用声音
+- 使用 WebM/Opus 压缩
 
 ---
 
-> **Remember:** Browser is the most accessible platform. Respect its constraints.
+## 7. 反模式
+
+| ❌ 错误            | ✅ 正确      |
+| ------------------ | ------------ |
+| 一次性加载所有资产 | 渐进式加载   |
+| 忽略标签页可见性   | 隐藏时暂停   |
+| 阻塞在音频加载上   | 懒加载音频   |
+| 跳过压缩           | 压缩一切     |
+| 假设快速连接       | 处理慢速网络 |
+
+---
+
+> **记住:** 浏览器是最易访问的平台。尊重它的限制。

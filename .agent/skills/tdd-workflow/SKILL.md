@@ -1,149 +1,30 @@
 ---
-name: tdd-workflow
-description: Test-Driven Development workflow principles. RED-GREEN-REFACTOR cycle.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+description: 测试驱动开发 (TDD) 工作流原则
 ---
 
-# TDD Workflow
+# TDD 工作流 (Test Driven Development)
 
-> Write tests first, code second.
+## 红-绿-重构 (Red-Green-Refactor)
 
----
+1.  **红 (Red)**: 写一个失败的测试。
+    - 这一步迫使你思考接口设计 (API Design)。
+    - 你甚至还没开始写实现代码。
 
-## 1. The TDD Cycle
+2.  **绿 (Green)**: 写出能通过测试的最简单的代码。
+    - 不要考虑优雅，犯规也没关系。
+    - 目标是让测试条变绿。
 
-```
-🔴 RED → Write failing test
-    ↓
-🟢 GREEN → Write minimal code to pass
-    ↓
-🔵 REFACTOR → Improve code quality
-    ↓
-   Repeat...
-```
+3.  **重构 (Refactor)**: 在测试保护下优化代码。
+    - 消除重复，优化命名，提升性能。
+    - 因为有测试，你不用担心改坏。
 
----
+## TDD 的好处
 
-## 2. The Three Laws of TDD
+- **信心**: 你知道代码是工作的。
+- **文档**: 测试用例就是最好的文档。
+- **设计**: 因为要易于测试，代码结构自然会解耦 (低耦合)。
 
-1. Write production code only to make a failing test pass
-2. Write only enough test to demonstrate failure
-3. Write only enough code to make the test pass
+## 什么时候不适合 TDD？
 
----
-
-## 3. RED Phase Principles
-
-### What to Write
-
-| Focus | Example |
-|-------|---------|
-| Behavior | "should add two numbers" |
-| Edge cases | "should handle empty input" |
-| Error states | "should throw for invalid data" |
-
-### RED Phase Rules
-
-- Test must fail first
-- Test name describes expected behavior
-- One assertion per test (ideally)
-
----
-
-## 4. GREEN Phase Principles
-
-### Minimum Code
-
-| Principle | Meaning |
-|-----------|---------|
-| **YAGNI** | You Aren't Gonna Need It |
-| **Simplest thing** | Write the minimum to pass |
-| **No optimization** | Just make it work |
-
-### GREEN Phase Rules
-
-- Don't write unneeded code
-- Don't optimize yet
-- Pass the test, nothing more
-
----
-
-## 5. REFACTOR Phase Principles
-
-### What to Improve
-
-| Area | Action |
-|------|--------|
-| Duplication | Extract common code |
-| Naming | Make intent clear |
-| Structure | Improve organization |
-| Complexity | Simplify logic |
-
-### REFACTOR Rules
-
-- All tests must stay green
-- Small incremental changes
-- Commit after each refactor
-
----
-
-## 6. AAA Pattern
-
-Every test follows:
-
-| Step | Purpose |
-|------|---------|
-| **Arrange** | Set up test data |
-| **Act** | Execute code under test |
-| **Assert** | Verify expected outcome |
-
----
-
-## 7. When to Use TDD
-
-| Scenario | TDD Value |
-|----------|-----------|
-| New feature | High |
-| Bug fix | High (write test first) |
-| Complex logic | High |
-| Exploratory | Low (spike, then TDD) |
-| UI layout | Low |
-
----
-
-## 8. Test Prioritization
-
-| Priority | Test Type |
-|----------|-----------|
-| 1 | Happy path |
-| 2 | Error cases |
-| 3 | Edge cases |
-| 4 | Performance |
-
----
-
-## 9. Anti-Patterns
-
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Skip the RED phase | Watch test fail first |
-| Write tests after | Write tests before |
-| Over-engineer initial | Keep it simple |
-| Multiple asserts | One behavior per test |
-| Test implementation | Test behavior |
-
----
-
-## 10. AI-Augmented TDD
-
-### Multi-Agent Pattern
-
-| Agent | Role |
-|-------|------|
-| Agent A | Write failing tests (RED) |
-| Agent B | Implement to pass (GREEN) |
-| Agent C | Optimize (REFACTOR) |
-
----
-
-> **Remember:** The test is the specification. If you can't write a test, you don't understand the requirement.
+- 探索性编程 (Exploratory / Prototype)。
+- UI 样式调整。

@@ -1,86 +1,39 @@
 ---
-description: Display agent and project status. Progress tracking and status board.
+description: 检查项目和智能体状态
 ---
 
-# /status - Show Status
+# 状态 (Status Workflow)
 
-$ARGUMENTS
+**触发命令**: `/status`
 
----
+## 目的
 
-## Task
+显示当前项目、任务和 Agent 的状态仪表盘。
 
-Show current project and agent status.
+## 显示内容
 
-### What It Shows
+1. **当前任务**:
+    - 读取 `task.md`。
+    - 显示当前正在进行的项目 (In Progress)。
+    - 显示下一步计划。
+    - 显示已完成的里程碑。
 
-1. **Project Info**
-   - Project name and path
-   - Tech stack
-   - Current features
+2. **Agent 状态**:
+    - 当前激活的 Agent。
+    - 当前加载的 Skills。
+    - 使用的模式 (Planning/Execution)。
 
-2. **Agent Status Board**
-   - Which agents are running
-   - Which tasks are completed
-   - Pending work
+3. **项目健康度**:
+    - 上次测试结果。
+    - 待修复的 TODOs。
 
-3. **File Statistics**
-   - Files created count
-   - Files modified count
+## 示例
 
-4. **Preview Status**
-   - Is server running
-   - URL
-   - Health check
-
----
-
-## Example Output
-
-```
-=== Project Status ===
-
-📁 Project: my-ecommerce
-📂 Path: C:/projects/my-ecommerce
-🏷️ Type: nextjs-ecommerce
-📊 Status: active
-
-🔧 Tech Stack:
-   Framework: next.js
-   Database: postgresql
-   Auth: clerk
-   Payment: stripe
-
-✅ Features (5):
-   • product-listing
-   • cart
-   • checkout
-   • user-auth
-   • order-history
-
-⏳ Pending (2):
-   • admin-panel
-   • email-notifications
-
-📄 Files: 73 created, 12 modified
-
-=== Agent Status ===
-
-✅ database-architect → Completed
-✅ backend-specialist → Completed
-🔄 frontend-specialist → Dashboard components (60%)
-⏳ test-engineer → Waiting
-
-=== Preview ===
-
-🌐 URL: http://localhost:3000
-💚 Health: OK
-```
+> User: /status
+> AI:
+> 📊 **项目状态**: 开发中
+> 🔄 **当前任务**: 实现 JWT 认证 (Step 3/5)
+> 🤖 **当前 Agent**: Backend Specialist
+> ✅ **已完成**: 数据库 Schema, 登录接口
 
 ---
-
-## Technical
-
-Status uses these scripts:
-- `python .agent/scripts/session_manager.py status`
-- `python .agent/scripts/auto_preview.py status`

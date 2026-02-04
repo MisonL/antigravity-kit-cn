@@ -1,37 +1,37 @@
-# Response Format Principles
+# 响应格式原则 (Response Format Principles)
 
-> Consistency is key - choose a format and stick to it.
+> 一致性是关键 —— 选择一种格式并坚持使用。
 
-## Common Patterns
-
-```
-Choose one:
-├── Envelope pattern ({ success, data, error })
-├── Direct data (just return the resource)
-└── HAL/JSON:API (hypermedia)
-```
-
-## Error Response
+## 常见模式
 
 ```
-Include:
-├── Error code (for programmatic handling)
-├── User message (for display)
-├── Details (for debugging, field-level errors)
-├── Request ID (for support)
-└── NOT internal details (security!)
+请选择一种:
+├── 信封模式 (Envelope pattern) ({ success, data, error })
+├── 直接数据模式 (直接返回资源本身)
+└── HAL/JSON:API (超媒体格式)
 ```
 
-## Pagination Types
+## 错误响应
 
-| Type | Best For | Trade-offs |
-|------|----------|------------|
-| **Offset** | Simple, jumpable | Performance on large datasets |
-| **Cursor** | Large datasets | Can't jump to page |
-| **Keyset** | Performance critical | Requires sortable key |
+```
+应包含:
+├── 错误代码 (供程序处理)
+├── 用户消息 (供显示)
+├── 详细信息 (供调试，字段级错误)
+├── 请求 ID (供技术支持追溯)
+└── 🚫 绝不包含内部实现细节 (安全隐患!)
+```
 
-### Selection Questions
+## 分页类型
 
-1. How large is the dataset?
-2. Do users need to jump to specific pages?
-3. Is data frequently changing?
+| 类型                | 最佳适用场景       | 权衡 (Trade-offs) |
+| :------------------ | :----------------- | :---------------- |
+| **Offset (偏移量)** | 简单，支持跳转页码 | 大数据集性能差    |
+| **Cursor (游标)**   | 大数据集，无限滚动 | 无法跳转特定页    |
+| **Keyset (键集)**   | 性能至关重要       | 需要可排序的键    |
+
+### 选择问题
+
+1.  数据集有多大？
+2.  用户需要跳转到特定页面吗？
+3.  数据是否频繁变化？

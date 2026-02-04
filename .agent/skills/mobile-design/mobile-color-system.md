@@ -1,420 +1,217 @@
-# Mobile Color System Reference
+---
+description: OLED 优化、深色模式、电池感知色彩与户外可见性
+---
 
-> OLED optimization, dark mode, battery-aware colors, and outdoor visibility.
-> **Color on mobile isn't just aesthetics—it's battery life and usability.**
+# 移动端色彩系统参考 (Mobile Color System Reference)
+
+> OLED 优化、深色模式、电池感知色彩与户外可见性。
+> **移动端的色彩不仅是美学——它关乎电池寿命和可用性。**
 
 ---
 
-## 1. Mobile Color Fundamentals
+## 1. 移动端色彩基础
 
-### Why Mobile Color is Different
+### 为什么移动端色彩不同
 
 ```
-DESKTOP:                           MOBILE:
-├── LCD screens (backlit)          ├── OLED common (self-emissive)
-├── Controlled lighting            ├── Outdoor, bright sun
-├── Stable power                   ├── Battery matters
-├── Personal preference            ├── System-wide dark mode
-└── Static viewing                 └── Variable angles, motion
+桌面端 (DESKTOP):                  移动端 (MOBILE):
+├── LCD 屏幕 (背光)                ├── OLED 普遍 (自发光)
+├── 受控的光照环境                 ├── 户外，强光直射
+├── 稳定的电源                     ├── 电池续航至关重要
+├── 个人偏好                       ├── 系统级深色模式
+└── 静态观看                       └── 视角多变，运动中
 ```
 
-### Mobile Color Priorities
+### 移动端色彩优先级
 
-| Priority | Why |
-|----------|-----|
-| **1. Readability** | Outdoor, variable lighting |
-| **2. Battery efficiency** | OLED = dark mode saves power |
-| **3. System integration** | Dark/light mode support |
-| **4. Semantics** | Error, success, warning colors |
-| **5. Brand** | After functional requirements |
+| 优先级          | 为什么               |
+| :-------------- | :------------------- |
+| **1. 易读性**   | 户外，多变的光照     |
+| **2. 电池效率** | OLED = 深色模式省电  |
+| **3. 系统集成** | 深色/浅色模式支持    |
+| **4. 语义**     | 错误, 成功, 警告颜色 |
+| **5. 品牌**     | 在满足功能需求之后   |
 
 ---
 
-## 2. OLED Considerations
+## 2. OLED 考量
 
-### How OLED Differs
-
-```
-LCD (Liquid Crystal Display):
-├── Backlight always on
-├── Black = backlight through dark filter
-├── Energy use = constant
-└── Dark mode = no battery savings
-
-OLED (Organic LED):
-├── Each pixel emits own light
-├── Black = pixel OFF (zero power)
-├── Energy use = brighter pixels use more
-└── Dark mode = significant battery savings
-```
-
-### Battery Savings with OLED
+### OLED 与 LCD 的区别
 
 ```
-Color energy consumption (relative):
-
-#000000 (True Black)  ████░░░░░░  0%
-#1A1A1A (Near Black)  █████░░░░░  ~15%
-#333333 (Dark Gray)   ██████░░░░  ~30%
-#666666 (Medium Gray) ███████░░░  ~50%
-#FFFFFF (White)       ██████████  100%
-
-Saturated colors also use significant power:
-├── Blue pixels: Most efficient
-├── Green pixels: Medium
-├── Red pixels: Least efficient
-└── Desaturated colors save more
+OLED (有机发光二极管):
+├── 每个像素自己发光
+├── 黑色 = 像素关闭 (零耗电)
+├── 耗电 = 像素越亮耗电越多
+└── 深色模式 = 显著省电
 ```
 
-### True Black vs Near Black
+### 电池节省与 OLED
 
 ```
-#000000 (True Black):
-├── Maximum battery savings
-├── Can cause "black smear" on scroll
-├── Sharp contrast (may be harsh)
-└── Used by Apple in pure dark mode
+色彩能耗 (相对):
 
-#121212 or #1A1A1A (Near Black):
-├── Still good battery savings
-├── Smoother scrolling (no smear)
-├── Slightly softer on eyes
-└── Material Design recommendation
+#000000 (纯黑)        ████░░░░░░  0% (最省电)
+#1A1A1A (近黑)        █████░░░░░  ~15%
+#333333 (深灰)        ██████░░░░  ~30%
+#FFFFFF (纯白)        ██████████  100%
 
-RECOMMENDATION: #000000 for backgrounds, #0D0D0D-#1A1A1A for surfaces
+饱和色也极其耗电:
+├── 蓝色像素: 效率最高
+├── 绿色像素: 中等
+├── 红色像素: 效率最低
+└── 去饱和颜色更省电
+```
+
+### 纯黑 (#000000) vs 近黑 (#121212)
+
+```
+#000000 (纯黑):
+├── 最大化电池节省
+├── 在滚动时可能导致 "黑色拖影 (Black Smear)"
+├── 对比度极高 (可能刺眼)
+└── Apple 的纯深色模式在使用
+
+#121212 (近黑 - Material 推荐):
+├── 依然有不错的省电效果
+├── 滚动更平滑 (无拖影)
+├── 对眼睛稍微柔和
+└── Material Design 推荐
+
+**推荐:** 背景使用 #000000 或 极深灰，表面 (Surface) 使用 #1C1C1E。
 ```
 
 ---
 
-## 3. Dark Mode Design
+## 3. 深色模式设计
 
-### Dark Mode Benefits
-
-```
-Users enable dark mode for:
-├── Battery savings (OLED)
-├── Reduced eye strain (low light)
-├── Personal preference
-├── AMOLED aesthetic
-└── Accessibility (light sensitivity)
-```
-
-### Dark Mode Color Strategy
+### 深色模式色彩策略
 
 ```
-LIGHT MODE                      DARK MODE
+浅色模式 (LIGHT)                深色模式 (DARK)
 ──────────                      ─────────
-Background: #FFFFFF      →      #000000 or #121212
-Surface:    #F5F5F5      →      #1E1E1E
-Surface 2:  #EEEEEE      →      #2C2C2C
+背景:       #FFFFFF      →      #000000 或 #121212
+表面:       #F5F5F5      →      #1C1C1E
+表面 2:     #EEEEEE      →      #2C2C2C
 
-Primary:    #1976D2      →      #90CAF9 (lighter)
-Text:       #212121      →      #E0E0E0 (not pure white)
-Secondary:  #757575      →      #9E9E9E
+主色:       #1976D2      →      #90CAF9 (变浅/减淡)
+文字:       #212121      →      #E0E0E0 (不要纯白)
+次要色:     #757575      →      #9E9E9E
 
-Elevation in dark mode:
-├── Higher = slightly lighter surface
-├── 0dp →  0% overlay
-├── 4dp →  9% overlay
-├── 8dp →  12% overlay
-└── Creates depth without shadows
+深色模式中的高度 (Elevation):
+├── 高度越高 = 表面颜色越浅 (Overlay)
+├── 0dp →  0% 叠加
+├── 4dp →  9% 叠加
+└── 通过亮度区分层级，而不是阴影
 ```
 
-### Text Colors in Dark Mode
-
-| Role | Light Mode | Dark Mode |
-|------|------------|-----------|
-| Primary | #000000 (Black) | #E8E8E8 (Not pure white) |
-| Secondary | #666666 | #B0B0B0 |
-| Disabled | #9E9E9E | #6E6E6E |
-| Links | #1976D2 | #8AB4F8 |
-
-### Color Inversion Rules
+### 颜色反转规则
 
 ```
-DON'T just invert colors:
-├── Saturated colors become eye-burning
-├── Semantic colors lose meaning
-├── Brand colors may break
-└── Contrast ratios change unpredictably
+❌ 不要 仅仅反转颜色:
+├── 饱和色会变得刺眼
+├── 语义色也会失去意义
+├── 品牌色可能崩坏
+└── 对比度变化不可预测
 
-DO create intentional dark palette:
-├── Desaturate primary colors
-├── Use lighter tints for emphasis
-├── Maintain semantic color meanings
-├── Check contrast ratios independently
+✅ 要 创建有意的深色色盘:
+├── 降低主色饱和度
+├── 使用更浅的色调 (Tints) 来强调
+├── 保持语义色的含义
+├── 独立检查对比度
 ```
 
 ---
 
-## 4. Outdoor Visibility
+## 4. 户外可见性
 
-### The Sunlight Problem
-
-```
-Screen visibility outdoors:
-├── Bright sun washes out low contrast
-├── Glare reduces readability
-├── Polarized sunglasses affect
-└── Users shield screen with hand
-
-Affected elements:
-├── Light gray text on white
-├── Subtle color differences
-├── Low opacity overlays
-└── Pastel colors
-```
-
-### High Contrast Strategies
+### 阳光问题
 
 ```
-For outdoor visibility:
+户外屏幕可见性:
+├── 强光会冲淡低对比度内容
+├── 眩光降低可读性
+├── 偏光墨镜会有影响
+└── 用户可能会用手遮挡屏幕
+```
 
-MINIMUM CONTRAST RATIOS:
-├── Normal text: 4.5:1 (WCAG AA)
-├── Large text: 3:1 (WCAG AA)
-├── Recommended: 7:1+ (AAA)
+### 高对比度策略
 
-AVOID:
-├── #999 on #FFF (fails AA)
-├── #BBB on #FFF (fails)
-├── Pale colors on light backgrounds
-└── Subtle gradients for critical info
+```
+为了户外可见性:
 
-DO:
-├── Use system semantic colors
-├── Test in bright environment
-├── Provide high contrast mode
-└── Use solid colors for critical UI
+最小对比度比率:
+├── 普通文字: 4.5:1 (WCAG AA)
+├── 大号文字: 3:1 (WCAG AA)
+├── 推荐: 7:1+ (AAA)
+
+避免 (AVOID):
+├── #999 在 #FFF 上 (未达标 AA)
+├── 浅色在浅色背景上
+└── 关键信息的微妙渐变
+
+建议 (DO):
+├── 使用系统语义色
+├── 在强光环境下测试
+├── 为关键 UI 使用实色
 ```
 
 ---
 
-## 5. Semantic Colors
+## 5. 语义色 (Semantic Colors)
 
-### Consistent Meaning
+### 一致的含义
 
-| Semantic | Meaning | iOS Default | Android Default |
-|----------|---------|-------------|-----------------|
-| Error | Problems, destruction | #FF3B30 | #B3261E |
-| Success | Completion, positive | #34C759 | #4CAF50 |
-| Warning | Attention, caution | #FF9500 | #FFC107 |
-| Info | Information | #007AFF | #2196F3 |
+| 语义               | 含义         | iOS 默认 | Android 默认 |
+| :----------------- | :----------- | :------- | :----------- |
+| **错误 (Error)**   | 问题, 破坏性 | #FF3B30  | #B3261E      |
+| **成功 (Success)** | 完成, 积极   | #34C759  | #4CAF50      |
+| **警告 (Warning)** | 注意, 谨慎   | #FF9500  | #FFC107      |
+| **信息 (Info)**    | 信息         | #007AFF  | #2196F3      |
 
-### Semantic Color Rules
+**规则:**
 
-```
-NEVER use semantic colors for:
-├── Branding (confuses meaning)
-├── Decoration (reduces impact)
-├── Arbitrary styling
-└── Status indicators (use icons too)
-
-ALWAYS:
-├── Pair with icons (colorblind users)
-├── Maintain across light/dark modes
-├── Keep consistent throughout app
-└── Follow platform conventions
-```
-
-### Error State Colors
-
-```
-Error states need:
-├── Red-ish color (semantic)
-├── High contrast against background
-├── Icon reinforcement
-├── Clear text explanation
-
-iOS:
-├── Light: #FF3B30
-├── Dark: #FF453A
-
-Android:
-├── Light: #B3261E
-├── Dark: #F2B8B5 (on error container)
-```
+- **永远不要** 将语义色用于装饰或品牌 (会混淆含义)。
+- **必须** 搭配图标使用 (照顾色盲用户)。
 
 ---
 
-## 6. Dynamic Color (Android)
+## 6. 动态取色 (Dynamic Color - Android)
 
 ### Material You
 
-```
-Android 12+ Dynamic Color:
+Android 12+ 的动态取色：
+用户壁纸 → 提取颜色 → 生成 App 主题
 
-User's wallpaper → Color extraction → App theme
-
-Your app automatically gets:
-├── Primary (from wallpaper dominant)
-├── Secondary (complementary)
-├── Tertiary (accent)
-├── Surface colors (neutral, derived)
-├── On-colors (text on each)
-```
-
-### Supporting Dynamic Color
-
-```kotlin
-// Jetpack Compose
-MaterialTheme(
-    colorScheme = dynamicColorScheme()
-        ?: staticColorScheme() // Fallback for older Android
-)
-
-// React Native
-// Limited support - consider react-native-material-you
-```
-
-### Fallback Colors
-
-```
-When dynamic color unavailable:
-├── Android < 12
-├── User disabled
-├── Non-supporting launchers
-
-Provide static color scheme:
-├── Define your brand colors
-├── Test in both modes
-├── Match dynamic color roles
-└── Support light + dark
-```
+- **支持动态取色**: 使用 Jetpack Compose `dynamicColorScheme()` 或 React Native 相关库。
+- **降级 (Fallback)**: 必须提供一套静态的品牌色主题，以备不支持动态取色的设备或用户关闭该功能。
 
 ---
 
-## 7. Color Accessibility
+## 7. 色彩反模式
 
-### Colorblind Considerations
+### ❌ 常见错误
 
-```
-~8% of men, ~0.5% of women are colorblind
-
-Types:
-├── Protanopia (red weakness)
-├── Deuteranopia (green weakness)
-├── Tritanopia (blue weakness)
-├── Monochromacy (rare, no color)
-
-Design rules:
-├── Never rely on color alone
-├── Use patterns, icons, text
-├── Test with simulation tools
-├── Avoid red/green distinctions only
-```
-
-### Contrast Testing Tools
-
-```
-Use these to verify:
-├── Built-in accessibility inspector (Xcode)
-├── Accessibility Scanner (Android)
-├── Contrast ratio calculators
-├── Colorblind simulation
-└── Test on actual devices in sunlight
-```
-
-### Sufficient Contrast
-
-```
-WCAG Guidelines:
-
-AA (Minimum)
-├── Normal text: 4.5:1
-├── Large text (18pt+): 3:1
-├── UI components: 3:1
-
-AAA (Enhanced)
-├── Normal text: 7:1
-├── Large text: 4.5:1
-
-Mobile recommendation: Meet AA, aim for AAA
-```
+| 错误                   | 问题            | 修复                 |
+| :--------------------- | :-------------- | :------------------- |
+| **浅灰在白色上**       | 户外不可见      | 最小 4.5:1 对比度    |
+| **深色模式用纯白字**   | 眼睛疲劳 (光晕) | 使用 #E0E0E0-#F0F0F0 |
+| **深色模式饱和度未减** | 刺眼, 荧光感    | 降低颜色饱和度       |
+| **红/绿单一指示**      | 色盲用户不可用  | 增加图标辅助         |
+| **忽略系统深色模式**   | 体验割裂        | 必须支持双模式       |
 
 ---
 
-## 8. Color Anti-Patterns
+## 8. 色彩系统检查清单
 
-### ❌ Common Mistakes
-
-| Mistake | Problem | Fix |
-|---------|---------|-----|
-| **Light gray on white** | Invisible outdoors | Min 4.5:1 contrast |
-| **Pure white in dark mode** | Eye strain | Use #E0E0E0-#F0F0F0 |
-| **Same saturation dark mode** | Garish, glowing | Desaturate colors |
-| **Red/green only indicator** | Colorblind users can't see | Add icons |
-| **Semantic colors for brand** | Confusing meaning | Use neutral for brand |
-| **Ignoring system dark mode** | Jarring experience | Support both modes |
-
-### ❌ AI Color Mistakes
-
-```
-AI tends to:
-├── Use same colors for light/dark
-├── Ignore OLED battery implications
-├── Skip contrast calculations
-├── Default to purple/violet (BANNED)
-├── Use low contrast "aesthetic" grays
-├── Not test in outdoor conditions
-└── Forget colorblind users
-
-RULE: Design for the worst case.
-Test in bright sunlight, with colorblindness simulation.
-```
+- [ ] **浅色和深色模式变体已定义？**
+- [ ] **对比度已检查 (4.5:1+)？**
+- [ ] **OLED 电池因素已考虑 (深色背景)？**
+- [ ] **语义色符合惯例？**
+- [ ] **色盲安全 (不依赖纯颜色)？**
+- [ ] **在强阳光下测试过吗？**
+- [ ] **在真实 OLED 设备上测试过深色模式吗？**
 
 ---
 
-## 9. Color System Checklist
-
-### Before Choosing Colors
-
-- [ ] Light and dark mode variants defined?
-- [ ] Contrast ratios checked (4.5:1+)?
-- [ ] OLED battery considered (dark mode)?
-- [ ] Semantic colors follow conventions?
-- [ ] Colorblind-safe (not color-only indicators)?
-
-### Before Release
-
-- [ ] Tested in bright sunlight?
-- [ ] Tested dark mode on OLED device?
-- [ ] System dark mode respected?
-- [ ] Dynamic color supported (Android)?
-- [ ] Error/success/warning consistent?
-- [ ] All text meets contrast requirements?
-
----
-
-## 10. Quick Reference
-
-### Dark Mode Backgrounds
-
-```
-True black (OLED max savings): #000000
-Near black (Material):         #121212
-Surface 1:                     #1E1E1E
-Surface 2:                     #2C2C2C
-Surface 3:                     #3C3C3C
-```
-
-### Text on Dark
-
-```
-Primary:   #E0E0E0 to #ECECEC
-Secondary: #A0A0A0 to #B0B0B0
-Disabled:  #606060 to #707070
-```
-
-### Contrast Ratios
-
-```
-Small text:  4.5:1 (minimum)
-Large text:  3:1 (minimum)
-UI elements: 3:1 (minimum)
-Ideal:       7:1 (AAA)
-```
-
----
-
-> **Remember:** Color on mobile must work in the worst conditions—bright sun, tired eyes, colorblindness, low battery. Pretty colors that fail these tests are useless colors.
+> **记住:** 移动端的色彩必须在最恶劣的条件下也能工作——强光、眼睛疲劳、色盲、低电量。如果在这些测试中失败，再漂亮的颜色也是无用的。

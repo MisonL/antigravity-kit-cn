@@ -1,40 +1,40 @@
-# REST Principles
+# REST 原则 (REST Principles)
 
-> Resource-based API design - nouns not verbs.
+> 基于资源的 API 设计 —— 是名词，而非动词。
 
-## Resource Naming Rules
+## 资源命名规则
 
 ```
-Principles:
-├── Use NOUNS, not verbs (resources, not actions)
-├── Use PLURAL forms (/users not /user)
-├── Use lowercase with hyphens (/user-profiles)
-├── Nest for relationships (/users/123/posts)
-└── Keep shallow (max 3 levels deep)
+设计原则:
+├── 使用名词，而非动词 (表示资源，而非动作)
+├── 使用复数形式 (/users 而不是 /user)
+├── 使用小写字母和连字符 (/user-profiles)
+├── 嵌套表示关系 (/users/123/posts)
+└── 保持层级浅 (最多 3 层深)
 ```
 
-## HTTP Method Selection
+## HTTP 方法选择
 
-| Method | Purpose | Idempotent? | Body? |
-|--------|---------|-------------|-------|
-| **GET** | Read resource(s) | Yes | No |
-| **POST** | Create new resource | No | Yes |
-| **PUT** | Replace entire resource | Yes | Yes |
-| **PATCH** | Partial update | No | Yes |
-| **DELETE** | Remove resource | Yes | No |
+| 方法       | 目的         | 幂等性? | 包含 Body? |
+| :--------- | :----------- | :------ | :--------- |
+| **GET**    | 读取资源     | 是      | 否         |
+| **POST**   | 创建新资源   | 否      | 是         |
+| **PUT**    | 替换整个资源 | 是      | 是         |
+| **PATCH**  | 部分更新     | 否      | 是         |
+| **DELETE** | 移除资源     | 是      | 否         |
 
-## Status Code Selection
+## 状态码选择
 
-| Situation | Code | Why |
-|-----------|------|-----|
-| Success (read) | 200 | Standard success |
-| Created | 201 | New resource created |
-| No content | 204 | Success, nothing to return |
-| Bad request | 400 | Malformed request |
-| Unauthorized | 401 | Missing/invalid auth |
-| Forbidden | 403 | Valid auth, no permission |
-| Not found | 404 | Resource doesn't exist |
-| Conflict | 409 | State conflict (duplicate) |
-| Validation error | 422 | Valid syntax, invalid data |
-| Rate limited | 429 | Too many requests |
-| Server error | 500 | Our fault |
+| 场景        | 代码 | 原因                   |
+| :---------- | :--- | :--------------------- |
+| 成功 (读取) | 200  | 标准成功响应           |
+| 已创建      | 201  | 新资源已创建           |
+| 无内容      | 204  | 操作成功，无需返回内容 |
+| 错误请求    | 400  | 请求格式错误           |
+| 未授权      | 401  | 缺少认证信息或无效     |
+| 禁止访问    | 403  | 认证有效，但无权限     |
+| 未找到      | 404  | 资源不存在             |
+| 冲突        | 409  | 状态冲突 (如重复资源)  |
+| 验证错误    | 422  | 语法正确，但数据无效   |
+| 速率限制    | 429  | 请求过多               |
+| 服务器错误  | 500  | 服务器内部错误         |

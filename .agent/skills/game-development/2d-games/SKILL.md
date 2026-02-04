@@ -1,119 +1,113 @@
----
-name: 2d-games
-description: 2D game development principles. Sprites, tilemaps, physics, camera.
-allowed-tools: Read, Write, Edit, Glob, Grep
----
+# 2D 游戏开发 (2D Game Development)
 
-# 2D Game Development
-
-> Principles for 2D game systems.
+> 2D 游戏系统原则。
 
 ---
 
-## 1. Sprite Systems
+## 1. 精灵系统 (Sprite Systems)
 
-### Sprite Organization
+### 精灵组织
 
-| Component | Purpose |
-|-----------|---------|
-| **Atlas** | Combine textures, reduce draw calls |
-| **Animation** | Frame sequences |
-| **Pivot** | Rotation/scale origin |
-| **Layering** | Z-order control |
+| 组件                 | 用途                                |
+| -------------------- | ----------------------------------- |
+| **Atlas (图集)**     | 合并纹理，减少绘制调用 (draw calls) |
+| **Animation (动画)** | 帧序列                              |
+| **Pivot (轴心)**     | 旋转/缩放原点                       |
+| **Layering (分层)**  | Z序控制 (Z-order)                   |
 
-### Animation Principles
+### 动画原则
 
-- Frame rate: 8-24 FPS typical
-- Squash and stretch for impact
-- Anticipation before action
-- Follow-through after action
-
----
-
-## 2. Tilemap Design
-
-### Tile Considerations
-
-| Factor | Recommendation |
-|--------|----------------|
-| **Size** | 16x16, 32x32, 64x64 |
-| **Auto-tiling** | Use for terrain |
-| **Collision** | Simplified shapes |
-
-### Layers
-
-| Layer | Content |
-|-------|---------|
-| Background | Non-interactive scenery |
-| Terrain | Walkable ground |
-| Props | Interactive objects |
-| Foreground | Parallax overlay |
+- 帧率: 典型 8-24 FPS
+- 挤压与拉伸 (Squash and stretch) 增加冲击力
+- 动作前的预备 (Anticipation)
+- 动作后的跟随 (Follow-through)
 
 ---
 
-## 3. 2D Physics
+## 2. 瓦片地图设计 (Tilemap Design)
 
-### Collision Shapes
+### 瓦片考量
 
-| Shape | Use Case |
-|-------|----------|
-| Box | Rectangular objects |
-| Circle | Balls, rounded |
-| Capsule | Characters |
-| Polygon | Complex shapes |
+| 因素                       | 建议                |
+| -------------------------- | ------------------- |
+| **尺寸**                   | 16x16, 32x32, 64x64 |
+| **自动瓦片 (Auto-tiling)** | 用于地形            |
+| **碰撞**                   | 简化的形状          |
 
-### Physics Considerations
+### 图层
 
-- Pixel-perfect vs physics-based
-- Fixed timestep for consistency
-- Layers for filtering
-
----
-
-## 4. Camera Systems
-
-### Camera Types
-
-| Type | Use |
-|------|-----|
-| **Follow** | Track player |
-| **Look-ahead** | Anticipate movement |
-| **Multi-target** | Two-player |
-| **Room-based** | Metroidvania |
-
-### Screen Shake
-
-- Short duration (50-200ms)
-- Diminishing intensity
-- Use sparingly
+| 图层              | 内容         |
+| ----------------- | ------------ |
+| Background (背景) | 非交互式风景 |
+| Terrain (地形)    | 可行走的地面 |
+| Props (道具)      | 交互式对象   |
+| Foreground (前景) | 视差覆盖层   |
 
 ---
 
-## 5. Genre Patterns
+## 3. 2D 物理
 
-### Platformer
+### 碰撞形状
 
-- Coyote time (leniency after edge)
-- Jump buffering
-- Variable jump height
+| 形状             | 适用场景     |
+| ---------------- | ------------ |
+| Box (盒)         | 矩形物体     |
+| Circle (圆)      | 球，圆形物体 |
+| Capsule (胶囊)   | 角色         |
+| Polygon (多边形) | 复杂形状     |
 
-### Top-down
+### 物理考量
 
-- 8-directional or free movement
-- Aim-based or auto-aim
-- Consider rotation or not
-
----
-
-## 6. Anti-Patterns
-
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Separate textures | Use atlases |
-| Complex collision shapes | Simplified collision |
-| Jittery camera | Smooth following |
-| Pixel-perfect on physics | Choose one approach |
+- 像素完美 vs 基于物理
+- 固定时间步长 (Fixed timestep) 以保持一致性
+- 用于过滤的分层
 
 ---
 
-> **Remember:** 2D is about clarity. Every pixel should communicate.
+## 4. 相机系统
+
+### 相机类型
+
+| 类型                      | 用途                      |
+| ------------------------- | ------------------------- |
+| **Follow (跟随)**         | 追踪玩家                  |
+| **Look-ahead (前瞻)**     | 预测移动                  |
+| **Multi-target (多目标)** | 双人游戏                  |
+| **Room-based (基于房间)** | 银河恶魔城 (Metroidvania) |
+
+### 屏幕震动
+
+- 短持续时间 (50-200ms)
+- 强度递减
+- 适度使用
+
+---
+
+## 5. 类型模式 (Genre Patterns)
+
+### 平台游戏 (Platformer)
+
+- 土狼时间 (Coyote time) (边缘后的宽容度)
+- 跳跃缓冲 (Jump buffering)
+- 可变跳跃高度
+
+### 俯视视角 (Top-down)
+
+- 8方向或自由移动
+- 基于瞄准或自动瞄准
+- 考虑是否旋转
+
+---
+
+## 6. 反模式 (Anti-Patterns)
+
+| ❌ 错误              | ✅ 正确            |
+| -------------------- | ------------------ |
+| 没用单独的纹理       | 使用图集 (Atlases) |
+| 复杂的碰撞形状       | 简化的碰撞         |
+| 抖动的相机           | 平滑跟随           |
+| 在物理上追求像素完美 | 选择一种方法       |
+
+---
+
+> **记住:** 2D 关乎清晰度。每个像素都应该传达信息。

@@ -1,113 +1,38 @@
 ---
-description: Structured brainstorming for projects and features. Explores multiple options before implementation.
+description: 结构化头脑风暴，明确项目需求
 ---
 
-# /brainstorm - Structured Idea Exploration
+# 头脑风暴 (Brainstorm Workflow)
 
-$ARGUMENTS
+**触发命令**: `/brainstorm [topic]`
 
----
+## 目的
 
-## Purpose
+当用户只有一个模糊的想法，或者面临复杂问题不知从何下手时，使用此工作流。不要直接写代码，先理清思路。
 
-This command activates BRAINSTORM mode for structured idea exploration. Use when you need to explore options before committing to an implementation.
+## 步骤流程
 
----
+1. **初始提问**:
+    - 询问项目的核心目标 (Goal)。
+    - 询问目标用户 (Target User)。
+    - 询问核心价值 (Value Proposition)。
 
-## Behavior
+2. **苏格拉底式追问 (Socratic Questioning)**:
+    - 基于用户的回答，提出 3 个以上的深化问题。
+    - 挑战用户的假设 (例如："如果用户离线了怎么办？")。
+    - 探索边界情况 (Edge Cases)。
 
-When `/brainstorm` is triggered:
+3. **方案发散**:
+    - 提出至少 3 种可能的解决方案或技术路线。
+    - 分析每种方案的优缺点 (Pros & Cons)。
 
-1. **Understand the goal**
-   - What problem are we solving?
-   - Who is the user?
-   - What constraints exist?
+4. **收敛总结**:
+    - 如果用户选定了方案，生成一份 `requirements.md` 或 `feature_spec.md`。
+    - 建议下一步行动 (Next Steps)。
 
-2. **Generate options**
-   - Provide at least 3 different approaches
-   - Each with pros and cons
-   - Consider unconventional solutions
+## 示例
 
-3. **Compare and recommend**
-   - Summarize tradeoffs
-   - Give a recommendation with reasoning
-
----
-
-## Output Format
-
-```markdown
-## 🧠 Brainstorm: [Topic]
-
-### Context
-[Brief problem statement]
+> User: /brainstorm 我想做一个待办事项 App
+> AI: 没问题。市面上有很多 Todo App，你想解决什么特定的痛点？是针对极客的纯键盘操作？还是针对团队的协作？
 
 ---
-
-### Option A: [Name]
-[Description]
-
-✅ **Pros:**
-- [benefit 1]
-- [benefit 2]
-
-❌ **Cons:**
-- [drawback 1]
-
-📊 **Effort:** Low | Medium | High
-
----
-
-### Option B: [Name]
-[Description]
-
-✅ **Pros:**
-- [benefit 1]
-
-❌ **Cons:**
-- [drawback 1]
-- [drawback 2]
-
-📊 **Effort:** Low | Medium | High
-
----
-
-### Option C: [Name]
-[Description]
-
-✅ **Pros:**
-- [benefit 1]
-
-❌ **Cons:**
-- [drawback 1]
-
-📊 **Effort:** Low | Medium | High
-
----
-
-## 💡 Recommendation
-
-**Option [X]** because [reasoning].
-
-What direction would you like to explore?
-```
-
----
-
-## Examples
-
-```
-/brainstorm authentication system
-/brainstorm state management for complex form
-/brainstorm database schema for social app
-/brainstorm caching strategy
-```
-
----
-
-## Key Principles
-
-- **No code** - this is about ideas, not implementation
-- **Visual when helpful** - use diagrams for architecture
-- **Honest tradeoffs** - don't hide complexity
-- **Defer to user** - present options, let them decide

@@ -1,123 +1,117 @@
----
-name: vr-ar
-description: VR/AR development principles. Comfort, interaction, performance requirements.
-allowed-tools: Read, Write, Edit, Glob, Grep
----
+# VR/AR 开发 (VR/AR Development)
 
-# VR/AR Development
-
-> Immersive experience principles.
+> 沉浸式体验原则。
 
 ---
 
-## 1. Platform Selection
+## 1. 平台选择
 
-### VR Platforms
+### VR 平台
 
-| Platform | Use Case |
-|----------|----------|
-| **Quest** | Standalone, wireless |
-| **PCVR** | High fidelity |
-| **PSVR** | Console market |
-| **WebXR** | Browser-based |
+| 平台      | 用途       |
+| --------- | ---------- |
+| **Quest** | 独立，无线 |
+| **PCVR**  | 高保真     |
+| **PSVR**  | 主机市场   |
+| **WebXR** | 基于浏览器 |
 
-### AR Platforms
+### AR 平台
 
-| Platform | Use Case |
-|----------|----------|
-| **ARKit** | iOS devices |
-| **ARCore** | Android devices |
-| **WebXR** | Browser AR |
-| **HoloLens** | Enterprise |
-
----
-
-## 2. Comfort Principles
-
-### Motion Sickness Prevention
-
-| Cause | Solution |
-|-------|----------|
-| **Locomotion** | Teleport, snap turn |
-| **Low FPS** | Maintain 90 FPS |
-| **Camera shake** | Avoid or minimize |
-| **Rapid acceleration** | Gradual movement |
-
-### Comfort Settings
-
-- Vignette during movement
-- Snap vs smooth turning
-- Seated vs standing modes
-- Height calibration
+| 平台         | 用途         |
+| ------------ | ------------ |
+| **ARKit**    | iOS 设备     |
+| **ARCore**   | Android 设备 |
+| **WebXR**    | 浏览器 AR    |
+| **HoloLens** | 企业级       |
 
 ---
 
-## 3. Performance Requirements
+## 2. 舒适度原则
 
-### Target Metrics
+### 晕动症预防
 
-| Platform | FPS | Resolution |
-|----------|-----|------------|
-| Quest 2 | 72-90 | 1832x1920 |
-| Quest 3 | 90-120 | 2064x2208 |
-| PCVR | 90 | 2160x2160+ |
-| PSVR2 | 90-120 | 2000x2040 |
+| 原因                  | 解决方案               |
+| --------------------- | ---------------------- |
+| **移动 (Locomotion)** | 传送，瞬转 (snap turn) |
+| **低 FPS**            | 维持 90 FPS            |
+| **相机抖动**          | 避免或最小化           |
+| **快速加速**          | 渐进移动               |
 
-### Frame Budget
+### 舒适设置
 
-- VR requires consistent frame times
-- Single dropped frame = visible judder
-- 90 FPS = 11.11ms budget
-
----
-
-## 4. Interaction Principles
-
-### Controller Interaction
-
-| Type | Use |
-|------|-----|
-| **Point + click** | UI, distant objects |
-| **Grab** | Manipulation |
-| **Gesture** | Magic, special actions |
-| **Physical** | Throwing, swinging |
-
-### Hand Tracking
-
-- More immersive but less precise
-- Good for: social, casual
-- Challenging for: action, precision
+- 移动时的晕影 (Vignette)
+- 瞬转 vs 平滑转向
+- 坐姿 vs 站姿模式
+- 高度校准
 
 ---
 
-## 5. Spatial Design
+## 3. 性能要求
 
-### World Scale
+### 目标指标
 
-- 1 unit = 1 meter (critical)
-- Objects must feel right size
-- Test with real measurements
+| 平台    | FPS    | 分辨率     |
+| ------- | ------ | ---------- |
+| Quest 2 | 72-90  | 1832x1920  |
+| Quest 3 | 90-120 | 2064x2208  |
+| PCVR    | 90     | 2160x2160+ |
+| PSVR2   | 90-120 | 2000x2040  |
 
-### Depth Cues
+### 帧预算
 
-| Cue | Importance |
-|-----|------------|
-| Stereo | Primary depth |
-| Motion parallax | Secondary |
-| Shadows | Grounding |
-| Occlusion | Layering |
-
----
-
-## 6. Anti-Patterns
-
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Move camera without player | Player controls camera |
-| Drop below 90 FPS | Maintain frame rate |
-| Use tiny UI text | Large, readable text |
-| Ignore arm length | Scale to player reach |
+- VR 需要一致的帧时间
+- 掉一帧 = 可见的抖动
+- 90 FPS = 11.11ms 预算
 
 ---
 
-> **Remember:** Comfort is not optional. Sick players don't play.
+## 4. 交互原则
+
+### 控制器交互
+
+| 类型                | 用途           |
+| ------------------- | -------------- |
+| **Point + click**   | UI，远处的物体 |
+| **Grab (抓取)**     | 操纵           |
+| **Gesture (手势)**  | 魔法，特殊动作 |
+| **Physical (物理)** | 投掷，挥舞     |
+
+### 手部追踪
+
+- 更沉浸但精度较低
+- 适合: 社交，休闲
+- 挑战: 动作，精度
+
+---
+
+## 5. 空间设计
+
+### 世界比例
+
+- 1 单位 = 1 米 (关键)
+- 物体必须感觉大小合适
+- 用真实测量进行测试
+
+### 深度线索
+
+| 线索                       | 重要性   |
+| -------------------------- | -------- |
+| 立体 (Stereo)              | 主要深度 |
+| 运动视差 (Motion parallax) | 次要     |
+| 阴影                       | 接地感   |
+| 遮挡                       | 分层     |
+
+---
+
+## 6. 反模式
+
+| ❌ 错误              | ✅ 正确              |
+| -------------------- | -------------------- |
+| 移动相机而不移动玩家 | 玩家控制相机         |
+| 低于 90 FPS          | 维持帧率             |
+| 使用微小的 UI 文本   | 大而易读的文本       |
+| 忽略手臂长度         | 极其玩家触及范围缩放 |
+
+---
+
+> **记住:** 舒适度不是可选项。生病的玩家不会玩游戏。

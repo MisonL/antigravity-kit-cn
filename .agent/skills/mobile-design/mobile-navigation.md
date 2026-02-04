@@ -1,458 +1,245 @@
-# Mobile Navigation Reference
+---
+description: 导航模式、深度链接、返回处理与 Tab/Stack/Drawer 决策
+---
 
-> Navigation patterns, deep linking, back handling, and tab/stack/drawer decisions.
-> **Navigation is the skeleton of your app—get it wrong and everything feels broken.**
+# 移动端导航参考 (Mobile Navigation Reference)
+
+> 导航模式、深度链接、返回处理与 Tab/Stack/Drawer 决策。
+> **导航是 App 的骨架——弄错了它，整个 App 就会感觉不对劲。**
 
 ---
 
-## 1. Navigation Selection Decision Tree
+## 1. 导航选择决策树
 
 ```
-WHAT TYPE OF APP?
+什么类型的 APP？
         │
-        ├── 3-5 top-level sections (equal importance)
-        │   └── ✅ Tab Bar / Bottom Navigation
-        │       Examples: Social, E-commerce, Utility
+        ├── 3-5 个顶级板块 (同等重要)
+        │   └── ✅ 标签栏 (Tab Bar / Bottom Navigation)
+        │       示例: 社交, 电商, 工具
         │
-        ├── Deep hierarchical content (drill down)
-        │   └── ✅ Stack Navigation
-        │       Examples: Settings, Email folders
+        ├── 深度层级内容 (逐层深入)
+        │   └── ✅ 栈导航 (Stack Navigation)
+        │       示例: 设置, 邮件文件夹
         │
-        ├── Many destinations (>5 top-level)
-        │   └── ✅ Drawer Navigation
-        │       Examples: Gmail, complex enterprise
+        ├── 很多目的地 (>5 个顶级)
+        │   └── ✅ 抽屉导航 (Drawer Navigation)
+        │       示例: Gmail, 复杂企业应用
         │
-        ├── Single linear flow
-        │   └── ✅ Stack only (wizard/onboarding)
-        │       Examples: Checkout, Setup flow
+        ├── 单一线性流程
+        │   └── ✅ 仅栈导航 (Stack only)
+        │       示例: 结账, 安装向导
         │
-        └── Tablet/Foldable
-            └── ✅ Navigation Rail + List-Detail
-                Examples: Mail, Notes on iPad
-```
-
----
-
-## 2. Tab Bar Navigation
-
-### When to Use
-
-```
-✅ USE Tab Bar when:
-├── 3-5 top-level destinations
-├── Destinations are of equal importance
-├── User frequently switches between them
-├── Each tab has independent navigation stack
-└── App is used in short sessions
-
-❌ AVOID Tab Bar when:
-├── More than 5 destinations
-├── Destinations have clear hierarchy
-├── Tabs would be used very unequally
-└── Content flows in a sequence
-```
-
-### Tab Bar Best Practices
-
-```
-iOS Tab Bar:
-├── Height: 49pt (83pt with home indicator)
-├── Max items: 5
-├── Icons: SF Symbols, 25×25pt
-├── Labels: Always show (accessibility)
-├── Active indicator: Tint color
-
-Android Bottom Navigation:
-├── Height: 80dp
-├── Max items: 5 (3-5 ideal)
-├── Icons: Material Symbols, 24dp
-├── Labels: Always show
-├── Active indicator: Pill shape + filled icon
-```
-
-### Tab State Preservation
-
-```
-RULE: Each tab maintains its own navigation stack.
-
-User journey:
-1. Home tab → Drill into item → Add to cart
-2. Switch to Profile tab
-3. Switch back to Home tab
-→ Should return to "Add to cart" screen, NOT home root
-
-Implementation:
-├── React Navigation: Each tab has own navigator
-├── Flutter: IndexedStack for state preservation
-└── Never reset tab stack on switch
+        └── 平板/折叠屏
+            └── ✅ 侧边导航栏 (Navigation Rail) + 列表详情
+                示例: iPad 上的邮件, 笔记
 ```
 
 ---
 
-## 3. Stack Navigation
+## 2. 标签栏导航 (Tab Bar)
 
-### Core Concepts
+### 何时使用
 
-```
-Stack metaphor: Cards stacked on top of each other
+- ✅ **使用** 当：3-5 个顶级目的地，同等重要，需频繁切换，每个标签有独立栈。
+- ❌ **避免** 当：>5 个目的地，有清晰层级，使用频率极不均衡，顺序流程。
 
-Push: Add screen on top
-Pop: Remove top screen (back)
-Replace: Swap current screen
-Reset: Clear stack, set new root
+### 标签栏最佳实践
 
-Visual: New screen slides in from right (LTR)
-Back: Screen slides out to right
-```
+**iOS Tab Bar:**
 
-### Stack Navigation Patterns
+- 高度: 49pt (带 Home indicator 为 83pt)
+- 最大项数: 5
+- 标签: 始终显示 (为了可访问性)
 
-| Pattern | Use Case | Implementation |
-|---------|----------|----------------|
-| **Simple Stack** | Linear flow | Push each step |
-| **Nested Stack** | Sections with sub-navigation | Stack inside tab |
-| **Modal Stack** | Focused tasks | Present modally |
-| **Auth Stack** | Login vs Main | Conditional root |
+**Android Bottom Navigation:**
 
-### Back Button Handling
+- 高度: 80dp
+- 最大项数: 5 (3-5 理想)
+- 标签: 始终显示
 
-```
-iOS:
-├── Edge swipe from left (system)
-├── Back button in nav bar (optional)
-├── Interactive pop gesture
-└── Never override swipe back without good reason
+### 标签状态持久化 (Tab State Preservation)
 
-Android:
-├── System back button/gesture
-├── Up button in toolbar (optional, for drill-down)
-├── Predictive back animation (Android 14+)
-└── Must handle back correctly (Activity/Fragment)
+**规则:** 每个标签必须维护自己的导航栈。
 
-Cross-Platform Rule:
-├── Back ALWAYS navigates up the stack
-├── Never hijack back for other purposes
-├── Confirm before discarding unsaved data
-└── Deep links should allow full back traversal
-```
+**用户旅程:**
+
+1.  首页 Tab → 点进商品 → 加入购物车
+2.  切换到 个人 Tab
+3.  切回 首页 Tab
+4.  → **必须** 回到 "加入购物车" 屏幕，**而不是** 首页根目录。
+
+**实现:**
+
+- React Navigation: 每个 Tab 有自己的 Navigator。
+- Flutter: 使用 `IndexedStack`。
 
 ---
 
-## 4. Drawer Navigation
+## 3. 栈导航 (Stack Navigation)
 
-### When to Use
+### 核心概念
 
-```
-✅ USE Drawer when:
-├── More than 5 top-level destinations
-├── Less frequently accessed destinations
-├── Complex app with many features
-├── Need for branding/user info in nav
-└── Tablet/large screen with persistent drawer
+- **Push**: 压入新屏幕 (前进)
+- **Pop**: 移除顶层屏幕 (返回)
+- **Replace**: 替换当前屏幕
+- **Reset**: 清空栈，设置新根
 
-❌ AVOID Drawer when:
-├── 5 or fewer destinations (use tabs)
-├── All destinations equally important
-├── Mobile-first simple app
-└── Discoverability is critical (drawer is hidden)
-```
+### 返回按钮处理
 
-### Drawer Patterns
+**跨平台规则:**
 
-```
-Modal Drawer:
-├── Opens over content (scrim behind)
-├── Swipe to open from edge
-├── Hamburger icon ( ☰ ) triggers
-└── Most common on mobile
-
-Permanent Drawer:
-├── Always visible (large screens)
-├── Content shifts over
-├── Good for productivity apps
-└── Tablets, desktops
-
-Navigation Rail (Android):
-├── Narrow vertical strip
-├── Icons + optional labels
-├── For tablets in portrait
-└── 80dp width
-```
+- Back **始终** 向上回溯栈 (Pop)。
+- **永远不要** 劫持返回按钮用于其他目的 (除非是关闭模态)。
+- 丢弃未保存数据前要**确认**。
+- 深度链接进入时，应构造完整的返回栈。
 
 ---
 
-## 5. Modal Navigation
+## 4. 抽屉导航 (Drawer Navigation)
+
+### 何时使用
+
+- ✅ **使用** 当：>5 个顶级目的地，低频访问，复杂功能，需要展示用户信息/品牌。
+- ❌ **避免** 当：≤5 个目的地，移动优先的简单应用，可发现性至关重要 (抽屉是隐藏的)。
+
+### 抽屉模式
+
+- **模态抽屉 (Modal)**: 覆盖在内容之上，汉堡菜单触发。 (手机常用)
+- **永久抽屉 (Permanent)**: 始终可见。 (平板/桌面)
+- **侧边栏 (Rail)**: Android 平板常用，窄条图标。
+
+---
+
+## 5. 模态导航 (Modal Navigation)
 
 ### Modal vs Push
 
-```
-PUSH (Stack):                    MODAL:
-├── Horizontal slide             ├── Vertical slide up (sheet)
-├── Part of hierarchy            ├── Separate task
-├── Back returns                 ├── Dismiss (X) returns
-├── Same navigation context      ├── Own navigation context
-└── "Drill in"                   └── "Focus on task"
+| PUSH (Stack)          | MODAL                     |
+| :-------------------- | :------------------------ |
+| 水平滑入 (Horizontal) | 垂直滑起 (Vertical Sheet) |
+| 层级的一部分          | 独立的任务                |
+| 返回 (Back) 退出      | 关闭 (Dismiss/X) 退出     |
+| 同一导航上下文        | 自己的导航上下文          |
+| "钻取信息 (Drill in)" | "聚焦任务 (Focus task)"   |
 
-USE MODAL for:
-├── Creating new content
-├── Settings/preferences
-├── Completing a transaction
-├── Self-contained workflows
-├── Quick actions
-```
+**使用 MODAL 用于:**
 
-### Modal Types
+- 创建新内容
+- 设置/偏好
+- 完成交易
+- 独立的工作流
+- 快速操作
 
-| Type | iOS | Android | Use Case |
-|------|-----|---------|----------|
-| **Sheet** | `.sheet` | Bottom Sheet | Quick tasks |
-| **Full Screen** | `.fullScreenCover` | Full Activity | Complex forms |
-| **Alert** | Alert | Dialog | Confirmations |
-| **Action Sheet** | Action Sheet | Menu/Bottom Sheet | Choose from options |
+### 模态关闭
 
-### Modal Dismissal
+用户期望通过以下方式关闭：
 
-```
-Users expect to dismiss modals by:
-├── Tapping X / Close button
-├── Swiping down (sheet)
-├── Tapping scrim (non-critical)
-├── System back (Android)
-├── Hardware back (old Android)
+- 点击 X / 关闭按钮
+- 向下滑动 (Sheet)
+- 点击背景遮罩 (非关键)
+- 系统返回键 (Android)
 
-RULE: Only block dismissal for unsaved data.
-```
+**规则:** 仅在有未保存数据时阻止关闭 (并提示)。
 
 ---
 
-## 6. Deep Linking
+## 6. 深度链接 (Deep Linking)
 
-### Why Deep Links from Day One
+### 为什么一开始就要做
 
-```
-Deep links enable:
-├── Push notification navigation
-├── Sharing content
-├── Marketing campaigns
-├── Spotlight/Search integration
-├── Widget navigation
-├── External app integration
+- 推送通知导航
+- 分享内容
+- 营销活动
+- Widget 导航
+- 外部集成
 
-Building later is HARD:
-├── Requires navigation refactor
-├── Screen dependencies unclear
-├── Parameter passing complex
-└── Always plan deep links at start
-```
+**后期再做很难**，因为需要重构导航结构。
 
-### URL Structure
+### 深度链接规则
 
-```
-Scheme://host/path?params
+1.  **全栈构造 (Full Stack Construction)**
+    - 链接到 `myapp://product/123`
+    - 栈应该是: Home (底) -> Product (顶)
+    - 这样点返回能回到 Home，而不是退出 App。
 
-Examples:
-├── myapp://product/123
-├── https://myapp.com/product/123 (Universal/App Link)
-├── myapp://checkout?promo=SAVE20
-├── myapp://tab/profile/settings
+2.  **认证感知**
+    - 如果需要登录 -> 保存目标 -> 跳转登录 -> 登录后 -> 跳转目标。
 
-Hierarchy should match navigation:
-├── myapp://home
-├── myapp://home/product/123
-├── myapp://home/product/123/reviews
-└── URL path = navigation path
-```
+3.  **无效链接**
+    - 如果目标不存在 -> 跳转到 Home 或 错误页 (不要 Crash)。
 
-### Deep Link Navigation Rules
-
-```
-1. FULL STACK CONSTRUCTION
-   Deep link to myapp://product/123 should:
-   ├── Put Home at root of stack
-   ├── Push Product screen on top
-   └── Back button returns to Home
-
-2. AUTHENTICATION AWARENESS
-   If deep link requires auth:
-   ├── Save intended destination
-   ├── Redirect to login
-   ├── After login, navigate to destination
-
-3. INVALID LINKS
-   If deep link target doesn't exist:
-   ├── Navigate to fallback (home)
-   ├── Show error message
-   └── Never crash or blank screen
-
-4. STATEFUL NAVIGATION
-   Deep link during active session:
-   ├── Don't blow away current stack
-   ├── Push on top OR
-   ├── Ask user if should navigate away
-```
+4.  **有状态导航**
+    - 如果在活跃会话中链接 -> 不要清空当前栈 -> Push 到顶层 (或询问)。
 
 ---
 
-## 7. Navigation State Persistence
+## 7. 导航状态持久化
 
-### What to Persist
+**应该持久化:**
 
-```
-SHOULD persist:
-├── Current tab selection
-├── Scroll position in lists
-├── Form draft data
-├── Recent navigation stack
-└── User preferences
+- 当前 Tab 选择
+- 列表滚动位置
+- 表单草稿
+- 最近的导航栈
+- 用户偏好
 
-SHOULD NOT persist:
-├── Modal states (dialogs)
-├── Temporary UI states
-├── Stale data (refresh on return)
-├── Authentication state (use secure storage)
-```
+**不应持久化:**
 
-### Implementation
-
-```javascript
-// React Navigation - State Persistence
-const [isReady, setIsReady] = useState(false);
-const [initialState, setInitialState] = useState();
-
-useEffect(() => {
-  const loadState = async () => {
-    const savedState = await AsyncStorage.getItem('NAV_STATE');
-    if (savedState) setInitialState(JSON.parse(savedState));
-    setIsReady(true);
-  };
-  loadState();
-}, []);
-
-const handleStateChange = (state) => {
-  AsyncStorage.setItem('NAV_STATE', JSON.stringify(state));
-};
-
-<NavigationContainer
-  initialState={initialState}
-  onStateChange={handleStateChange}
->
-```
+- 模态状态
+- 临时 UI
+- 过期数据 (返回时刷新)
+- 认证状态 (用安全存储)
 
 ---
 
-## 8. Transition Animations
+## 8. 过渡动画 (Transition Animations)
 
-### Platform Defaults
+### 平台默认值
 
-```
-iOS Transitions:
-├── Push: Slide from right
-├── Modal: Slide from bottom (sheet) or fade
-├── Tab switch: Cross-fade
-├── Interactive: Swipe to go back
+- **iOS**: Push 从右滑入，Modal 从底滑入 (或 Sheet)。
+- **Android**: Push 淡入+微上滑 (或从右)，Modal 从底滑入。
 
-Android Transitions:
-├── Push: Fade + slide from right
-├── Modal: Slide from bottom
-├── Tab switch: Cross-fade or none
-├── Shared element: Hero animations
-```
+### 共享元素过渡 (Shared Element)
 
-### Custom Transitions
+连接屏幕间的元素：
+Screen A (小图) -> 点击 -> Screen B (大图)
+图片从 A 位置平滑放大移动到 B 位置。
 
-```
-When to custom:
-├── Brand identity requires it
-├── Shared element connections
-├── Special reveal effects
-└── Keep it subtle, <300ms
-
-When to use default:
-├── Most of the time
-├── Standard drill-down
-├── Platform consistency
-└── Performance critical paths
-```
-
-### Shared Element Transitions
-
-```
-Connect elements between screens:
-
-Screen A: Product card with image
-            ↓ (tap)
-Screen B: Product detail with same image (expanded)
-
-Image animates from card position to detail position.
-
-Implementation:
-├── React Navigation: shared element library
-├── Flutter: Hero widget
-├── SwiftUI: matchedGeometryEffect
-└── Compose: Shared element transitions
-```
+- React Navigation: Shared Element
+- Flutter: Hero widget
 
 ---
 
-## 9. Navigation Anti-Patterns
+## 9. 导航反模式
 
-### ❌ Navigation Sins
+### ❌ 导航七宗罪
 
-| Anti-Pattern | Problem | Solution |
-|--------------|---------|----------|
-| **Inconsistent back** | User confused, can't predict | Always pop stack |
-| **Hidden navigation** | Features undiscoverable | Visible tabs/drawer trigger |
-| **Deep nesting** | User gets lost | Max 3-4 levels, breadcrumbs |
-| **Breaking swipe back** | iOS users frustrated | Never override gesture |
-| **No deep links** | Can't share, bad notifications | Plan from start |
-| **Tab stack reset** | Work lost on switch | Preserve tab states |
-| **Modal for primary flow** | Can't back track | Use stack navigation |
-
-### ❌ AI Navigation Mistakes
-
-```
-AI tends to:
-├── Use modals for everything (wrong)
-├── Forget tab state preservation (wrong)
-├── Skip deep linking (wrong)
-├── Override platform back behavior (wrong)
-├── Reset stack on tab switch (wrong)
-└── Ignore predictive back (Android 14+)
-
-RULE: Use platform navigation patterns.
-Don't reinvent navigation.
-```
+| 反模式              | 问题         | 解决方案          |
+| :------------------ | :----------- | :---------------- |
+| **不一致的返回**    | 用户困惑     | 始终 Pop 栈       |
+| **隐藏导航**        | 功能不可发现 | 可见的 Tab/触发器 |
+| **过深嵌套**        | 用户迷路     | 最多 3-4 层       |
+| **破坏滑动返回**    | iOS 用户暴怒 | 绝不覆盖手势      |
+| **无深度链接**      | 无法分享     | 一开始就规划      |
+| **Tab 切换重置**    | 工作丢失     | 保持 Tab 状态     |
+| **主流程用 Modals** | 无法回溯     | 使用 Stack        |
 
 ---
 
-## 10. Navigation Checklist
+## 10. 导航检查清单
 
-### Before Navigation Architecture
-
-- [ ] App type determined (tabs/drawer/stack)
-- [ ] Number of top-level destinations counted
-- [ ] Deep link URL scheme planned
-- [ ] Auth flow integrated with navigation
-- [ ] Tablet/large screen considered
-
-### Before Every Screen
-
-- [ ] Can user navigate back? (not dead end)
-- [ ] Deep link to this screen planned
-- [ ] State preserved on navigate away/back
-- [ ] Transition appropriate for relationship
-- [ ] Auth required? Handled?
-
-### Before Release
-
-- [ ] All deep links tested
-- [ ] Back button works everywhere
-- [ ] Tab states preserved correctly
-- [ ] Edge swipe back works (iOS)
-- [ ] Predictive back works (Android 14+)
-- [ ] Universal/App links configured
-- [ ] Push notification deep links work
+- [ ] **App 类型已确定 (Tab/Drawer/Stack)？**
+- [ ] **顶级目的地数量已清点？**
+- [ ] **深度链接 URL Scheme 已规划？**
+- [ ] **认证流程与导航已集成？**
+- [ ] **平板/大屏已考虑？**
+- [ ] **所有屏幕都可返回 (无死胡同)？**
+- [ ] **离开/返回时状态已保存？**
+- [ ] **过渡动画恰当？**
+- [ ] **物理返回键 (Android) 处理好了吗？**
+- [ ] **预测性返回 (Android 14+) 支持了吗？**
 
 ---
 
-> **Remember:** Navigation is invisible when done right. Users shouldn't think about HOW to get somewhere—they just get there. If they notice navigation, something is wrong.
+> **记住:** 好的导航是隐形的。用户不应该思考**如何**去哪里——他们只是到达那里。如果他们注意到了导航，说明有什么地方错了。

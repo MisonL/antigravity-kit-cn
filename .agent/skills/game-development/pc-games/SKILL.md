@@ -1,144 +1,138 @@
----
-name: pc-games
-description: PC and console game development principles. Engine selection, platform features, optimization strategies.
-allowed-tools: Read, Write, Edit, Glob, Grep
----
+# PC 与主机游戏开发 (PC & Console Game Development)
 
-# PC/Console Game Development
-
-> Engine selection and platform-specific principles.
+> PC 和主机平台开发原则与引擎选择。
 
 ---
 
-## 1. Engine Selection
+## 1. 引擎选择 (Engine Selection)
 
-### Decision Tree
+### 决策树
 
 ```
-What are you building?
+你在构建什么？
 │
-├── 2D Game
-│   ├── Open source important? → Godot
-│   └── Large team/assets? → Unity
+├── 2D 游戏
+│   ├── 开源很重要？ → Godot
+│   └── 大型团队/资产？ → Unity
 │
-├── 3D Game
-│   ├── AAA visual quality? → Unreal
-│   ├── Cross-platform priority? → Unity
-│   └── Indie/open source? → Godot 4
+├── 3D 游戏
+│   ├── AAA 视觉质量？ → Unreal
+│   ├── 跨平台优先？ → Unity
+│   └── 独立/开源？ → Godot 4
 │
-└── Specific Needs
-    ├── DOTS performance? → Unity
+└── 特定需求
+    ├── DOTS 性能？ → Unity
     ├── Nanite/Lumen? → Unreal
-    └── Lightweight? → Godot
+    └── 轻量级？ → Godot
 ```
 
-### Comparison
+### 比较
 
-| Factor | Unity 6 | Godot 4 | Unreal 5 |
-|--------|---------|---------|----------|
-| 2D | Good | Excellent | Limited |
-| 3D | Good | Good | Excellent |
-| Learning | Medium | Easy | Hard |
-| Cost | Revenue share | Free | 5% after $1M |
-| Team | Any | Solo-Medium | Medium-Large |
+| 因素 | Unity 6  | Godot 4   | Unreal 5       |
+| ---- | -------- | --------- | -------------- |
+| 2D   | 好       | 极好      | 这里有限       |
+| 3D   | 好       | 好        | 极好           |
+| 学习 | 中等     | 容易      | 难             |
+| 成本 | 收入分成 | 免费      | 100万美元后 5% |
+| 团队 | 任何     | 个人-中型 | 中型-大型      |
 
 ---
 
-## 2. Platform Features
+## 2. 平台特性 (Platform Features)
 
-### Steam Integration
+### Steam 集成
 
-| Feature | Purpose |
-|---------|---------|
-| Achievements | Player goals |
-| Cloud Saves | Cross-device progress |
-| Leaderboards | Competition |
-| Workshop | User mods |
-| Rich Presence | Show in-game status |
+| 特性                   | 目的           |
+| ---------------------- | -------------- |
+| 成就 (Achievements)    | 玩家目标       |
+| 云存档 (Cloud Saves)   | 跨设备进度     |
+| 排行榜 (Leaderboards)  | 竞争           |
+| 创意工坊 (Workshop)    | 用户模组       |
+| 富呈现 (Rich Presence) | 显示游戏内状态 |
 
-### Console Requirements
+### 主机要求
 
-| Platform | Certification |
-|----------|--------------|
-| PlayStation | TRC compliance |
-| Xbox | XR compliance |
-| Nintendo | Lotcheck |
+| 平台        | 认证     |
+| ----------- | -------- |
+| PlayStation | TRC 合规 |
+| Xbox        | XR 合规  |
+| Nintendo    | Lotcheck |
 
 ---
 
-## 3. Controller Support
+## 3. 控制器支持
 
-### Input Abstraction
+### 输入抽象
 
 ```
-Map ACTIONS, not buttons:
+映射动作 (ACTIONS)，而不是按钮:
 - "confirm" → A (Xbox), Cross (PS), B (Nintendo)
 - "cancel" → B (Xbox), Circle (PS), A (Nintendo)
 ```
 
-### Haptic Feedback
+### 触觉反馈 (Haptic Feedback)
 
-| Intensity | Use |
-|-----------|-----|
-| Light | UI feedback |
-| Medium | Impacts |
-| Heavy | Major events |
-
----
-
-## 4. Performance Optimization
-
-### Profiling First
-
-| Engine | Tool |
-|--------|------|
-| Unity | Profiler Window |
-| Godot | Debugger → Profiler |
-| Unreal | Unreal Insights |
-
-### Common Bottlenecks
-
-| Bottleneck | Solution |
-|------------|----------|
-| Draw calls | Batching, atlases |
-| GC spikes | Object pooling |
-| Physics | Simpler colliders |
-| Shaders | LOD shaders |
+| 强度 | 用途     |
+| ---- | -------- |
+| 轻   | UI 反馈  |
+| 中   | 撞击     |
+| 重   | 重大事件 |
 
 ---
 
-## 5. Engine-Specific Principles
+## 4. 性能优化
+
+### 性能分析优先
+
+| 引擎   | 工具                |
+| ------ | ------------------- |
+| Unity  | Profiler Window     |
+| Godot  | Debugger → Profiler |
+| Unreal | Unreal Insights     |
+
+### 常见瓶颈
+
+| 瓶颈                  | 解决方案                        |
+| --------------------- | ------------------------------- |
+| 绘制调用 (Draw calls) | 合批 (Batching)，图集 (Atlases) |
+| GC 峰值               | 对象池 (Object pooling)         |
+| 物理                  | 更简单的碰撞体                  |
+| 着色器                | LOD 着色器                      |
+
+---
+
+## 5. 引擎特定原则
 
 ### Unity 6
 
-- DOTS for performance-critical systems
-- Burst compiler for hot paths
-- Addressables for asset streaming
+- DOTS 用于性能关键系统
+- Burst compiler 用于热路径
+- Addressables 用于资产流式传输
 
 ### Godot 4
 
-- GDScript for rapid iteration
-- C# for complex logic
-- Signals for decoupling
+- GDScript 用于快速迭代
+- C# 用于复杂逻辑
+- Signals 用于解耦
 
 ### Unreal 5
 
-- Blueprint for designers
-- C++ for performance
-- Nanite for high-poly environments
-- Lumen for dynamic lighting
+- Blueprint (蓝图) 给设计师
+- C++ 追求性能
+- Nanite 用于高多边形环境
+- Lumen 用于动态光照
 
 ---
 
-## 6. Anti-Patterns
+## 6. 反模式
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Choose engine by hype | Choose by project needs |
-| Ignore platform guidelines | Study certification requirements |
-| Hardcode input buttons | Abstract to actions |
-| Skip profiling | Profile early and often |
+| ❌ 错误        | ✅ 正确        |
+| -------------- | -------------- |
+| 凭炒作选择引擎 | 按项目需求选择 |
+| 忽略平台指南   | 研究认证要求   |
+| 硬编码输入按钮 | 抽象为动作     |
+| 跳过性能分析   | 尽早并经常分析 |
 
 ---
 
-> **Remember:** Engine is a tool. Master the principles, then adapt to any engine.
+> **记住:** 引擎只是工具。掌握原则，然后适应任何引擎。

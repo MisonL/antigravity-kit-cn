@@ -1,52 +1,44 @@
 ---
-name: database-design
-description: Database design principles and decision-making. Schema design, indexing strategy, ORM selection, serverless databases.
-allowed-tools: Read, Write, Edit, Glob, Grep
+description: 数据库设计原则、Schema 设计与 ORM 选择
 ---
 
-# Database Design
+# 数据库设计 (Database Design)
 
-> **Learn to THINK, not copy SQL patterns.**
+## 选型指南
 
-## 🎯 Selective Reading Rule
+- **PostgreSQL**: 默认首选。通用，功能强大，支持 JSONB。
+- **SQLite**: 适合原型、小型应用、嵌入式场景。
+- **DuckDB**: 适合数据分析 (OLAP)。
+- **Redis**: 缓存、队列、会话存储。
 
-**Read ONLY files relevant to the request!** Check the content map, find what you need.
+## 设计原则
 
-| File | Description | When to Read |
-|------|-------------|--------------|
-| `database-selection.md` | PostgreSQL vs Neon vs Turso vs SQLite | Choosing database |
-| `orm-selection.md` | Drizzle vs Prisma vs Kysely | Choosing ORM |
-| `schema-design.md` | Normalization, PKs, relationships | Designing schema |
-| `indexing.md` | Index types, composite indexes | Performance tuning |
-| `optimization.md` | N+1, EXPLAIN ANALYZE | Query optimization |
-| `migrations.md` | Safe migrations, serverless DBs | Schema changes |
+1.  **规范化 (Normalization)**: 至少满足 3NF，消除数据冗余（除非为了性能特意反规范化）。
+2.  **主键 (Primary Keys)**:
+    - 使用 `UUID` 或 `CUID` 防止遍历攻击。
+    - 避免使用自增 `ID` (Auto Increment Integer) 作为公开 ID。
+3.  **索引 (Indexing)**:
+    - 为外键列添加索引。
+    - 为经常查询 (`WHERE`, `ORDER BY`) 的列添加索引。
+4.  **软删除 (Soft Delete)**:
+    - 添加 `deletedAt` 字段，而不是直接 `DELETE` 记录。
 
----
+## Prisma 最佳实践
 
-## ⚠️ Core Principle
+- **Schema 命名**: Model 使用 PascalCase (如 `User`), 字段使用 camelCase (如 `firstName`).
+- **关系**: 始终明确定义反向关系。
+- **枚举**: 使用 `enum` 代替魔法字符串。
 
-- ASK user for database preferences when unclear
-- Choose database/ORM based on CONTEXT
-- Don't default to PostgreSQL for everything
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+}
 
----
-
-## Decision Checklist
-
-Before designing schema:
-
-- [ ] Asked user about database preference?
-- [ ] Chosen database for THIS context?
-- [ ] Considered deployment environment?
-- [ ] Planned index strategy?
-- [ ] Defined relationship types?
-
----
-
-## Anti-Patterns
-
-❌ Default to PostgreSQL for simple apps (SQLite may suffice)
-❌ Skip indexing
-❌ Use SELECT * in production
-❌ Store JSON when structured data is better
-❌ Ignore N+1 queries
+enum Role {
+  USER
+  ADMIN
+}
+```

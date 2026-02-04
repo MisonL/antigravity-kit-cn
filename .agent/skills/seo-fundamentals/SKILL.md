@@ -1,129 +1,28 @@
 ---
-name: seo-fundamentals
-description: SEO fundamentals, E-E-A-T, Core Web Vitals, and Google algorithm principles.
-allowed-tools: Read, Glob, Grep
+description: SEO 基础、Google 算法原理解析
 ---
 
-# SEO Fundamentals
+# SEO 基础 (Search Engine Optimization)
 
-> Principles for search engine visibility.
+## 核心三要素 (E-E-A-T)
 
----
+Google 评估内容质量的标准：
 
-## 1. E-E-A-T Framework
+1.  **Experience (经验)**: 作者是否亲自体验过？
+2.  **Expertise (专业性)**: 作者是否是该领域专家？
+3.  **Authoritativeness (权威性)**: 网站是否有权威外链？
+4.  **Trustworthiness (可信度)**: 网站是否安全 (HTTPS)？
 
-| Principle | Signals |
-|-----------|---------|
-| **Experience** | First-hand knowledge, real examples |
-| **Expertise** | Credentials, depth of knowledge |
-| **Authoritativeness** | Backlinks, mentions, industry recognition |
-| **Trustworthiness** | HTTPS, transparency, accurate info |
+## 技术 SEO
 
----
+1.  **Sitemap**: `sitemap.xml` 提交给 Search Console。
+2.  **Robots.txt**: 控制爬虫访问。
+3.  **Canonical Url**: 防止重复内容。
+4.  **SSR/SSG**: 确保爬虫能直接看到 HTML 内容（SPA 需要注意）。
 
-## 2. Core Web Vitals
+## 页面优化 (On-Page)
 
-| Metric | Target | Measures |
-|--------|--------|----------|
-| **LCP** | < 2.5s | Loading performance |
-| **INP** | < 200ms | Interactivity |
-| **CLS** | < 0.1 | Visual stability |
-
----
-
-## 3. Technical SEO Principles
-
-### Site Structure
-
-| Element | Purpose |
-|---------|---------|
-| XML sitemap | Help crawling |
-| robots.txt | Control access |
-| Canonical tags | Prevent duplicates |
-| HTTPS | Security signal |
-
-### Performance
-
-| Factor | Impact |
-|--------|--------|
-| Page speed | Core Web Vital |
-| Mobile-friendly | Ranking factor |
-| Clean URLs | Crawlability |
-
----
-
-## 4. Content SEO Principles
-
-### Page Elements
-
-| Element | Best Practice |
-|---------|---------------|
-| Title tag | 50-60 chars, keyword front |
-| Meta description | 150-160 chars, compelling |
-| H1 | One per page, main keyword |
-| H2-H6 | Logical hierarchy |
-| Alt text | Descriptive, not stuffed |
-
-### Content Quality
-
-| Factor | Importance |
-|--------|------------|
-| Depth | Comprehensive coverage |
-| Freshness | Regular updates |
-| Uniqueness | Original value |
-| Readability | Clear writing |
-
----
-
-## 5. Schema Markup Types
-
-| Type | Use |
-|------|-----|
-| Article | Blog posts, news |
-| Organization | Company info |
-| Person | Author profiles |
-| FAQPage | Q&A content |
-| Product | E-commerce |
-| Review | Ratings |
-| BreadcrumbList | Navigation |
-
----
-
-## 6. AI Content Guidelines
-
-### What Google Looks For
-
-| ✅ Do | ❌ Don't |
-|-------|----------|
-| AI draft + human edit | Publish raw AI content |
-| Add original insights | Copy without value |
-| Expert review | Skip fact-checking |
-| Follow E-E-A-T | Keyword stuffing |
-
----
-
-## 7. Ranking Factors (Prioritized)
-
-| Priority | Factor |
-|----------|--------|
-| 1 | Quality, relevant content |
-| 2 | Backlinks from authority sites |
-| 3 | Page experience (Core Web Vitals) |
-| 4 | Mobile optimization |
-| 5 | Technical SEO fundamentals |
-
----
-
-## 8. Measurement
-
-| Metric | Tool |
-|--------|------|
-| Rankings | Search Console, Ahrefs |
-| Traffic | Analytics |
-| Core Web Vitals | PageSpeed Insights |
-| Indexing | Search Console |
-| Backlinks | Ahrefs, Semrush |
-
----
-
-> **Remember:** SEO is a long-term game. Quality content + technical excellence + patience = results.
+- **Title**: 包含核心关键词，吸引人点击。
+- **Meta Description**: 这是广告语，提高点击率 (CTR)。
+- **H1**: 每个页面只能有一个 H1。
+- **Alt Text**: 图片必须有描述。

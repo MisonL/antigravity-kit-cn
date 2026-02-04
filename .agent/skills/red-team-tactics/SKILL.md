@@ -1,199 +1,31 @@
 ---
-name: red-team-tactics
-description: Red team tactics principles based on MITRE ATT&CK. Attack phases, detection evasion, reporting.
-allowed-tools: Read, Glob, Grep
+description: 红队战术原理、攻击阶段与检测规避
 ---
 
-# Red Team Tactics
+# 红队战术 (Red Team Tactics)
 
-> Adversary simulation principles based on MITRE ATT&CK framework.
+**注意：仅用于授权的渗透测试和安全研究。**
 
----
+## MITRE ATT&CK 框架
 
-## 1. MITRE ATT&CK Phases
+攻击链通常遵循以下阶段：
 
-### Attack Lifecycle
+1.  **侦查 (Reconnaissance)**: 收集目标信息 (Whois, Shodan, LinkedIn)。
+2.  **资源开发 (Resource Development)**: 购买域名，准备钓鱼服务器。
+3.  **初始访问 (Initial Access)**: 钓鱼邮件，利用公开漏洞。
+4.  **执行 (Execution)**: 运行恶意代码。
+5.  **持久化 (Persistence)**: 修改注册表，创建计划任务。
+6.  **提权 (Privilege Escalation)**: 从 User 提权到 Admin/Root。
+7.  **横向移动 (Lateral Movement)**: 攻击内网其他机器。
+8.  **数据渗漏 (Exfiltration)**: 偷取数据。
 
-```
-RECONNAISSANCE → INITIAL ACCESS → EXECUTION → PERSISTENCE
-       ↓              ↓              ↓            ↓
-   PRIVILEGE ESC → DEFENSE EVASION → CRED ACCESS → DISCOVERY
-       ↓              ↓              ↓            ↓
-LATERAL MOVEMENT → COLLECTION → C2 → EXFILTRATION → IMPACT
-```
+## 常用工具
 
-### Phase Objectives
+- **Nmap**: 网络扫描。
+- **Metasploit**: 漏洞利用框架。
+- **Burp Suite**: Web 代理与拦截。
+- **Cobalt Strike**: 后渗透平台。
 
-| Phase | Objective |
-|-------|-----------|
-| **Recon** | Map attack surface |
-| **Initial Access** | Get first foothold |
-| **Execution** | Run code on target |
-| **Persistence** | Survive reboots |
-| **Privilege Escalation** | Get admin/root |
-| **Defense Evasion** | Avoid detection |
-| **Credential Access** | Harvest credentials |
-| **Discovery** | Map internal network |
-| **Lateral Movement** | Spread to other systems |
-| **Collection** | Gather target data |
-| **C2** | Maintain command channel |
-| **Exfiltration** | Extract data |
+## 防御规避
 
----
-
-## 2. Reconnaissance Principles
-
-### Passive vs Active
-
-| Type | Trade-off |
-|------|-----------|
-| **Passive** | No target contact, limited info |
-| **Active** | Direct contact, more detection risk |
-
-### Information Targets
-
-| Category | Value |
-|----------|-------|
-| Technology stack | Attack vector selection |
-| Employee info | Social engineering |
-| Network ranges | Scanning scope |
-| Third parties | Supply chain attack |
-
----
-
-## 3. Initial Access Vectors
-
-### Selection Criteria
-
-| Vector | When to Use |
-|--------|-------------|
-| **Phishing** | Human target, email access |
-| **Public exploits** | Vulnerable services exposed |
-| **Valid credentials** | Leaked or cracked |
-| **Supply chain** | Third-party access |
-
----
-
-## 4. Privilege Escalation Principles
-
-### Windows Targets
-
-| Check | Opportunity |
-|-------|-------------|
-| Unquoted service paths | Write to path |
-| Weak service permissions | Modify service |
-| Token privileges | Abuse SeDebug, etc. |
-| Stored credentials | Harvest |
-
-### Linux Targets
-
-| Check | Opportunity |
-|-------|-------------|
-| SUID binaries | Execute as owner |
-| Sudo misconfiguration | Command execution |
-| Kernel vulnerabilities | Kernel exploits |
-| Cron jobs | Writable scripts |
-
----
-
-## 5. Defense Evasion Principles
-
-### Key Techniques
-
-| Technique | Purpose |
-|-----------|---------|
-| LOLBins | Use legitimate tools |
-| Obfuscation | Hide malicious code |
-| Timestomping | Hide file modifications |
-| Log clearing | Remove evidence |
-
-### Operational Security
-
-- Work during business hours
-- Mimic legitimate traffic patterns
-- Use encrypted channels
-- Blend with normal behavior
-
----
-
-## 6. Lateral Movement Principles
-
-### Credential Types
-
-| Type | Use |
-|------|-----|
-| Password | Standard auth |
-| Hash | Pass-the-hash |
-| Ticket | Pass-the-ticket |
-| Certificate | Certificate auth |
-
-### Movement Paths
-
-- Admin shares
-- Remote services (RDP, SSH, WinRM)
-- Exploitation of internal services
-
----
-
-## 7. Active Directory Attacks
-
-### Attack Categories
-
-| Attack | Target |
-|--------|--------|
-| Kerberoasting | Service account passwords |
-| AS-REP Roasting | Accounts without pre-auth |
-| DCSync | Domain credentials |
-| Golden Ticket | Persistent domain access |
-
----
-
-## 8. Reporting Principles
-
-### Attack Narrative
-
-Document the full attack chain:
-1. How initial access was gained
-2. What techniques were used
-3. What objectives were achieved
-4. Where detection failed
-
-### Detection Gaps
-
-For each successful technique:
-- What should have detected it?
-- Why didn't detection work?
-- How to improve detection
-
----
-
-## 9. Ethical Boundaries
-
-### Always
-
-- Stay within scope
-- Minimize impact
-- Report immediately if real threat found
-- Document all actions
-
-### Never
-
-- Destroy production data
-- Cause denial of service (unless scoped)
-- Access beyond proof of concept
-- Retain sensitive data
-
----
-
-## 10. Anti-Patterns
-
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Rush to exploitation | Follow methodology |
-| Cause damage | Minimize impact |
-| Skip reporting | Document everything |
-| Ignore scope | Stay within boundaries |
-
----
-
-> **Remember:** Red team simulates attackers to improve defenses, not to cause harm.
+- **Living off the Land (LOLBins)**: 利用系统自带工具 (PowerShell, CertUtil) 进行攻击，以躲避杀毒软件。

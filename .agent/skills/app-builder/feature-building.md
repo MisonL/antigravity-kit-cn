@@ -1,53 +1,53 @@
-# Feature Building
+# 功能构建 (Feature Building)
 
-> How to analyze and implement new features.
+> 如何分析和实现新功能。
 
-## Feature Analysis
+## 功能分析
 
 ```
-Request: "add payment system"
+请求: "添加支付系统"
 
-Analysis:
-├── Required Changes:
-│   ├── Database: orders, payments tables
-│   ├── Backend: /api/checkout, /api/webhooks/stripe
-│   ├── Frontend: CheckoutForm, PaymentSuccess
-│   └── Config: Stripe API keys
+分析:
+├── 变更需求:
+│   ├── 数据库: orders, payments 表
+│   ├── 后端: /api/checkout, /api/webhooks/stripe
+│   ├── 前端: CheckoutForm, PaymentSuccess
+│   └── 配置: Stripe API keys
 │
-├── Dependencies:
+├── 依赖项:
 │   ├── stripe package
-│   └── Existing user authentication
+│   └── 现有用户认证
 │
-└── Estimated Time: 15-20 minutes
+└── 预估时间: 15-20 分钟
 ```
 
-## Iterative Enhancement Process
+## 迭代增强流程
 
 ```
-1. Analyze existing project
-2. Create change plan
-3. Present plan to user
-4. Get approval
-5. Apply changes
-6. Test
-7. Show preview
+1. 分析现有项目
+2. 创建变更计划 (PLAN.md)
+3. 向用户展示计划
+4. 获得批准
+5. 应用变更
+6. 测试
+7. 显示预览
 ```
 
-## Error Handling
+## 错误处理
 
-| Error Type | Solution Strategy |
-|------------|-------------------|
-| TypeScript Error | Fix type, add missing import |
-| Missing Dependency | Run npm install |
-| Port Conflict | Suggest alternative port |
-| Database Error | Check migration, validate connection |
+| 错误类型        | 解决策略               |
+| --------------- | ---------------------- |
+| TypeScript 错误 | 修复类型，添加缺失导入 |
+| 缺失依赖        | 运行 npm install       |
+| 端口冲突        | 建议替代端口           |
+| 数据库错误      | 检查迁移，验证连接     |
 
-## Recovery Strategy
+## 恢复策略
 
 ```
-1. Detect error
-2. Try automatic fix
-3. If failed, report to user
-4. Suggest alternative
-5. Rollback if necessary
+1. 检测错误
+2. 尝试自动修复
+3. 如果失败，向用户报告
+4. 建议替代方案
+5. 必须时回滚
 ```

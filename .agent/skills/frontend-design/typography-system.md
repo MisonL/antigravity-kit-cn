@@ -1,345 +1,265 @@
-# Typography System Reference
+---
+description: 排版系统原则与决策
+---
 
-> Typography principles and decision-making - learn to think, not memorize.
-> **No fixed font names or sizes - understand the system.**
+# 排版系统参考 (Typography System Reference)
+
+> 排版原则与决策制定 - 学习思考，而非死记。
+> **没有固定的字体名称或尺寸 - 理解系统。**
 
 ---
 
-## 1. Modular Scale Principles
+## 1. 模块化尺度原则 (Modular Scale Principles)
 
-### What is a Modular Scale?
-
-```
-A mathematical relationship between font sizes:
-├── Pick a BASE size (usually body text)
-├── Pick a RATIO (multiplier)
-└── Generate all sizes using: base × ratio^n
-```
-
-### Common Ratios and When to Use
-
-| Ratio | Value | Feeling | Best For |
-|-------|-------|---------|----------|
-| Minor Second | 1.067 | Very subtle | Dense UI, small screens |
-| Major Second | 1.125 | Subtle | Compact interfaces |
-| Minor Third | 1.2 | Comfortable | Mobile apps, cards |
-| Major Third | 1.25 | Balanced | General web (most common) |
-| Perfect Fourth | 1.333 | Noticeable | Editorial, blogs |
-| Perfect Fifth | 1.5 | Dramatic | Headlines, marketing |
-| Golden Ratio | 1.618 | Maximum impact | Hero sections, display |
-
-### Generate Your Scale
+### 什么是模块化尺度？
 
 ```
-Given: base = YOUR_BASE_SIZE, ratio = YOUR_RATIO
+字体尺寸之间的数学关系:
+├── 选择一个 基础 (BASE) 尺寸 (通常是正文)
+├── 选择一个 比率 (RATIO) (倍数)
+└── 使用公式生成所有尺寸: base × ratio^n
+```
+
+### 常用比率与适用场景
+
+| 比率                    | 值    | 感觉       | 适用              |
+| :---------------------- | :---- | :--------- | :---------------- |
+| 小二度 (Minor Second)   | 1.067 | 极其微妙   | 密集 UI, 小屏幕   |
+| 大二度 (Major Second)   | 1.125 | 微妙       | 紧凑界面          |
+| 小三度 (Minor Third)    | 1.2   | 舒适       | 移动应用, 卡片    |
+| 大三度 (Major Third)    | 1.25  | 平衡       | 通用网页 (最常用) |
+| 纯四度 (Perfect Fourth) | 1.333 | 明显       | 编辑, 博客        |
+| 纯五度 (Perfect Fifth)  | 1.5   | 戏剧性     | 标题, 营销        |
+| 黄金比 (Golden Ratio)   | 1.618 | 最大冲击力 | Hero 区块, 展示   |
+
+### 生成你的尺度
+
+```
+给定: base = 你的基础尺寸, ratio = 你的比率
 
 Scale:
 ├── xs:  base ÷ ratio²
 ├── sm:  base ÷ ratio
-├── base: YOUR_BASE_SIZE
+├── base: 你的基础尺寸
 ├── lg:  base × ratio
 ├── xl:  base × ratio²
 ├── 2xl: base × ratio³
 ├── 3xl: base × ratio⁴
-└── ... continue as needed
+└── ... 按需继续
 ```
-
-### Choosing Base Size
-
-| Context | Base Size Range | Why |
-|---------|-----------------|-----|
-| Mobile-first | 16-18px | Readability on small screens |
-| Desktop app | 14-16px | Information density |
-| Editorial | 18-21px | Long-form reading comfort |
-| Accessibility focus | 18px+ | Easier to read |
 
 ---
 
-## 2. Font Pairing Principles
+## 2. 字体搭配原则
 
-### What Makes Fonts Work Together
-
-```
-Contrast + Harmony:
-├── Different ENOUGH to create hierarchy
-├── Similar ENOUGH to feel cohesive
-└── Usually: serif + sans, or display + neutral
-```
-
-### Pairing Strategies
-
-| Strategy | How | Result |
-|----------|-----|--------|
-| **Contrast** | Serif heading + Sans body | Classic, editorial feel |
-| **Same Family** | One variable font, different weights | Cohesive, modern |
-| **Same Designer** | Fonts by same foundry | Often harmonious proportions |
-| **Era Match** | Fonts from same time period | Historical consistency |
-
-### What to Look For
+### 为什么字体能搭配在一起
 
 ```
-When pairing, compare:
-├── x-height (height of lowercase letters)
-├── Letter width (narrow vs wide)
-├── Stroke contrast (thin/thick variation)
-└── Overall mood (formal vs casual)
+对比 + 和谐:
+├── 足够不同 以创造层级
+├── 足够相似 以感觉协调
+└── 通常: 衬线 + 无衬线, 或 展示 + 中性
 ```
 
-### Safe Pairing Patterns
+### 搭配策略
 
-| Heading Style | Body Style | Mood |
-|---------------|------------|------|
-| Geometric sans | Humanist sans | Modern, friendly |
-| Display serif | Clean sans | Editorial, sophisticated |
-| Neutral sans | Same sans | Minimal, tech |
-| Bold geometric | Light geometric | Contemporary |
+| 策略         | 如何做                  | 结果         |
+| :----------- | :---------------------- | :----------- |
+| **对比**     | 衬线标题 + 无衬线正文   | 经典, 编辑感 |
+| **同家族**   | 一个可变字体, 不同字重  | 协调, 现代   |
+| **同设计师** | 同一 Foundry 出品的字体 | 通常比例和谐 |
+| **年代匹配** | 同一历史时期的字体      | 历史一致性   |
 
-### Avoid
+### 寻找什么
 
-- ❌ Two decorative fonts together
-- ❌ Similar fonts that conflict
-- ❌ More than 2-3 font families
-- ❌ Fonts with very different x-heights
+```
+搭配时，比较:
+├── x-height (小写字母高度)
+├── 字母宽度 (窄 vs 宽)
+├── 笔画对比 (粗/细变化)
+└── 整体情绪 (正式 vs 休闲)
+```
 
 ---
 
-## 3. Line Height Principles
+## 3. 行高原则 (Line Height)
 
-### The Relationship
+### 关系
 
 ```
-Line height depends on:
-├── Font size (larger text = less line height needed)
-├── Line length (longer lines = more line height)
-├── Font design (some fonts need more space)
-└── Content type (headings vs body)
+行高取决于:
+├── 字号 (字号越大 = 需要的行高比例越小)
+├── 行长 (行越长 = 需要越多行高)
+├── 字体设计 (某些字体需要更多空间)
+└── 内容类型 (标题 vs 正文)
 ```
 
-### Guidelines by Context
+### 上下文指南
 
-| Content Type | Line Height Range | Why |
-|--------------|-------------------|-----|
-| **Headings** | 1.1 - 1.3 | Short lines, want compact |
-| **Body text** | 1.4 - 1.6 | Comfortable reading |
-| **Long-form** | 1.6 - 1.8 | Maximum readability |
-| **UI elements** | 1.2 - 1.4 | Space efficiency |
-
-### Adjustment Factors
-
-- **Longer line length** → Increase line height
-- **Larger font size** → Decrease line height ratio
-- **All caps** → May need more line height
-- **Tight tracking** → May need more line height
+| 内容类型             | 行高范围  | 为什么         |
+| :------------------- | :-------- | :------------- |
+| **标题 (Headings)**  | 1.1 - 1.3 | 行短，需要紧凑 |
+| **正文 (Body)**      | 1.4 - 1.6 | 舒适阅读       |
+| **长文 (Long-form)** | 1.6 - 1.8 | 最大易读性     |
+| **UI 元素**          | 1.2 - 1.4 | 空间效率       |
 
 ---
 
-## 4. Line Length Principles
+## 4. 行长原则 (Line Length)
 
-### Optimal Reading Width
+### 最佳阅读宽度
 
 ```
-The sweet spot: 45-75 characters per line
-├── < 45: Too choppy, breaks flow
-├── 45-75: Comfortable reading
-├── > 75: Eye tracking strain
+甜蜜点: 每行 45-75 个字符
+├── < 45: 太碎，打断心流
+├── 45-75: 舒适阅读
+├── > 75: 眼球追踪疲劳
 ```
 
-### How to Measure
+### 如何测量
 
 ```css
-/* Character-based (recommended) */
-max-width: 65ch; /* ch = width of "0" character */
+/* 基于字符 (推荐) */
+max-width: 65ch; /* ch = "0" 字符的宽度 */
 
-/* This adapts to font size automatically */
+/* 这会自动适应字号 */
 ```
-
-### Context Adjustments
-
-| Context | Character Range |
-|---------|-----------------|
-| Desktop article | 60-75 characters |
-| Mobile | 35-50 characters |
-| Sidebar text | 30-45 characters |
-| Wide monitors | Still cap at ~75ch |
 
 ---
 
-## 5. Responsive Typography Principles
+## 5. 响应式排版原则
 
-### The Problem
+### 问题
 
 ```
-Fixed sizes don't scale well:
-├── Desktop size too big on mobile
-├── Mobile size too small on desktop
-└── Breakpoint jumps feel jarring
+固定尺寸无法很好地缩放:
+├── 桌面尺寸在手机上太大
+├── 手机尺寸在桌面上太小
+└── 断点跳跃感觉突兀
 ```
 
-### Fluid Typography (clamp)
+### 流体排版 (clamp)
 
 ```css
-/* Syntax: clamp(MIN, PREFERRED, MAX) */
-font-size: clamp(
-  MINIMUM_SIZE,
-  FLUID_CALCULATION,
-  MAXIMUM_SIZE
-);
-
-/* FLUID_CALCULATION typically: 
-   base + viewport-relative-unit */
+/* 语法: clamp(最小, 首选, 最大) */
+font-size: clamp(MINIMUM_SIZE, FLUID_CALCULATION, MAXIMUM_SIZE);
 ```
 
-### Scaling Strategy
+### 缩放策略
 
-| Element | Scaling Behavior |
-|---------|-----------------|
-| Body text | Slight scaling (1rem → 1.125rem) |
-| Subheadings | Moderate scaling |
-| Headings | More dramatic scaling |
-| Display text | Most dramatic scaling |
+| 元素     | 缩放行为                   |
+| :------- | :------------------------- |
+| 正文     | 轻微缩放 (1rem → 1.125rem) |
+| 副标题   | 中度缩放                   |
+| 标题     | 更具戏剧性的缩放           |
+| 展示大字 | 最剧烈的缩放               |
 
 ---
 
-## 6. Weight and Emphasis Principles
+## 6. 字重与强调原则
 
-### Semantic Weight Usage
+### 语义化字重
 
-| Weight Range | Name | Use For |
-|--------------|------|---------|
-| 300-400 | Light/Normal | Body text, paragraphs |
-| 500 | Medium | Subtle emphasis |
-| 600 | Semibold | Subheadings, labels |
-| 700 | Bold | Headings, strong emphasis |
-| 800-900 | Heavy/Black | Display, hero text |
+| 字重范围 | 名称         | 用途            |
+| :------- | :----------- | :-------------- |
+| 300-400  | Light/Normal | 正文, 段落      |
+| 500      | Medium       | 微妙强调        |
+| 600      | Semibold     | 副标题, 标签    |
+| 700      | Bold         | 标题, 强强调    |
+| 800-900  | Heavy/Black  | 展示, Hero 文字 |
 
-### Creating Contrast
+### 创造对比
 
 ```
-Good contrast = skip at least 2 weight levels
-├── 400 body + 700 heading = good
-├── 400 body + 500 emphasis = subtle
-├── 600 heading + 700 subheading = too similar
+好对比 = 跳过至少 2 个字重级别
+├── 400 正文 + 700 标题 = 好
+├── 400 正文 + 500 强调 = 微妙
+├── 600 标题 + 700 副标题 = 太相似
 ```
-
-### Avoid
-
-- ❌ Too many weights (max 3-4 per page)
-- ❌ Adjacent weights for hierarchy (400/500)
-- ❌ Heavy weights for long text
 
 ---
 
-## 7. Letter Spacing (Tracking)
+## 7. 字间距 (Tracking)
 
-### Principles
+### 原则
 
 ```
-Large text (headings): tighter tracking
-├── Letters are big, gaps feel larger
-└── Slight negative tracking looks better
+大号字 (标题): 紧缩字间距
+├── 字母大，间隙感觉更大
+└── 轻微负值看起来更好
 
-Small text (body): normal or slightly wider
-├── Improves readability at small sizes
-└── Never negative for body text
+小号字 (正文): 正常或稍宽
+├── 在小尺寸下提高易读性
+└── 正文绝不要用负值
 
-ALL CAPS: always wider tracking
-├── Uppercase lacks ascenders/descenders
-└── Needs more space to feel right
+全大写 (ALL CAPS): 总是加宽
+├── 大写字母缺乏升部/降部
+└── 需要更多空间才感觉对
 ```
-
-### Adjustment Guidelines
-
-| Context | Tracking Adjustment |
-|---------|---------------------|
-| Display/Hero | -2% to -4% |
-| Headings | -1% to -2% |
-| Body text | 0% (normal) |
-| Small text | +1% to +2% |
-| ALL CAPS | +5% to +10% |
 
 ---
 
-## 8. Hierarchy Principles
+## 8. 层级原则
 
-### Visual Hierarchy Through Type
+### 通过排版建立视觉层级
 
 ```
-Ways to create hierarchy:
-├── SIZE (most obvious)
-├── WEIGHT (bold stands out)
-├── COLOR (contrast levels)
-├── SPACING (margins separate sections)
-└── POSITION (top = important)
+建立层级的方法:
+├── 尺寸 (SIZE) (最明显)
+├── 字重 (WEIGHT) (粗体突出)
+├── 颜色 (COLOR) (对比度层级)
+├── 间距 (SPACING) (边距分隔区域)
+└── 位置 (POSITION) (顶部 = 重要)
 ```
 
-### Typical Hierarchy
+### 典型层级
 
-| Level | Characteristics |
-|-------|-----------------|
-| Primary (H1) | Largest, boldest, most distinct |
-| Secondary (H2) | Noticeably smaller but still bold |
-| Tertiary (H3) | Medium size, may use weight only |
-| Body | Standard size and weight |
-| Caption/Meta | Smaller, often lighter color |
-
-### Testing Hierarchy
-
-Ask: "Can I tell what's most important at a glance?"
-
-If squinting at the page, the hierarchy should still be clear.
+| 级别          | 特征                   |
+| :------------ | :--------------------- |
+| 主标题 (H1)   | 最大, 最粗, 最独特     |
+| 二级标题 (H2) | 明显较小但仍粗         |
+| 三级标题 (H3) | 中等大小, 可能仅用字重 |
+| 正文 (Body)   | 标准尺寸和字重         |
+| 说明/元数据   | 更小, 通常颜色更浅     |
 
 ---
 
-## 9. Readability Psychology
+## 9. 易读性心理学
 
-### F-Pattern Reading
+### F型阅读模式
 
 ```
-Users scan in F-pattern:
-├── Across the top (first line)
-├── Down the left side
-├── Across again (subheading)
-└── Continue down left
+用户以 F 型扫描:
+├── 扫过顶部 (第一行)
+├── 沿左侧向下
+├── 再次横扫 (副标题)
+└── 继续沿左侧向下
 ```
 
-**Implication**: Key info on left and in headings
+**启示**: 关键信息放在左侧和标题中。
 
-### Chunking for Comprehension
+### 信息分块
 
-- Short paragraphs (3-4 lines max)
-- Clear subheadings
-- Bullet points for lists
-- White space between sections
-
-### Cognitive Ease
-
-- Familiar fonts = easier reading
-- High contrast = less strain
-- Consistent patterns = predictable
+- 短段落 (最多 3-4 行)
+- 清晰的副标题
+- 列表项使用项目符号
+- 板块之间留白
 
 ---
 
-## 10. Typography Selection Checklist
+## 10. 排版选择检查清单
 
-Before finalizing typography:
+在最终确定排版之前：
 
-- [ ] **Asked user for font preferences?**
-- [ ] **Considered brand/context?**
-- [ ] **Selected appropriate scale ratio?**
-- [ ] **Limited to 2-3 font families?**
-- [ ] **Tested readability at all sizes?**
-- [ ] **Checked line length (45-75ch)?**
-- [ ] **Verified contrast for accessibility?**
-- [ ] **Different from your last project?**
-
-### Anti-Patterns
-
-- ❌ Same fonts every project
-- ❌ Too many font families
-- ❌ Ignoring readability for style
-- ❌ Fixed sizes without responsiveness
-- ❌ Decorative fonts for body text
+- [ ] **询问了用户字体偏好？**
+- [ ] **考虑了品牌/上下文？**
+- [ ] **选择了合适的比例？**
+- [ ] **限制在 2-3 个字体家族？**
+- [ ] **测试了所有尺寸的易读性？**
+- [ ] **检查了行长 (45-75ch)？**
+- [ ] **验证了对比度 (无障碍)？**
+- [ ] **不同于上一个项目？**
 
 ---
 
-> **Remember**: Typography is about communication clarity. Choose based on content needs and audience, not personal preference.
+> **记住**: 排版是为了沟通的清晰度。根据内容需求和受众选择，而不是个人喜好。

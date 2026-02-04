@@ -1,57 +1,24 @@
 ---
-name: web-design-guidelines
-description: Review UI code for Web Interface Guidelines compliance. Use when asked to "review my UI", "check accessibility", "audit design", "review UX", or "check my site against best practices".
-metadata:
-  author: vercel
-  version: "1.0.0"
-  argument-hint: <file-or-pattern>
+description: Web 界面指南 (WIG) 审查与无障碍检查
 ---
 
-# Web Interface Guidelines
+# Web 设计指南 (Web Design Guidelines)
 
-Review files for compliance with Web Interface Guidelines.
+## 用户体验 (UX)
 
-## How It Works
+1.  **加载状态**: 在数据加载时显示 Skeleton 或 Spinner。
+2.  **空状态**: 列表为空时，提供引导（"没有数据，点击这里创建"）。
+3.  **错误处理**: 友好的错误提示，不仅仅是 "Error 500"。
 
-1. Fetch the latest guidelines from the source URL below
-2. Read the specified files (or prompt user for files/pattern)
-3. Check against all rules in the fetched guidelines
-4. Output findings in the terse `file:line` format
+## 无障碍 (Accessbility / a11y)
 
-## Guidelines Source
+1.  **键盘导航**: 确保所有交互元素 (Botton, Link, Input) 都能用 Tab 键访问。
+2.  **语义化 HTML**: 使用 `<main>`, `<nav>`, `<article>` 而不是全用 `<div>`。
+3.  **颜色对比度**: 文本与背景对比度至少 4.5:1。
+4.  **Alt 属性**: 所有图片必须有 Alt。
 
-Fetch fresh guidelines before each review:
+## 响应式 (Responsive)
 
-```
-https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
-```
-
-Use WebFetch to retrieve the latest rules. The fetched content contains all the rules and output format instructions.
-
-## Usage
-
-When a user provides a file or pattern argument:
-1. Fetch guidelines from the source URL above
-2. Read the specified files
-3. Apply all rules from the fetched guidelines
-4. Output findings using the format specified in the guidelines
-
-If no files specified, ask the user which files to review.
-
----
-
-## Related Skills
-
-| Skill | When to Use |
-|-------|-------------|
-| **[frontend-design](../frontend-design/SKILL.md)** | Before coding - Learn design principles (color, typography, UX psychology) |
-| **web-design-guidelines** (this) | After coding - Audit for accessibility, performance, and best practices |
-
-## Design Workflow
-
-```
-1. DESIGN   → Read frontend-design principles
-2. CODE     → Implement the design
-3. AUDIT    → Run web-design-guidelines review ← YOU ARE HERE
-4. FIX      → Address findings from audit
-```
+- 确保在 Mobile (320px+), Tablet, Desktop 都能正常显示。
+- 不要出现横向滚动条（除非是特定组件如 Carousel）。
+- 触摸目标足够大。

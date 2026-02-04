@@ -1,45 +1,28 @@
 ---
-name: lint-and-validate
-description: Automatic quality control, linting, and static analysis procedures. Use after every code modification to ensure syntax correctness and project standards. Triggers onKeywords: lint, format, check, validate, types, static analysis.
-allowed-tools: Read, Glob, Grep, Bash
+description: 代码质量检查、Linting 配置与执行
 ---
 
-# Lint and Validate Skill
+# Lint 与校验 (Lint and Validate)
 
-> **MANDATORY:** Run appropriate validation tools after EVERY code change. Do not finish a task until the code is error-free.
+## 为什么需要 Lint？
 
-### Procedures by Ecosystem
+Lint 工具能在代码运行前发现错误。它是成本最低的测试。
 
-#### Node.js / TypeScript
-1. **Lint/Fix:** `npm run lint` or `npx eslint "path" --fix`
-2. **Types:** `npx tsc --noEmit`
-3. **Security:** `npm audit --audit-level=high`
+## 推荐配置
 
-#### Python
-1. **Linter (Ruff):** `ruff check "path" --fix` (Fast & Modern)
-2. **Security (Bandit):** `bandit -r "path" -ll`
-3. **Types (MyPy):** `mypy "path"`
+1.  **ESLint** (JavaScript/TypeScript)
+    - 推荐 `eslint-config-standard` 或 `antfu/eslint-config`。
+    - 关注：未使用的变量、潜在的死循环、Hook 规则。
 
-## The Quality Loop
-1. **Write/Edit Code**
-2. **Run Audit:** `npm run lint && npx tsc --noEmit`
-3. **Analyze Report:** Check the "FINAL AUDIT REPORT" section.
-4. **Fix & Repeat:** Submitting code with "FINAL AUDIT" failures is NOT allowed.
+2.  **Prettier / Biome** (Formatting)
+    - 自动化代码风格（缩进、分号、单引号）。
+    - 再也不用在 Code Review 中争论代码风格了。
 
-## Error Handling
-- If `lint` fails: Fix the style or syntax issues immediately.
-- If `tsc` fails: Correct type mismatches before proceeding.
-- If no tool is configured: Check the project root for `.eslintrc`, `tsconfig.json`, `pyproject.toml` and suggest creating one.
+3.  **TypeScript** (Type Checking)
+    - `strict: true` 是必须的。
+    - 不要忽略 `any` 警告。
 
----
-**Strict Rule:** No code should be committed or reported as "done" without passing these checks.
+## 自动化 (Automation)
 
----
-
-## Scripts
-
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `scripts/lint_runner.py` | Unified lint check | `python scripts/lint_runner.py <project_path>` |
-| `scripts/type_coverage.py` | Type coverage analysis | `python scripts/type_coverage.py <project_path>` |
-
+- **Husky + lint-staged**: 在 commit 时自动运行 Lint，只检查修改过的文件。
+- **CI Pipeline**: 在合并代码前强制运行 Lint 检查。

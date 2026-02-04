@@ -1,135 +1,129 @@
----
-name: 3d-games
-description: 3D game development principles. Rendering, shaders, physics, cameras.
-allowed-tools: Read, Write, Edit, Glob, Grep
----
+# 3D 游戏开发 (3D Game Development)
 
-# 3D Game Development
-
-> Principles for 3D game systems.
+> 3D 游戏系统原则。
 
 ---
 
-## 1. Rendering Pipeline
+## 1. 渲染管线 (Rendering Pipeline)
 
-### Stages
+### 阶段
 
 ```
-1. Vertex Processing → Transform geometry
-2. Rasterization → Convert to pixels
-3. Fragment Processing → Color pixels
-4. Output → To screen
+1. 顶点处理 (Vertex Processing) → 变换几何体
+2. 光栅化 (Rasterization) → 转换为像素
+3. 片元处理 (Fragment Processing) → 为像素着色
+4. 输出 (Output) → 到屏幕
 ```
 
-### Optimization Principles
+### 优化原则
 
-| Technique | Purpose |
-|-----------|---------|
-| **Frustum culling** | Don't render off-screen |
-| **Occlusion culling** | Don't render hidden |
-| **LOD** | Less detail at distance |
-| **Batching** | Combine draw calls |
-
----
-
-## 2. Shader Principles
-
-### Shader Types
-
-| Type | Purpose |
-|------|---------|
-| **Vertex** | Position, normals |
-| **Fragment/Pixel** | Color, lighting |
-| **Compute** | General computation |
-
-### When to Write Custom Shaders
-
-- Special effects (water, fire, portals)
-- Stylized rendering (toon, sketch)
-- Performance optimization
-- Unique visual identity
+| 技术                             | 目的             |
+| -------------------------------- | ---------------- |
+| **视锥体剔除 (Frustum culling)** | 不渲染屏幕外物体 |
+| **遮挡剔除 (Occlusion culling)** | 不渲染被遮挡物体 |
+| **LOD (多细节层次)**             | 远距离更少细节   |
+| **合批 (Batching)**              | 合并绘制调用     |
 
 ---
 
-## 3. 3D Physics
+## 2. 着色器原则 (Shader Principles)
 
-### Collision Shapes
+### 着色器类型
 
-| Shape | Use Case |
-|-------|----------|
-| **Box** | Buildings, crates |
-| **Sphere** | Balls, quick checks |
-| **Capsule** | Characters |
-| **Mesh** | Terrain (expensive) |
+| 类型                           | 目的       |
+| ------------------------------ | ---------- |
+| **Vertex (顶点)**              | 位置，法线 |
+| **Fragment/Pixel (片元/像素)** | 颜色，光照 |
+| **Compute (计算)**             | 通用计算   |
 
-### Principles
+### 何时编写自定义着色器
 
-- Simple colliders, complex visuals
-- Layer-based filtering
-- Raycasting for line-of-sight
-
----
-
-## 4. Camera Systems
-
-### Camera Types
-
-| Type | Use |
-|------|-----|
-| **Third-person** | Action, adventure |
-| **First-person** | Immersive, FPS |
-| **Isometric** | Strategy, RPG |
-| **Orbital** | Inspection, editors |
-
-### Camera Feel
-
-- Smooth following (lerp)
-- Collision avoidance
-- Look-ahead for movement
-- FOV changes for speed
+- 特效 (水，火，传送门)
+- 风格化渲染 (卡通，素描)
+- 性能优化
+- 独特的视觉标识
 
 ---
 
-## 5. Lighting
+## 3. 3D 物理
 
-### Light Types
+### 碰撞形状
 
-| Type | Use |
-|------|-----|
-| **Directional** | Sun, moon |
-| **Point** | Lamps, torches |
-| **Spot** | Flashlight, stage |
-| **Ambient** | Base illumination |
+| 形状        | 适用场景     |
+| ----------- | ------------ |
+| **Box**     | 建筑物，箱子 |
+| **Sphere**  | 球，快速检查 |
+| **Capsule** | 角色         |
+| **Mesh**    | 地形 (昂贵)  |
 
-### Performance Consideration
+### 原则
 
-- Real-time shadows are expensive
-- Bake when possible
-- Shadow cascades for large worlds
-
----
-
-## 6. Level of Detail (LOD)
-
-### LOD Strategy
-
-| Distance | Model |
-|----------|-------|
-| Near | Full detail |
-| Medium | 50% triangles |
-| Far | 25% or billboard |
+- 简单的碰撞体，复杂的视觉效果
+- 基于层的过滤
+- 视线检测使用射线检测 (Raycasting)
 
 ---
 
-## 7. Anti-Patterns
+## 4. 相机系统
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Mesh colliders everywhere | Simple shapes |
-| Real-time shadows on mobile | Baked or blob shadows |
-| One LOD for all distances | Distance-based LOD |
-| Unoptimized shaders | Profile and simplify |
+### 相机类型
+
+| 类型                   | 用途         |
+| ---------------------- | ------------ |
+| **第三人称**           | 动作，冒险   |
+| **第一人称**           | 沉浸式，FPS  |
+| **等轴测 (Isometric)** | 策略，RPG    |
+| **轨道 (Orbital)**     | 检视，编辑器 |
+
+### 相机手感
+
+- 平滑跟随 (lerp)
+- 避障
+- 移动前瞻
+- 随速度改变 FOV
 
 ---
 
-> **Remember:** 3D is about illusion. Create the impression of detail, not the detail itself.
+## 5. 光照
+
+### 光照类型
+
+| 类型                     | 用途         |
+| ------------------------ | ------------ |
+| **Directional (定向光)** | 太阳，月亮   |
+| **Point (点光源)**       | 灯，火把     |
+| **Spot (聚光灯)**        | 手电筒，舞台 |
+| **Ambient (环境光)**     | 基础照明     |
+
+### 性能考量
+
+- 实时阴影很昂贵
+- 尽可能烘焙 (Bake)
+- 大世界使用级联阴影 (Shadow cascades)
+
+---
+
+## 6. 多细节层次 (LOD)
+
+### LOD 策略
+
+| 距离 | 模型                     |
+| ---- | ------------------------ |
+| 近   | 全细节                   |
+| 中   | 50% 三角形               |
+| 远   | 25% 或公告板 (billboard) |
+
+---
+
+## 7. 反模式
+
+| ❌ 错误              | ✅ 正确          |
+| -------------------- | ---------------- |
+| 哪里都用网格碰撞体   | 使用简单形状     |
+| 移动端使用实时阴影   | 烘焙或 Blob 阴影 |
+| 所有距离使用一个 LOD | 基于距离的 LOD   |
+| 未优化的着色器       | 分析并简化       |
+
+---
+
+> **记住:** 3D 关乎错觉。创造细节的印象，而不是细节本身。

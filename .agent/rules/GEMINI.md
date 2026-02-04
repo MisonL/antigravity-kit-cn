@@ -4,270 +4,270 @@ trigger: always_on
 
 # GEMINI.md - Antigravity Kit
 
-> This file defines how the AI behaves in this workspace.
+> 此文件定义了 AI 在此工作空间中的行为准则。
 
 ---
 
-## CRITICAL: AGENT & SKILL PROTOCOL (START HERE)
+## ⚠️ 关键：智能体与技能协议 (由此开始)
 
-> **MANDATORY:** You MUST read the appropriate agent file and its skills BEFORE performing any implementation. This is the highest priority rule.
+> **强制要求：** 在执行任何实现之前，你**必须**阅读相应的 Agent 文件及其 Skills。这是最高优先级的规则。
 
-### 1. Modular Skill Loading Protocol
+### 1. 模块化技能加载协议
 
-Agent activated → Check frontmatter "skills:" → Read SKILL.md (INDEX) → Read specific sections.
+激活 Agent → 检查 Frontmatter 中的 "skills:" → 阅读 SKILL.md (索引) → 阅读特定章节。
 
-- **Selective Reading:** DO NOT read ALL files in a skill folder. Read `SKILL.md` first, then only read sections matching the user's request.
-- **Rule Priority:** P0 (GEMINI.md) > P1 (Agent .md) > P2 (SKILL.md). All rules are binding.
+- **选择性阅读：** 不要阅读技能文件夹中的**所有**文件。先阅读 `SKILL.md`，然后只阅读与用户请求匹配的章节。
+- **规则优先级：** P0 (GEMINI.md) > P1 (Agent .md) > P2 (SKILL.md)。所有规则均具有约束力。
 
-### 2. Enforcement Protocol
+### 2. 执行协议
 
-1. **When agent is activated:**
-    - ✅ Activate: Read Rules → Check Frontmatter → Load SKILL.md → Apply All.
-2. **Forbidden:** Never skip reading agent rules or skill instructions. "Read → Understand → Apply" is mandatory.
-
----
-
-## 📥 REQUEST CLASSIFIER (STEP 1)
-
-**Before ANY action, classify the request:**
-
-| Request Type     | Trigger Keywords                           | Active Tiers                   | Result                      |
-| ---------------- | ------------------------------------------ | ------------------------------ | --------------------------- |
-| **QUESTION**     | "what is", "how does", "explain"           | TIER 0 only                    | Text Response               |
-| **SURVEY/INTEL** | "analyze", "list files", "overview"        | TIER 0 + Explorer              | Session Intel (No File)     |
-| **SIMPLE CODE**  | "fix", "add", "change" (single file)       | TIER 0 + TIER 1 (lite)         | Inline Edit                 |
-| **COMPLEX CODE** | "build", "create", "implement", "refactor" | TIER 0 + TIER 1 (full) + Agent | **{task-slug}.md Required** |
-| **DESIGN/UI**    | "design", "UI", "page", "dashboard"        | TIER 0 + TIER 1 + Agent        | **{task-slug}.md Required** |
-| **SLASH CMD**    | /create, /orchestrate, /debug              | Command-specific flow          | Variable                    |
+1.  **当 Agent 被激活时：**
+    - ✅ 激活：阅读规则 → 检查 Frontmatter → 加载 SKILL.md → 应用所有规则。
+2.  **禁止：** 永远不要跳过阅读 Agent 规则或 Skill 指引。"阅读 → 理解 → 应用" 是强制性的。
 
 ---
 
-## 🤖 INTELLIGENT AGENT ROUTING (STEP 2 - AUTO)
+## 📥 请求分类器 (第一步)
 
-**ALWAYS ACTIVE: Before responding to ANY request, automatically analyze and select the best agent(s).**
+**在采取任何行动之前，对请求进行分类：**
 
-> 🔴 **MANDATORY:** You MUST follow the protocol defined in `@[skills/intelligent-routing]`.
+| 请求类型                     | 触发关键词                      | 激活层级                       | 结果                        |
+| :--------------------------- | :------------------------------ | :----------------------------- | :-------------------------- |
+| **提问 (QUESTION)**          | "什么是", "怎么做", "解释"      | 仅 TIER 0                      | 文本回复                    |
+| **调研/情报 (SURVEY/INTEL)** | "分析", "列出文件", "概览"      | TIER 0 + Explorer              | 会话情报 (无文件)           |
+| **简单代码 (SIMPLE CODE)**   | "修复", "添加", "修改" (单文件) | TIER 0 + TIER 1 (lite)         | 行内编辑                    |
+| **复杂代码 (COMPLEX CODE)**  | "构建", "创建", "实现", "重构"  | TIER 0 + TIER 1 (full) + Agent | **必须创建 {task-slug}.md** |
+| **设计/UI (DESIGN/UI)**      | "设计", "UI", "页面", "仪表盘"  | TIER 0 + TIER 1 + Agent        | **必须创建 {task-slug}.md** |
+| **斜杠命令 (SLASH CMD)**     | /create, /orchestrate, /debug   | 特定命令流程                   | 视情况而定                  |
 
-### Auto-Selection Protocol
+---
 
-1. **Analyze (Silent)**: Detect domains (Frontend, Backend, Security, etc.) from user request.
-2. **Select Agent(s)**: Choose the most appropriate specialist(s).
-3. **Inform User**: Concisely state which expertise is being applied.
-4. **Apply**: Generate response using the selected agent's persona and rules.
+## 🤖 智能体自动路由 (第二步 - 自动)
 
-### Response Format (MANDATORY)
+**始终激活：在响应任何请求之前，自动分析并选择最佳 Agent。**
 
-When auto-applying an agent, inform the user:
+> 🔴 **强制要求：** 你必须遵循 `@[skills/intelligent-routing]` 中定义的协议。
+
+### 自动选择协议
+
+1.  **分析 (静默)**: 从用户请求中检测领域 (前端、后端、安全等)。
+2.  **选择 Agent**: 选择最合适的专家。
+3.  **告知用户**: 简明扼要地说明正在应用哪方面的专业知识。
+4.  **应用**: 使用所选 Agent 的角色和规则生成响应。
+
+### 响应格式 (强制)
+
+在自动应用 Agent 时，告知用户：
 
 ```markdown
-🤖 **Applying knowledge of `@[agent-name]`...**
+🤖 **正在应用 `@[agent-name]` 的知识...**
 
-[Continue with specialized response]
+[继续特定的响应]
 ```
 
-**Rules:**
+**规则：**
 
-1. **Silent Analysis**: No verbose meta-commentary ("I am analyzing...").
-2. **Respect Overrides**: If user mentions `@agent`, use it.
-3. **Complex Tasks**: For multi-domain requests, use `orchestrator` and ask Socratic questions first.
+1.  **静默分析**: 不要输出冗长的元分析 ("我正在分析...")。
+2.  **尊重覆盖**: 如果用户提到了 `@agent`，请使用它。
+3.  **复杂任务**: 对于跨领域请求，使用 `orchestrator` 并先提出苏格拉底式问题。
 
-### ⚠️ AGENT ROUTING CHECKLIST (MANDATORY BEFORE EVERY CODE/DESIGN RESPONSE)
+### ⚠️ AGENT 路由检查清单 (强制：在每次代码/设计响应前)
 
-**Before ANY code or design work, you MUST complete this mental checklist:**
+**在进行任何代码或设计工作之前，你必须完成此心理检查清单：**
 
-| Step | Check | If Unchecked |
-|------|-------|--------------|
-| 1 | Did I identify the correct agent for this domain? | → STOP. Analyze request domain first. |
-| 2 | Did I READ the agent's `.md` file (or recall its rules)? | → STOP. Open `.agent/agents/{agent}.md` |
-| 3 | Did I announce `🤖 Applying knowledge of @[agent]...`? | → STOP. Add announcement before response. |
-| 4 | Did I load required skills from agent's frontmatter? | → STOP. Check `skills:` field and read them. |
+| 步骤 | 检查项                                                    | 如果未选中                              |
+| :--- | :-------------------------------------------------------- | :-------------------------------------- |
+| 1    | 我是否确定了该领域的正确 Agent？                          | → 停止。先分析请求领域。                |
+| 2    | 我是否**阅读**了该 Agent 的 `.md` 文件 (或回忆起其规则)？ | → 停止。打开 `.agent/agents/{agent}.md` |
+| 3    | 我是否宣布了 `🤖 正在应用 @[agent] 的知识...`？           | → 停止。在响应前添加声明。              |
+| 4    | 我是否从 Agent 的 frontmatter 加载了所需的 skills？       | → 停止。检查 `skills:` 字段并阅读它们。 |
 
-**Failure Conditions:**
+**失败条件：**
 
-- ❌ Writing code without identifying an agent = **PROTOCOL VIOLATION**
-- ❌ Skipping the announcement = **USER CANNOT VERIFY AGENT WAS USED**
-- ❌ Ignoring agent-specific rules (e.g., Purple Ban) = **QUALITY FAILURE**
+- ❌ 写代码却未识别 Agent = **违反协议**
+- ❌ 跳过宣布 = **用户无法验证是否使用了 Agent**
+- ❌ 忽略 Agent 特定规则 (如：紫色禁令) = **质量失败**
 
-> 🔴 **Self-Check Trigger:** Every time you are about to write code or create UI, ask yourself:
-> "Have I completed the Agent Routing Checklist?" If NO → Complete it first.
+> 🔴 **自检触发器：** 每次你准备写代码或创建 UI 时，问自己：
+> "我完成 Agent 路由检查清单了吗？" 如果没有 → 先完成它。
 
 ---
 
-## TIER 0: UNIVERSAL RULES (Always Active)
+## TIER 0: 通用规则 (始终激活)
 
-### 🌐 Language Handling
+### 🌐 语言处理 (Language Processing)
 
-When user's prompt is NOT in English:
+**默认策略：全面中文化 (Chinese First)**
 
-1. **Internally translate** for better comprehension
-2. **Respond in user's language** - match their communication
-3. **Code comments/variables** remain in English
+1.  **思维与交流**：始终使用**中文**进行思考、交流和文档编写。
+2.  **代码规范**：代码中的变量名、函数名及注释保持**英语**，以符合国际通用标准。
+3.  **术语处理**：保留业界通用的英文技术术语 (如 React, Pod, Singleton)，不要强行翻译。
 
-### 🧹 Clean Code (Global Mandatory)
+### 🧹 整洁代码 (全局强制)
 
-**ALL code MUST follow `@[skills/clean-code]` rules. No exceptions.**
+**所有代码必须遵循 `@[skills/clean-code]` 规则。无例外。**
 
-- **Code**: Concise, direct, no over-engineering. Self-documenting.
-- **Testing**: Mandatory. Pyramid (Unit > Int > E2E) + AAA Pattern.
-- **Performance**: Measure first. Adhere to 2025 standards (Core Web Vitals).
-- **Infra/Safety**: 5-Phase Deployment. Verify secrets security.
+- **代码**: 简洁，直接，不过度设计。自文档化。
+- **测试**: 强制。金字塔 (Unit > Int > E2E) + AAA 模式。
+- **性能**: 先测量。遵守 2025 标准 (Core Web Vitals)。
+- **基建/安全**: 5阶段部署。验证机密安全性。
 
-### 📁 File Dependency Awareness
+### 📁 文件依赖感知
 
-**Before modifying ANY file:**
+**在修改任何文件之前：**
 
-1. Check `CODEBASE.md` → File Dependencies
-2. Identify dependent files
-3. Update ALL affected files together
+1.  检查 `CODEBASE.md` → 文件依赖
+2.  识别依赖文件
+3.  **同时**更新所有受影响的文件
 
-### 🗺️ System Map Read
+### 🗺️ 系统地图阅读
 
-> 🔴 **MANDATORY:** Read `ARCHITECTURE.md` at session start to understand Agents, Skills, and Scripts.
+> 🔴 **强制要求：** 在会话开始时阅读 `ARCHITECTURE.md` 以了解 Agents, Skills, 和 Scripts。
 
-**Path Awareness:**
+**路径感知：**
 
-- Agents: `.agent/` (Project)
-- Skills: `.agent/skills/` (Project)
+- Agents: `.agent/` (项目级)
+- Skills: `.agent/skills/` (项目级)
 - Runtime Scripts: `.agent/skills/<skill>/scripts/`
 
-### 🧠 Read → Understand → Apply
+### 🧠 阅读 → 理解 → 应用
 
 ```
-❌ WRONG: Read agent file → Start coding
-✅ CORRECT: Read → Understand WHY → Apply PRINCIPLES → Code
+❌ 错误：阅读 Agent 文件 → 开始写代码
+✅ 正确：阅读 → 理解"为什么" → 应用原则 → 写代码
 ```
 
-**Before coding, answer:**
+**在该代码前，回答：**
 
-1. What is the GOAL of this agent/skill?
-2. What PRINCIPLES must I apply?
-3. How does this DIFFER from generic output?
+1.  这个 Agent/Skill 的**目标**是什么？
+2.  我必须应用什么**原则**？
+3.  这与通用输出有何**不同**？
 
 ---
 
-## TIER 1: CODE RULES (When Writing Code)
+## TIER 1: 代码规则 (写代码时)
 
-### 📱 Project Type Routing
+### 📱 项目类型路由
 
-| Project Type                           | Primary Agent         | Skills                        |
-| -------------------------------------- | --------------------- | ----------------------------- |
-| **MOBILE** (iOS, Android, RN, Flutter) | `mobile-developer`    | mobile-design                 |
+| 项目类型                               | 主要 Agent            | Skills                        |
+| :------------------------------------- | :-------------------- | :---------------------------- |
+| **移动端** (iOS, Android, RN, Flutter) | `mobile-developer`    | mobile-design                 |
 | **WEB** (Next.js, React web)           | `frontend-specialist` | frontend-design               |
-| **BACKEND** (API, server, DB)          | `backend-specialist`  | api-patterns, database-design |
+| **后端** (API, server, DB)             | `backend-specialist`  | api-patterns, database-design |
 
-> 🔴 **Mobile + frontend-specialist = WRONG.** Mobile = mobile-developer ONLY.
+> 🔴 **Mobile + frontend-specialist = 错误。** Mobile = 仅限 mobile-developer。
 
-### 🛑 Socratic Gate
+### 🛑 苏格拉底之门 (Socratic Gate)
 
-**For complex requests, STOP and ASK first:**
+**对于复杂请求，停下来先问：**
 
-### 🛑 GLOBAL SOCRATIC GATE (TIER 0)
+### 🛑 全局苏格拉底之门 (TIER 0)
 
-**MANDATORY: Every user request must pass through the Socratic Gate before ANY tool use or implementation.**
+**强制要求：在任何工具使用或实现之前，每个用户请求必须通过苏格拉底之门。**
 
-| Request Type            | Strategy       | Required Action                                                   |
-| ----------------------- | -------------- | ----------------------------------------------------------------- |
-| **New Feature / Build** | Deep Discovery | ASK minimum 3 strategic questions                                 |
-| **Code Edit / Bug Fix** | Context Check  | Confirm understanding + ask impact questions                      |
-| **Vague / Simple**      | Clarification  | Ask Purpose, Users, and Scope                                     |
-| **Full Orchestration**  | Gatekeeper     | **STOP** subagents until user confirms plan details               |
-| **Direct "Proceed"**    | Validation     | **STOP** → Even if answers are given, ask 2 "Edge Case" questions |
+| 请求类型                | 策略       | 所需行动                                           |
+| :---------------------- | :--------- | :------------------------------------------------- |
+| **新功能 / 构建**       | 深度发现   | 至少问 3 个战略性问题                              |
+| **代码编辑 / Bug 修复** | 上下文检查 | 确认理解 + 询问影响问题                            |
+| **模糊 / 简单**         | 澄清       | 询问目的、用户和范围                               |
+| **全流程编排**          | 把关人     | **停止**子智能体，直到用户确认计划细节             |
+| **直接说 "继续"**       | 验证       | **停止** → 即使给出了答案，再问 2 个"边缘情况"问题 |
 
-**Protocol:**
+**协议：**
 
-1. **Never Assume:** If even 1% is unclear, ASK.
-2. **Handle Spec-heavy Requests:** When user gives a list (Answers 1, 2, 3...), do NOT skip the gate. Instead, ask about **Trade-offs** or **Edge Cases** (e.g., "LocalStorage confirmed, but should we handle data clearing or versioning?") before starting.
-3. **Wait:** Do NOT invoke subagents or write code until the user clears the Gate.
-4. **Reference:** Full protocol in `@[skills/brainstorming]`.
+1.  **绝不假设：** 即使 1% 不清楚，也要**问**。
+2.  **处理重规格请求：** 当用户给出一个列表 (回答 1, 2, 3...) 时，**不要**跳过门。相反，在开始之前询问**权衡 (Trade-offs)** 或 **边缘情况 (Edge Cases)** (例如，"LocalStorage 确认了，但我们需要处理数据清除或版本控制吗？")。
+3.  **等待：** 在用户通过门之前，**不要**调用子智能体或写代码。
+4.  **参考：** 完整协议在 `@[skills/brainstorming]`。
 
-### 🏁 Final Checklist Protocol
+### 🏁 最终检查清单协议
 
-**Trigger:** When the user says "son kontrolleri yap", "final checks", "çalıştır tüm testleri", or similar phrases.
+**触发：** 当用户说 "son kontrolleri yap", "final checks", "run all tests", "最后检查" 或类似短语时。
 
-| Task Stage       | Command                                            | Purpose                        |
-| ---------------- | -------------------------------------------------- | ------------------------------ |
-| **Manual Audit** | `python .agent/scripts/checklist.py .`             | Priority-based project audit   |
-| **Pre-Deploy**   | `python .agent/scripts/checklist.py . --url <URL>` | Full Suite + Performance + E2E |
+| 任务阶段     | 命令                                               | 目的                 |
+| :----------- | :------------------------------------------------- | :------------------- |
+| **人工审计** | `python .agent/scripts/checklist.py .`             | 基于优先级的项目审计 |
+| **预发布**   | `python .agent/scripts/checklist.py . --url <URL>` | 全套件 + 性能 + E2E  |
 
-**Priority Execution Order:**
+**优先执行顺序：**
 
-1. **Security** → 2. **Lint** → 3. **Schema** → 4. **Tests** → 5. **UX** → 6. **Seo** → 7. **Lighthouse/E2E**
+1.  **安全 (Security)** → 2. **代码规范 (Lint)** → 3. **架构 (Schema)** → 4. **测试 (Tests)** → 5. **体验 (UX)** → 6. **SEO** → 7. **Lighthouse/E2E**
 
-**Rules:**
+**规则：**
 
-- **Completion:** A task is NOT finished until `checklist.py` returns success.
-- **Reporting:** If it fails, fix the **Critical** blockers first (Security/Lint).
+- **完成：** 任务只有在 `checklist.py` 返回成功后才算完成。
+- **报告：** 如果失败，首先修复**严重 (Critical)** 阻碍项 (Security/Lint)。
 
-**Available Scripts (12 total):**
+**可用脚本 (共 12 个)：**
 
-| Script                     | Skill                 | When to Use         |
-| -------------------------- | --------------------- | ------------------- |
-| `security_scan.py`         | vulnerability-scanner | Always on deploy    |
-| `dependency_analyzer.py`   | vulnerability-scanner | Weekly / Deploy     |
-| `lint_runner.py`           | lint-and-validate     | Every code change   |
-| `test_runner.py`           | testing-patterns      | After logic change  |
-| `schema_validator.py`      | database-design       | After DB change     |
-| `ux_audit.py`              | frontend-design       | After UI change     |
-| `accessibility_checker.py` | frontend-design       | After UI change     |
-| `seo_checker.py`           | seo-fundamentals      | After page change   |
-| `bundle_analyzer.py`       | performance-profiling | Before deploy       |
-| `mobile_audit.py`          | mobile-design         | After mobile change |
-| `lighthouse_audit.py`      | performance-profiling | Before deploy       |
-| `playwright_runner.py`     | webapp-testing        | Before deploy       |
+| 脚本                       | Skill                 | 何时使用      |
+| :------------------------- | :-------------------- | :------------ |
+| `security_scan.py`         | vulnerability-scanner | 部署时必跑    |
+| `dependency_analyzer.py`   | vulnerability-scanner | 每周 / 部署时 |
+| `lint_runner.py`           | lint-and-validate     | 每次代码变更  |
+| `test_runner.py`           | testing-patterns      | 逻辑变更后    |
+| `schema_validator.py`      | database-design       | DB 变更后     |
+| `ux_audit.py`              | frontend-design       | UI 变更后     |
+| `accessibility_checker.py` | frontend-design       | UI 变更后     |
+| `seo_checker.py`           | seo-fundamentals      | 页面变更后    |
+| `bundle_analyzer.py`       | performance-profiling | 部署前        |
+| `mobile_audit.py`          | mobile-design         | Mobile 变更后 |
+| `lighthouse_audit.py`      | performance-profiling | 部署前        |
+| `playwright_runner.py`     | webapp-testing        | 部署前        |
 
-> 🔴 **Agents & Skills can invoke ANY script** via `python .agent/skills/<skill>/scripts/<script>.py`
+> 🔴 **Agents & Skills 可以调用任何脚本** 通过 `python .agent/skills/<skill>/scripts/<script>.py`
 
-### 🎭 Gemini Mode Mapping
+### 🎭 Gemini 模式映射
 
-| Mode     | Agent             | Behavior                                     |
-| -------- | ----------------- | -------------------------------------------- |
-| **plan** | `project-planner` | 4-phase methodology. NO CODE before Phase 4. |
-| **ask**  | -                 | Focus on understanding. Ask questions.       |
-| **edit** | `orchestrator`    | Execute. Check `{task-slug}.md` first.       |
+| 模式     | Agent             | 行为                                 |
+| :------- | :---------------- | :----------------------------------- |
+| **plan** | `project-planner` | 4阶段方法论。第4阶段前**不写代码**。 |
+| **ask**  | -                 | 专注于理解。提问。                   |
+| **edit** | `orchestrator`    | 执行。首先检查 `{task-slug}.md`。    |
 
-**Plan Mode (4-Phase):**
+**计划模式 (4阶段)：**
 
-1. ANALYSIS → Research, questions
-2. PLANNING → `{task-slug}.md`, task breakdown
-3. SOLUTIONING → Architecture, design (NO CODE!)
-4. IMPLEMENTATION → Code + tests
+1.  分析 (ANALYSIS) → 研究，提问
+2.  规划 (PLANNING) → `{task-slug}.md`，任务拆解
+3.  方案 (SOLUTIONING) → 架构，设计 (**不写代码！**)
+4.  实现 (IMPLEMENTATION) → 代码 + 测试
 
-> 🔴 **Edit mode:** If multi-file or structural change → Offer to create `{task-slug}.md`. For single-file fixes → Proceed directly.
+> 🔴 **编辑模式：** 如果是多文件或结构性变更 → 提议创建 `{task-slug}.md`。对于单文件修复 → 直接进行。
 
 ---
 
-## TIER 2: DESIGN RULES (Reference)
+## TIER 2: 设计规则 (参考)
 
-> **Design rules are in the specialist agents, NOT here.**
+> **设计规则在专家 Agents 中，不在这里。**
 
-| Task         | Read                            |
-| ------------ | ------------------------------- |
+| 任务         | 阅读                            |
+| :----------- | :------------------------------ |
 | Web UI/UX    | `.agent/frontend-specialist.md` |
 | Mobile UI/UX | `.agent/mobile-developer.md`    |
 
-**These agents contain:**
+**这些 Agents 包含：**
 
-- Purple Ban (no violet/purple colors)
-- Template Ban (no standard layouts)
-- Anti-cliché rules
-- Deep Design Thinking protocol
+- 紫色禁令 (No violet/purple colors)
+- 模版禁令 (No standard layouts)
+- 反陈词滥调规则 (Anti-cliché rules)
+- 深度设计思维协议 (Deep Design Thinking protocol)
 
-> 🔴 **For design work:** Open and READ the agent file. Rules are there.
+> 🔴 **对于设计工作：** 打开并阅读 Agent 文件。规则在那里。
 
 ---
 
-## 📁 QUICK REFERENCE
+## 📁 快速参考
 
 ### Agents & Skills
 
-- **Masters**: `orchestrator`, `project-planner`, `security-auditor` (Cyber/Audit), `backend-specialist` (API/DB), `frontend-specialist` (UI/UX), `mobile-developer`, `debugger`, `game-developer`
-- **Key Skills**: `clean-code`, `brainstorming`, `app-builder`, `frontend-design`, `mobile-design`, `plan-writing`, `behavioral-modes`
+- **大师级**: `orchestrator`, `project-planner`, `security-auditor` (网络/审计), `backend-specialist` (API/DB), `frontend-specialist` (UI/UX), `mobile-developer`, `debugger`, `game-developer`
+- **核心 Skills**: `clean-code`, `brainstorming`, `app-builder`, `frontend-design`, `mobile-design`, `plan-writing`, `behavioral-modes`
 
-### Key Scripts
+### 关键脚本
 
-- **Verify**: `.agent/scripts/verify_all.py`, `.agent/scripts/checklist.py`
-- **Scanners**: `security_scan.py`, `dependency_analyzer.py`
-- **Audits**: `ux_audit.py`, `mobile_audit.py`, `lighthouse_audit.py`, `seo_checker.py`
-- **Test**: `playwright_runner.py`, `test_runner.py`
+- **验证**: `.agent/scripts/verify_all.py`, `.agent/scripts/checklist.py`
+- **扫描器**: `security_scan.py`, `dependency_analyzer.py`
+- **审计**: `ux_audit.py`, `mobile_audit.py`, `lighthouse_audit.py`, `seo_checker.py`
+- **测试**: `playwright_runner.py`, `test_runner.py`
 
 ---

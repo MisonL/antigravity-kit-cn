@@ -1,666 +1,539 @@
-# Android Platform Guidelines
+---
+description: Material Design 3 精要、Android 设计惯例、Roboto 排版与原生模式
+---
 
-> Material Design 3 essentials, Android design conventions, Roboto typography, and native patterns.
-> **Read this file when building for Android devices.**
+# Android 平台指南 (Android Platform Guidelines)
+
+> Material Design 3 精要、Android 设计惯例、Roboto 排版与原生模式。
+> **为 Android 设备构建应用时必读。**
 
 ---
 
-## 1. Material Design 3 Philosophy
+## 1. Material Design 3 哲学
 
-### Core Material Principles
+### 核心 Material 原则
 
 ```
-MATERIAL AS METAPHOR:
-├── Surfaces exist in 3D space
-├── Light and shadow define hierarchy
-├── Motion provides continuity
-└── Bold, graphic, intentional design
+将 Material 作为隐喻 (MATERIAL AS METAPHOR):
+├── 表面存在于 3D 空间中
+├── 光线和阴影定义层级
+├── 动效提供连续性
+└── 大胆、图形化、有意的设计
 
-ADAPTIVE DESIGN:
-├── Responds to device capabilities
-├── One UI for all form factors
-├── Dynamic color from wallpaper
-└── Personalized per user
+自适应设计 (ADAPTIVE DESIGN):
+├── 响应设备能力
+├── 所有形态使用统一 UI
+├── 动态颜色源自壁纸
+└── 为每个用户个性化
 
-ACCESSIBLE BY DEFAULT:
-├── Large touch targets
-├── Clear visual hierarchy
-├── Semantic colors
-└── Motion respects preferences
+默认无障碍 (ACCESSIBLE BY DEFAULT):
+├── 大触摸目标
+├── 清晰的视觉层级
+├── 语义化颜色
+└── 动效尊重偏好
 ```
 
-### Material Design Values
+### Material 设计价值观
 
-| Value | Implementation |
-|-------|----------------|
-| **Dynamic Color** | Colors adapt to wallpaper/user preference |
-| **Personalization** | User-specific themes |
-| **Accessibility** | Built into every component |
-| **Responsiveness** | Works on all screen sizes |
-| **Consistency** | Unified design language |
+| 价值观       | 实现方式              |
+| :----------- | :-------------------- |
+| **动态颜色** | 颜色适应壁纸/用户偏好 |
+| **个性化**   | 用户特定的主题        |
+| **可访问性** | 内置于每个组件中      |
+| **响应式**   | 在所有屏幕尺寸上工作  |
+| **一致性**   | 统一的设计语言        |
 
 ---
 
-## 2. Android Typography
+## 2. Android 排版 (Typography)
 
-### Roboto Font Family
-
-```
-Android System Fonts:
-├── Roboto: Default sans-serif
-├── Roboto Flex: Variable font (API 33+)
-├── Roboto Serif: Serif alternative
-├── Roboto Mono: Monospace
-└── Google Sans: Google products (special license)
-```
-
-### Material Type Scale
-
-| Role | Size | Weight | Line Height | Usage |
-|------|------|--------|-------------|-------|
-| **Display Large** | 57sp | Regular | 64sp | Hero text, splash |
-| **Display Medium** | 45sp | Regular | 52sp | Large headers |
-| **Display Small** | 36sp | Regular | 44sp | Medium headers |
-| **Headline Large** | 32sp | Regular | 40sp | Page titles |
-| **Headline Medium** | 28sp | Regular | 36sp | Section headers |
-| **Headline Small** | 24sp | Regular | 32sp | Subsections |
-| **Title Large** | 22sp | Regular | 28sp | Dialogs, cards |
-| **Title Medium** | 16sp | Medium | 24sp | Lists, navigation |
-| **Title Small** | 14sp | Medium | 20sp | Tabs, secondary |
-| **Body Large** | 16sp | Regular | 24sp | Primary content |
-| **Body Medium** | 14sp | Regular | 20sp | Secondary content |
-| **Body Small** | 12sp | Regular | 16sp | Captions |
-| **Label Large** | 14sp | Medium | 20sp | Buttons, FAB |
-| **Label Medium** | 12sp | Medium | 16sp | Navigation |
-| **Label Small** | 11sp | Medium | 16sp | Chips, badges |
-
-### Scalable Pixels (sp)
+### Roboto 字体家族
 
 ```
-sp = Scale-independent pixels
-
-sp automatically scales with:
-├── User font size preference
-├── Display density
-└── Accessibility settings
-
-RULE: ALWAYS use sp for text, dp for everything else.
+Android 系统字体:
+├── Roboto: 默认无衬线字体
+├── Roboto Flex: 可变字体 (API 33+)
+├── Roboto Serif: 衬线体替代方案
+├── Roboto Mono: 等宽字体
+└── Google Sans: Google 产品 (特殊许可)
 ```
 
-### Font Weight Usage
+### Material 字阶
 
-| Weight | Use Case |
-|--------|----------|
-| Regular (400) | Body text, display |
-| Medium (500) | Buttons, labels, emphasis |
-| Bold (700) | Rarely, strong emphasis only |
+| 角色                | 大小 | 字重    | 行高 | 用途             |
+| :------------------ | :--- | :------ | :--- | :--------------- |
+| **Display Large**   | 57sp | Regular | 64sp | 英雄文本、启动页 |
+| **Display Medium**  | 45sp | Regular | 52sp | 大标题           |
+| **Display Small**   | 36sp | Regular | 44sp | 中标题           |
+| **Headline Large**  | 32sp | Regular | 40sp | 页面标题         |
+| **Headline Medium** | 28sp | Regular | 36sp | 章节标题         |
+| **Headline Small**  | 24sp | Regular | 32sp | 子章节           |
+| **Title Large**     | 22sp | Regular | 28sp | 对话框、卡片     |
+| **Title Medium**    | 16sp | Medium  | 24sp | 列表、导航       |
+| **Title Small**     | 14sp | Medium  | 20sp | 标签、次要内容   |
+| **Body Large**      | 16sp | Regular | 24sp | 主要内容         |
+| **Body Medium**     | 14sp | Regular | 20sp | 次要内容         |
+| **Body Small**      | 12sp | Regular | 16sp | 说明、标注       |
+| **Label Large**     | 14sp | Medium  | 20sp | 按钮、FAB        |
+| **Label Medium**    | 12sp | Medium  | 16sp | 导航             |
+| **Label Small**     | 11sp | Medium  | 16sp | Chips、徽章      |
+
+### 可缩放像素 (sp)
+
+```
+sp = Scale-independent pixels (独立缩放像素)
+
+sp 自动随以下因素缩放:
+├── 用户字体大小偏好
+├── 显示密度
+└── 辅助功能设置
+
+规则: 始终对文本使用 sp，其他所有尺寸使用 dp。
+```
+
+### 字重用法
+
+| 字重          | 用途                   |
+| :------------ | :--------------------- |
+| Regular (400) | 正文文本、Display      |
+| Medium (500)  | 按钮、标签、强调       |
+| Bold (700)    | 极少使用，仅用于强强调 |
 
 ---
 
-## 3. Material Color System
+## 3. Material 色彩系统
 
-### Dynamic Color (Material You)
-
-```
-Android 12+ Dynamic Color:
-
-User's wallpaper → Color extraction → App theme
-
-Your app automatically adapts to:
-├── Primary color (from wallpaper)
-├── Secondary color (complementary)
-├── Tertiary color (accent)
-├── Surface colors (derived)
-└── All semantic colors adjust
-
-RULE: Implement dynamic color for personalized feel.
-```
-
-### Semantic Color Roles
+### 动态颜色 (Dynamic Color - Material You)
 
 ```
-Surface Colors:
-├── Surface → Main background
-├── SurfaceVariant → Cards, containers
-├── SurfaceTint → Elevation overlay
-├── InverseSurface → Snackbars, tooltips
+Android 12+ 动态颜色:
 
-On-Surface Colors:
-├── OnSurface → Primary text
-├── OnSurfaceVariant → Secondary text
-├── Outline → Borders, dividers
-├── OutlineVariant → Subtle dividers
+用户壁纸 → 颜色提取 → App 主题
 
-Primary Colors:
-├── Primary → Key actions, FAB
-├── OnPrimary → Text on primary
-├── PrimaryContainer → Less emphasis
-├── OnPrimaryContainer → Text on container
+你的 App 自动适应:
+├── Primary color (来自壁纸)
+├── Secondary color (互补色)
+├── Tertiary color (强调色)
+├── Surface colors (衍生)
+└── 所有语义颜色随之调整
 
-Secondary/Tertiary: Similar pattern
+规则: 实现动态颜色以获得原生个性化体验。
 ```
 
-### Error, Warning, Success Colors
-
-| Role | Light | Dark | Usage |
-|------|-------|------|-------|
-| Error | #B3261E | #F2B8B5 | Errors, destructive |
-| OnError | #FFFFFF | #601410 | Text on error |
-| ErrorContainer | #F9DEDC | #8C1D18 | Error backgrounds |
-
-### Dark Theme
+### 语义色彩角色
 
 ```
-Material Dark Theme:
+表面颜色 (Surface Colors):
+├── Surface → 主背景
+├── SurfaceVariant → 卡片、容器
+├── SurfaceTint → 海拔覆盖层
+├── InverseSurface → Snackbars, 提示框
 
-├── Background: #121212 (not pure black by default)
-├── Surface: #1E1E1E, #232323, etc. (elevation)
-├── Elevation: Higher = lighter overlay
-├── Reduce saturation on colors
-└── Check contrast ratios
+表面上颜色 (On-Surface Colors):
+├── OnSurface → 主要文本
+├── OnSurfaceVariant → 次要文本
+├── Outline → 边框、分割线
+├── OutlineVariant → 微妙分割线
 
-Elevation overlays (dark mode):
-├── 0dp → 0% overlay
-├── 1dp → 5% overlay
-├── 3dp → 8% overlay
-├── 6dp → 11% overlay
-├── 8dp → 12% overlay
-├── 12dp → 14% overlay
+主要颜色 (Primary Colors):
+├── Primary → 关键操作、FAB
+├── OnPrimary → Primary 上的文本
+├── PrimaryContainer → 较低强调
+├── OnPrimaryContainer → Container 上的文本
+
+Secondary/Tertiary: 类似模式
+```
+
+### 错误、警告、成功颜色
+
+| 角色           | 浅色 (Light) | 深色 (Dark) | 用途         |
+| :------------- | :----------- | :---------- | :----------- |
+| Error          | #B3261E      | #F2B8B5     | 错误、破坏性 |
+| OnError        | #FFFFFF      | #601410     | 错误上的文本 |
+| ErrorContainer | #F9DEDC      | #8C1D18     | 错误背景     |
+
+### 深色主题
+
+```
+Material 深色主题:
+
+├── 背景: #121212 (默认不是纯黑)
+├── Surface: #1E1E1E, #232323 等 (基于海拔)
+├── 海拔 (Elevation): 越高 = 越亮的覆盖层
+├── 降低颜色饱和度
+└── 检查对比度
+
+海拔覆盖层 (深色模式):
+├── 0dp → 0% 覆盖
+├── 1dp → 5% 覆盖
+├── 3dp → 8% 覆盖
+├── 6dp → 11% 覆盖
+├── 8dp → 12% 覆盖
+├── 12dp → 14% 覆盖
 ```
 
 ---
 
-## 4. Android Layout & Spacing
+## 4. Android 布局与间距
 
-### Layout Grid
-
-```
-Android uses 8dp baseline grid:
-
-All spacing in multiples of 8dp:
-├── 4dp: Component internal (half-step)
-├── 8dp: Minimum spacing
-├── 16dp: Standard spacing
-├── 24dp: Section spacing
-├── 32dp: Large spacing
-
-Margins:
-├── Compact (phone): 16dp
-├── Medium (small tablet): 24dp
-├── Expanded (large): 24dp+ or columns
-```
-
-### Responsive Layout
+### 布局网格
 
 ```
-Window Size Classes:
+Android 使用 8dp 基线网格:
 
-COMPACT (< 600dp width):
-├── Phones in portrait
-├── Single column layout
-├── Bottom navigation
+所有间距为 8dp 的倍数:
+├── 4dp: 组件内部 (半步)
+├── 8dp: 最小间距
+├── 16dp: 标准间距
+├── 24dp: 章节间距
+├── 32dp: 大间距
 
-MEDIUM (600-840dp width):
-├── Tablets, foldables
-├── Consider 2 columns
-├── Navigation rail option
-
-EXPANDED (> 840dp width):
-├── Large tablets, desktop
-├── Multi-column layouts
-├── Navigation drawer
+边距 (Margins):
+├── 紧凑 (手机): 16dp
+├── 中等 (小平板): 24dp
+├── 扩展 (大屏): 24dp+ 或多列
 ```
 
-### Canonical Layouts
+### 响应式布局
 
-| Layout | Use Case | Window Class |
-|--------|----------|--------------|
-| **List-Detail** | Email, messages | Medium, Expanded |
-| **Feed** | Social, news | All |
-| **Supporting Pane** | Reference content | Medium, Expanded |
+```
+窗口尺寸分类 (Window Size Classes):
+
+COMPACT (< 600dp 宽):
+├── 竖屏手机
+├── 单列布局
+├── 底部导航
+
+MEDIUM (600-840dp 宽):
+├── 平板、折叠屏
+├── 考虑 2 列
+├── 侧边导航栏 (Navigation rail) 选项
+
+EXPANDED (> 840dp 宽):
+├── 大平板、桌面
+├── 多列布局
+├── 导航抽屉 (Navigation drawer)
+```
 
 ---
 
-## 5. Android Navigation Patterns
+## 5. Android 导航模式
 
-### Navigation Components
+### 导航组件
 
-| Component | Use Case | Position |
-|-----------|----------|----------|
-| **Bottom Navigation** | 3-5 top-level destinations | Bottom |
-| **Navigation Rail** | Tablets, foldables | Left side, vertical |
-| **Navigation Drawer** | Many destinations, large screens | Left side, hidden/visible |
-| **Top App Bar** | Current context, actions | Top |
+| 组件                  | 用途             | 位置            |
+| :-------------------- | :--------------- | :-------------- |
+| **Bottom Navigation** | 3-5 个顶级目的地 | 底部            |
+| **Navigation Rail**   | 平板、折叠屏     | 左侧，垂直      |
+| **Navigation Drawer** | 很多目的地、大屏 | 左侧，隐藏/可见 |
+| **Top App Bar**       | 当前上下文、操作 | 顶部            |
 
-### Bottom Navigation
+### 底部导航 (Bottom Navigation)
 
 ```
 ┌─────────────────────────────────────┐
 │                                     │
-│         Content Area                │
+│         内容区域                    │
 │                                     │
 ├─────────────────────────────────────┤
-│  🏠     🔍     ➕     ❤️     👤    │ ← 80dp height
-│ Home   Search  FAB   Saved  Profile│
+│  🏠     🔍     ➕     ❤️     👤    │ ← 80dp 高
+│ 首页    搜索   FAB    收藏    个人  │
 └─────────────────────────────────────┘
 
-Rules:
-├── 3-5 destinations
-├── Icons: Material Symbols (24dp)
-├── Labels: Always visible (accessibility)
-├── Active: Filled icon + indicator pill
-├── Badge: For notifications
-├── FAB can integrate (optional)
+规则:
+├── 3-5 个目的地
+├── 图标: Material Symbols (24dp)
+├── 标签: 始终可见 (可访问性)
+├── 激活: 实心图标 + 指示器胶囊 (Pill)
+├── 徽章: 用于通知
+├── FAB 可以集成 (可选)
 ```
 
-### Top App Bar
+### 顶部应用栏 (Top App Bar)
 
 ```
-Types:
-├── Center-aligned: Logo apps, simple
-├── Small: Compact, scrolls away
-├── Medium: Title + actions, collapses
-├── Large: Display title, collapses to small
+类型:
+├── 居中对齐: Logo 应用，简单
+├── 小型: 紧凑，滚动时隐藏
+├── 中型: 标题 + 操作，折叠
+├── 大型: 展示标题，折叠为小型
 
 ┌─────────────────────────────────────┐
-│  ☰   App Title              🔔 ⋮  │ ← 64dp (small)
+│  ☰   应用标题               🔔 ⋮  │ ← 64dp (小型)
 ├─────────────────────────────────────┤
 │                                     │
-│         Content Area                │
+│         内容区域                    │
 └─────────────────────────────────────┘
 
-Actions: Max 3 icons, overflow menu ( ⋮ ) for more
+操作: 最多 3 个图标，更多用溢出菜单 ( ⋮ )
 ```
 
-### Navigation Rail (Tablets)
+### 返回导航 (Back Navigation)
 
 ```
-┌───────┬─────────────────────────────┐
-│  ≡    │                             │
-│       │                             │
-│  🏠   │                             │
-│ Home  │       Content Area          │
-│       │                             │
-│  🔍   │                             │
-│Search │                             │
-│       │                             │
-│  👤   │                             │
-│Profile│                             │
-└───────┴─────────────────────────────┘
+Android 提供系统级返回:
+├── 返回按钮 (3 按钮导航)
+├── 返回手势 (边缘滑动)
+├── 预测性返回 (Predictive back, Android 14+)
 
-Width: 80dp
-Icons: 24dp
-Labels: Below icon
-FAB: Can be at top
-```
-
-### Back Navigation
-
-```
-Android provides system back:
-├── Back button (3-button nav)
-├── Back gesture (swipe from edge)
-├── Predictive back (Android 14+)
-
-Your app must:
-├── Handle back correctly (pop stack)
-├── Support predictive back animation
-├── Never hijack/override back unexpectedly
-└── Confirm before discarding unsaved work
+你的 App 必须:
+├── 正确处理返回 (Pop 栈)
+├── 支持预测性返回动画
+├── 绝不意外劫持/覆盖返回
+└── 在丢弃未保存工作前确认
 ```
 
 ---
 
-## 6. Material Components
+## 6. Material 组件
 
-### Buttons
+### 按钮
 
 ```
-Button Types:
+按钮类型:
 
 ┌──────────────────────┐
-│    Filled Button     │  ← Primary action
+│    Filled Button     │  ← 主要操作
 └──────────────────────┘
 
 ┌──────────────────────┐
-│    Tonal Button      │  ← Secondary, less emphasis
+│    Tonal Button      │  ← 次要，较低强调
 └──────────────────────┘
 
 ┌──────────────────────┐
-│   Outlined Button    │  ← Tertiary, lower emphasis
+│   Outlined Button    │  ← 第三级，更低强调
 └──────────────────────┘
 
-    Text Button           ← Lowest emphasis
+    Text Button           ← 最低强调
 
-Heights:
-├── Small: 40dp (when constrained)
+高度:
+├── Small: 40dp (受限时)
 ├── Standard: 40dp
-├── Large: 56dp (FAB size when needed)
+├── Large: 56dp (需要时与 FAB 尺寸一致)
 
-Min touch target: 48dp (even if visual is smaller)
+最小触摸目标: 48dp (即使视觉上更小)
 ```
 
-### Floating Action Button (FAB)
+### 浮动操作按钮 (FAB)
 
 ```
-FAB Types:
-├── Standard: 56dp diameter
-├── Small: 40dp diameter
-├── Large: 96dp diameter
-├── Extended: Icon + text, variable width
+FAB 类型:
+├── Standard: 56dp 直径
+├── Small: 40dp 直径
+├── Large: 96dp 直径
+├── Extended: 图标 + 文本，可变宽度
 
-Position: Bottom right, 16dp from edges
-Elevation: Floats above content
+位置: 右下角，距边缘 16dp
+海拔: 浮动在内容之上
 
 ┌─────────────────────────────────────┐
 │                                     │
-│         Content                     │
+│         内容                        │
 │                                     │
 │                              ┌────┐ │
 │                              │ ➕ │ │ ← FAB
 │                              └────┘ │
 ├─────────────────────────────────────┤
-│       Bottom Navigation             │
+│       底部导航                      │
 └─────────────────────────────────────┘
 ```
 
-### Cards
+### 卡片 (Cards)
 
 ```
-Card Types:
-├── Elevated: Shadow, resting state
-├── Filled: Background color, no shadow
-├── Outlined: Border, no shadow
+卡片类型:
+├── Elevated: 阴影，静止状态
+├── Filled: 背景色，无阴影
+├── Outlined: 边框，无阴影
 
-Card Anatomy:
-┌─────────────────────────────────────┐
-│           Header Image              │ ← Optional
-├─────────────────────────────────────┤
-│  Title / Headline                   │
-│  Subhead / Supporting text          │
-├─────────────────────────────────────┤
-│      [ Action ]    [ Action ]       │ ← Optional actions
-└─────────────────────────────────────┘
-
-Corner radius: 12dp (M3 default)
+圆角: 12dp (M3 默认)
 Padding: 16dp
 ```
 
-### Text Fields
+### 文本输入框 (Text Fields)
 
 ```
-Types:
-├── Filled: Background fill, underline
-├── Outlined: Border all around
+类型:
+├── Filled: 背景填充，下划线
+├── Outlined: 全边框
 
 ┌─────────────────────────────────────┐
-│  Label                              │ ← Floats up on focus
+│  标签 (Label)                       │ ← 聚焦时上浮
 │  ________________________________________________
-│  │     Input text here...          │ ← Leading/trailing icons
+│  │     在此输入文本...             │ ← 前置/后置图标
 │  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-│  Supporting text or error           │
+│  说明文本或错误                     │
 └─────────────────────────────────────┘
 
-Height: 56dp
-Label: Animates from placeholder to top
-Error: Red color + icon + message
+高度: 56dp
+标签: 从占位符动画到顶部
+错误: 红色 + 图标 + 信息
 ```
 
 ### Chips
 
 ```
-Types:
-├── Assist: Smart actions (directions, call)
-├── Filter: Toggle filters
-├── Input: Represent entities (tags, contacts)
-├── Suggestion: Dynamic recommendations
+类型:
+├── Assist: 智能操作 (导航、拨打)
+├── Filter: 切换过滤器
+├── Input: 代表实体 (标签、联系人)
+├── Suggestion: 动态推荐
 
 ┌───────────────┐
-│  🏷️ Filter   │  ← 32dp height, 8dp corner radius
+│  🏷️ 过滤器   │  ← 32dp 高, 8dp 圆角
 └───────────────┘
 
-States: Unselected, Selected, Disabled
+状态: 未选, 选中, 禁用
 ```
 
 ---
 
-## 7. Android-Specific Patterns
+## 7. Android 特定模式
 
 ### Snackbars
 
 ```
-Position: Bottom, above navigation
-Duration: 4-10 seconds
-Action: One optional text action
+位置: 底部，导航之上
+持续时间: 4-10 秒
+操作: 一个可选的文本操作
 
 ┌─────────────────────────────────────────────────┐
-│  Archived 1 item                    [ UNDO ]    │
+│  已归档 1 项                        [ 撤销 ]    │
 └─────────────────────────────────────────────────┘
 
-Rules:
-├── Brief message, single line if possible
-├── Max 2 lines
-├── One action (text, not icon)
-├── Can be dismissed by swipe
-└── Don't stack, queue them
+规则:
+├── 简短信息，尽可能单行
+├── 最多 2 行
+├── 一个操作 (文本，非图标)
+├── 可滑动关闭
+└── 不要堆叠，排队显示
 ```
 
 ### Bottom Sheets
 
 ```
-Types:
-├── Standard: Interactive content
-├── Modal: Blocks background (with scrim)
+类型:
+├── Standard: 交互式内容
+├── Modal: 阻挡背景 (带遮罩 Scrim)
 
-Modal Bottom Sheet:
+模态 Bottom Sheet:
 ┌─────────────────────────────────────┐
 │                                     │
-│        (Scrim over content)         │
+│        (遮罩覆盖内容)                │
 │                                     │
 ├═════════════════════════════════════┤
-│  ─────  (Drag handle, optional)     │
+│  ─────  (拖拽手柄，可选)             │
 │                                     │
-│        Sheet Content                │
+│        Sheet 内容                   │
 │                                     │
-│        Actions / Options            │
-│                                     │
-└─────────────────────────────────────┘
-
-Corner radius: 28dp (top corners)
-```
-
-### Dialogs
-
-```
-Types:
-├── Basic: Title + content + actions
-├── Full-screen: Complex editing (mobile)
-├── Date/Time picker
-├── Confirmation dialog
-
-┌─────────────────────────────────────┐
-│              Title                  │
-│                                     │
-│       Supporting text that          │
-│       explains the dialog           │
-│                                     │
-│           [ Cancel ]  [ Confirm ]   │
-└─────────────────────────────────────┘
-
-Rules:
-├── Centered on screen
-├── Scrim behind (dim background)
-├── Max 2 actions aligned right
-├── Destructive action can be on left
-```
-
-### Pull to Refresh
-
-```
-Android uses SwipeRefreshLayout pattern:
-
-┌─────────────────────────────────────┐
-│         ○ (Spinner)                 │ ← Circular progress
-├─────────────────────────────────────┤
-│                                     │
-│         Content                     │
 │                                     │
 └─────────────────────────────────────┘
 
-Spinner: Material circular indicator
-Position: Top center, pulls down with content
+圆角: 28dp (顶部角落)
 ```
 
-### Ripple Effect
+### 涟漪效果 (Ripple Effect)
 
 ```
-Every touchable element needs ripple:
+每个可触摸元素都需要涟漪:
 
-Touch down → Ripple expands from touch point
-Touch up → Ripple completes and fades
+按下 → 涟漪从触摸点扩散
+抬起 → 涟漪完成并淡出
 
-Color: 
-├── On light: Black at ~12% opacity
-├── On dark: White at ~12% opacity
-├── On colored: Appropriate contrast
-
-This is MANDATORY for Android feel.
+这是 Android 质感的强制要求。
 ```
 
 ---
 
 ## 8. Material Symbols
 
-### Usage Guidelines
+### 使用指南
 
 ```
-Material Symbols: Google's icon library
+Material Symbols: Google 的图标库
 
-Styles:
-├── Outlined: Default, most common
-├── Rounded: Softer, friendly
-├── Sharp: Angular, precise
+样式:
+├── Outlined: 默认，最常用
+├── Rounded: 柔和，友好
+├── Sharp: 棱角分明，精确
 
-Variable font axes:
-├── FILL: 0 (outline) to 1 (filled)
-├── wght: 100-700 (weight)
-├── GRAD: -25 to 200 (emphasis)
-├── opsz: 20, 24, 40, 48 (optical size)
+可变字体轴:
+├── FILL: 0 (描边) 到 1 (填充)
+├── wght: 100-700 (字重)
+├── GRAD: -25 到 200 (强调)
+├── opsz: 20, 24, 40, 48 (光学尺寸)
 ```
 
-### Icon Sizes
+### 图标尺寸
 
-| Size | Usage |
-|------|-------|
-| 20dp | Dense UI, inline |
-| 24dp | Standard (most common) |
-| 40dp | Larger touch targets |
-| 48dp | Emphasis, standalone |
+| 尺寸 | 用途          |
+| :--- | :------------ |
+| 20dp | 密集 UI，内联 |
+| 24dp | 标准 (最常用) |
+| 40dp | 较大触摸目标  |
+| 48dp | 强调，独立    |
 
-### States
+---
+
+## 9. Android 可访问性
+
+### TalkBack 需求
 
 ```
-Icon States:
-├── Default: Full opacity
-├── Disabled: 38% opacity
-├── Hover/Focus: Container highlight
-├── Selected: Filled variant + tint
+每个交互元素需要:
+├── contentDescription (是什么)
+├── 正确的语义 (role)
+├── 状态声明 (selected, disabled)
+└── 逻辑分组
+```
 
-Active vs Inactive:
-├── Inactive: Outlined
-├── Active: Filled + indicator
+### 触摸目标尺寸
+
+```
+强制: 48dp × 48dp 最小
+
+即使视觉元素较小:
+├── 图标: 24dp 视觉, 48dp 触摸区域
+├── 复选框: 20dp 视觉, 48dp 触摸区域
+└── 添加 Padding 以达到 48dp
+
+目标间距: 8dp 最小
+```
+
+### 字体缩放
+
+```
+Android 支持字体缩放:
+用户可设置 85% 到 200%。
+
+规则: 在 200% 缩放比例下测试你的 UI。
+使用 sp 单位，避免固定高度。
 ```
 
 ---
 
-## 9. Android Accessibility
+## 10. Android 检查清单
 
-### TalkBack Requirements
+### 每个 Android 屏幕前
 
-```
-Every interactive element needs:
-├── contentDescription (what it is)
-├── Correct semantics (button, checkbox, etc.)
-├── State announcements (selected, disabled)
-└── Grouping where logical
+- [ ] 使用 Material 3 组件
+- [ ] 触摸目标 ≥ 48dp
+- [ ] 所有可触摸元素有涟漪效果
+- [ ] Roboto 或 Material 字阶
+- [ ] 语义颜色 (动态颜色支持)
+- [ ] 返回导航工作正常
 
-Jetpack Compose:
-Modifier.semantics {
-    contentDescription = "Play button"
-    role = Role.Button
-}
+### Android 发布前
 
-React Native:
-accessibilityLabel="Play button"
-accessibilityRole="button"
-accessibilityState={{ disabled: false }}
-```
-
-### Touch Target Size
-
-```
-MANDATORY: 48dp × 48dp minimum
-
-Even if visual element is smaller:
-├── Icon: 24dp visual, 48dp touch area
-├── Checkbox: 20dp visual, 48dp touch area
-└── Add padding to reach 48dp
-
-Spacing between targets: 8dp minimum
-```
-
-### Font Scaling
-
-```
-Android supports font scaling:
-├── 85% (smaller)
-├── 100% (default)
-├── 115%, 130%, 145%...
-├── Up to 200% (largest)
-
-RULE: Test your UI at 200% font scale.
-Use sp units and avoid fixed heights.
-```
-
-### Reduce Motion
-
-```kotlin
-// Check motion preference
-val reduceMotion = Settings.Global.getFloat(
-    contentResolver,
-    Settings.Global.ANIMATOR_DURATION_SCALE,
-    1f
-) == 0f
-
-if (reduceMotion) {
-    // Skip or reduce animations
-}
-```
+- [ ] 深色主题测试
+- [ ] 动态颜色测试 (如支持)
+- [ ] 所有字体大小测试 (200% 缩放)
+- [ ] TalkBack 测试
+- [ ] 预测性返回已实现 (Android 14+)
+- [ ] Edge-to-edge 显示 (Android 15+)
+- [ ] 不同屏幕尺寸测试 (手机, 平板)
+- [ ] 导航模式符合平台惯例
 
 ---
 
-## 10. Android Checklist
-
-### Before Every Android Screen
-
-- [ ] Using Material 3 components
-- [ ] Touch targets ≥ 48dp
-- [ ] Ripple effect on all touchables
-- [ ] Roboto or Material type scale
-- [ ] Semantic colors (dynamic color support)
-- [ ] Back navigation works correctly
-
-### Before Android Release
-
-- [ ] Dark theme tested
-- [ ] Dynamic color tested (if supported)
-- [ ] All font sizes tested (200% scale)
-- [ ] TalkBack tested
-- [ ] Predictive back implemented (Android 14+)
-- [ ] Edge-to-edge display (Android 15+)
-- [ ] Different screen sizes tested (phones, tablets)
-- [ ] Navigation patterns match platform (back, gestures)
-
----
-
-> **Remember:** Android users expect Material Design. Custom designs that ignore Material patterns feel foreign and broken. Use Material components as your foundation, customize thoughtfully.
+> **记住:** Android 用户期待 Material Design。忽略 Material 模式的自定义设计会让人感觉陌生和破碎。以 Material 组件为基础，进行深思熟虑的定制。

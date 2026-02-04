@@ -1,31 +1,31 @@
-# Rate Limiting Principles
+# 速率限制原则 (Rate Limiting)
 
-> Protect your API from abuse and overload.
+> 保护 API 免受滥用和过载。
 
-## Why Rate Limit
-
-```
-Protect against:
-├── Brute force attacks
-├── Resource exhaustion
-├── Cost overruns (if pay-per-use)
-└── Unfair usage
-```
-
-## Strategy Selection
-
-| Type | How | When |
-|------|-----|------|
-| **Token bucket** | Burst allowed, refills over time | Most APIs |
-| **Sliding window** | Smooth distribution | Strict limits |
-| **Fixed window** | Simple counters per window | Basic needs |
-
-## Response Headers
+## 为什么要限制速率
 
 ```
-Include in headers:
-├── X-RateLimit-Limit (max requests)
-├── X-RateLimit-Remaining (requests left)
-├── X-RateLimit-Reset (when limit resets)
-└── Return 429 when exceeded
+防范:
+├── 暴力破解攻击
+├── 资源耗尽
+├── 成本超支 (如果是按使用量付费)
+└── 不公平的使用
+```
+
+## 策略选择
+
+| 类型                          | 机制                     | 适用场景   |
+| :---------------------------- | :----------------------- | :--------- |
+| **令牌桶 (Token bucket)**     | 允许突发流量，随时间填充 | 大多数 API |
+| **滑动窗口 (Sliding window)** | 平滑分布                 | 严格限制   |
+| **固定窗口 (Fixed window)**   | 每个窗口的简单计数器     | 基本需求   |
+
+## 响应头 (Response Headers)
+
+```
+要在响应头中包含:
+├── X-RateLimit-Limit (最大请求数)
+├── X-RateLimit-Remaining (剩余请求数)
+├── X-RateLimit-Reset (重置时间)
+└── 超出限制时返回 429
 ```

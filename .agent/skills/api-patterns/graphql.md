@@ -1,41 +1,41 @@
-# GraphQL Principles
+# GraphQL 原则
 
-> Flexible queries for complex, interconnected data.
+> 灵活查询，适用于复杂、互联的数据结构。
 
-## When to Use
-
-```
-✅ Good fit:
-├── Complex, interconnected data
-├── Multiple frontend platforms
-├── Clients need flexible queries
-├── Evolving data requirements
-└── Reducing over-fetching matters
-
-❌ Poor fit:
-├── Simple CRUD operations
-├── File upload heavy
-├── HTTP caching important
-└── Team unfamiliar with GraphQL
-```
-
-## Schema Design Principles
+## 何时使用
 
 ```
-Principles:
-├── Think in graphs, not endpoints
-├── Design for evolvability (no versions)
-├── Use connections for pagination
-├── Be specific with types (not generic "data")
-└── Handle nullability thoughtfully
+✅ 适用场景:
+├── 复杂、高度互联的数据
+├── 多个前端平台 (Web, iOS, Android)
+├── 客户端需要灵活的查询能力
+├── 数据需求频繁变化
+└── 需要减少过度获取 (Over-fetching)
+
+❌ 不适用场景:
+├── 简单的 CRUD 操作
+├── 涉及大量文件上传
+├── HTTP 缓存至关重要
+└── 团队不熟悉 GraphQL
 ```
 
-## Security Considerations
+## Schema 设计原则
 
 ```
-Protect against:
-├── Query depth attacks → Set max depth
-├── Query complexity → Calculate cost
-├── Batching abuse → Limit batch size
-├── Introspection → Disable in production
+设计原则:
+├── 以图 (Graph) 的方式思考，而不是端点 (Endpoints)
+├── 设计要有可演进性 (通常无版本号)
+├── 使用 Connections 模式进行分页
+├── 类型定义要具体 (不要使用通用的 "data")
+└── 深思熟虑地处理空值 (Nullability)
+```
+
+## 安全考量
+
+```
+防范措施:
+├── 查询深度攻击 → 设置最大深度
+├── 查询复杂度 → 计算查询成本
+├── 批量滥用 → 限制批量大小
+└── 内省 (Introspection) → 生产环境禁用
 ```

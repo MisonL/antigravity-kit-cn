@@ -1,129 +1,123 @@
----
-name: game-design
-description: Game design principles. GDD structure, balancing, player psychology, progression.
-allowed-tools: Read, Glob, Grep
----
+# 游戏设计原则 (Game Design Principles)
 
-# Game Design Principles
-
-> Design thinking for engaging games.
+> 游戏的设计思维 - 核心循环、文档、平衡性和玩家心理。
 
 ---
 
-## 1. Core Loop Design
+## 1. 核心循环设计 (Core Loop Design)
 
-### The 30-Second Test
+### 30 秒测试
 
 ```
-Every game needs a fun 30-second loop:
-1. ACTION → Player does something
-2. FEEDBACK → Game responds
-3. REWARD → Player feels good
-4. REPEAT
+每个游戏都需要一个有趣的 30 秒循环:
+1. 动作 (ACTION) → 玩家做某事
+2. 反馈 (FEEDBACK) → 游戏响应
+3. 奖励 (REWARD) → 玩家感觉良好
+4. 重复 (REPEAT)
 ```
 
-### Loop Examples
+### 循环示例
 
-| Genre | Core Loop |
-|-------|-----------|
-| Platformer | Run → Jump → Land → Collect |
-| Shooter | Aim → Shoot → Kill → Loot |
-| Puzzle | Observe → Think → Solve → Advance |
-| RPG | Explore → Fight → Level → Gear |
-
----
-
-## 2. Game Design Document (GDD)
-
-### Essential Sections
-
-| Section | Content |
-|---------|---------|
-| **Pitch** | One-sentence description |
-| **Core Loop** | 30-second gameplay |
-| **Mechanics** | How systems work |
-| **Progression** | How player advances |
-| **Art Style** | Visual direction |
-| **Audio** | Sound direction |
-
-### Principles
-
-- Keep it living (update regularly)
-- Visuals help communicate
-- Less is more (start small)
+| 类型 | 核心循环                  |
+| ---- | ------------------------- |
+| 平台 | 跑 → 跳 → 落地 → 收集     |
+| 射击 | 瞄准 → 射击 → 击杀 → 拾取 |
+| 解谜 | 观察 → 思考 → 解开 → 前进 |
+| RPG  | 探索 → 战斗 → 升级 → 装备 |
 
 ---
 
-## 3. Player Psychology
+## 2. 游戏设计文档 (GDD)
 
-### Motivation Types
+### 核心部分
 
-| Type | Driven By |
-|------|-----------|
-| **Achiever** | Goals, completion |
-| **Explorer** | Discovery, secrets |
-| **Socializer** | Interaction, community |
-| **Killer** | Competition, dominance |
+| 部分            | 内容         |
+| --------------- | ------------ |
+| **Pitch**       | 一句话描述   |
+| **Core Loop**   | 30 秒玩法    |
+| **Mechanics**   | 系统如何工作 |
+| **Progression** | 玩家如何前进 |
+| **Art Style**   | 视觉方向     |
+| **Audio**       | 声音方向     |
 
-### Reward Schedules
+### 原则
 
-| Schedule | Effect | Use |
-|----------|--------|-----|
-| **Fixed** | Predictable | Milestone rewards |
-| **Variable** | Addictive | Loot drops |
-| **Ratio** | Effort-based | Grind games |
+- 保持它是鲜活的 (定期更新)
+- 视觉辅助交流
+- 少即是多 (从小开始)
 
 ---
 
-## 4. Difficulty Balancing
+## 3. 玩家心理学
 
-### Flow State
+### 动机类型
+
+| 类型                    | 驱动力       |
+| ----------------------- | ------------ |
+| **Achiever (成就者)**   | 目标，完成度 |
+| **Explorer (探索者)**   | 发现，秘密   |
+| **Socializer (社交者)** | 互动，社区   |
+| **Killer (杀手)**       | 竞争，支配   |
+
+### 奖励计划
+
+| 计划     | 效果     | 用途       |
+| -------- | -------- | ---------- |
+| **固定** | 可预测   | 里程碑奖励 |
+| **可变** | 易上瘾   | 掉落战利品 |
+| **比率** | 基于努力 | 刷刷刷游戏 |
+
+---
+
+## 4. 难度平衡
+
+### 心流状态 (Flow State)
 
 ```
-Too Hard → Frustration → Quit
-Too Easy → Boredom → Quit
-Just Right → Flow → Engagement
+太难 → 沮丧 → 退出
+太易 → 无聊 → 退出
+刚刚好 → 心流 → 投入
 ```
 
-### Balancing Strategies
+### 平衡策略
 
-| Strategy | How |
-|----------|-----|
-| **Dynamic** | Adjust to player skill |
-| **Selection** | Let player choose |
-| **Accessibility** | Options for all |
-
----
-
-## 5. Progression Design
-
-### Progression Types
-
-| Type | Example |
-|------|---------|
-| **Skill** | Player gets better |
-| **Power** | Character gets stronger |
-| **Content** | New areas unlock |
-| **Story** | Narrative advances |
-
-### Pacing Principles
-
-- Early wins (hook quickly)
-- Gradually increase challenge
-- Rest beats between intensity
-- Meaningful choices
+| 策略       | 如何做           |
+| ---------- | ---------------- |
+| **动态**   | 适应玩家技能     |
+| **选择**   | 让玩家选择       |
+| **无障碍** | 为所有人提供选项 |
 
 ---
 
-## 6. Anti-Patterns
+## 5. 进度设计
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Design in isolation | Playtest constantly |
-| Polish before fun | Prototype first |
-| Force one way to play | Allow player expression |
-| Punish excessively | Reward progress |
+### 进度类型
+
+| 类型     | 示例         |
+| -------- | ------------ |
+| **技能** | 玩家变得更好 |
+| **力量** | 角色变得更强 |
+| **内容** | 新区域解锁   |
+| **故事** | 叙事推进     |
+
+### 节奏原则
+
+- 早期胜利 (快速钩住)
+- 逐渐增加挑战
+- 强度之间的休息节拍
+- 有意义的选择
 
 ---
 
-> **Remember:** Fun is discovered through iteration, not designed on paper.
+## 6. 反模式
+
+| ❌ 错误        | ✅ 正确          |
+| -------------- | ---------------- |
+| 孤立设计       | 持续进行游戏测试 |
+| 有趣之前先打磨 | 首先制作原型     |
+| 强制一种玩法   | 允许玩家表达     |
+| 过度惩罚       | 奖励进步         |
+
+---
+
+> **记住:** 乐趣是通过迭代发现的，而不是在纸上设计出来的。

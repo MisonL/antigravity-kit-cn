@@ -1,78 +1,82 @@
+---
+description: Antigravity Skills 创建与使用指南
+---
+
 # Antigravity Skills
 
-> **Hướng dẫn tạo và sử dụng Skills trong Antigravity Kit**
+> **Antigravity Kit 技能创建与使用指南**
 
 ---
 
-## 📋 Giới thiệu
+## 📋 简介
 
-Mặc dù các mô hình cơ bản của Antigravity (như Gemini) là những mô hình đa năng mạnh mẽ, nhưng chúng không biết ngữ cảnh dự án cụ thể hoặc các tiêu chuẩn của nhóm bạn. Việc tải từng quy tắc hoặc công cụ vào cửa sổ ngữ cảnh của tác nhân sẽ dẫn đến tình trạng "phình to công cụ", chi phí cao hơn, độ trễ và sự nhầm lẫn.
+虽然 Antigravity 的基础模型（如 Gemini）是强大的通用模型，但它们不知道你具体的项目上下文或团队标准。将每一条规则或工具都加载到 Agent 的上下文窗口会导致"工具膨胀"，增加成本、延迟并导致混乱。
 
-**Antigravity Skills** giải quyết vấn đề này thông qua tính năng **Progressive Disclosure**. Kỹ năng là một gói kiến thức chuyên biệt, ở trạng thái không hoạt động cho đến khi cần. Thông tin này chỉ được tải vào ngữ cảnh của tác nhân khi yêu cầu cụ thể của bạn khớp với nội dung mô tả của kỹ năng.
+**Antigravity Skills** 通过**渐进式披露 (Progressive Disclosure)** 解决了这个问题。技能是一个专门的知识包，在需要之前处于休眠状态。只有当你的具体请求与技能的描述相匹配时，这些信息才会加载到 Agent 的上下文中。
 
 ---
 
-## 📁 Cấu trúc và Phạm vi
+## 📁 结构与范围
 
-Kỹ năng là các gói dựa trên thư mục. Bạn có thể xác định các phạm vi này tuỳ thuộc vào nhu cầu:
+技能是基于文件夹的包。你可以根据需求定义范围：
 
-| Phạm vi | Đường dẫn | Mô tả |
-|---------|-----------|-------|
-| **Workspace** | `<workspace-root>/.agent/skills/` | Chỉ có trong một dự án cụ thể |
+| 范围                     | 路径                              | 描述               |
+| :----------------------- | :-------------------------------- | :----------------- |
+| **工作空间 (Workspace)** | `<workspace-root>/.agent/skills/` | 仅在特定项目中可用 |
 
-### Cấu trúc thư mục kỹ năng
+### 技能文件夹结构
 
 ```
 my-skill/
-├── SKILL.md      # (Required) Metadata & instructions
-├── scripts/      # (Optional) Python or Bash scripts
-├── references/   # (Optional) Text, documentation, templates
-└── assets/       # (Optional) Images or logos
+├── SKILL.md      # (必选) 元数据和说明指令
+├── scripts/      # (可选) Python 或 Bash 脚本
+├── references/   # (可选) 文本、文档、模版
+└── assets/       # (可选) 图片或 Logo
 ```
 
 ---
 
-## 🔍 Ví dụ 1: Code Review Skill
+## 🔍示例 1: 代码审查技能 (Code Review Skill)
 
-Đây là một kỹ năng chỉ có hướng dẫn (instruction-only), chỉ cần tạo file `SKILL.md`.
+这是一个仅包含指令 (instruction-only) 的技能，只需创建一个 `SKILL.md` 文件。
 
-### Bước 1: Tạo thư mục
+### 第一步：创建目录
 
 ```bash
 mkdir -p ~/.gemini/antigravity/skills/code-review
 ```
 
-### Bước 2: Tạo SKILL.md
+### 第二步：创建 SKILL.md
 
 ```markdown
 ---
 name: code-review
-description: Reviews code changes for bugs, style issues, and best practices. Use when reviewing PRs or checking code quality.
+description: 审查代码变更中的 Bug、风格问题和最佳实践。在 Review PR 或检查代码质量时使用。
 ---
 
-# Code Review Skill
+# 代码审查 (Code Review)
 
-When reviewing code, follow these steps:
+在审查代码时，请遵循以下步骤：
 
-## Review checklist
+## 审查清单
 
-1. **Correctness**: Does the code do what it's supposed to?
-2. **Edge cases**: Are error conditions handled?
-3. **Style**: Does it follow project conventions?
-4. **Performance**: Are there obvious inefficiencies?
+1.  **正确性 (Correctness)**: 代码是否完成了它应该做的事？
+2.  **边缘情况 (Edge cases)**: 是否处理了错误条件？
+3.  **风格 (Style)**: 是否遵循项目规范？
+4.  **性能 (Performance)**: 是否有明显的低效之处？
 
-## How to provide feedback
+## 如何提供反馈
 
-- Be specific about what needs to change
-- Explain why, not just what
-- Suggest alternatives when possible
+- 具体指出需要修改的地方
+- 解释"为什么"，而不仅仅是"是什么"
+- 尽可能提供替代方案
 ```
 
-> **Lưu ý**: File `SKILL.md` chứa siêu dữ liệu (name, description) ở trên cùng, sau đó là các chỉ dẫn. Agent sẽ chỉ đọc siêu dữ liệu và chỉ tải hướng dẫn khi cần.
+> **注意**: `SKILL.md` 文件顶部包含元数据 (name, description)，随后是指令。Agent 只会读取元数据，仅在需要时加载指令。
 
-### Dùng thử
+### 试一试
 
-Tạo file `demo_bad_code.py`:
+创建一个 `demo_bad_code.py`:
 
 ```python
 import time
@@ -96,33 +100,33 @@ def process_payments(items):
 def run_batch():
     users = [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}]
     items = [{'price': 10}, {'price': 20}, {'price': 100}]
-    
+
     u = get_user_data(users, 3)
     print("User found: " + u['name'])  # Will crash if None
-    
+
     print("Total: " + str(process_payments(items)))
 
 if __name__ == "__main__":
     run_batch()
 ```
 
-**Prompt**: `review the @demo_bad_code.py file`
+**提示词**: `审查 @demo_bad_code.py 文件`
 
-Agent sẽ tự động xác định kỹ năng `code-review`, tải thông tin và thực hiện theo hướng dẫn.
+Agent 将自动识别 `code-review` 技能，加载信息并按照指令执行。
 
 ---
 
-## 📄 Ví dụ 2: License Header Skill
+## 📄 示例 2: 许可证头技能 (License Header Skill)
 
-Kỹ năng này sử dụng file tham chiếu (reference file) trong thư mục `resources/`.
+此技能使用 `resources/` 目录中的参考文件。
 
-### Bước 1: Tạo thư mục
+### 第一步：创建目录
 
 ```bash
 mkdir -p .agent/skills/license-header-adder/resources
 ```
 
-### Bước 2: Tạo file template
+### 第二步：创建模版文件
 
 **`.agent/skills/license-header-adder/resources/HEADER.txt`**:
 
@@ -134,44 +138,44 @@ mkdir -p .agent/skills/license-header-adder/resources
  */
 ```
 
-### Bước 3: Tạo SKILL.md
+### 第三步：创建 SKILL.md
 
 **`.agent/skills/license-header-adder/SKILL.md`**:
 
 ```markdown
 ---
 name: license-header-adder
-description: Adds the standard corporate license header to new source files.
+description: 为新源文件添加标准的企业许可证头。
 ---
 
-# License Header Adder
+# 添加许可证头 (License Header Adder)
 
-This skill ensures that all new source files have the correct copyright header.
+此技能确保所有新源文件都具有正确的版权头。
 
-## Instructions
+## 指令
 
-1. **Read the Template**: Read the content of `resources/HEADER.txt`.
-2. **Apply to File**: When creating a new file, prepend this exact content.
-3. **Adapt Syntax**: 
-   - For C-style languages (Java, TS), keep the `/* */` block.
-   - For Python/Shell, convert to `#` comments.
+1.  **读取模版**: 读取 `resources/HEADER.txt` 的内容。
+2.  **应用到文件**: 创建新文件时，将此确切内容添加到开头。
+3.  **适配语法**:
+    - 对于 C 风格语言 (Java, TS)，保留 `/* */` 块。
+    - 对于 Python/Shell，转换为 `#` 注释。
 ```
 
-### Dùng thử
+### 试一试
 
-**Prompt**: `Create a new Python script named data_processor.py that prints 'Hello World'.`
+**提示词**: `创建一个名为 data_processor.py 的 Python 脚本，打印 'Hello World'。`
 
-Agent sẽ đọc template, chuyển đổi comments theo kiểu Python và tự động thêm vào đầu file.
+Agent 将读取模版，按 Python 风格转换注释，并自动添加到文件开头。
 
 ---
 
-## 🎯 Kết luận
+## 🎯 总结
 
-Bằng cách tạo Skills, bạn đã biến mô hình AI đa năng thành một chuyên gia cho dự án của mình:
+通过创建 Skills，你已经将通用 AI 模型转变为项目的专家：
 
-- ✅ Hệ thống hoá các best practices
-- ✅ Tuân theo quy tắc đánh giá code
-- ✅ Tự động thêm license headers
-- ✅ Agent tự động biết cách làm việc với nhóm của bạn
+- ✅ 系统化最佳实践
+- ✅ 遵循代码审查规则
+- ✅ 自动添加 License 头
+- ✅ Agent 自动知道如何与你的团队协作
 
-Thay vì liên tục nhắc AI "nhớ thêm license" hoặc "sửa format commit", giờ đây Agent sẽ tự động thực hiện!
+现在，Agent 会自动执行这些操作，而不需要你每次都提醒它！

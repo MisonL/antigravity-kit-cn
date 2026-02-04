@@ -1,24 +1,24 @@
-# Authentication Patterns
+# 认证模式 (Authentication Patterns)
 
-> Choose auth pattern based on use case.
+> 根据使用场景选择合适的认证模式。
 
-## Selection Guide
+## 选择指南
 
-| Pattern | Best For |
-|---------|----------|
-| **JWT** | Stateless, microservices |
-| **Session** | Traditional web, simple |
-| **OAuth 2.0** | Third-party integration |
-| **API Keys** | Server-to-server, public APIs |
-| **Passkey** | Modern passwordless (2025+) |
+| 模式          | 最佳适用场景            |
+| :------------ | :---------------------- |
+| **JWT**       | 无状态、微服务架构      |
+| **Session**   | 传统 Web 应用、简单场景 |
+| **OAuth 2.0** | 第三方集成              |
+| **API Keys**  | 服务器间通信、公共 API  |
+| **Passkey**   | 现代无密码认证 (2025+)  |
 
-## JWT Principles
+## JWT 原则
 
 ```
-Important:
-├── Always verify signature
-├── Check expiration
-├── Include minimal claims
-├── Use short expiry + refresh tokens
-└── Never store sensitive data in JWT
+重要事项:
+├── 始终验证签名
+├── 检查过期时间
+├── 仅包含最小必要的声明 (Claims)
+├── 使用短过期时间 + 刷新令牌 (Refresh tokens)
+└── 绝不在 JWT 中存储敏感数据
 ```

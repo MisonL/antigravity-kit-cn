@@ -1,144 +1,41 @@
 ---
-description: Test generation and test running command. Creates and executes tests for code.
+description: 生成测试用例并运行测试
+skills:
+    - testing-patterns
+    - webapp-testing
 ---
 
-# /test - Test Generation and Execution
+# 测试 (Test Workflow)
 
-$ARGUMENTS
+**触发命令**: `/test [scope]`
 
----
+## 目的
 
-## Purpose
+不仅仅是运行测试，而是**生成**测试、**修复**测试并**报告**结果。
 
-This command generates tests, runs existing tests, or checks test coverage.
+## 步骤流程
 
----
+1. **测试策略**:
+    - 分析目标代码。
+    - 决定测试类型 (Unit/Integration/E2E)。
+    - 选择测试框架 (Jest/Vitest/Playwright)。
 
-## Sub-commands
+2. **生成测试**:
+    - 如果测试不存在，创建测试文件 `*.test.ts`。
+    - 编写覆盖核心逻辑的测试用例。
+    - Mock 外部依赖。
 
-```
-/test                - Run all tests
-/test [file/feature] - Generate tests for specific target
-/test coverage       - Show test coverage report
-/test watch          - Run tests in watch mode
-```
+3. **执行测试**:
+    - 运行 `npm test` 或特定命令。
 
----
+4. **修复与重试**:
+    - 如果测试失败，分析错误。
+    - 自动修复代码或测试用例。
+    - 重新运行直到通过 (或达到重试上限)。
 
-## Behavior
+## 示例
 
-### Generate Tests
-
-When asked to test a file or feature:
-
-1. **Analyze the code**
-   - Identify functions and methods
-   - Find edge cases
-   - Detect dependencies to mock
-
-2. **Generate test cases**
-   - Happy path tests
-   - Error cases
-   - Edge cases
-   - Integration tests (if needed)
-
-3. **Write tests**
-   - Use project's test framework (Jest, Vitest, etc.)
-   - Follow existing test patterns
-   - Mock external dependencies
+> User: /test utils/auth.ts
+> AI: 正在为 utils/auth.ts 生成单元测试... 运行 Jest... 所有测试通过 ✅。
 
 ---
-
-## Output Format
-
-### For Test Generation
-
-```markdown
-## 🧪 Tests: [Target]
-
-### Test Plan
-| Test Case | Type | Coverage |
-|-----------|------|----------|
-| Should create user | Unit | Happy path |
-| Should reject invalid email | Unit | Validation |
-| Should handle db error | Unit | Error case |
-
-### Generated Tests
-
-`tests/[file].test.ts`
-
-[Code block with tests]
-
----
-
-Run with: `npm test`
-```
-
-### For Test Execution
-
-```
-🧪 Running tests...
-
-✅ auth.test.ts (5 passed)
-✅ user.test.ts (8 passed)
-❌ order.test.ts (2 passed, 1 failed)
-
-Failed:
-  ✗ should calculate total with discount
-    Expected: 90
-    Received: 100
-
-Total: 15 tests (14 passed, 1 failed)
-```
-
----
-
-## Examples
-
-```
-/test src/services/auth.service.ts
-/test user registration flow
-/test coverage
-/test fix failed tests
-```
-
----
-
-## Test Patterns
-
-### Unit Test Structure
-
-```typescript
-describe('AuthService', () => {
-  describe('login', () => {
-    it('should return token for valid credentials', async () => {
-      // Arrange
-      const credentials = { email: 'test@test.com', password: 'pass123' };
-      
-      // Act
-      const result = await authService.login(credentials);
-      
-      // Assert
-      expect(result.token).toBeDefined();
-    });
-
-    it('should throw for invalid password', async () => {
-      // Arrange
-      const credentials = { email: 'test@test.com', password: 'wrong' };
-      
-      // Act & Assert
-      await expect(authService.login(credentials)).rejects.toThrow('Invalid credentials');
-    });
-  });
-});
-```
-
----
-
-## Key Principles
-
-- **Test behavior not implementation**
-- **One assertion per test** (when practical)
-- **Descriptive test names**
-- **Arrange-Act-Assert pattern**
-- **Mock external dependencies**

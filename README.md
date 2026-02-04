@@ -1,6 +1,6 @@
-# Antigravity Kit
+# Antigravity Kit CN
 
-> AI Agent templates with Skills, Agents, and Workflows
+> 包含技能 (Skills)、智能体 (Agents) 和工作流 (Workflows) 的 AI Agent 模版
 
 <div  align="center">
     <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit?theme=dark" alt="Antigravity Kit - Nổi bật trên Unikorn.vn" style="width: 210px; height: 54px;" width="210" height="54" /></a>
@@ -8,117 +8,115 @@
     <a href="https://launch.j2team.dev/products/antigravity-kit" target="_blank"><img src="https://launch.j2team.dev/badge/antigravity-kit/dark" alt="Antigravity Kit on J2TEAM Launch" width="250" height="54" /></a>
 </div>
 
-## Quick Install
+## 快速安装 (Quick Install)
 
 ```bash
 npx @vudovn/ag-kit init
 ```
 
-Or install globally:
+或者全局安装：
 
 ```bash
 npm install -g @vudovn/ag-kit
 ag-kit init
 ```
 
-This installs the `.agent` folder containing all templates into your project.
+这将把包含所有模版的 `.agent` 文件夹安装到你的项目中。
 
-## What's Included
+## 包含内容 (What's Included)
 
-| Component     | Count | Description                                                        |
-| ------------- | ----- | ------------------------------------------------------------------ |
-| **Agents**    | 20    | Specialist AI personas (frontend, backend, security, PM, QA, etc.) |
-| **Skills**    | 36    | Domain-specific knowledge modules                                  |
-| **Workflows** | 11    | Slash command procedures                                           |
+| 组件 (Component) | 数量 | 描述                                               |
+| ---------------- | ---- | -------------------------------------------------- |
+| **Agents**       | 20   | 专家级 AI 人格 (前端、后端、安全、产品经理、QA 等) |
+| **Skills**       | 36   | 特定领域的知识模块                                 |
+| **Workflows**    | 11   | 斜杠命令流程                                       |
 
+## 使用方法 (Usage)
 
-## Usage
+### 使用智能体 (Using Agents)
 
-### Using Agents
-
-**No need to mention agents explicitly!** The system automatically detects and applies the right specialist(s):
-
-```
-You: "Add JWT authentication"
-AI: 🤖 Applying @security-auditor + @backend-specialist...
-
-You: "Fix the dark mode button"
-AI: 🤖 Using @frontend-specialist...
-
-You: "Login returns 500 error"
-AI: 🤖 Using @debugger for systematic analysis...
-```
-
-**How it works:**
-
-- Analyzes your request silently
-
-- Detects domain(s) automatically (frontend, backend, security, etc.)
-- Selects the best specialist(s)
-- Informs you which expertise is being applied
-- You get specialist-level responses without needing to know the system architecture
-
-**Benefits:**
-
-- ✅ Zero learning curve - just describe what you need
-- ✅ Always get expert responses
-- ✅ Transparent - shows which agent is being used
-- ✅ Can still override by mentioning agent explicitly
-
-### Using Workflows
-
-Invoke workflows with slash commands:
-
-| Command          | Description                           |
-| ---------------- | ------------------------------------- |
-| `/brainstorm`    | Explore options before implementation |
-| `/create`        | Create new features or apps           |
-| `/debug`         | Systematic debugging                  |
-| `/deploy`        | Deploy application                    |
-| `/enhance`       | Improve existing code                 |
-| `/orchestrate`   | Multi-agent coordination              |
-| `/plan`          | Create task breakdown                 |
-| `/preview`       | Preview changes locally               |
-| `/status`        | Check project status                  |
-| `/test`          | Generate and run tests                |
-| `/ui-ux-pro-max` | Design with 50 styles                 |
-
-Example:
+**无需显式提及 Agent！** 系统会自动检测并应用正确的专家：
 
 ```
-/brainstorm authentication system
-/create landing page with hero section
-/debug why login fails
+You: "添加 JWT 认证"
+AI: 🤖 正在应用 @security-auditor + @backend-specialist...
+
+You: "修复深色模式按钮"
+AI: 🤖 正在使用 @frontend-specialist...
+
+You: "登录返回 500 错误"
+AI: 🤖 正在使用 @debugger 进行系统化分析...
 ```
 
-### Using Skills
+**工作原理：**
 
-Skills are loaded automatically based on task context. The AI reads skill descriptions and applies relevant knowledge.
+- 静默分析你的请求
+- 自动检测领域 (前端、后端、安全等)
+- 选择最佳专家
+- 告知你正在应用哪方面的专业知识
+- 无需了解系统架构即可获得专家级响应
 
-## CLI Tool
+**优势：**
 
-| Command         | Description                               |
-| --------------- | ----------------------------------------- |
-| `ag-kit init`   | Install `.agent` folder into your project |
-| `ag-kit update` | Update to the latest version              |
-| `ag-kit status` | Check installation status                 |
+- ✅ 零学习曲线 - 描述需求即可
+- ✅ 始终获得专家响应
+- ✅ 透明 - 显示正在使用的 Agent
+- ✅ 仍然可以通过显式提及 Agent 来覆盖
 
-### Options
+### 使用工作流 (Using Workflows)
+
+使用斜杠命令调用工作流：
+
+| 命令             | 描述             |
+| ---------------- | ---------------- |
+| `/brainstorm`    | 在实施前探索方案 |
+| `/create`        | 创建新功能或应用 |
+| `/debug`         | 系统化调试       |
+| `/deploy`        | 部署应用         |
+| `/enhance`       | 改进现有代码     |
+| `/orchestrate`   | 多智能体协同     |
+| `/plan`          | 创建任务拆解     |
+| `/preview`       | 本地预览变更     |
+| `/status`        | 检查项目状态     |
+| `/test`          | 生成并运行测试   |
+| `/ui-ux-pro-max` | 50 种风格的设计  |
+
+示例：
+
+```
+/brainstorm 认证系统
+/create 带 Hero 部分的着陆页
+/debug 为什么登录失败
+```
+
+### 使用技能 (Using Skills)
+
+技能基于任务上下文自动加载。AI 会阅读技能描述并应用相关知识。
+
+## CLI 工具
+
+| 命令            | 描述                             |
+| --------------- | -------------------------------- |
+| `ag-kit init`   | 安装 `.agent` 文件夹到你的项目中 |
+| `ag-kit update` | 更新到最新版本                   |
+| `ag-kit status` | 检查安装状态                     |
+
+### 选项
 
 ```bash
-ag-kit init --force        # Overwrite existing .agent folder
-ag-kit init --path ./myapp # Install in specific directory
-ag-kit init --branch dev   # Use specific branch
-ag-kit init --quiet        # Suppress output (for CI/CD)
-ag-kit init --dry-run      # Preview actions without executing
+ag-kit init --force        # 覆盖现有的 .agent 文件夹
+ag-kit init --path ./myapp # 安装到指定目录
+ag-kit init --branch dev   # 使用特定分支
+ag-kit init --quiet        # 抑制输出 (用于 CI/CD)
+ag-kit init --dry-run      # 预览操作而不执行
 ```
 
-## Documentation
+## 文档 (Documentation)
 
-- **[Web App Example](https://antigravity-kit.vercel.app//docs/guide/examples/brainstorm)** - Step-by-step guide to creating a web application
-- **[Online Docs](https://antigravity-kit.vercel.app//docs)** - Browse all documentation online
+- **[Web App 示例](https://antigravity-kit.vercel.app//docs/guide/examples/brainstorm)** - 创建 Web 应用的分步指南
+- **[在线文档](https://antigravity-kit.vercel.app//docs)** - 在线浏览所有文档
 
-## Buy me coffee
+## 请我喝咖啡 (Buy me coffee)
 
 <p align="center">
   <a href="https://buymeacoffee.com/vudovn">
@@ -132,6 +130,6 @@ ag-kit init --dry-run      # Preview actions without executing
   <img src="https://img.vietqr.io/image/mbbank-0779440918-compact.jpg" alt="Buy me coffee" width="200" />
 </p>
 
-## License
+## 许可证 (License)
 
 MIT © Vudovn

@@ -1,122 +1,126 @@
-# API Security Testing
+# API 安全测试 (API Security Testing)
 
-> Principles for testing API security. OWASP API Top 10, authentication, authorization testing.
-
----
-
-## OWASP API Security Top 10
-
-| Vulnerability | Test Focus |
-|---------------|------------|
-| **API1: BOLA** | Access other users' resources |
-| **API2: Broken Auth** | JWT, session, credentials |
-| **API3: Property Auth** | Mass assignment, data exposure |
-| **API4: Resource Consumption** | Rate limiting, DoS |
-| **API5: Function Auth** | Admin endpoints, role bypass |
-| **API6: Business Flow** | Logic abuse, automation |
-| **API7: SSRF** | Internal network access |
-| **API8: Misconfiguration** | Debug endpoints, CORS |
-| **API9: Inventory** | Shadow APIs, old versions |
-| **API10: Unsafe Consumption** | Third-party API trust |
+> API 安全测试原则。OWASP API Top 10、认证与授权测试。
 
 ---
 
-## Authentication Testing
+## OWASP API 安全 Top 10
 
-### JWT Testing
-
-| Check | What to Test |
-|-------|--------------|
-| Algorithm | None, algorithm confusion |
-| Secret | Weak secrets, brute force |
-| Claims | Expiration, issuer, audience |
-| Signature | Manipulation, key injection |
-
-### Session Testing
-
-| Check | What to Test |
-|-------|--------------|
-| Generation | Predictability |
-| Storage | Client-side security |
-| Expiration | Timeout enforcement |
-| Invalidation | Logout effectiveness |
+| 漏洞                                       | 测试重点                             |
+| :----------------------------------------- | :----------------------------------- |
+| **API1: BOLA** (越权)                      | 访问其他用户的资源                   |
+| **API2: Broken Auth** (认证失效)           | JWT, Session, 凭证强度               |
+| **API3: Property Auth** (属性越权)         | 批量赋值 (Mass Assignment), 数据泄露 |
+| **API4: Resource Consumption** (资源耗尽)  | 速率限制 (Rate limiting), DoS        |
+| **API5: Function Auth** (功能越权)         | 管理端点, 角色绕过                   |
+| **API6: Business Flow** (业务流程)         | 逻辑滥用, 自动化攻击                 |
+| **API7: SSRF** (服务端伪造)                | 内部网络访问                         |
+| **API8: Misconfiguration** (配置错误)      | 调试端点, CORS 配置                  |
+| **API9: Inventory** (资产管理)             | 影子 API, 旧版本 API                 |
+| **API10: Unsafe Consumption** (不安全消费) | 对第三方 API 的盲目信任              |
 
 ---
 
-## Authorization Testing
+## 认证测试 (Authentication Testing)
 
-| Test Type | Approach |
-|-----------|----------|
-| **Horizontal** | Access peer users' data |
-| **Vertical** | Access higher privilege functions |
-| **Context** | Access outside allowed scope |
+### JWT 测试
 
-### BOLA/IDOR Testing
+| 检查项           | 测试内容                           |
+| :--------------- | :--------------------------------- |
+| 算法 (Algorithm) | None 算法, 算法混淆攻击            |
+| 密钥 (Secret)    | 弱密钥, 暴力破解                   |
+| 声明 (Claims)    | 过期时间, 发行者 (iss), 受众 (aud) |
+| 签名 (Signature) | 篡改, 密钥注入                     |
 
-1. Identify resource IDs in requests
-2. Capture request with user A's session
-3. Replay with user B's session
-4. Check for unauthorized access
+### Session 测试
 
----
-
-## Input Validation Testing
-
-| Injection Type | Test Focus |
-|----------------|------------|
-| SQL | Query manipulation |
-| NoSQL | Document queries |
-| Command | System commands |
-| LDAP | Directory queries |
-
-**Approach:** Test all parameters, try type coercion, test boundaries, check error messages.
+| 检查项 | 测试内容                      |
+| :----- | :---------------------------- |
+| 生成   | 可预测性                      |
+| 存储   | 客户端安全 (HttpOnly, Secure) |
+| 过期   | 超时强制执行                  |
+| 失效   | 注销有效性                    |
 
 ---
 
-## Rate Limiting Testing
+## 授权测试 (Authorization Testing)
 
-| Aspect | Check |
-|--------|-------|
-| Existence | Is there any limit? |
-| Bypass | Headers, IP rotation |
-| Scope | Per-user, per-IP, global |
+| 测试类型       | 方法                           |
+| :------------- | :----------------------------- |
+| **水平越权**   | 访问同级用户的数据             |
+| **垂直越权**   | 访问更高权限 (如管理员) 的功能 |
+| **上下文越权** | 访问允许范围之外的数据         |
 
-**Bypass techniques:** X-Forwarded-For, different HTTP methods, case variations, API versioning.
+### BOLA/IDOR 测试
 
----
-
-## GraphQL Security
-
-| Test | Focus |
-|------|-------|
-| Introspection | Schema disclosure |
-| Batching | Query DoS |
-| Nesting | Depth-based DoS |
-| Authorization | Field-level access |
+1.  在请求中识别资源 ID (如 user_id, order_id)
+2.  使用用户 A 的 Session 捕获请求
+3.  使用用户 B 的 Session 重放请求
+4.  检查是否未授权访问
 
 ---
 
-## Security Testing Checklist
+## 输入验证测试
 
-**Authentication:**
-- [ ] Test for bypass
-- [ ] Check credential strength
-- [ ] Verify token security
+| 注入类型   | 测试重点     |
+| :--------- | :----------- |
+| SQL 注入   | 查询篡改     |
+| NoSQL 注入 | 文档查询篡改 |
+| 命令注入   | 系统命令执行 |
+| LDAP 注入  | 目录查询篡改 |
 
-**Authorization:**
-- [ ] Test BOLA/IDOR
-- [ ] Check privilege escalation
-- [ ] Verify function access
-
-**Input:**
-- [ ] Test all parameters
-- [ ] Check for injection
-
-**Config:**
-- [ ] Check CORS
-- [ ] Verify headers
-- [ ] Test error handling
+**方法:** 测试所有参数，尝试类型强制转换，测试边界值，检查详细错误信息。
 
 ---
 
-> **Remember:** APIs are the backbone of modern apps. Test them like attackers will.
+## 速率限制测试
+
+| 方面   | 检查                 |
+| :----- | :------------------- |
+| 存在性 | 是否有任何限制？     |
+| 绕过   | 修改 Header, IP 轮换 |
+| 范围   | 每用户, 每 IP, 全局  |
+
+**绕过技术:** X-Forwarded-For 伪造, 使用不同 HTTP 方法, 大小写变体, API 版本号。
+
+---
+
+## GraphQL 安全
+
+| 测试                 | 重点           |
+| :------------------- | :------------- |
+| 内省 (Introspection) | Schema 泄露    |
+| 批量查询 (Batching)  | 查询 DoS       |
+| 嵌套深度 (Nesting)   | 基于深度的 DoS |
+| 授权                 | 字段级访问控制 |
+
+---
+
+## 安全测试检查清单
+
+**认证:**
+
+- [ ] 测试绕过机制
+- [ ] 检查凭证强度
+- [ ] 验证令牌 (Token) 安全性
+
+**授权:**
+
+- [ ] 测试 BOLA/IDOR (水平越权)
+- [ ] 检查提权漏洞 (垂直越权)
+- [ ] 验证功能访问权限
+
+**输入:**
+
+- [ ] 测试所有参数
+- [ ] 检查注入漏洞
+
+**配置:**
+
+- [ ] 检查 CORS 设置
+- [ ] 验证安全 Header
+- [ ] 测试错误处理 (不泄露敏感信息)
+
+---
+
+> **记住:** API 是现代应用程序的骨干。像攻击者一样测试它们。

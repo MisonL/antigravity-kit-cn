@@ -1,167 +1,37 @@
 ---
-name: powershell-windows
-description: PowerShell Windows patterns. Critical pitfalls, operator syntax, error handling.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+description: PowerShell Windows 脚本编写模式与陷阱
 ---
 
-# PowerShell Windows Patterns
+# PowerShell (Windows)
 
-> Critical patterns and pitfalls for Windows PowerShell.
+## 注意事项
 
----
+1.  **编码问题 (Encoding)**
+    - Windows 默认 GBK/CP936。尽量强制使用 UTF-8。
+    - `$OutputEncoding = [System.Text.Encoding]::UTF8`
 
-## 1. Operator Syntax Rules
+2.  **执行策略 (Execution Policy)**
+    - 脚本可能默认被禁止运行。需运行 `Set-ExecutionPolicy RemoteSigned`。
 
-### CRITICAL: Parentheses Required
+3.  **动词-名词 结构**
+    - PowerShell 命令都遵循 `Verb-Noun` 格式。
+    - `Get-Process`, `New-Item`, `Remove-Item`。
 
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| `if (Test-Path "a" -or Test-Path "b")` | `if ((Test-Path "a") -or (Test-Path "b"))` |
-| `if (Get-Item $x -and $y -eq 5)` | `if ((Get-Item $x) -and ($y -eq 5))` |
+## 常用命令对照
 
-**Rule:** Each cmdlet call MUST be in parentheses when using logical operators.
+| Bash     | PowerShell                    |
+| :------- | :---------------------------- |
+| `ls`     | `Get-ChildItem` (ls 是别名)   |
+| `cp`     | `Copy-Item`                   |
+| `rm -rf` | `Remove-Item -Recurse -Force` |
+| `grep`   | `Select-String`               |
+| `curl`   | `Invoke-WebRequest`           |
 
----
+## 管道对象
 
-## 2. Unicode/Emoji Restriction
-
-### CRITICAL: No Unicode in Scripts
-
-| Purpose | ❌ Don't Use | ✅ Use |
-|---------|-------------|--------|
-| Success | ✅ ✓ | [OK] [+] |
-| Error | ❌ ✗ 🔴 | [!] [X] |
-| Warning | ⚠️ 🟡 | [*] [WARN] |
-| Info | ℹ️ 🔵 | [i] [INFO] |
-| Progress | ⏳ | [...] |
-
-**Rule:** Use ASCII characters only in PowerShell scripts.
-
----
-
-## 3. Null Check Patterns
-
-### Always Check Before Access
-
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| `$array.Count -gt 0` | `$array -and $array.Count -gt 0` |
-| `$text.Length` | `if ($text) { $text.Length }` |
-
----
-
-## 4. String Interpolation
-
-### Complex Expressions
-
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| `"Value: $($obj.prop.sub)"` | Store in variable first |
-
-**Pattern:**
-```
-$value = $obj.prop.sub
-Write-Output "Value: $value"
-```
-
----
-
-## 5. Error Handling
-
-### ErrorActionPreference
-
-| Value | Use |
-|-------|-----|
-| Stop | Development (fail fast) |
-| Continue | Production scripts |
-| SilentlyContinue | When errors expected |
-
-### Try/Catch Pattern
-
-- Don't return inside try block
-- Use finally for cleanup
-- Return after try/catch
-
----
-
-## 6. File Paths
-
-### Windows Path Rules
-
-| Pattern | Use |
-|---------|-----|
-| Literal path | `C:\Users\User\file.txt` |
-| Variable path | `Join-Path $env:USERPROFILE "file.txt"` |
-| Relative | `Join-Path $ScriptDir "data"` |
-
-**Rule:** Use Join-Path for cross-platform safety.
-
----
-
-## 7. Array Operations
-
-### Correct Patterns
-
-| Operation | Syntax |
-|-----------|--------|
-| Empty array | `$array = @()` |
-| Add item | `$array += $item` |
-| ArrayList add | `$list.Add($item) | Out-Null` |
-
----
-
-## 8. JSON Operations
-
-### CRITICAL: Depth Parameter
-
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| `ConvertTo-Json` | `ConvertTo-Json -Depth 10` |
-
-**Rule:** Always specify `-Depth` for nested objects.
-
-### File Operations
-
-| Operation | Pattern |
-|-----------|---------|
-| Read | `Get-Content "file.json" -Raw | ConvertFrom-Json` |
-| Write | `$data | ConvertTo-Json -Depth 10 | Out-File "file.json" -Encoding UTF8` |
-
----
-
-## 9. Common Errors
-
-| Error Message | Cause | Fix |
-|---------------|-------|-----|
-| "parameter 'or'" | Missing parentheses | Wrap cmdlets in () |
-| "Unexpected token" | Unicode character | Use ASCII only |
-| "Cannot find property" | Null object | Check null first |
-| "Cannot convert" | Type mismatch | Use .ToString() |
-
----
-
-## 10. Script Template
+Bash 管道传递所有的都是**字符串 (Text)**，PowerShell 管道传递的是**对象 (.NET Objects)**。
+这意味着你可以直接操作对象属性，而不需要 awk/sed 文本处理。
 
 ```powershell
-# Strict mode
-Set-StrictMode -Version Latest
-$ErrorActionPreference = "Continue"
-
-# Paths
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-
-# Main
-try {
-    # Logic here
-    Write-Output "[OK] Done"
-    exit 0
-}
-catch {
-    Write-Warning "Error: $_"
-    exit 1
-}
+Get-Process | Where-Object {$_.CPU -gt 10} | Stop-Process
 ```
-
----
-
-> **Remember:** PowerShell has unique syntax rules. Parentheses, ASCII-only, and null checks are non-negotiable.

@@ -1,94 +1,54 @@
-# Architecture Examples
-
-> Real-world architecture decisions by project type.
-
+---
+description: 常见架构模式的实际应用示例
 ---
 
-## Example 1: MVP E-commerce (Solo Developer)
+# 架构示例 (Architecture Examples)
 
-```yaml
-Requirements:
-  - <1000 users initially
-  - Solo developer
-  - Fast to market (8 weeks)
-  - Budget-conscious
+## 1. 模块化单体 (Modular Monolith) - 推荐默认架构
 
-Architecture Decisions:
-  App Structure: Monolith (simpler for solo)
-  Framework: Next.js (full-stack, fast)
-  Data Layer: Prisma direct (no over-abstraction)
-  Authentication: JWT (simpler than OAuth)
-  Payment: Stripe (hosted solution)
-  Database: PostgreSQL (ACID for orders)
+适合：大多数初创项目，中小团队。
 
-Trade-offs Accepted:
-  - Monolith → Can't scale independently (team doesn't justify it)
-  - No Repository → Less testable (simple CRUD doesn't need it)
-  - JWT → No social login initially (can add later)
-
-Future Migration Path:
-  - Users > 10K → Extract payment service
-  - Team > 3 → Add Repository pattern
-  - Social login requested → Add OAuth
+```
+src/
+├── modules/
+│   ├── auth/           # Auth Context
+│   │   ├── api/        # Public Interface
+│   │   ├── core/       # Domain Logic
+│   │   └── data/       # Database Access
+│   ├── inventory/      # Inventory Context
+│   └── billing/        # Billing Context
+├── shared/             # Shared Kernel (Logging, Utils)
+└── main.ts             # Composition Root
 ```
 
----
+- **规则**: 模块之间只能通过 `api` 目录引用，不能直接 import 内部代码。数据库表也是隔离的。
 
-## Example 2: SaaS Product (5-10 Developers)
+## 2. 事件驱动架构 (Event-Driven Architecture)
 
-```yaml
-Requirements:
-  - 1K-100K users
-  - 5-10 developers
-  - Long-term (12+ months)
-  - Multiple domains (billing, users, core)
+适合：高解耦，异步处理，高并发。
 
-Architecture Decisions:
-  App Structure: Modular Monolith (team size optimal)
-  Framework: NestJS (modular by design)
-  Data Layer: Repository pattern (testing, flexibility)
-  Domain Model: Partial DDD (rich entities)
-  Authentication: OAuth + JWT
-  Caching: Redis
-  Database: PostgreSQL
+- **订单服务**: 创建订单 -> 发送 `OrderCreated` 事件。
+- **库存服务**: 监听 `OrderCreated` -> 扣减库存。
+- **邮件服务**: 监听 `OrderCreated` -> 发送确认邮件。
 
-Trade-offs Accepted:
-  - Modular Monolith → Some module coupling (microservices not justified)
-  - Partial DDD → No full aggregates (no domain experts)
-  - RabbitMQ later → Initial synchronous (add when proven needed)
+优点：添加新功能（如发送短信）不需要修改订单服务。
+缺点：排查问题困难，最终一致性挑战。
 
-Migration Path:
-  - Team > 10 → Consider microservices
-  - Domains conflict → Extract bounded contexts
-  - Read performance issues → Add CQRS
+## 3. 六边形架构 (Hexagonal / Ports and Adapters)
+
+适合：核心业务逻辑复杂，需要独立于技术框架。
+
+```
+src/
+├── domain/             # 纯业务逻辑 (无依赖)
+│   ├── model/
+│   └── service/
+├── application/        # 用例 (Use Cases)
+│   ├── ports/          # 接口定义 (In / Out)
+│   └── service/
+├── infrastructure/     # 适配器 (Adapters)
+│   ├── web/            # 接收 HTTP 请求
+│   └── persistence/    # 数据库实现
 ```
 
----
-
-## Example 3: Enterprise (100K+ Users)
-
-```yaml
-Requirements:
-  - 100K+ users
-  - 10+ developers
-  - Multiple business domains
-  - Different scaling needs
-  - 24/7 availability
-
-Architecture Decisions:
-  App Structure: Microservices (independent scale)
-  API Gateway: Kong/AWS API GW
-  Domain Model: Full DDD
-  Consistency: Event-driven (eventual OK)
-  Message Bus: Kafka
-  Authentication: OAuth + SAML (enterprise SSO)
-  Database: Polyglot (right tool per job)
-  CQRS: Selected services
-
-Operational Requirements:
-  - Service mesh (Istio/Linkerd)
-  - Distributed tracing (Jaeger/Tempo)
-  - Centralized logging (ELK/Loki)
-  - Circuit breakers (Resilience4j)
-  - Kubernetes/Helm
-```
+- **核心原则**: 依赖倒置。业务逻辑不依赖数据库，数据库依赖业务定义的接口。

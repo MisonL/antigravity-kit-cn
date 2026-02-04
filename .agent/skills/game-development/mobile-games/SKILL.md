@@ -1,108 +1,102 @@
----
-name: mobile-games
-description: Mobile game development principles. Touch input, battery, performance, app stores.
-allowed-tools: Read, Write, Edit, Glob, Grep
----
+# 移动游戏开发 (Mobile Game Development)
 
-# Mobile Game Development
-
-> Platform constraints and optimization principles.
+> 平台限制和优化原则。
 
 ---
 
-## 1. Platform Considerations
+## 1. 平台考量
 
-### Key Constraints
+### 关键限制
 
-| Constraint | Strategy |
-|------------|----------|
-| **Touch input** | Large hit areas, gestures |
-| **Battery** | Limit CPU/GPU usage |
-| **Thermal** | Throttle when hot |
-| **Screen size** | Responsive UI |
-| **Interruptions** | Pause on background |
-
----
-
-## 2. Touch Input Principles
-
-### Touch vs Controller
-
-| Touch | Desktop/Console |
-|-------|-----------------|
-| Imprecise | Precise |
-| Occludes screen | No occlusion |
-| Limited buttons | Many buttons |
-| Gestures available | Buttons/sticks |
-
-### Best Practices
-
-- Minimum touch target: 44x44 points
-- Visual feedback on touch
-- Avoid precise timing requirements
-- Support both portrait and landscape
+| 限制                       | 策略              |
+| -------------------------- | ----------------- |
+| **Touch input (触摸输入)** | 大点击区域，手势  |
+| **Battery (电池)**         | 限制 CPU/GPU 使用 |
+| **Thermal (热量)**         | 发热时节流        |
+| **Screen size (屏幕尺寸)** | 响应式 UI         |
+| **Interruptions (中断)**   | 在后台暂停        |
 
 ---
 
-## 3. Performance Targets
+## 2. 触摸输入原则
 
-### Thermal Management
+### 触摸 vs 控制器
 
-| Action | Trigger |
-|--------|---------|
-| Reduce quality | Device warm |
-| Limit FPS | Device hot |
-| Pause effects | Critical temp |
+| 触摸     | 桌面/主机 |
+| -------- | --------- |
+| 不精确   | 精确      |
+| 遮挡屏幕 | 无遮挡    |
+| 按钮有限 | 许多按钮  |
+| 可用手势 | 按钮/摇杆 |
 
-### Battery Optimization
+### 最佳实践
 
-- 30 FPS often sufficient
-- Sleep when paused
-- Minimize GPS/network
-- Dark mode saves OLED battery
+- 最小触摸目标: 44x44 点
+- 触摸时的视觉反馈
+- 避免精确的时间要求
+- 支持纵向和横向
 
 ---
 
-## 4. App Store Requirements
+## 3. 性能目标
+
+### 热管理
+
+| 动作     | 触发条件 |
+| -------- | -------- |
+| 降低质量 | 设备温热 |
+| 限制 FPS | 设备发热 |
+| 暂停特效 | 临界温度 |
+
+### 电池优化
+
+- 30 FPS 通常足够
+- 暂停时睡眠
+- 最小化 GPS/网络
+- 深色模式节省 OLED 电量
+
+---
+
+## 4. 应用商店要求
 
 ### iOS (App Store)
 
-| Requirement | Note |
-|-------------|------|
-| Privacy labels | Required |
-| Account deletion | If account creation exists |
-| Screenshots | For all device sizes |
+| 要求     | 备注             |
+| -------- | ---------------- |
+| 隐私标签 | 必需             |
+| 账户删除 | 如果存在账户创建 |
+| 截图     | 针对所有设备尺寸 |
 
 ### Android (Google Play)
 
-| Requirement | Note |
-|-------------|------|
-| Target API | Current year's SDK |
-| 64-bit | Required |
-| App bundles | Recommended |
+| 要求        | 备注       |
+| ----------- | ---------- |
+| 目标 API    | 当年的 SDK |
+| 64位        | 必需       |
+| App bundles | 推荐       |
 
 ---
 
-## 5. Monetization Models
+## 5. 变现模型
 
-| Model | Best For |
-|-------|----------|
-| **Premium** | Quality games, loyal audience |
-| **Free + IAP** | Casual, progression-based |
-| **Ads** | Hyper-casual, high volume |
-| **Subscription** | Content updates, multiplayer |
-
----
-
-## 6. Anti-Patterns
-
-| ❌ Don't | ✅ Do |
-|----------|-------|
-| Desktop controls on mobile | Design for touch |
-| Ignore battery drain | Monitor thermals |
-| Force landscape | Support player preference |
-| Always-on network | Cache and sync |
+| 模型                       | 最适合             |
+| -------------------------- | ------------------ |
+| **Premium (付费)**         | 优质游戏，忠实受众 |
+| **Free + IAP (免费+内购)** | 休闲，基于进度     |
+| **Ads (广告)**             | 超休闲，高量级     |
+| **Subscription (订阅)**    | 内容更新，多人游戏 |
 
 ---
 
-> **Remember:** Mobile is the most constrained platform. Respect battery and attention.
+## 6. 反模式
+
+| ❌ 错误              | ✅ 正确      |
+| -------------------- | ------------ |
+| 在移动端使用桌面控制 | 为触摸设计   |
+| 忽略电池消耗         | 监控热量     |
+| 强制横屏             | 支持玩家偏好 |
+| 始终联网             | 缓存并同步   |
+
+---
+
+> **记住:** 移动端是受限最多的平台。尊重要求电池和注意力。
