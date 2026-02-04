@@ -1,4 +1,4 @@
-# Antigravity Kit
+# Antigravity Kit CN
 
 > 包含技能 (Skills)、智能体 (Agents) 和工作流 (Workflows) 的 AI Agent 模版
 
