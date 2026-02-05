@@ -465,7 +465,7 @@ export default function Home() {
         <img
           className="dark:invert"
           src="/images/logo.png"
-          alt="Antigravity Kit logo"
+          alt="Antigravity Kit 标志"
           width={100}
           height={20}
         />
@@ -476,7 +476,7 @@ export default function Home() {
             </span>
           </h1>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            AI Agent templates with Skills, Agents, and Workflows for{" "}
+            面向 Antigravity Google 的 AI Agent 模板，包含 Skills、Agents 与 Workflows，适用于{" "}
             <a
               href="https://antigravity.google/t"
               className="inline-flex items-center align-middle font-medium text-zinc-950 dark:text-zinc-50 mb-2"
@@ -502,7 +502,7 @@ export default function Home() {
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
             href="/docs"
           >
-            Documentation
+            文档
           </Link>
         </div>
       </main>

@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 
 export default function Footer() {
@@ -6,63 +5,63 @@ export default function Footer() {
         <footer className="border-t border-zinc-200 dark:border-zinc-800 mt-auto">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-                    {/* Product */}
+                    {/* 产品 */}
                     <div>
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">Product</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">产品</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
                                 <Link href="/docs" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Documentation
+                                    文档
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/docs/agents" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Agents
+                                    智能体
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/docs/skills" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Skills
+                                    技能
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/docs/workflows" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Workflows
+                                    工作流
                                 </Link>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Resources */}
+                    {/* 资源 */}
                     <div>
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">Resources</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">资源</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
                                 <Link href="/docs/installation" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Installation
+                                    安装
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/docs/cli" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    CLI Reference
+                                    CLI 参考
                                 </Link>
                             </li>
                             <li>
                                 <a href="https://github.com/vudovn/antigravity-kit" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Examples
+                                    示例
                                 </a>
                             </li>
                             <li>
                                 <a href="https://github.com/vudovn/antigravity-kit/releases" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Changelog
+                                    更新日志
                                 </a>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Community */}
+                    {/* 社区 */}
                     <div>
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">Community</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">社区</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
                                 <a href="https://github.com/vudovn/antigravity-kit" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
@@ -71,39 +70,39 @@ export default function Footer() {
                             </li>
                             <li>
                                 <a href="https://github.com/vudovn/antigravity-kit/issues" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Issues
+                                    问题
                                 </a>
                             </li>
                             <li>
                                 <a href="https://github.com/vudovn/antigravity-kit/discussions" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Discussions
+                                    讨论
                                 </a>
                             </li>
                             <li>
                                 <a href="https://github.com/vudovn/antigravity-kit/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Contributing
+                                    贡献指南
                                 </a>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Legal */}
+                    {/* 法律 */}
                     <div>
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">Legal</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">法律</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
                                 <a href="https://github.com/vudovn/antigravity-kit/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    License
+                                    许可证
                                 </a>
                             </li>
                             <li>
                                 <Link href="#1" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Privacy Policy
+                                    隐私政策
                                 </Link>
                             </li>
                             <li>
                                 <Link href="#1" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    Terms of Service
+                                    服务条款
                                 </Link>
                             </li>
                         </ul>
@@ -121,7 +120,7 @@ export default function Footer() {
                             rel="noopener noreferrer"
                             className="font-medium text-zinc-900 dark:text-zinc-50 hover:underline">
                             @vudovn
-                        </a>. All rights reserved.
+                        </a>。保留所有权利。
                     </p>
 
                     {/* Social Links */}

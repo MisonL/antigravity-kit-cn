@@ -23,7 +23,7 @@ export default function ThemeToggle() {
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             variant="ghost"
             size="icon"
-            aria-label="Toggle theme"
+            aria-label="切换主题"
         >
             {theme === 'dark' ? (
                 <svg

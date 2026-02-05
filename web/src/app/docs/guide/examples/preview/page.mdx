@@ -1,77 +1,77 @@
 export const metadata = {
-  title: "Example: Preview Management | Antigravity Kit",
-  description: "Learn how to use the /preview workflow to manage your local development server.",
+  title: "示例：预览管理 | Antigravity Kit",
+  description: "学习如何使用 /preview 管理本地开发服务器。",
 };
 
 import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip, FeatureGrid, Feature } from '@/components/mdx'
 
-# Preview Management
+# 预览管理
 
-Manage your local development server with the `/preview` workflow.
+使用 `/preview` 管理本地开发服务器。
 
-## Overview
+## 概览
 
-The `/preview` command manages your local development server.
-Start, stop, restart, or check the status with simple commands.
+`/preview` 用于管理本地开发服务器。
+你可以用简单命令启动、停止、重启或检查状态。
 
 <FeatureGrid>
-  <Feature title="start" description="Launch server" />
-  <Feature title="stop" description="Kill server" />
-  <Feature title="restart" description="Reload" />
-  <Feature title="check" description="Health" />
+  <Feature title="start" description="启动服务" />
+  <Feature title="stop" description="停止服务" />
+  <Feature title="restart" description="重启" />
+  <Feature title="check" description="健康检查" />
 </FeatureGrid>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Start Server">
+  <Step number={1} title="启动服务">
     ```bash
     /preview start
     ```
   </Step>
-  <Step number={2} title="Check Status">
+  <Step number={2} title="检查状态">
     ```bash
     /preview
     ```
   </Step>
-  <Step number={3} title="Stop Server">
+  <Step number={3} title="停止服务">
     ```bash
     /preview stop
     ```
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
   <TerminalLine type="user">/preview start</TerminalLine>
 
   <TerminalBlock>
-    <TerminalLine type="agent">**🚀 Starting preview...**</TerminalLine>
+    <TerminalLine type="agent">**🚀 正在启动预览...**</TerminalLine>
     <div className="text-xs mt-2">
-      Port: 3000<br/>
-      Type: Next.js
+      端口：3000<br/>
+      类型：Next.js
     </div>
   </TerminalBlock>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**✅ Preview ready!**</TerminalLine>
+    <TerminalLine type="agent">**✅ 预览就绪！**</TerminalLine>
     URL: <span className="text-blue-400">http://localhost:3000</span>
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Auto-detection">
-    Automatically detects Next.js, Vite, etc.
+  <Tip title="自动识别">
+    自动识别 Next.js、Vite 等框架。
   </Tip>
-  <Tip title="Port Conflict">
-    Suggests alternatives if port 3000 is busy.
+  <Tip title="端口冲突">
+    当 3000 被占用时，会给出替代端口建议。
   </Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Run `/preview start` to launch your dev server
-- See [Deployment](/docs/guide/examples/deployment) to go live
+- 运行 `/preview start` 启动开发服务器
+- 查看 [生产部署](/docs/guide/examples/deployment) 进行上线

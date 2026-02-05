@@ -1,93 +1,93 @@
 export const metadata = {
-  title: "Example: Production Deployment | Antigravity Kit",
-  description: "Learn how to strictly and safely deploy applications using the /deploy workflow.",
+  title: "示例：生产部署 | Antigravity Kit",
+  description: "学习如何使用 /deploy 进行严格且安全的部署。",
 };
 
 import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip } from '@/components/mdx'
 
-# Production Deployment
+# 生产部署
 
-Ship with confidence using the safety-first `/deploy` workflow.
+使用安全优先的 `/deploy` 工作流，自信发布。
 
-## Overview
+## 概览
 
-The `/deploy` command is an **Audit & Release Conductor**.
-It forces your code to pass a rigorous health check before deployment.
+`/deploy` 是一个**审计与发布指挥器**。
+它会在部署前强制进行严格健康检查。
 
 <Callout type="info" title="It stops you from deploying if:">
-  - Security vulnerabilities are found
-  - Linting errors exist
-  - TypeScript types are invalid
-  - Critical tests fail
+  - 发现安全漏洞
+  - 存在 Lint 错误
+  - TypeScript 类型无效
+  - 关键测试失败
 </Callout>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Execute Command">
-    When your code is ready, trigger the deployment pipeline.
+  <Step number={1} title="执行命令">
+    代码就绪后，触发部署流水线。
 
     ```bash
     /deploy
     ```
   </Step>
-  <Step number={2} title="Pre-Flight Checklist">
-    The agent automatically audits your project health.
+  <Step number={2} title="起飞前检查">
+    智能体自动审计项目健康状况。
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
-        <h4 className="text-sm font-semibold mb-1">🛡️ Security</h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">Scans for vulnerabilities & secrets</p>
+        <h4 className="text-sm font-semibold mb-1">🛡️ 安全</h4>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">扫描漏洞与密钥泄露</p>
       </div>
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
-        <h4 className="text-sm font-semibold mb-1">📋 Quality</h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">Enforces Linting & Type Safety</p>
+        <h4 className="text-sm font-semibold mb-1">📋 质量</h4>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">执行 Lint 与类型安全检查</p>
       </div>
     </div>
   </Step>
-  <Step number={3} title="Release">
-    If checks pass, it builds and pushes to your platform (Vercel, Docker, etc).
+  <Step number={3} title="发布">
+    检查通过后，构建并发布到平台（Vercel、Docker 等）。
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
   <TerminalLine type="user">/deploy</TerminalLine>
 
   <TerminalBlock>
-    <TerminalLine type="agent">**Running Pre-Flight Checks...**</TerminalLine>
+    <TerminalLine type="agent">**正在运行起飞前检查...**</TerminalLine>
     <div className="space-y-1 mt-2">
-      <div>🔄 Security Scan... <span className="text-green-400">PASSED</span></div>
-      <div>🔄 Lint Check... <span className="text-green-400">PASSED</span></div>
-      <div>🔄 Type Validation... <span className="text-green-400">PASSED</span></div>
+      <div>🔄 安全扫描... <span className="text-green-400">通过</span></div>
+      <div>🔄 Lint 检查... <span className="text-green-400">通过</span></div>
+      <div>🔄 类型校验... <span className="text-green-400">通过</span></div>
     </div>
     <br/>
-    <span className="text-green-400">✅ All checks passed!</span>
-    Deploying to Vercel...
+    <span className="text-green-400">✅ 全部通过！</span>
+    正在部署到 Vercel...
   </TerminalBlock>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**🚀 Deployment Complete!**</TerminalLine>
+    <TerminalLine type="agent">**🚀 部署完成！**</TerminalLine>
     <div className="space-y-1 mt-2">
-      <div>🌐 URL: <span className="text-blue-400">https://my-app.vercel.app</span></div>
-      <div>💚 Health Check: <span className="text-green-400">OK</span></div>
+      <div>🌐 地址：<span className="text-blue-400">https://my-app.vercel.app</span></div>
+      <div>💚 健康检查：<span className="text-green-400">OK</span></div>
     </div>
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Check First">
-    Run `/deploy check` to dry-run validations without deploying.
+  <Tip title="先检查">
+    运行 `/deploy check` 进行预检，不执行部署。
   </Tip>
-  <Tip title="Rollback Safety">
-    Use `/deploy rollback` to instantly revert to the last stable version.
+  <Tip title="安全回滚">
+    使用 `/deploy rollback` 立即回滚到上一个稳定版本。
   </Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Try `/deploy check` to run pre-flight checks
-- Learn about [Multi-Agent Orchestration](/docs/guide/examples/orchestration)
+- 运行 `/deploy check` 执行预检查
+- 了解 [多智能体编排](/docs/guide/examples/orchestration)

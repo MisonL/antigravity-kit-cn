@@ -9,24 +9,45 @@ import { Button } from '@/components/ui/button';
 
 const navSections = [
     {
-        title: 'Getting Started',
+        title: '快速开始',
         items: [
-            { href: '/docs', label: 'Introduction' },
-            { href: '/docs/installation', label: 'Installation' },
+            { href: '/docs', label: '介绍' },
+            { href: '/docs/installation', label: '安装' },
         ],
     },
     {
-        title: 'Core Concepts',
+        title: '核心概念',
         items: [
-            { href: '/docs/agents', label: 'Agents' },
-            { href: '/docs/skills', label: 'Skills' },
-            { href: '/docs/workflows', label: 'Workflows' },
+            { href: '/docs/agents', label: '智能体' },
+            { href: '/docs/skills', label: '技能' },
+            { href: '/docs/rules-workflows', label: '规则与工作流' },
+            { href: '/docs/workflows', label: '斜杠工作流' },
+            { href: '/docs/task-groups', label: '任务组' },
+            { href: '/docs/agent-modes-settings', label: 'Agent 模式与设置' },
         ],
     },
     {
-        title: 'CLI Reference',
+        title: 'Agent 机制',
         items: [
-            { href: '/docs/cli', label: 'Commands & Options' },
+            { href: '/docs/agent', label: 'Agent 介绍' },
+            { href: '/docs/artifacts', label: 'Artifacts' },
+            { href: '/docs/task-list', label: 'Task List' },
+            { href: '/docs/implementation-plan', label: 'Implementation Plan' },
+            { href: '/docs/knowledge', label: 'Knowledge' },
+        ],
+    },
+    {
+        title: '编辑器能力',
+        items: [
+            { href: '/docs/browser-subagent', label: '浏览器子智能体' },
+            { href: '/docs/mcp', label: 'MCP 集成' },
+            { href: '/docs/command', label: 'Command' },
+        ],
+    },
+    {
+        title: 'CLI 参考',
+        items: [
+            { href: '/docs/cli', label: '命令与选项' },
         ],
     },
 ];
@@ -46,7 +67,7 @@ export default function MobileMenu() {
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="lg:hidden p-2 rounded-md text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-                aria-label="Toggle menu"
+                aria-label="切换菜单"
             >
                 {isOpen ? (
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

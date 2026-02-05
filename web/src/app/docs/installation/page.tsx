@@ -1,35 +1,38 @@
 import Link from "next/link";
 import { Callout } from "@/components/mdx";
+import agents from "@/services/agents.json";
+import skills from "@/services/skills.json";
+import workflows from "@/services/workflows.json";
 
 export const metadata = {
-  title: "Installation | Antigravity Kit",
-  description: "Get started with Antigravity Kit in under a minute.",
+  title: "安装 | Antigravity Kit",
+  description: "一分钟内完成 Antigravity Kit 安装。",
 };
 
 export default function InstallationPage() {
   return (
     <div className="max-w-3xl">
       <nav className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-        <Link href="/docs" className="hover:text-zinc-900 dark:hover:text-zinc-50">Docs</Link>
+        <Link href="/docs" className="hover:text-zinc-900 dark:hover:text-zinc-50">文档</Link>
         <span>/</span>
-        <span className="text-zinc-900 dark:text-zinc-50">Installation</span>
+        <span className="text-zinc-900 dark:text-zinc-50">安装</span>
       </nav>
 
       <div className="mb-8 pb-8 border-b border-zinc-200 dark:border-zinc-800">
         <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-          Installation
+          安装
         </h1>
         <p className="text-lg text-zinc-600 dark:text-zinc-400">
-          Get started with Antigravity Kit in under a minute.
+          一分钟内完成 Antigravity Kit 安装。
         </p>
       </div>
 
       <section id="quick-start" className="mb-12 scroll-mt-16">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-          Quick Start
+          快速开始
         </h2>
         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-          The fastest way to install Antigravity Kit is using <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">npx</code> in root project:
+          在项目根目录使用 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">npx</code> 是最快的安装方式：
         </p>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
@@ -37,16 +40,16 @@ export default function InstallationPage() {
         </pre>
 
         <Callout type="info">
-          <strong>Note:</strong> This command will create a <code>.agent</code> folder in your current directory containing all templates.
+          <strong>提示：</strong>此命令会在当前目录创建包含全部模板的 <code>.agent</code> 文件夹。
         </Callout>
       </section>
 
       <section id="global-install" className="mb-12 scroll-mt-16">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-          Global Installation
+          全局安装
         </h2>
         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-          Install the CLI globally to use <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code> command anywhere:
+          全局安装 CLI，即可在任意位置使用 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code>：
         </p>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-2 text-sm font-mono text-zinc-100">
@@ -58,50 +61,50 @@ export default function InstallationPage() {
         </pre>
 
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-          Read other commands in <Link className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300" href="/docs/cli">CLI commands</Link> documentation.
+          其他命令请查看 <Link className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300" href="/docs/cli">CLI 参考</Link>。
         </p>
       </section>
 
       <section id="structure" className="mb-12 scroll-mt-16">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-          What Gets Installed
+          安装内容
         </h2>
         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-          After running the installation command, you'll have the following structure:
+          安装后会生成如下结构：
         </p>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
 {`.agent/
-├── agents/          # 16 Specialist Agents
-├── skills/          # 40+ Skills
-├── workflows/       # 11 Slash Commands
-├── rules/           # Workspace Rules
-└── ARCHITECTURE.md  # Full documentation`}
+├── agents/          # ${agents.length} 个专家智能体
+├── skills/          # ${skills.length}+ 个技能
+├── workflows/       # ${workflows.length} 个斜杠命令
+├── rules/           # 工作区规则
+└── ARCHITECTURE.md  # 架构文档`}
         </pre>
 
         <div className="space-y-4">
           <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
             <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">agents/</h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Contains 16 specialist AI agent configurations for different domains (frontend, backend, security, etc.)
+              包含 {agents.length} 个面向不同领域的专家智能体配置（前端、后端、安全等）
             </p>
           </div>
           <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
             <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">skills/</h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              40+ domain-specific knowledge modules that agents can use
+              {skills.length}+ 个可被智能体加载的领域知识模块
             </p>
           </div>
           <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
             <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">workflows/</h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              11 slash command procedures for common development tasks
+              {workflows.length} 个面向常见任务的斜杠命令流程
             </p>
           </div>
           <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
             <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">rules/</h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Workspace configuration including <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">GEMINI.md</code> for behavior rules
+              工作区配置（包含行为规则 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">GEMINI.md</code>）
             </p>
           </div>
         </div>
@@ -109,54 +112,54 @@ export default function InstallationPage() {
 
       <section id="requirements" className="mb-12 scroll-mt-16">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-          System Requirements
+          系统要求
         </h2>
         <ul className="space-y-2 text-base text-zinc-600 dark:text-zinc-400 mb-6">
           <li className="flex items-start gap-2">
             <svg className="w-5 h-5 text-green-600 dark:text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span>Node.js 16.0 or later</span>
+            <span>Node.js 16.0 或更高</span>
           </li>
           <li className="flex items-start gap-2">
             <svg className="w-5 h-5 text-green-600 dark:text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span>npm or yarn package manager</span>
+            <span>npm 或 yarn 包管理器</span>
           </li>
           <li className="flex items-start gap-2">
             <svg className="w-5 h-5 text-green-600 dark:text-green-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span>Git (for updates and version control)</span>
+            <span>Git（用于更新与版本控制）</span>
           </li>
         </ul>
       </section>
 
       <section className="mb-12">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-          Next Steps
+          下一步
         </h2>
         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-          Now that you have Antigravity Kit installed, learn about the core concepts:
+          安装完成后，可进一步了解核心概念：
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <Link
             href="/docs/agents"
             className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
           >
-            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Agents →</h3>
+            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">智能体 →</h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Learn about specialist AI agents
+              了解专家智能体
             </p>
           </Link>
           <Link
             href="/docs/skills"
             className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
           >
-            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Skills →</h3>
+            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">技能 →</h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Discover 40+ domain-specific skills
+              查看领域知识技能
             </p>
           </Link>
         </div>
@@ -170,13 +173,13 @@ export default function InstallationPage() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Introduction
+          介绍
         </Link>
         <Link
           href="/docs/agents"
           className="text-sm font-medium text-zinc-900 dark:text-zinc-50 hover:underline flex items-center gap-1"
         >
-          Agents
+          智能体
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>

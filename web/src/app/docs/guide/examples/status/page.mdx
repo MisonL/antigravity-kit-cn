@@ -1,31 +1,31 @@
 export const metadata = {
-  title: "Example: Project Status | Antigravity Kit",
-  description: "Learn how to use the /status workflow to view your project and agent status at a glance.",
+  title: "示例：项目状态 | Antigravity Kit",
+  description: "学习如何使用 /status 一览项目与智能体状态。",
 };
 
 import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip, FeatureGrid, Feature } from '@/components/mdx'
 
-# Project Status
+# 项目状态
 
-Get a complete overview of your project with the `/status` workflow.
+使用 `/status` 获取项目全局概览。
 
-## Overview
+## 概览
 
-The `/status` command gives you a **complete dashboard view** of your project.
-See project info, tech stack, completed features, agent activity, and preview status.
+`/status` 会提供项目的**完整仪表盘视图**。
+你可以看到项目信息、技术栈、已完成的功能、智能体活动与预览状态。
 
 <FeatureGrid>
-  <Feature title="Project" description="Info & Stack" />
-  <Feature title="Agents" description="Status Board" />
-  <Feature title="Files" description="Statistics" />
-  <Feature title="Preview" description="Health Check" />
+  <Feature title="项目" description="信息与技术栈" />
+  <Feature title="智能体" description="状态看板" />
+  <Feature title="文件" description="统计数据" />
+  <Feature title="预览" description="健康检查" />
 </FeatureGrid>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Run Command">
-    Simply run the command to see your project dashboard.
+  <Step number={1} title="运行命令">
+    直接运行即可查看项目仪表盘。
 
     ```bash
     /status
@@ -33,46 +33,46 @@ See project info, tech stack, completed features, agent activity, and preview st
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
   <TerminalLine type="user">/status</TerminalLine>
 
   <TerminalBlock>
-    <div className="text-yellow-400 mb-2">=== Project Status ===</div>
+    <div className="text-yellow-400 mb-2">=== 项目状态 ===</div>
     <div className="space-y-1 mb-4">
-      <div>📁 Project: my-ecommerce</div>
-      <div>🏷️ Type: nextjs-ecommerce</div>
-      <div>📄 Files: 73 created, 12 modified</div>
+      <div>📁 项目：my-ecommerce</div>
+      <div>🏷️ 类型：nextjs-ecommerce</div>
+      <div>📄 文件：新建 73，修改 12</div>
     </div>
 
-    <div className="text-yellow-400 mb-2">=== Agent Status ===</div>
+    <div className="text-yellow-400 mb-2">=== 智能体状态 ===</div>
     <div className="space-y-1 mb-4">
-      <div><span className="text-green-400">✅</span> database-architect → Completed</div>
-      <div><span className="text-green-400">✅</span> backend-specialist → Completed</div>
+      <div><span className="text-green-400">✅</span> database-architect → 已完成</div>
+      <div><span className="text-green-400">✅</span> backend-specialist → 已完成</div>
       <div><span className="text-blue-400">🔄</span> frontend-specialist → 60%</div>
     </div>
 
-    <div className="text-yellow-400 mb-2">=== Preview ===</div>
+    <div className="text-yellow-400 mb-2">=== 预览 ===</div>
     <div className="space-y-1">
-      <div>🌐 URL: <span className="text-blue-400">http://localhost:3000</span></div>
-      <div>💚 Health: <span className="text-green-400">OK</span></div>
+      <div>🌐 地址：<span className="text-blue-400">http://localhost:3000</span></div>
+      <div>💚 健康：<span className="text-green-400">OK</span></div>
     </div>
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Before Deploy">
-    Check status to ensure all agents completed.
+  <Tip title="部署前检查">
+    部署前先确认所有智能体都已完成。
   </Tip>
-  <Tip title="Track Progress">
-    Monitor multi-agent orchestration in real-time.
+  <Tip title="追踪进度">
+    实时监控多智能体编排进度。
   </Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Run `/status` to check project state
-- See [Deployment](/docs/guide/examples/deployment) when ready to ship
+- 运行 `/status` 检查项目状态
+- 准备上线时查看 [生产部署](/docs/guide/examples/deployment)

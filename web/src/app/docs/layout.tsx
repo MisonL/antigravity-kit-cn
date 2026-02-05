@@ -4,8 +4,8 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
 export const metadata: Metadata = {
-    title: "Documentation | Antigravity Kit",
-    description: "Complete documentation for Antigravity Kit - AI Agent templates with Skills, Agents, and Workflows.",
+    title: "文档 | Antigravity Kit",
+    description: "Antigravity Kit 完整文档：Skills、Agents 与 Workflows 模板集合。",
 };
 
 export default function DocsLayout({
@@ -34,10 +34,10 @@ export default function DocsLayout({
                     <aside className="hidden xl:block w-64 shrink-0 sticky top-[57px] h-[calc(100vh-3.5rem)] overflow-y-auto py-8 scrollbar-thin">
                         <div className="text-sm">
                             <div className="font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
-                                On This Page
+                                本页内容
                             </div>
                             <div className="text-xs text-zinc-500 dark:text-zinc-500">
-                                Table of contents coming soon
+                                目录即将上线
                             </div>
                         </div>
                     </aside>

@@ -21,9 +21,9 @@ Antigravity Kit 不是一个简单的"提示词库"，而是一个**模块化的
 **硬盘全量安装，内存按需加载。**
 系统不会一次性把所有 Prompt 塞给 AI。只有当用户触发特定领域时，相关的文件才会被读取。
 
-- **P0 级**：`GEMINI.md` (始终激活)
-- **P1 级**：`Agent.md` (根据请求路由激活)
-- **P2 级**：`Skill.md` (根据 Agent 需求激活)
+- **P0 级**：规则文件 (全局 `~/.gemini/GEMINI.md` 或工作区 `.agent/rules/*.md`)
+- **P1 级**：Agent 定义 (`.agent/agents/<agent>.md`)
+- **P2 级**：Skill 指令 (`.agent/skills/<skill>/SKILL.md`)
 
 ### 🤖 智能路由 (Intelligent Routing)
 
@@ -39,13 +39,15 @@ Antigravity Kit 不是一个简单的"提示词库"，而是一个**模块化的
 
 ```
 .agent/
-├── ARHCITECTURE.md       # 本文件
+├── ARCHITECTURE.md       # 本文件
 ├── agents/               # 智能体定义 (Persona)
 │   ├── frontend-specialist.md
 │   ├── backend-specialist.md
 │   └── ...
+├── rules/                # 规则 (Workspace Rules)
+│   └── GEMINI.md
 ├── skills/               # 技能库 (Knowledge)
-│   ├── react-best-practices/
+│   ├── nextjs-react-expert/
 │   ├── api-patterns/
 │   └── ...
 ├── workflows/            # 工作流 (Slash Commands)
@@ -70,7 +72,7 @@ Antigravity Kit 不是一个简单的"提示词库"，而是一个**模块化的
 description: 前端开发专家
 skills:
     - frontend-design
-    - react-best-practices
+    - nextjs-react-expert
     - tailwind-patterns
 ---
 ```

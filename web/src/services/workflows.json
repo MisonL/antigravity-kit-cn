@@ -1,46 +1,46 @@
 [
     {
         "command": "/brainstorm",
-        "description": "Socratic discovery"
+        "description": "结构化头脑风暴，明确项目需求"
     },
     {
         "command": "/create",
-        "description": "Create new features"
+        "description": "创建新项目或新功能，包含脚手架生成"
     },
     {
         "command": "/debug",
-        "description": "Debug issues"
+        "description": "调试模式。激活 DEBUG 模式以进行系统化问题排查。"
     },
     {
         "command": "/deploy",
-        "description": "Deploy application"
+        "description": "部署命令。用于生产环境发布。"
     },
     {
         "command": "/enhance",
-        "description": "Improve existing code"
+        "description": "改进现有代码，添加功能或重构"
     },
     {
         "command": "/orchestrate",
-        "description": "Multi-agent coordination"
+        "description": "多智能体协同，处理复杂任务"
     },
     {
         "command": "/plan",
-        "description": "Task breakdown"
+        "description": "制定详细的项目实施计划"
     },
     {
         "command": "/preview",
-        "description": "Preview changes"
+        "description": "启动预览服务器并检查状态"
     },
     {
         "command": "/status",
-        "description": "Check project status"
+        "description": "检查项目和智能体状态"
     },
     {
         "command": "/test",
-        "description": "Run tests"
+        "description": "生成测试用例并运行测试"
     },
     {
         "command": "/ui-ux-pro-max",
-        "description": "Design with 50 styles"
+        "description": "创建具有高设计质量、可用于生产环境的前端界面"
     }
 ]

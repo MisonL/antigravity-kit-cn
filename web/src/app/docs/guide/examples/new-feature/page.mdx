@@ -1,102 +1,112 @@
 export const metadata = {
-  title: "Example: Add a New Feature | Antigravity Kit",
-  description: "Step-by-step guide on adding new features to an existing application using Antigravity Kit workflows.",
+    title: "示例：新增功能 | Antigravity Kit",
+    description: "使用 Antigravity Kit 工作流为现有应用添加新功能的分步指南。",
 };
 
-import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip } from '@/components/mdx'
+import {
+    Callout,
+    StepList,
+    Step,
+    Terminal,
+    TerminalLine,
+    TerminalBlock,
+    ProTips,
+    Tip,
+} from "@/components/mdx";
 
-# Add a New Feature
+# 新增功能
 
-Learn how to safely add complex features to an existing codebase using the `/enhance` workflow.
+学习如何使用 `/enhance` 安全地为现有代码库增加复杂功能。
 
-## Overview
+## 概览
 
-The `/enhance` workflow is your day-to-day tool for iterative development.
-Unlike `/create` which builds from scratch, `/enhance` focuses on surgically adding functionality without breaking existing code.
+`/enhance` 是日常迭代的主力工具。
+不同于从零构建的 `/create`，`/enhance` 关注“微创式”地新增功能，避免破坏既有代码。
 
-<Callout type="info">
-  **Scenario:** Adding a "Dashboard Analytics" feature to an existing SaaS application.
-</Callout>
+<Callout type="info">**场景：**为现有 SaaS 应用添加“仪表盘分析”功能。</Callout>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Feature Planning">
-    Describe your feature requirements clearly.
+  <Step number={1} title="需求规划">
+    清晰描述你的功能需求。
 
     ```bash
-    /enhance Add an analytics dashboard for user activity
-    Requirements:
-    - Track daily active users and page views
-    - Visual charts using Recharts
-    - API endpoint to aggregate data
+    /enhance 添加用户活动分析仪表盘
+    需求：
+    - 追踪每日活跃用户和页面浏览量
+    - 使用 Recharts 可视化图表
+    - 聚合数据的 API 接口
     ```
+
   </Step>
-  <Step number={2} title="Component Implementation">
-    Specialists implement the full vertical slice.
+  <Step number={2} title="组件实现">
+    专家智能体按垂直切片完成实现。
 
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 text-center">
-        <div className="text-xs font-semibold">Database</div>
+        <div className="text-xs font-semibold">数据库</div>
       </div>
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 text-center">
-        <div className="text-xs font-semibold">Backend</div>
+        <div className="text-xs font-semibold">后端</div>
       </div>
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 text-center">
-        <div className="text-xs font-semibold">Frontend</div>
+        <div className="text-xs font-semibold">前端</div>
       </div>
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 text-center">
-        <div className="text-xs font-semibold">Testing</div>
+        <div className="text-xs font-semibold">测试</div>
       </div>
     </div>
+
   </Step>
-  <Step number={3} title="Verify Integration">
-    Run `final checks` to validate bundle size, accessibility, and tests.
+  <Step number={3} title="验证集成">
+    运行 `final checks` 验证包体积、可访问性与测试。
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
-  <TerminalLine type="user">/enhance add dark mode toggle</TerminalLine>
+  <TerminalLine type="user">/enhance 添加深色模式切换</TerminalLine>
 
-  <TerminalBlock>
-    <TerminalLine type="agent">**Analyzing codebase...**</TerminalLine>
+<TerminalBlock>
+    <TerminalLine type="agent">**正在分析代码库...**</TerminalLine>
     <div className="text-xs mt-2">
-      Found: Tailwind CSS with no dark mode config<br/>
-      Plan: Update tailwind.config, add ThemeProvider, create toggle component
+        发现：Tailwind CSS 未配置暗色模式
+        <br />
+        计划：更新 tailwind.config，添加 ThemeProvider，创建切换组件
     </div>
-  </TerminalBlock>
+</TerminalBlock>
 
-  <div className="space-y-2 pl-8 mb-4">
+<div className="space-y-2 pl-8 mb-4">
     <div className="flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
-      <span><strong>Frontend:</strong> Creating ThemeToggle...</span>
+        <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+        <span>
+            <strong>前端：</strong>正在创建 ThemeToggle...
+        </span>
     </div>
     <div className="flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-      <span><strong>Testing:</strong> Adding theme tests...</span>
+        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        <span>
+            <strong>测试：</strong>正在添加主题测试...
+        </span>
     </div>
-  </div>
+</div>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**✅ Feature Added!**</TerminalLine>
-    <span className="text-zinc-400">Run `/preview start` to test.</span>
+    <TerminalLine type="agent">**✅ 功能已添加！**</TerminalLine>
+    <span className="text-zinc-400">运行 `/preview start` 进行测试。</span>
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Check Dependencies">
-    Use `checklist.py` to prevent bundle bloat from new libraries.
-  </Tip>
-  <Tip title="Keep It Modular">
-    Isolate new components to minimize side effects on existing code.
-  </Tip>
+    <Tip title="检查依赖">使用 `checklist.py` 防止新增库导致包体膨胀。</Tip>
+    <Tip title="保持模块化">隔离新增组件，减少对既有代码的副作用。</Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Try `/enhance` in your project
-- See [Test Generation](/docs/guide/examples/test) for coverage
+- 在项目中尝试 `/enhance`
+- 查看 [测试生成](/docs/guide/examples/test) 了解覆盖策略

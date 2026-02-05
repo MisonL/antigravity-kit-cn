@@ -6,9 +6,9 @@ interface TerminalProps {
 
 export function Terminal({ children }: TerminalProps) {
   return (
-    <div className="bg-zinc-950 rounded-lg p-4 font-mono text-sm text-zinc-300 mb-6 overflow-x-auto">
+    <span className="block bg-zinc-950 rounded-lg p-4 font-mono text-sm text-zinc-300 mb-6 overflow-x-auto">
       {children}
-    </div>
+    </span>
   );
 }
 
@@ -31,12 +31,12 @@ export function TerminalLine({ type = "system", children }: TerminalLineProps) {
   };
 
   return (
-    <div className="mb-2">
+    <span className="block mb-2">
       {labels[type] && (
         <span className={`${colors[type]} font-semibold`}>{labels[type]} </span>
       )}
       {children}
-    </div>
+    </span>
   );
 }
 
@@ -47,12 +47,12 @@ interface TerminalBlockProps {
 
 export function TerminalBlock({ highlight, children }: TerminalBlockProps) {
   return (
-    <div
-      className={`pl-4 border-l-2 ${
+    <span
+      className={`block pl-4 border-l-2 ${
         highlight ? "border-green-800" : "border-zinc-800"
       } mb-4`}
     >
       {children}
-    </div>
+    </span>
   );
 }

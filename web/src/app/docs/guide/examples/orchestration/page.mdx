@@ -1,42 +1,54 @@
 export const metadata = {
-  title: "Example: Multi-Agent Orchestration | Antigravity Kit",
-  description: "Learn how to coordinate multiple specialist agents for complex projects using the /orchestrate workflow.",
+    title: "示例：多智能体编排 | Antigravity Kit",
+    description: "学习如何使用 /orchestrate 协调多个专家智能体完成复杂项目。",
 };
 
-import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip, FeatureGrid, Feature } from '@/components/mdx'
+import {
+    Callout,
+    StepList,
+    Step,
+    Terminal,
+    TerminalLine,
+    TerminalBlock,
+    ProTips,
+    Tip,
+    FeatureGrid,
+    Feature,
+} from "@/components/mdx";
 
-# Multi-Agent Orchestration
+# 多智能体编排
 
-Build entire SaaS platforms by coordinating specialist agents with the `/orchestrate` workflow.
+使用 `/orchestrate` 协调专家智能体，构建完整 SaaS 平台。
 
-## Overview
+## 概览
 
-Most AI interactions are 1-on-1. The `orchestrator` agent changes this by acting as a **Project Manager**.
-It breaks down a large request (e.g., "Build a SaaS MVP") into tasks and assigns them to the best specialist for the job.
+大多数 AI 交互都是一对一的。`orchestrator` 作为**项目经理**改变了这一点。
+它会把大型需求（如“构建 SaaS MVP”）拆成任务，并分配给最合适的专家。
 
 <FeatureGrid>
-  <Feature title="Backend" description="API & DB Architect" />
-  <Feature title="Frontend" description="UI/UX Specialist" />
-  <Feature title="Security" description="Safety Auditor" />
-  <Feature title="QA" description="Test Engineer" />
+    <Feature title="后端" description="API 与 DB 架构" />
+    <Feature title="前端" description="UI/UX 专家" />
+    <Feature title="安全" description="安全审计" />
+    <Feature title="QA" description="测试工程师" />
 </FeatureGrid>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Project Brief">
-    Describe the high-level goal. The orchestrator will interview you to clarify requirements.
+  <Step number={1} title="项目简述">
+    描述高层目标，orchestrator 会追问以澄清需求。
 
     ```bash
-    /orchestrate Build a "Course Platform" MVP with:
-    - User Authentication (NextAuth)
-    - Stripe Payments
-    - Video Hosting (Mux)
-    - Dashboard for Instructors
+    /orchestrate 构建一个"在线课程平台" MVP，包含：
+    - 用户认证 (NextAuth)
+    - Stripe 支付
+    - 视频托管 (Mux)
+    - 讲师仪表盘
     ```
+
   </Step>
-  <Step number={2} title="Phase 1: Planning">
-    The `project-planner` agent creates a detailed roadmap (`PLAN.md`).
+  <Step number={2} title="阶段 1：规划">
+    `project-planner` 生成详细路线图（`PLAN.md`）。
 
     <div className="bg-zinc-50 dark:bg-zinc-900 p-3 rounded-lg text-xs font-mono border-l-2 border-blue-500 mt-2">
       ...<br/>
@@ -45,55 +57,62 @@ It breaks down a large request (e.g., "Build a SaaS MVP") into tasks and assigns
       - Courses (id, title, price)<br/>
       ...
     </div>
+
   </Step>
-  <Step number={3} title="Phase 2: Execution">
-    Agents work in parallel. The Orchestrator monitors progress and unblocks dependencies.
+  <Step number={3} title="阶段 2：执行">
+    智能体并行工作，Orchestrator 监控进度并解除阻塞。
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
-  <TerminalLine type="user">/orchestrate Build E-commerce MVP</TerminalLine>
+  <TerminalLine type="user">/orchestrate 构建电商 MVP</TerminalLine>
 
-  <TerminalBlock>
-    <TerminalLine type="agent">**Activating Squad...**</TerminalLine>
-    Assigning tasks based on `PLAN.md`:
-  </TerminalBlock>
+<TerminalBlock>
+    <TerminalLine type="agent">**正在激活小队...**</TerminalLine>
+    基于 `PLAN.md` 分配任务：
+</TerminalBlock>
 
-  <div className="space-y-3 pl-8">
+<div className="space-y-3 pl-8">
     <div className="flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
-      <span><strong>Backend-Specialist:</strong> Configuring Prisma Schema...</span>
+        <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span>
+        <span>
+            <strong>Backend-Specialist:</strong> 正在配置 Prisma Schema...
+        </span>
     </div>
     <div className="flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-      <span><strong>Frontend-Specialist:</strong> Building ProductCard component...</span>
+        <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+        <span>
+            <strong>Frontend-Specialist:</strong> 正在构建 ProductCard 组件...
+        </span>
     </div>
     <div className="flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
-      <span><strong>Security-Auditor:</strong> Reviewing auth flow...</span>
+        <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+        <span>
+            <strong>Security-Auditor:</strong> 正在审查认证流程...
+        </span>
     </div>
-  </div>
+</div>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**✅ Project Complete!**</TerminalLine>
-    All tasks finished. Run `npm run dev` to start.
+    <TerminalLine type="agent">**✅ 项目完成！**</TerminalLine>
+    所有任务已结束。运行 `npm run dev` 启动。
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Start Small">
-    Don't try to build Facebook in one go. Orchestrate an MVP first, then use `/enhance` to iterate.
-  </Tip>
-  <Tip title="Define Auth">
-    Always specify how users log in (e.g., "Use NextAuth with Google"). It's a key architectural decision.
-  </Tip>
+    <Tip title="从小开始">
+        不要一次构建“完整 Facebook”。先编排 MVP，再用 `/enhance` 迭代。
+    </Tip>
+    <Tip title="明确认证方式">
+        说明用户如何登录（如“使用 NextAuth + Google”），这是关键架构决策。
+    </Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Learn about [Systematic Debugging](/docs/guide/examples/debugging) to maintain your complex app
-- See [Deployment](/docs/guide/examples/deployment) to ship your MVP
+- 了解 [系统化调试](/docs/guide/examples/debugging) 以维护复杂应用
+- 查看 [生产部署](/docs/guide/examples/deployment) 发布 MVP

@@ -1,83 +1,88 @@
 export const metadata = {
-  title: "Example: Systematic Debugging | Antigravity Kit",
-  description: "Learn how to solve complex issues using the /debug workflow's 4-phase investigation protocol.",
+    title: "示例：系统化调试 | Antigravity Kit",
+    description: "学习如何使用 /debug 的四阶段调查协议解决复杂问题。",
 };
 
-import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip } from '@/components/mdx'
+import {
+    Callout,
+    StepList,
+    Step,
+    Terminal,
+    TerminalLine,
+    TerminalBlock,
+    ProTips,
+    Tip,
+} from "@/components/mdx";
 
-# Systematic Debugging
+# 系统化调试
 
-Solve complex issues using the rigorous `/debug` workflow.
+使用严谨的 `/debug` 工作流解决复杂问题。
 
-## Overview
+## 概览
 
-The `/debug` workflow enforces a **4-phase investigation protocol** (Discovery, Hypothesis, Verification, Resolution). It prevents guess-driven development by requiring evidence before code changes.
+`/debug` 强制执行 **四阶段调查协议**（发现、假设、验证、解决）。它要求在改代码前先拿到证据，避免“拍脑袋式”开发。
 
 <Callout type="info" title="When to use:">
-  - "The login button does nothing"
-  - "API returns 500 error intermittently"
-  - "App crashes on mobile only"
+    - “登录按钮没有反应” - “API 间歇性返回 500” - “仅在移动端崩溃”
 </Callout>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Discovery">
-    Gathers facts: Error logs, user reports, reproduction steps.
+  <Step number={1} title="发现">
+    收集事实：错误日志、用户反馈、复现步骤。
 
     ```bash
-    /debug Login returns 403 even with correct credentials
+    /debug 使用正确凭据登录仍返回 403
     ```
+
   </Step>
-  <Step number={2} title="Hypothesis">
-    Formulates potential causes prioritized by likelihood.
+  <Step number={2} title="假设">
+    按可能性优先级提出潜在原因。
   </Step>
-  <Step number={3} title="Verification">
-    Systematically tests each hypothesis using scripts or logs.
+  <Step number={3} title="验证">
+    使用脚本或日志系统性验证每个假设。
   </Step>
-  <Step number={4} title="Resolution">
-    Implements the fix and adds a regression test.
+  <Step number={4} title="解决">
+    修复问题并补充回归测试。
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
-  <TerminalLine type="user">/debug Form submission fails silently</TerminalLine>
+  <TerminalLine type="user">/debug 表单提交静默失败</TerminalLine>
 
-  <TerminalBlock>
-    <TerminalLine type="agent">**Phase 1: Discovery**</TerminalLine>
-    Reading `CheckoutForm.tsx`... Found `handleSubmit`.
-    <span className="text-red-400">ERROR: Cannot read properties of undefined</span>
-  </TerminalBlock>
+<TerminalBlock>
+    <TerminalLine type="agent">**阶段 1：发现**</TerminalLine>
+    正在读取 `CheckoutForm.tsx`... 找到 `handleSubmit`。
+    <span className="text-red-400">错误：无法读取 undefined 的属性</span>
+</TerminalBlock>
 
-  <TerminalBlock>
-    <TerminalLine type="agent">**Phase 2: Hypothesis**</TerminalLine>
+<TerminalBlock>
+    <TerminalLine type="agent">**阶段 2：假设**</TerminalLine>
     <div className="text-xs mt-1">
-      1. `emailRef.current` is null on mount<br/>
-      2. Event handler not bound correctly
+        1. `emailRef.current` 在挂载时为 null
+        <br />
+        2. 事件处理函数未正确绑定
     </div>
-  </TerminalBlock>
+</TerminalBlock>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**Phase 4: Resolution**</TerminalLine>
-    Fix applied: Added null check to `emailRef`.
-    <span className="text-green-400">✅ Test passed: Form submits successfully.</span>
+    <TerminalLine type="agent">**阶段 4：解决**</TerminalLine>
+    修复：为 `emailRef` 添加空值检查。
+    <span className="text-green-400">✅ 测试通过：表单成功提交。</span>
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Provide Context">
-    Paste the exact error message or stack trace for faster discovery.
-  </Tip>
-  <Tip title="Trust, Verify">
-    Ask the agent to run the reproduction case again to confirm it's solved.
-  </Tip>
+    <Tip title="提供上下文">贴出完整错误信息或堆栈，排查更快。</Tip>
+    <Tip title="信任，但要验证">让智能体再次复现，确认问题已解决。</Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Try `/debug` on an existing bug
-- See [Deployment](/docs/guide/examples/deployment) to ship your fix
+- 在现有 Bug 上尝试 `/debug`
+- 查看 [生产部署](/docs/guide/examples/deployment) 发布修复

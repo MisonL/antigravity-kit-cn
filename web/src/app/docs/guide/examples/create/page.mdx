@@ -1,84 +1,94 @@
 export const metadata = {
-  title: "Example: Create New Application | Antigravity Kit",
-  description: "Learn how to use the /create workflow to build new applications from scratch with AI-powered wizards.",
+    title: "示例：创建新应用 | Antigravity Kit",
+    description: "学习如何使用 /create 工作流从零构建应用。",
 };
 
-import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip } from '@/components/mdx'
+import {
+    Callout,
+    StepList,
+    Step,
+    Terminal,
+    TerminalLine,
+    TerminalBlock,
+    ProTips,
+    Tip,
+} from "@/components/mdx";
 
-# Create New Application
+# 创建新应用
 
-Build complete applications from scratch with the `/create` wizard.
+使用 `/create` 向导从零构建完整应用。
 
-## Overview
+## 概览
 
-The `/create` command is your **application creation wizard**.
-It guides you through an interactive dialogue, understands your requirements,
-plans the architecture, and orchestrates specialist agents to build your app.
+`/create` 是你的**应用创建向导**。
+它会引导你进行交互式对话，理解需求、规划架构，并编排专家智能体完成构建。
 
 <Callout type="info">
-  **From idea to running app:** Just describe what you want, and the wizard handles tech stack, file structure, database schema, and implementation.
+    **从想法到可运行应用：**只需描述需求，向导会处理技术栈、目录结构、数据库
+    schema 与实现细节。
 </Callout>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Describe Your App">
-    Tell the wizard what you want to build. It will ask clarifying questions if needed.
+  <Step number={1} title="描述应用">
+    告诉向导你要构建什么。如果信息不足，它会追问澄清。
 
     ```bash
-    /create e-commerce site with product listing and cart
+    /create 带商品列表和购物车的电商网站
     ```
+
   </Step>
-  <Step number={2} title="Review Plan">
-    The `project-planner` agent creates a detailed plan. Approve to proceed.
+  <Step number={2} title="审核计划">
+    `project-planner` 会生成详细计划，确认后进入执行。
   </Step>
-  <Step number={3} title="Agents Build">
-    Specialist agents work in parallel: database-architect, backend, frontend.
+  <Step number={3} title="智能体构建">
+    专家智能体并行工作：database-architect、backend、frontend。
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
-  <TerminalLine type="user">/create todo app with dark mode</TerminalLine>
+  <TerminalLine type="user">/create 带深色模式的待办应用</TerminalLine>
 
-  <TerminalBlock>
-    <TerminalLine type="agent">**Analyzing request...**</TerminalLine>
-    Tech Stack: Next.js + Tailwind + Zustand
-    <span className="text-yellow-300">Proceed? (Y/N)</span>
-  </TerminalBlock>
+<TerminalBlock>
+    <TerminalLine type="agent">**正在分析请求...**</TerminalLine>
+    技术栈：Next.js + Tailwind + Zustand
+    <span className="text-yellow-300">继续？(Y/N)</span>
+</TerminalBlock>
 
-  <TerminalLine type="user">Y</TerminalLine>
+<TerminalLine type="user">Y</TerminalLine>
 
-  <div className="space-y-2 pl-8 mb-4">
+<div className="space-y-2 pl-8 mb-4">
     <div className="flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-      <span><strong>Backend:</strong> Creating store...</span>
+        <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+        <span>
+            <strong>Backend:</strong> 正在创建 store...
+        </span>
     </div>
     <div className="flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-      <span><strong>Frontend:</strong> Building components...</span>
+        <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
+        <span>
+            <strong>Frontend:</strong> 正在构建组件...
+        </span>
     </div>
-  </div>
+</div>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**🚀 App Created!**</TerminalLine>
-    Preview: <span className="text-blue-400">http://localhost:3000</span>
+    <TerminalLine type="agent">**🚀 应用已创建！**</TerminalLine>
+    预览地址：<span className="text-blue-400">http://localhost:3000</span>
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Be Specific">
-    "E-commerce with Stripe" beats "online store".
-  </Tip>
-  <Tip title="Start Simple">
-    Create MVP first, use `/enhance` to iterate.
-  </Tip>
+    <Tip title="更具体">“带 Stripe 的电商”优于“在线商店”。</Tip>
+    <Tip title="从简单开始">先做 MVP，再用 `/enhance` 迭代。</Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Run `/create` followed by your app idea
-- Use [Add New Feature](/docs/guide/examples/new-feature) to extend
+- 输入 `/create` 并描述你的应用
+- 使用 [新增功能](/docs/guide/examples/new-feature) 继续扩展

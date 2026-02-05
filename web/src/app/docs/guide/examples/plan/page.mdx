@@ -1,76 +1,84 @@
 export const metadata = {
-  title: "Example: Project Planning | Antigravity Kit",
-  description: "Learn how to use the /plan workflow to create detailed project plans before implementation.",
+    title: "示例：项目规划 | Antigravity Kit",
+    description: "学习如何使用 /plan 在实施前生成详细计划。",
 };
 
-import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip } from '@/components/mdx'
+import {
+    Callout,
+    StepList,
+    Step,
+    Terminal,
+    TerminalLine,
+    TerminalBlock,
+    ProTips,
+    Tip,
+} from "@/components/mdx";
 
-# Project Planning
+# 项目规划
 
-Create detailed implementation plans before writing code with the `/plan` workflow.
+在写代码前，使用 `/plan` 生成详细实施计划。
 
-## Overview
+## 概览
 
-The `/plan` command activates **planning-only mode**.
-It uses the `project-planner` agent to create a detailed plan file without writing any code.
+`/plan` 会进入**仅规划模式**。
+它使用 `project-planner` 生成详细计划文件，不写任何代码。
 
 <Callout type="info">
-  **Critical Rule:** NO CODE is written during planning. Only `PLAN.md` is created.
+    **关键规则：**规划阶段不写代码，只生成 `PLAN.md`。
 </Callout>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Describe Your Project">
-    Tell the planner what you want to build.
+  <Step number={1} title="描述项目">
+    告诉规划器你要构建什么。
 
     ```bash
-    /plan e-commerce site with cart and checkout
+    /plan 带购物车和结账的电商网站
     ```
+
   </Step>
-  <Step number={2} title="Socratic Questions">
-    The planner asks clarifying questions before creating the plan.
+  <Step number={2} title="苏格拉底式提问">
+    规划器在生成计划前会先澄清问题。
   </Step>
-  <Step number={3} title="Plan Generated">
-    Creates `docs/PLAN-{slug}.md` with tasks and agent assignments.
+  <Step number={3} title="生成计划">
+    创建 `docs/PLAN-{slug}.md`，包含任务与智能体分配。
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
-  <TerminalLine type="user">/plan SaaS dashboard with analytics</TerminalLine>
+  <TerminalLine type="user">/plan 带分析功能的 SaaS 仪表盘</TerminalLine>
 
-  <TerminalBlock>
-    <TerminalLine type="agent">**Clarifying Questions:**</TerminalLine>
+<TerminalBlock>
+    <TerminalLine type="agent">**澄清问题：**</TerminalLine>
     <div className="text-yellow-300 text-xs mt-2">
-      1. What metrics? (users, revenue?)<br/>
-      2. Real-time or daily?<br/>
-      3. Charting library?
+        1. 哪些指标？（用户、收入？）
+        <br />
+        2. 实时还是按天？
+        <br />
+        3. 使用哪种图表库？
     </div>
-  </TerminalBlock>
+</TerminalBlock>
 
-  <TerminalLine type="user">Users + revenue, real-time, Recharts</TerminalLine>
+<TerminalLine type="user">用户 + 收入，实时，Recharts</TerminalLine>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**✅ Plan Created!**</TerminalLine>
+    <TerminalLine type="agent">**✅ 计划已创建！**</TerminalLine>
     `docs/PLAN-saas-dashboard.md`<br/>
-    <span className="text-zinc-400">Run `/create` to implement.</span>
+    <span className="text-zinc-400">运行 `/create` 进入实现。</span>
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Answer Thoroughly">
-    The more context you provide, the better the plan.
-  </Tip>
-  <Tip title="Edit the Plan">
-    Modify the generated plan before implementation.
-  </Tip>
+    <Tip title="回答更充分">上下文越清晰，计划越准确。</Tip>
+    <Tip title="编辑计划">在实施前调整生成的计划。</Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Run `/plan` for your next major feature
-- After planning, use [Create Application](/docs/guide/examples/create) to implement
+- 为下一个重大功能运行 `/plan`
+- 规划完成后，使用 [创建新应用](/docs/guide/examples/create) 进入实现

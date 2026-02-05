@@ -1,158 +1,234 @@
 [
     {
         "name": "orchestrator",
-        "description": "Multi-agent coordination",
+        "description": "协调专家代理、分解复杂任务、维持上下文一致性",
         "skills": [
             "parallel-agents",
-            "behavioral-modes"
+            "behavioral-modes",
+            "plan-writing",
+            "brainstorming",
+            "clean-code",
+            "architecture",
+            "lint-and-validate",
+            "powershell-windows",
+            "bash-linux"
         ]
     },
     {
         "name": "project-planner",
-        "description": "Discovery, task planning",
+        "description": "负责项目进度管理、任务拆解和资源协调",
         "skills": [
-            "brainstorming",
             "plan-writing",
-            "architecture"
+            "brainstorming",
+            "parallel-agents",
+            "clean-code",
+            "app-builder"
         ]
     },
     {
         "name": "frontend-specialist",
-        "description": "Web UI/UX",
+        "description": "负责前端架构、UI组件和用户体验的专家",
         "skills": [
             "frontend-design",
-            "react-best-practices",
+            "nextjs-react-expert",
             "tailwind-patterns",
-            "web-design-guidelines"
+            "web-design-guidelines",
+            "webapp-testing",
+            "clean-code",
+            "lint-and-validate"
         ]
     },
     {
         "name": "backend-specialist",
-        "description": "API, business logic",
+        "description": "负责后端架构、API设计、数据库和系统稳定性的专家",
         "skills": [
             "api-patterns",
             "nodejs-best-practices",
-            "database-design"
+            "database-design",
+            "server-management",
+            "vulnerability-scanner",
+            "clean-code",
+            "python-patterns",
+            "mcp-builder",
+            "lint-and-validate",
+            "powershell-windows",
+            "bash-linux",
+            "rust-pro"
         ]
     },
     {
         "name": "database-architect",
-        "description": "Schema, SQL",
+        "description": "负责数据库设计、优化、迁移和数据仓库策略",
         "skills": [
             "database-design",
-            "prisma-expert"
+            "server-management",
+            "vulnerability-scanner",
+            "clean-code"
         ]
     },
     {
         "name": "mobile-developer",
-        "description": "iOS, Android, RN",
+        "description": "负责 iOS/Android 本地应用开发",
         "skills": [
-            "mobile-design"
+            "mobile-design",
+            "api-patterns",
+            "clean-code"
         ]
     },
     {
         "name": "game-developer",
-        "description": "Game logic, mechanics",
+        "description": "负责游戏逻辑设计、图形渲染和交互体验",
         "skills": [
-            "game-development"
+            "game-development",
+            "mobile-design",
+            "clean-code",
+            "pc-games",
+            "web-games",
+            "mobile-games",
+            "game-design",
+            "multiplayer",
+            "vr-ar",
+            "2d-games",
+            "3d-games",
+            "game-art",
+            "game-audio"
         ]
     },
     {
         "name": "devops-engineer",
-        "description": "CI/CD, Docker",
+        "description": "负责部署、服务器管理、Docker和CI/CD",
         "skills": [
             "deployment-procedures",
-            "docker-expert"
+            "server-management",
+            "bash-linux",
+            "vulnerability-scanner",
+            "clean-code",
+            "powershell-windows"
         ]
     },
     {
         "name": "security-auditor",
-        "description": "Security compliance",
+        "description": "负责安全审计、漏洞扫描和合规性检查",
         "skills": [
             "vulnerability-scanner",
-            "red-team-tactics"
+            "red-team-tactics",
+            "code-review-checklist",
+            "clean-code",
+            "api-patterns"
         ]
     },
     {
         "name": "penetration-tester",
-        "description": "Offensive security",
+        "description": "模拟黑客攻击，发现系统漏洞",
         "skills": [
-            "red-team-tactics"
+            "red-team-tactics",
+            "vulnerability-scanner",
+            "bash-linux",
+            "clean-code",
+            "api-patterns"
         ]
     },
     {
         "name": "test-engineer",
-        "description": "Testing strategies",
+        "description": "编写测试用例，执行自动化测试",
         "skills": [
             "testing-patterns",
             "tdd-workflow",
-            "webapp-testing"
+            "webapp-testing",
+            "clean-code",
+            "code-review-checklist",
+            "lint-and-validate"
         ]
     },
     {
         "name": "debugger",
-        "description": "Root cause analysis",
+        "description": "系统化调试和根因分析",
         "skills": [
-            "systematic-debugging"
-        ]
-    },
-    {
-        "name": "performance-optimizer",
-        "description": "Speed, Web Vitals",
-        "skills": [
+            "systematic-debugging",
+            "clean-code",
             "performance-profiling"
         ]
     },
     {
+        "name": "performance-optimizer",
+        "description": "负责前端和后端的性能分析与优化",
+        "skills": [
+            "performance-profiling",
+            "database-design",
+            "nextjs-react-expert",
+            "clean-code"
+        ]
+    },
+    {
         "name": "seo-specialist",
-        "description": "Ranking, visibility",
+        "description": "负责搜索引擎优化策略、关键词分析和技术SEO",
         "skills": [
             "seo-fundamentals",
-            "geo-fundamentals"
+            "geo-fundamentals",
+            "web-design-guidelines",
+            "clean-code"
         ]
     },
     {
         "name": "documentation-writer",
-        "description": "Manuals, docs",
+        "description": "负责撰写技术文档、API文档和用户手册",
         "skills": [
-            "documentation-templates"
+            "documentation-templates",
+            "seo-fundamentals",
+            "clean-code"
         ]
     },
     {
         "name": "product-manager",
-        "description": "Requirements, user stories",
+        "description": "负责需求定义、路线图规划和用户价值分析",
         "skills": [
+            "brainstorming",
             "plan-writing",
-            "brainstorming"
+            "seo-fundamentals",
+            "clean-code"
         ]
     },
     {
         "name": "product-owner",
-        "description": "Strategy, backlog, MVP",
+        "description": "负责产品验收、待办事项管理和业务价值确认",
         "skills": [
             "plan-writing",
-            "brainstorming"
+            "brainstorming",
+            "clean-code"
         ]
     },
     {
         "name": "qa-automation-engineer",
-        "description": "E2E testing, CI pipelines",
+        "description": "负责编写自动化测试脚本、CI集成测试",
         "skills": [
             "webapp-testing",
-            "testing-patterns"
+            "testing-patterns",
+            "web-design-guidelines",
+            "clean-code",
+            "lint-and-validate"
         ]
     },
     {
         "name": "code-archaeologist",
-        "description": "Legacy code, refactoring",
+        "description": "负责理解遗留代码、逆向工程和文档化旧系统",
         "skills": [
             "clean-code",
+            "systematic-debugging",
+            "documentation-templates",
             "code-review-checklist"
         ]
     },
     {
         "name": "explorer-agent",
-        "description": "Codebase analysis",
-        "skills": []
+        "description": "负责探索现有代码库、生成报告和理解项目结构",
+        "skills": [
+            "clean-code",
+            "bash-linux",
+            "intelligent-routing",
+            "architecture",
+            "plan-writing",
+            "brainstorming",
+            "systematic-debugging"
+        ]
     }
 ]

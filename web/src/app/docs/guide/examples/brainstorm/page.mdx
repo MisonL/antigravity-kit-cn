@@ -1,91 +1,100 @@
 export const metadata = {
-  title: "Example: Structured Brainstorming | Antigravity Kit",
-  description: "Learn how to use the /brainstorm workflow to explore multiple options before committing to an implementation.",
+    title: "示例：结构化头脑风暴 | Antigravity Kit",
+    description: "学习如何使用 /brainstorm 在落地前探索多种方案。",
 };
 
-import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip, FeatureGrid, Feature } from '@/components/mdx'
+import {
+    Callout,
+    StepList,
+    Step,
+    Terminal,
+    TerminalLine,
+    TerminalBlock,
+    ProTips,
+    Tip,
+    FeatureGrid,
+    Feature,
+} from "@/components/mdx";
 
-# Structured Brainstorming
+# 结构化头脑风暴
 
-Explore multiple approaches before writing code with the `/brainstorm` workflow.
+在写代码之前，使用 `/brainstorm` 探索多种方案。
 
-## Overview
+## 概览
 
-The `/brainstorm` command activates a **structured ideation mode**.
-Instead of jumping straight to code, the agent explores at least 3 different approaches,
-analyzes pros and cons, and helps you make an informed decision.
+`/brainstorm` 会启用**结构化构思模式**。
+它不会直接跳到实现，而是至少提供 3 种方案，分析利弊，辅助你做出选择。
 
 <FeatureGrid>
-  <Feature title="No Code" description="Ideas only" />
-  <Feature title="3+ Options" description="Always compare" />
-  <Feature title="Pros/Cons" description="Honest tradeoffs" />
-  <Feature title="You Decide" description="Final choice" />
+    <Feature title="不写代码" description="只讨论思路" />
+    <Feature title="3+ 方案" description="对比选择" />
+    <Feature title="利弊分析" description="客观权衡" />
+    <Feature title="你来决定" description="最终拍板" />
 </FeatureGrid>
 
-## The Process
+## 流程
 
 <StepList>
-  <Step number={1} title="Describe Your Challenge">
-    Tell the agent what you want to explore. Be specific about constraints.
+  <Step number={1} title="描述挑战">
+    告诉智能体你要探索什么，并说明约束条件。
 
     ```bash
-    /brainstorm authentication system for my SaaS app
+    /brainstorm 我的 SaaS 应用的用户认证系统
     ```
+
   </Step>
-  <Step number={2} title="Review Options">
-    The agent presents 3+ approaches with pros, cons, and effort levels.
+  <Step number={2} title="查看方案">
+    智能体给出 3+ 方案，包含优缺点与工作量评估。
   </Step>
-  <Step number={3} title="Make Decision">
-    Choose an option, then use `/enhance` or `/create` to implement.
+  <Step number={3} title="做出决策">
+    选定方案后，用 `/enhance` 或 `/create` 进入实现。
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
-  <TerminalLine type="user">/brainstorm state management for complex form</TerminalLine>
+  <TerminalLine type="user">/brainstorm 复杂表单的状态管理方案</TerminalLine>
 
-  <TerminalBlock>
-    <TerminalLine type="agent">**Exploring Options...**</TerminalLine>
-  </TerminalBlock>
+<TerminalBlock>
+    <TerminalLine type="agent">**正在探索方案...**</TerminalLine>
+</TerminalBlock>
 
-  <div className="space-y-4 pl-8 mb-4">
+<div className="space-y-4 pl-8 mb-4">
     <div className="border-t border-zinc-800 pt-3">
-      <strong className="text-purple-400">Option A: React Hook Form + Zod</strong>
-      <div className="text-xs mt-1 space-y-1">
-        <div className="text-green-400">✅ Minimal re-renders, great DX</div>
-        <div className="text-red-400">❌ Learning curve</div>
-        <div className="text-yellow-400">📊 Effort: Low</div>
-      </div>
+        <strong className="text-purple-400">
+            方案 A：React Hook Form + Zod
+        </strong>
+        <div className="text-xs mt-1 space-y-1">
+            <div className="text-green-400">✅ 重渲染少，体验好</div>
+            <div className="text-red-400">❌ 学习成本</div>
+            <div className="text-yellow-400">📊 成本：低</div>
+        </div>
     </div>
     <div className="border-t border-zinc-800 pt-3">
-      <strong className="text-purple-400">Option B: Zustand</strong>
-      <div className="text-xs mt-1 space-y-1">
-        <div className="text-green-400">✅ Full control, persists across routes</div>
-        <div className="text-red-400">❌ More boilerplate</div>
-        <div className="text-yellow-400">📊 Effort: Medium</div>
-      </div>
+        <strong className="text-purple-400">方案 B：Zustand</strong>
+        <div className="text-xs mt-1 space-y-1">
+            <div className="text-green-400">✅ 可控性强，跨路由持久化</div>
+            <div className="text-red-400">❌ 样板代码多</div>
+            <div className="text-yellow-400">📊 成本：中</div>
+        </div>
     </div>
-  </div>
+</div>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**💡 Recommendation: Option A**</TerminalLine>
-    For 20+ fields, RHF minimizes re-renders.
+    <TerminalLine type="agent">**💡 推荐：方案 A**</TerminalLine>
+    20+ 字段时，RHF 能显著减少重渲染。
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 小贴士
 
 <ProTips>
-  <Tip title="Provide Context">
-    Mention constraints: "I need SSR support", "Must work offline".
-  </Tip>
-  <Tip title="Ask Follow-ups">
-    "Tell me more about Option B's scalability" before deciding.
-  </Tip>
+    <Tip title="提供上下文">说明约束："需要 SSR 支持"、"必须离线可用"。</Tip>
+    <Tip title="继续追问">在决定前可询问："方案 B 的可扩展性如何？"</Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Try `/brainstorm` for your next architecture decision
-- After deciding, use [Add New Feature](/docs/guide/examples/new-feature) to implement
+- 在下一次架构决策中使用 `/brainstorm`
+- 做出选择后，使用 [新增功能](/docs/guide/examples/new-feature) 进入实现

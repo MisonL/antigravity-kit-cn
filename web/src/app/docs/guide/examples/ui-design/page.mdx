@@ -1,90 +1,108 @@
 export const metadata = {
-  title: "Example: Advanced UI Design | Antigravity Kit",
-  description: "Learn how to build high-conversion landing pages using the /ui-ux-pro-max workflow and style prompts.",
+    title: "示例：高级 UI 设计 | Antigravity Kit",
+    description: "学习如何使用 /ui-ux-pro-max 和风格提示构建高转化落地页。",
 };
 
-import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips, Tip } from '@/components/mdx'
+import {
+    Callout,
+    StepList,
+    Step,
+    Terminal,
+    TerminalLine,
+    TerminalBlock,
+    ProTips,
+    Tip,
+} from "@/components/mdx";
 
-# Advanced UI Design
+# 高级 UI 设计
 
-Create stunning, high-conversion landing pages instantly with the `/ui-ux-pro-max` workflow.
+使用 `/ui-ux-pro-max` 立刻生成高转化的落地页。
 
-## Overview
+## 概览
 
-This is a standardized workflow designed specifically for **Rapid Landing Page Development**.
+这是一个专为**快速落地页开发**设计的标准化工作流。
 
 <Callout type="info">
-  **Powered by NextLevelBuilder:** This workflow is optimized to work with the curated style prompts from [nextlevelbuilder.io](https://ui-ux-pro-max-skill.nextlevelbuilder.io/#styles). You pick a style, and the AI handles the execution.
+    **由 NextLevelBuilder 驱动：**该工作流与
+    [nextlevelbuilder.io](https://ui-ux-pro-max-skill.nextlevelbuilder.io/#styles)
+    的精选风格提示深度适配。你选择风格，AI 负责实现。
 </Callout>
 
-## The Process
+## 过程
 
 <StepList>
-  <Step number={1} title="Choose Your Style">
-    Visit [nextlevelbuilder.io](https://ui-ux-pro-max-skill.nextlevelbuilder.io/#styles) and copy a style prompt (e.g., "Modern SaaS - Dark Mode").
+  <Step number={1} title="选择风格">
+    访问 [nextlevelbuilder.io](https://ui-ux-pro-max-skill.nextlevelbuilder.io/#styles) 并复制风格提示（如 "Modern SaaS - Dark Mode"）。
   </Step>
-  <Step number={2} title="Run the Command">
-    Paste the style prompt and your content requirements.
+  <Step number={2} title="运行命令">
+    粘贴风格提示与内容需求。
 
     ```bash
-    /ui-ux-pro-max Create a friendly pet grooming service landing page with claymorphism cards,
-    service packages, pet gallery, booking system, and testimonials from pet owners.
-    Use playful warm colors.
+    /ui-ux-pro-max 创建一个友好的宠物美容服务落地页，使用粘土拟态卡片，
+    包含服务套餐、宠物画廊、预约系统和宠物主人评价。
+    使用温暖活泼的配色。
     ```
+
   </Step>
-  <Step number={3} title="The Construction">
-    The agent automatically builds the entire page structure.
+  <Step number={3} title="构建阶段">
+    智能体自动搭建完整页面结构。
 
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
-        <h4 className="text-sm font-semibold mb-1">📐 Structure</h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">Semantic HTML5 & SEO hierarchy</p>
+        <h4 className="text-sm font-semibold mb-1">📐 结构</h4>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">语义化 HTML5 与 SEO 层级</p>
       </div>
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
-        <h4 className="text-sm font-semibold mb-1">🧩 Components</h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">Reusable, accessible UI blocks</p>
+        <h4 className="text-sm font-semibold mb-1">🧩 组件</h4>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">可复用、可访问的 UI 模块</p>
       </div>
       <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
-        <h4 className="text-sm font-semibold mb-1">✨ Interactivity</h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">Micro-animations & responsiveness</p>
+        <h4 className="text-sm font-semibold mb-1">✨ 交互</h4>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">微动效与响应式体验</p>
       </div>
     </div>
+
   </Step>
 </StepList>
 
-## Example Session
+## 示例对话
 
 <Terminal>
-  <TerminalLine type="user">/ui-ux-pro-max Create a friendly pet grooming service landing page with claymorphism cards, service packages, pet gallery, booking system, and testimonials from pet owners. Use playful warm colors</TerminalLine>
+  <TerminalLine type="user">/ui-ux-pro-max 创建一个友好的宠物美容服务落地页，使用粘土拟态卡片，包含服务套餐、宠物画廊、预约系统和宠物主人评价。使用温暖活泼的配色。</TerminalLine>
 
-  <TerminalBlock>
-    <TerminalLine type="agent">**Analyzing Style...**</TerminalLine>
-    Loading "Modern SaaS"...<br/>
+<TerminalBlock>
+    <TerminalLine type="agent">**正在分析风格...**</TerminalLine>
+    正在加载 "Modern SaaS"...
+    <br />
     <div className="text-xs text-zinc-500 mt-2">
-      <div>🎨 <strong>Colors:</strong> Indigo-500 primary, Slate-900 bg</div>
-      <div>✨ <strong>Effects:</strong> Glassmorphism cards</div>
+        <div>
+            🎨 <strong>配色：</strong>Indigo-500 主色，Slate-900 背景
+        </div>
+        <div>
+            ✨ <strong>效果：</strong>玻璃拟态卡片
+        </div>
     </div>
-  </TerminalBlock>
+</TerminalBlock>
 
   <TerminalBlock highlight>
-    <TerminalLine type="agent">**✅ Page Complete!**</TerminalLine>
-    Created `app/page.tsx`<br/>
-    <span className="text-green-400">Run `/preview start` to view.</span>
+    <TerminalLine type="agent">**✅ 页面完成！**</TerminalLine>
+    已创建 `app/page.tsx`<br/>
+    <span className="text-green-400">运行 `/preview start` 查看。</span>
   </TerminalBlock>
 </Terminal>
 
-## Pro Tips
+## 专家建议
 
 <ProTips>
-  <Tip title="Be Specific">
-    Instead of "nice design", use "glassmorphism dark mode with neon accents".
-  </Tip>
-  <Tip title="List Sections">
-    Explicitly list "Hero, Features, Pricing, FAQ" to ensure a complete layout.
-  </Tip>
+    <Tip title="更具体">
+        不要只说“好看”，改成“玻璃拟态 + 深色模式 + 霓虹点缀”。
+    </Tip>
+    <Tip title="列出区块">
+        明确列出“Hero、Features、Pricing、FAQ”等，保证布局完整。
+    </Tip>
 </ProTips>
 
-## Next Steps
+## 下一步
 
-- Browse styles at [NextLevelBuilder Style Gallery](https://ui-ux-pro-max-skill.nextlevelbuilder.io/#styles)
-- See [Production Deployment](/docs/guide/examples/deployment) to ship your page
+- 浏览 [NextLevelBuilder 风格库](https://ui-ux-pro-max-skill.nextlevelbuilder.io/#styles)
+- 查看 [生产部署](/docs/guide/examples/deployment) 发布页面

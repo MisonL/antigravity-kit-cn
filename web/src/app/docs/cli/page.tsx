@@ -5,35 +5,35 @@ export default function CLIPage() {
         <div className="max-w-3xl">
             {/* Breadcrumb */}
             <nav className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-                <Link href="/docs" className="hover:text-zinc-900 dark:hover:text-zinc-50">Docs</Link>
+                <Link href="/docs" className="hover:text-zinc-900 dark:hover:text-zinc-50">文档</Link>
                 <span>/</span>
-                <span className="text-zinc-900 dark:text-zinc-50">CLI Reference</span>
+                <span className="text-zinc-900 dark:text-zinc-50">CLI 参考</span>
             </nav>
 
             {/* Page Header */}
             <div className="mb-8 pb-8 border-b border-zinc-200 dark:border-zinc-800">
                 <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-                    CLI Reference
+                    CLI 参考
                 </h1>
                 <p className="text-lg text-zinc-600 dark:text-zinc-400">
-                    Command-line interface for managing Antigravity Kit installations.
+                    用于管理 Antigravity Kit 安装的命令行工具。
                 </p>
             </div>
 
-            {/* Overview */}
+            {/* 概览 */}
             <section className="mb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-                    Overview
+                    概览
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    The <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code> CLI tool helps you manage Antigravity Kit installations across your projects.
+                    <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code> CLI 用于在多个项目中管理 Antigravity Kit 安装。
                 </p>
             </section>
 
             {/* Commands */}
             <section className="mb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-                    Commands
+                    命令
                 </h2>
 
                 <div className="space-y-8">
@@ -43,7 +43,7 @@ export default function CLIPage() {
                             <code className="font-mono">ag-kit init</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
-                            Initialize Antigravity Kit in your project by installing the <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent</code> folder.
+                            通过安装 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent</code> 文件夹在项目中初始化 Antigravity Kit。
                         </p>
 
                         <div className="relative group mb-4">
@@ -53,11 +53,11 @@ export default function CLIPage() {
                         </div>
 
                         <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
-                            <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Behavior</div>
+                            <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
-                                <li>• Creates <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> directory in current folder</li>
-                                <li>• Downloads latest templates from GitHub</li>
-                                <li>• Skips  if <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> already exists (use <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--force</code> to override)</li>
+                                <li>• 在当前目录创建 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 文件夹</li>
+                                <li>• 从 GitHub 下载最新模板</li>
+                                <li>• 若已存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 则跳过（使用 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--force</code> 覆盖）</li>
                             </ul>
                         </div>
                     </div>
@@ -68,7 +68,7 @@ export default function CLIPage() {
                             <code className="font-mono">ag-kit update</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
-                            Update your existing Antigravity Kit installation to the latest version.
+                            将现有的 Antigravity Kit 升级到最新版本。
                         </p>
 
                         <div className="relative group mb-4">
@@ -79,7 +79,7 @@ export default function CLIPage() {
 
                         <div className="p-4 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/20">
                             <p className="text-sm text-amber-900 dark:text-amber-200">
-                                <strong className="font-semibold">Warning:</strong> This will delete and replace your <code className="px-1 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 font-mono text-xs">.agent/</code> folder. Make sure to backup any custom changes.
+                                <strong className="font-semibold">警告：</strong>此操作会删除并替换你的 <code className="px-1 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 font-mono text-xs">.agent/</code> 文件夹，请先备份自定义修改。
                             </p>
                         </div>
                     </div>
@@ -90,7 +90,7 @@ export default function CLIPage() {
                             <code className="font-mono">ag-kit status</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
-                            Check the current installation status and version information.
+                            查看当前安装状态与版本信息。
                         </p>
 
                         <div className="relative group mb-4">
@@ -100,13 +100,13 @@ export default function CLIPage() {
                         </div>
 
                         <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
-                            <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Output Includes</div>
+                            <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">输出内容</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
-                                <li>• Installation status (installed/not installed)</li>
-                                <li>• Current version</li>
-                                <li>• Agent count</li>
-                                <li>• Skill count</li>
-                                <li>• Workflow count</li>
+                                <li>• 安装状态（已安装/未安装）</li>
+                                <li>• 当前版本</li>
+                                <li>• 智能体数量</li>
+                                <li>• 技能数量</li>
+                                <li>• 工作流数量</li>
                             </ul>
                         </div>
                     </div>
@@ -116,18 +116,18 @@ export default function CLIPage() {
             {/* Options */}
             <section className="mb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-                    Options
+                    选项
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    Customize CLI behavior with these options:
+                    可用选项如下：
                 </p>
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm border border-zinc-200 dark:border-zinc-800">
                         <thead className="bg-zinc-50 dark:bg-zinc-900/50">
                             <tr>
-                                <th className="text-left py-3 px-4 font-semibold text-zinc-900 dark:text-zinc-50 border-b border-zinc-200 dark:border-zinc-800">Option</th>
-                                <th className="text-left py-3 px-4 font-semibold text-zinc-900 dark:text-zinc-50 border-b border-zinc-200 dark:border-zinc-800">Description</th>
+                                <th className="text-left py-3 px-4 font-semibold text-zinc-900 dark:text-zinc-50 border-b border-zinc-200 dark:border-zinc-800">选项</th>
+                                <th className="text-left py-3 px-4 font-semibold text-zinc-900 dark:text-zinc-50 border-b border-zinc-200 dark:border-zinc-800">说明</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -136,7 +136,7 @@ export default function CLIPage() {
                                     <code className="font-mono text-zinc-900 dark:text-zinc-50">--force</code>
                                 </td>
                                 <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                                    Overwrite existing <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">.agent</code> folder
+                                    覆盖已有的 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">.agent</code> 文件夹
                                 </td>
                             </tr>
                             <tr>
@@ -144,7 +144,7 @@ export default function CLIPage() {
                                     <code className="font-mono text-zinc-900 dark:text-zinc-50">--path &lt;dir&gt;</code>
                                 </td>
                                 <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                                    Install in specific directory instead of current folder
+                                    安装到指定目录而非当前目录
                                 </td>
                             </tr>
                             <tr>
@@ -152,7 +152,7 @@ export default function CLIPage() {
                                     <code className="font-mono text-zinc-900 dark:text-zinc-50">--branch &lt;name&gt;</code>
                                 </td>
                                 <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                                    Use specific Git branch (default: main)
+                                    使用指定 Git 分支（默认：main）
                                 </td>
                             </tr>
                             <tr>
@@ -160,7 +160,7 @@ export default function CLIPage() {
                                     <code className="font-mono text-zinc-900 dark:text-zinc-50">--quiet</code>
                                 </td>
                                 <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                                    Suppress output (useful for CI/CD pipelines)
+                                    抑制输出（适用于 CI/CD）
                                 </td>
                             </tr>
                             <tr>
@@ -168,7 +168,7 @@ export default function CLIPage() {
                                     <code className="font-mono text-zinc-900 dark:text-zinc-50">--dry-run</code>
                                 </td>
                                 <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                                    Preview actions without executing
+                                    预览操作而不执行
                                 </td>
                             </tr>
                         </tbody>
@@ -179,13 +179,13 @@ export default function CLIPage() {
             {/* Examples */}
             <section className="mb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-                    Examples
+                    示例
                 </h2>
 
                 <div className="space-y-6">
                     <div>
                         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
-                            Force reinstall
+                            强制重装
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
@@ -196,7 +196,7 @@ export default function CLIPage() {
 
                     <div>
                         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
-                            Install in specific directory
+                            安装到指定目录
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
@@ -207,7 +207,7 @@ export default function CLIPage() {
 
                     <div>
                         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
-                            Use development branch
+                            使用开发分支
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
@@ -218,7 +218,7 @@ export default function CLIPage() {
 
                     <div>
                         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
-                            Silent install for CI/CD
+                            CI/CD 静默安装
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
@@ -229,19 +229,19 @@ export default function CLIPage() {
                 </div>
             </section>
 
-            {/* Next Steps */}
+            {/* 下一步 */}
             <section className="mb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-                    Next Steps
+                    下一步
                 </h2>
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/installation"
                         className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Installation Guide →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">安装指南 →</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                            Full installation instructions
+                            完整的安装说明
                         </p>
                     </Link>
                     <a
@@ -250,9 +250,9 @@ export default function CLIPage() {
                         rel="noopener noreferrer"
                         className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">View on GitHub →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">查看 GitHub →</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                            Source code and contribution guide
+                            源码与贡献指南
                         </p>
                     </a>
                 </div>
@@ -267,7 +267,7 @@ export default function CLIPage() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
-                    Workflows
+                    工作流
                 </Link>
                 <a
                     href="https://github.com/vudovn/antigravity-kit"
