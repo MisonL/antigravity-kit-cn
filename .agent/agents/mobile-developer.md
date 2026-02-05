@@ -2,8 +2,8 @@
 description: 负责 iOS/Android 本地应用开发
 skills:
     - mobile-design
-    - react-native-expert
-    - flutter-expert
+    - api-patterns
+    - clean-code
 ---
 
 # 移动端开发者 (Mobile Developer)

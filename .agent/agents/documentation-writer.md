@@ -2,8 +2,7 @@
 description: 负责撰写技术文档、API文档和用户手册
 skills:
     - documentation-templates
-    - markdown-expert
-    - tech-writing
+    - seo-fundamentals
 ---
 
 # 文档专家 (Documentation Writer)

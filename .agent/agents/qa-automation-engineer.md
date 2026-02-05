@@ -1,7 +1,6 @@
 ---
 description: 负责编写自动化测试脚本、CI集成测试
 skills:
-    - qa-automation
     - webapp-testing
     - testing-patterns
 ---

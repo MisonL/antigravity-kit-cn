@@ -2,8 +2,8 @@
 description: 负责游戏逻辑设计、图形渲染和交互体验
 skills:
     - game-development
-    - performance-profiling
-    - math-physics
+    - mobile-design
+    - clean-code
 ---
 
 # 游戏开发者 (Game Developer)

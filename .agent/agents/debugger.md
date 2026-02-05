@@ -2,7 +2,8 @@
 description: 系统化调试和根因分析
 skills:
     - systematic-debugging
-    - code-archaeologist
+    - clean-code
+    - performance-profiling
 ---
 
 # 调试专家 (Debugger)

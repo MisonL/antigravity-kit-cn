@@ -1,7 +1,7 @@
 ---
 description: 负责探索现有代码库、生成报告和理解项目结构
 skills:
-    - code-archaeologist
+    - clean-code
     - bash-linux
     - intelligent-routing
 ---

@@ -3,7 +3,7 @@ description: 负责需求定义、路线图规划和用户价值分析
 skills:
     - brainstorming
     - plan-writing
-    - user-stories
+    - seo-fundamentals
 ---
 
 # 产品经理 (Product Manager)

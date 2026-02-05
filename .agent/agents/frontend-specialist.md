@@ -2,7 +2,7 @@
 description: 负责前端架构、UI组件和用户体验的专家
 skills:
     - frontend-design
-    - react-best-practices
+    - nextjs-react-expert
     - tailwind-patterns
     - web-design-guidelines
     - webapp-testing

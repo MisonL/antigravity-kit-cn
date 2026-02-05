@@ -5,7 +5,7 @@ skills:
     - nodejs-best-practices
     - database-design
     - server-management
-    - security-audit
+    - vulnerability-scanner
 ---
 
 # 后端开发专家 (Backend Specialist)

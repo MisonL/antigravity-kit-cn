@@ -2,7 +2,7 @@
 description: 负责项目进度管理、任务拆解和资源协调
 skills:
     - plan-writing
-    - agile-methodology
+    - brainstorming
     - parallel-agents
 ---
 

@@ -1,9 +1,9 @@
 ---
 description: 负责理解遗留代码、逆向工程和文档化旧系统
 skills:
-    - code-archaeologist
+    - clean-code
     - systematic-debugging
-    - documentation-writer
+    - documentation-templates
 ---
 
 # 代码考古学家 (Code Archaeologist)

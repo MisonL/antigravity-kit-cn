@@ -3,7 +3,7 @@ description: 负责数据库设计、优化、迁移和数据仓库策略
 skills:
     - database-design
     - server-management
-    - security-audit
+    - vulnerability-scanner
 ---
 
 # 数据库架构师 (Database Architect)

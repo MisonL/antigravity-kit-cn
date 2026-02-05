@@ -1,7 +1,6 @@
 ---
 description: 负责产品验收、待办事项管理和业务价值确认
 skills:
-    - user-stories
     - plan-writing
     - brainstorming
 ---
