@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.0.2] - 2026-02-04
+- **New Skills**:
+    - `rust-pro` - Master Rust 1.75+ 
+- **Agent Workflows**:
+    - Updated `orchestrate.md` fix output turkish
+
+
 ## [2.0.1] - 2026-01-26
 
 ### Added

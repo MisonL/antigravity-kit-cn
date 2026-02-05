@@ -24,8 +24,8 @@ export default function DonateDialog({ className }: DonateDialogProps) {
                         <span>Fuel the Developer</span>
                     </DialogTitle>
                     <DialogDescription className="space-y-2 pt-2">
-                        Hi! I'm <strong>Vu</strong>. I am currently unemployed and dedicating my full time to building this kit. <br />
-                        Your support literally keeps me alive and coding! If you find this tool helpful, please consider buying me a coffee.
+                        Hi! I'm <strong>Vu</strong>. I'm dedicating my full-time work to building this kit. <br />
+                        Your support helps me keep shipping and maintaining it. If you find this tool helpful, please consider buying me a coffee.
                     </DialogDescription>
                 </DialogHeader>
 

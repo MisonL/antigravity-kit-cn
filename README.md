@@ -36,7 +36,7 @@ To keep the `.agent/` folder local (not tracked by Git) while maintaining AI fun
 | Component     | Count | Description                                                        |
 | ------------- | ----- | ------------------------------------------------------------------ |
 | **Agents**    | 20    | Specialist AI personas (frontend, backend, security, PM, QA, etc.) |
-| **Skills**    | 36    | Domain-specific knowledge modules                                  |
+| **Skills**    | 37    | Domain-specific knowledge modules                                  |
 | **Workflows** | 11    | Slash command procedures                                           |
 
 

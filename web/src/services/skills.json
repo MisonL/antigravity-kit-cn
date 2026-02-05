@@ -178,5 +178,10 @@
         "name": "intelligent-routing",
         "description": "Automatic agent selection and routing",
         "category": "Other"
+    },
+    {
+        "name": "rust-pro",
+        "description": "Master Rust 1.75+ with modern async patterns, advanced type system features, and production-ready systems programming.",
+        "category": "Backend & API"
     }
 ]
