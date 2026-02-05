@@ -1,4 +1,5 @@
 ---
+name: architecture
 description: 架构决策框架、权衡分析与 ADR 文档
 ---
 

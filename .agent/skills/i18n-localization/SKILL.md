@@ -1,4 +1,5 @@
 ---
+name: i18n-localization
 description: 国际化与本地化模式，RTL 支持
 ---
 

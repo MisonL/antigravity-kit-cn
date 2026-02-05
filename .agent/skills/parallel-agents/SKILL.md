@@ -1,4 +1,5 @@
 ---
+name: parallel-agents
 description: 多智能体协同编排模式、任务分解与合并
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: clean-code
 description: 务实的代码规范 - 简洁、直接、无过度设计
 ---
 

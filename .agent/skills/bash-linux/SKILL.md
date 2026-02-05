@@ -1,4 +1,5 @@
 ---
+name: bash-linux
 description: Bash/Linux 终端命令模式、脚本编写与错误处理
 ---
 

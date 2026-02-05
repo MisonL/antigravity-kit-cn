@@ -1,4 +1,5 @@
 ---
+name: python-patterns
 description: Python 开发原则、架构与工具链
 ---
 

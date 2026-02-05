@@ -1,4 +1,5 @@
 ---
+name: app-builder
 description: 应用程序构建编排器，负责项目初始化和脚手架生成
 ---
 

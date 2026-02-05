@@ -1,4 +1,5 @@
 ---
+name: plan-writing
 description: 结构化任务规划、WBS 分解与依赖管理
 ---
 

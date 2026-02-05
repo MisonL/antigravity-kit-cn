@@ -1,4 +1,5 @@
 ---
+name: frontend-design
 description: 网页 UI 设计思维、布局、排版与配色原则
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: lint-and-validate
 description: 代码质量检查、Linting 配置与执行
 ---
 

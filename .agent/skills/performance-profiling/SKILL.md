@@ -1,4 +1,5 @@
 ---
+name: performance-profiling
 description: 性能分析原则、Lighthouse 指标优化与 Bundle 分析
 ---
 

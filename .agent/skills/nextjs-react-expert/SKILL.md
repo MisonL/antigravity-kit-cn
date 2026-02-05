@@ -1,4 +1,5 @@
 ---
+name: nextjs-react-expert
 description: Next.js 与 React 性能优化、架构与渲染模式 (SSR/CSR/RSC)
 ---
 

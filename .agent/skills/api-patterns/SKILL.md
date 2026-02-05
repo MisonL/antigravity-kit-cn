@@ -1,4 +1,5 @@
 ---
+name: api-patterns
 description: API 设计原则与最佳实践 (REST, GraphQL, tRPC)
 ---
 

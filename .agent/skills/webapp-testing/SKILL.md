@@ -1,4 +1,5 @@
 ---
+name: webapp-testing
 description: Web 应用测试原则、E2E 测试策略
 ---
 

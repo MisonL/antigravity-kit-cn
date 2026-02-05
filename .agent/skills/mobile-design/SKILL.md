@@ -1,4 +1,5 @@
 ---
+name: mobile-design
 description: 移动端优先设计思维、触摸交互与平台规范 (iOS/Android)
 ---
 

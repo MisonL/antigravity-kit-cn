@@ -1,4 +1,5 @@
 ---
+name: mcp-builder
 description: MCP (模型上下文协议) 服务器构建原则、工具设计与资源模式
 ---
 

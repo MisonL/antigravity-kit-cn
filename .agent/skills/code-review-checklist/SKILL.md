@@ -1,4 +1,5 @@
 ---
+name: code-review-checklist
 description: 代码审查指南，涵盖质量、安全和最佳实践
 ---
 

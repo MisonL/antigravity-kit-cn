@@ -1,4 +1,5 @@
 ---
+name: intelligent-routing
 description: 智能路由算法与 Agent 自动选择逻辑
 ---
 

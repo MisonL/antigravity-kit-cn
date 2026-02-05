@@ -1,4 +1,5 @@
 ---
+name: seo-fundamentals
 description: SEO 基础、Google 算法原理解析
 ---
 

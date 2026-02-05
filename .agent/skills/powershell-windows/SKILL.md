@@ -1,4 +1,5 @@
 ---
+name: powershell-windows
 description: PowerShell Windows 脚本编写模式与陷阱
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: game-development
 description: 游戏开发编排器，跨平台引擎选择与游戏设计模式
 ---
 

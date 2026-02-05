@@ -1,4 +1,5 @@
 ---
+name: brainstorming
 description: 苏格拉底式提问协议与需求澄清
 ---
 

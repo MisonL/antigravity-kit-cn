@@ -1,4 +1,5 @@
 ---
+name: tailwind-patterns
 description: Tailwind CSS v4 最佳实践、设计系统配置
 ---
 

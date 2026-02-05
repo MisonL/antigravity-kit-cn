@@ -1,4 +1,5 @@
 ---
+name: deployment-procedures
 description: 生产部署决策、安全部署流程与回滚策略
 ---
 

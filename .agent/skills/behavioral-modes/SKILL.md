@@ -1,4 +1,5 @@
 ---
+name: behavioral-modes
 description: AI 行为模式 (Brainstorm, Implement, Debug, Review, Teach, Ship)
 ---
 

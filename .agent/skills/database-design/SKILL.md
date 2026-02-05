@@ -1,4 +1,5 @@
 ---
+name: database-design
 description: 数据库设计原则、Schema 设计与 ORM 选择
 ---
 

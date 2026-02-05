@@ -1,4 +1,5 @@
 ---
+name: documentation-templates
 description: 常用文档模版 (README, API Docs, Code Comments)
 ---
 
