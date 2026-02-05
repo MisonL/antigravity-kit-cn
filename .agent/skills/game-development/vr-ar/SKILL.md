@@ -1,8 +1,14 @@
+---
+name: vr-ar
+description: vr-ar skill module
+---
+
 # VR/AR 开发 (VR/AR Development)
 
 > 沉浸式体验原则。
 
 ---
+name: vr-ar
 
 ## 1. 平台选择
 

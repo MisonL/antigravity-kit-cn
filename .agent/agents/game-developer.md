@@ -4,6 +4,19 @@ skills:
     - game-development
     - mobile-design
     - clean-code
+    - pc-games
+    - web-games
+    - mobile-games
+    - game-design
+    - multiplayer
+    - vr-ar
+    - 2d-games
+    - 3d-games
+    - game-art
+    - game-audio
+name: game-developer
+model: inherit
+tools: Read, Write, Edit, Bash, Grep, Glob
 ---
 
 # 游戏开发者 (Game Developer)

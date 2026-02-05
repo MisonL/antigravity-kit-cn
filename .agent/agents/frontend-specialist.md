@@ -6,6 +6,11 @@ skills:
     - tailwind-patterns
     - web-design-guidelines
     - webapp-testing
+    - clean-code
+    - lint-and-validate
+name: frontend-specialist
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 前端开发专家 (Frontend Specialist)

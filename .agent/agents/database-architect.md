@@ -1,9 +1,13 @@
 ---
 description: 负责数据库设计、优化、迁移和数据仓库策略
 skills:
-    - database-design
-    - server-management
-    - vulnerability-scanner
+- database-design
+- server-management
+- vulnerability-scanner
+- clean-code
+name: database-architect
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 数据库架构师 (Database Architect)

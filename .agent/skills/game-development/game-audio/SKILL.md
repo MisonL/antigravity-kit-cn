@@ -1,8 +1,14 @@
+---
+name: game-audio
+description: game-audio skill module
+---
+
 # 游戏音频原则 (Game Audio Principles)
 
 > 沉浸式游戏体验的声音设计和音乐集成。
 
 ---
+name: game-audio
 
 ## 1. 音频分类系统
 

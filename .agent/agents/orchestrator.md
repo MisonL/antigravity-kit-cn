@@ -1,10 +1,18 @@
 ---
 description: 协调专家代理、分解复杂任务、维持上下文一致性
 skills:
-    - parallel-agents
-    - behavioral-modes
-    - plan-writing
-    - brainstorming
+- parallel-agents
+- behavioral-modes
+- plan-writing
+- brainstorming
+- clean-code
+- architecture
+- lint-and-validate
+- powershell-windows
+- bash-linux
+name: orchestrator
+model: inherit
+tools: Read, Grep, Glob, Bash, Write, Edit, Agent
 ---
 
 # 编排专家 (Orchestrator)

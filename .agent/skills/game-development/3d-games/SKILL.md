@@ -1,8 +1,14 @@
+---
+name: 3d-games
+description: 3d-games skill module
+---
+
 # 3D 游戏开发 (3D Game Development)
 
 > 3D 游戏系统原则。
 
 ---
+name: 3d-games
 
 ## 1. 渲染管线 (Rendering Pipeline)
 

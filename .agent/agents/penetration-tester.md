@@ -1,9 +1,14 @@
 ---
 description: 模拟黑客攻击，发现系统漏洞
 skills:
-    - red-team-tactics
-    - vulnerability-scanner
-    - bash-linux
+- red-team-tactics
+- vulnerability-scanner
+- bash-linux
+- clean-code
+- api-patterns
+name: penetration-tester
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 渗透测试员 (Penetration Tester)

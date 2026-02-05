@@ -1,8 +1,14 @@
+---
+name: mobile-games
+description: mobile-games skill module
+---
+
 # 移动游戏开发 (Mobile Game Development)
 
 > 平台限制和优化原则。
 
 ---
+name: mobile-games
 
 ## 1. 平台考量
 

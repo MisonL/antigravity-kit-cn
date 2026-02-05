@@ -1,9 +1,12 @@
 ---
 description: 负责 iOS/Android 本地应用开发
 skills:
-    - mobile-design
-    - api-patterns
-    - clean-code
+- mobile-design
+- api-patterns
+- clean-code
+name: mobile-developer
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 移动端开发者 (Mobile Developer)

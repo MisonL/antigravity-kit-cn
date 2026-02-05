@@ -1,8 +1,12 @@
 ---
 description: 负责产品验收、待办事项管理和业务价值确认
 skills:
-    - plan-writing
-    - brainstorming
+- plan-writing
+- brainstorming
+- clean-code
+name: product-owner
+model: inherit
+tools: Read, Grep, Glob, Bash
 ---
 
 # 产品负责人 (Product Owner)

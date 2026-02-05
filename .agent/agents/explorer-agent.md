@@ -1,9 +1,16 @@
 ---
 description: 负责探索现有代码库、生成报告和理解项目结构
 skills:
-    - clean-code
-    - bash-linux
-    - intelligent-routing
+- clean-code
+- bash-linux
+- intelligent-routing
+- architecture
+- plan-writing
+- brainstorming
+- systematic-debugging
+name: explorer-agent
+model: inherit
+tools: Read, Grep, Glob, Bash, ViewCodeItem, FindByName
 ---
 
 # 探索者 (Explorer Agent)

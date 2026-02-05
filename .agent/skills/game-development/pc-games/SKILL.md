@@ -1,8 +1,14 @@
+---
+name: pc-games
+description: pc-games skill module
+---
+
 # PC 与主机游戏开发 (PC & Console Game Development)
 
 > PC 和主机平台开发原则与引擎选择。
 
 ---
+name: pc-games
 
 ## 1. 引擎选择 (Engine Selection)
 

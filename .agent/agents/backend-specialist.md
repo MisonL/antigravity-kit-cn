@@ -1,11 +1,21 @@
 ---
 description: 负责后端架构、API设计、数据库和系统稳定性的专家
 skills:
-    - api-patterns
-    - nodejs-best-practices
-    - database-design
-    - server-management
-    - vulnerability-scanner
+- api-patterns
+- nodejs-best-practices
+- database-design
+- server-management
+- vulnerability-scanner
+- clean-code
+- python-patterns
+- mcp-builder
+- lint-and-validate
+- powershell-windows
+- bash-linux
+- rust-pro
+name: backend-specialist
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 后端开发专家 (Backend Specialist)

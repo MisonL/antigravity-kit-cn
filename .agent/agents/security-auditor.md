@@ -1,9 +1,14 @@
 ---
 description: 负责安全审计、漏洞扫描和合规性检查
 skills:
-    - vulnerability-scanner
-    - red-team-tactics
-    - code-review-checklist
+- vulnerability-scanner
+- red-team-tactics
+- code-review-checklist
+- clean-code
+- api-patterns
+name: security-auditor
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 安全审计员 (Security Auditor)

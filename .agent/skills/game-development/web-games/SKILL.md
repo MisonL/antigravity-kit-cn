@@ -1,8 +1,14 @@
+---
+name: web-games
+description: web-games skill module
+---
+
 # Web 浏览器游戏开发 (Web Browser Game Development)
 
 > 框架选择和浏览器特定原则。
 
 ---
+name: web-games
 
 ## 1. 框架选择
 

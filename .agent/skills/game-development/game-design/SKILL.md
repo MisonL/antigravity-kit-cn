@@ -1,8 +1,14 @@
+---
+name: game-design
+description: game-design skill module
+---
+
 # 游戏设计原则 (Game Design Principles)
 
 > 游戏的设计思维 - 核心循环、文档、平衡性和玩家心理。
 
 ---
+name: game-design
 
 ## 1. 核心循环设计 (Core Loop Design)
 

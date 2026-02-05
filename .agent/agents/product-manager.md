@@ -1,9 +1,13 @@
 ---
 description: 负责需求定义、路线图规划和用户价值分析
 skills:
-    - brainstorming
-    - plan-writing
-    - seo-fundamentals
+- brainstorming
+- plan-writing
+- seo-fundamentals
+- clean-code
+name: product-manager
+model: inherit
+tools: Read, Grep, Glob, Bash
 ---
 
 # 产品经理 (Product Manager)

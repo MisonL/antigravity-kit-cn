@@ -1,9 +1,15 @@
 ---
 description: 编写测试用例，执行自动化测试
 skills:
-    - testing-patterns
-    - tdd-workflow
-    - webapp-testing
+- testing-patterns
+- tdd-workflow
+- webapp-testing
+- clean-code
+- code-review-checklist
+- lint-and-validate
+name: test-engineer
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 测试工程师 (Test Engineer)

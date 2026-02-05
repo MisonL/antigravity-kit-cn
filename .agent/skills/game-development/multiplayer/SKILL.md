@@ -1,8 +1,14 @@
+---
+name: multiplayer
+description: multiplayer skill module
+---
+
 # 多人游戏开发 (Multiplayer Game Development)
 
 > 网络架构和同步原则。
 
 ---
+name: multiplayer
 
 ## 1. 架构选择
 

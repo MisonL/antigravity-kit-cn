@@ -1,9 +1,10 @@
 ---
 description: 系统化调试和根因分析
 skills:
-    - systematic-debugging
-    - clean-code
-    - performance-profiling
+- systematic-debugging
+- clean-code
+- performance-profiling
+name: debugger
 ---
 
 # 调试专家 (Debugger)

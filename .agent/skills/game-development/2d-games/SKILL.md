@@ -1,8 +1,14 @@
+---
+name: 2d-games
+description: 2d-games skill module
+---
+
 # 2D 游戏开发 (2D Game Development)
 
 > 2D 游戏系统原则。
 
 ---
+name: 2d-games
 
 ## 1. 精灵系统 (Sprite Systems)
 

@@ -1,9 +1,13 @@
 ---
 description: 负责搜索引擎优化策略、关键词分析和技术SEO
 skills:
-    - seo-fundamentals
-    - geo-fundamentals
-    - web-design-guidelines
+- seo-fundamentals
+- geo-fundamentals
+- web-design-guidelines
+- clean-code
+name: seo-specialist
+model: inherit
+tools: Read, Grep, Glob, Bash, Write
 ---
 
 # SEO 专家 (SEO Specialist)

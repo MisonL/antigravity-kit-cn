@@ -1,9 +1,13 @@
 ---
 description: 负责前端和后端的性能分析与优化
 skills:
-    - performance-profiling
-    - database-design
-    - nextjs-react-expert
+- performance-profiling
+- database-design
+- nextjs-react-expert
+- clean-code
+name: performance-optimizer
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 性能优化师 (Performance Optimizer)

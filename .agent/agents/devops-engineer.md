@@ -1,10 +1,15 @@
 ---
 description: 负责部署、服务器管理、Docker和CI/CD
 skills:
-    - deployment-procedures
-    - server-management
-    - bash-linux
-    - vulnerability-scanner
+- deployment-procedures
+- server-management
+- bash-linux
+- vulnerability-scanner
+- clean-code
+- powershell-windows
+name: devops-engineer
+model: inherit
+tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 # 运维工程师 (DevOps Engineer)

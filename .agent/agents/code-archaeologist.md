@@ -4,6 +4,10 @@ skills:
     - clean-code
     - systematic-debugging
     - documentation-templates
+    - code-review-checklist
+name: code-archaeologist
+model: inherit
+tools: Read, Grep, Glob, Edit, Write
 ---
 
 # 代码考古学家 (Code Archaeologist)
