@@ -26,6 +26,16 @@ ag-kit init
 
 这将把包含所有模版的 `.agent` 文件夹安装到你的项目中。
 
+### ⚠️ 关于 `.gitignore` 的重要说明
+
+如果您正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/` 文件夹添加到 `.gitignore` 可能会阻止 IDE 索引工作流。这会导致斜杠命令（如 `/plan`, `/debug`）无法在对话建议下拉菜单中显示。
+
+**推荐方案：**
+为了在保持 `.agent/` 文件夹本地化（不被 Git 追踪）的同时维持 AI 功能：
+
+1. 确保 `.agent/` **不要** 出现在项目的 `.gitignore` 中。
+2. 作为一个替代方案，请将其添加到您的本地排除文件：`.git/info/exclude`
+
 ## 包含内容 (What's Included)
 
 | 组件 (Component) | 数量 | 描述                                               |
