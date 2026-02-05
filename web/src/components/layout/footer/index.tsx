@@ -26,7 +26,7 @@ export default function Footer() {
                             </li>
                             <li>
                                 <Link href="/docs/workflows" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
-                                    工作流
+                                    斜杠工作流
                                 </Link>
                             </li>
                         </ul>

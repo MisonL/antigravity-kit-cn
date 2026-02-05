@@ -65,7 +65,7 @@ export default function WorkflowsPage() {
                 <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
                     <p className="text-sm text-blue-900 dark:text-blue-100 mb-0">
                         <Lightbulb className="w-4 h-4 inline" />
-                        <strong className="font-semibold">提示：</strong>部分工作流可能包含 <code className="px-1 py-0.5 rounded bg-blue-100 dark:bg-blue-900/40 font-mono text-xs">// turbo</code> 标记，用于自动执行安全命令（无需二次确认）。
+                        <strong className="font-semibold">提示：</strong>部分工作流可能包含 <code className="px-1 py-0.5 rounded bg-blue-100 dark:bg-blue-900/40 font-mono text-xs">{"//"} turbo</code> 标记，用于自动执行安全命令（无需二次确认）。
                     </p>
                 </div>
             </section>
@@ -148,21 +148,21 @@ description: 部署到预发布环境
                 </h2>
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
+                        href="/docs/rules-workflows"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                    >
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">规则与工作流 →</h3>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                            了解规则与流程差异
+                        </p>
+                    </Link>
+                    <Link
                         href="/docs/cli"
                         className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
                     >
                         <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">CLI 参考 →</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             查看命令行工具
-                        </p>
-                    </Link>
-                    <Link
-                        href="/docs/agents"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
-                    >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">返回智能体 →</h3>
-                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                            查看专家智能体
                         </p>
                     </Link>
                 </div>

@@ -5,6 +5,7 @@ trigger: always_on
 # GEMINI.md - Antigravity Kit
 
 > 此文件定义了 AI 在此工作空间中的行为准则。
+> 工作区规则存放在 `.agent/rules/`；全局规则位于 `~/.gemini/GEMINI.md`。单个规则文件限制 12,000 字符。
 
 ---
 

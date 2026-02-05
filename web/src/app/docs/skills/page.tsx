@@ -166,7 +166,7 @@ Step-by-step guidance, conventions, and patterns the agent should follow.`}</cod
                 <div className="mt-2 p-4 rounded-lg border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/20">
                     <p className="text-sm text-blue-900 dark:text-blue-100 mb-0">
                         <Lightbulb className="w-4 h-4 inline" />
-                        <strong className="font-semibold">提示：</strong>描述建议使用第三人称并包含关键词，例如："Generates unit tests for Python code using pytest conventions."
+                        <strong className="font-semibold">提示：</strong>描述建议使用第三人称并包含关键词，例如：使用 pytest 约定为 Python 代码生成单元测试。
                     </p>
                 </div>
             </section>

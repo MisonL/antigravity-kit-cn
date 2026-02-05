@@ -68,7 +68,7 @@ const searchGroups: SearchGroup[] = [
                 keywords: 'knowledge modules react nextjs tailwind patterns testing 技能 知识 模块'
             },
             {
-                label: '工作流',
+                label: '斜杠工作流',
                 value: 'workflows',
                 href: '/docs/workflows',
                 keywords: 'slash commands brainstorm create debug deploy enhance 工作流 斜杠命令'

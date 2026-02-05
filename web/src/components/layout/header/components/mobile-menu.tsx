@@ -58,6 +58,7 @@ export default function MobileMenu() {
 
     // Close menu when route changes
     useEffect(() => {
+        // eslint-disable-next-line react-compiler/react-compiler
         setIsOpen(false);
     }, [pathname]);
 

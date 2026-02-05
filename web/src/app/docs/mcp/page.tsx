@@ -88,8 +88,8 @@ export default function McpPage() {
                             MCP 允许 Antigravity 执行由服务器定义的安全操作。
                         </p>
                         <ul className="mt-3 space-y-2 text-base text-zinc-600 dark:text-zinc-400">
-                            <li>示例："Create a Linear issue for this TODO."</li>
-                            <li>示例："Search Notion or GitHub for authentication patterns."</li>
+                            <li>示例：为这条 TODO 创建 Linear Issue</li>
+                            <li>示例：在 Notion 或 GitHub 中搜索认证相关模式</li>
                         </ul>
                     </div>
                 </div>

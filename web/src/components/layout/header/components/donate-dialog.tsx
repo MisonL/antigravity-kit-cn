@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { CoffeeIcon, Heart, QrCodeIcon, User } from 'lucide-react';
+import { CoffeeIcon, Heart, QrCodeIcon } from 'lucide-react';
 
 interface DonateDialogProps {
     className?: string;
@@ -24,7 +24,7 @@ export default function DonateDialog({ className }: DonateDialogProps) {
                         <span>Fuel the Developer</span>
                     </DialogTitle>
                     <DialogDescription className="space-y-2 pt-2">
-                        Hi! I'm <strong>Vu</strong>. I am currently unemployed and dedicating my full time to building this kit. <br />
+                        Hi! I&apos;m <strong>Vu</strong>. I am currently unemployed and dedicating my full time to building this kit. <br />
                         Your support literally keeps me alive and coding! If you find this tool helpful, please consider buying me a coffee.
                     </DialogDescription>
                 </DialogHeader>

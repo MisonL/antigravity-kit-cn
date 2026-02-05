@@ -54,7 +54,7 @@ export default function CommandPage() {
                             生成样板代码、重构复杂函数或编写文档，不打断编码节奏。
                         </p>
                         <p className="text-base text-zinc-600 dark:text-zinc-400">
-                            示例：<span className="font-mono">"Create a React component for a login form."</span>
+                            示例：<span className="font-mono">创建一个登录表单的 React 组件</span>
                         </p>
                     </div>
                     <div>
@@ -63,7 +63,7 @@ export default function CommandPage() {
                             在集成终端中通过自然语言生成复杂命令，无需记忆语法。
                         </p>
                         <p className="text-base text-zinc-600 dark:text-zinc-400">
-                            示例：<span className="font-mono">"Find all processes listening on port 3000 and kill them."</span>
+                            示例：<span className="font-mono">找到所有监听 3000 端口的进程并杀掉它们</span>
                         </p>
                     </div>
                 </div>

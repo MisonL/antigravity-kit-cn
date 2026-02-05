@@ -35,6 +35,9 @@ export default function AgentsPage() {
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
                     当你发起请求时，Antigravity Kit 的<strong>智能路由</strong>会自动识别需要哪些智能体并激活它们。你也可以点名某个智能体来覆盖自动路由。
                 </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-500">
+                    说明：此页介绍的是 Antigravity Kit 的专家智能体。如需了解 Antigravity 平台级 Agent，请前往 <Link className="text-zinc-900 dark:text-zinc-50 underline underline-offset-4" href="/docs/agent">Agent 介绍</Link>。
+                </p>
             </section>
 
             {/* How to Use */}
