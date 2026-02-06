@@ -1,46 +1,59 @@
 ---
-description: 创建新项目或新功能，包含脚手架生成
+description: 新建应用命令。触发 App Builder 技能并启动与用户的交互式对话。
 ---
 
-# 创建 (Create Workflow)
+# /create - 创建应用
 
-**触发命令**: `/create [description]`
-
-## 目的
-
-这是"将想法转化为代码"的第一步。它负责初始化项目结构、选择技术栈，并生成最初的脚手架代码。
-
-## 步骤流程
-
-1. **意图识别**:
-    - 是**新项目** (New Project) 还是**新功能** (New Feature)？
-    - 分析所需领域 (Frontend/Backend/Database/Mobile)。
-
-2. **技术栈确认**:
-    - 如果是新项目，推荐 Next.js + Tailwind (Web) 或 Hono (API)。
-    - 确认是否需要 Docker、CI/CD 等基础设施。
-
-3. **生成计划**:
-    - 在开始写代码前，先列出将要创建/修改的文件列表。
-    - 让用户确认。
-
-4. **代码生成**:
-    - 调用 `app-builder` 技能。
-    - 顺序创建文件：配置文件 -> 基础组件 -> 业务逻辑 -> 页面。
-
-5. **初步验证**:
-    - 运行 Lint 检查。
-    - 提醒用户安装依赖 (`npm install`)。
-
-## 示例
-
-> User: /create 一个带有登录页面的 Next.js 仪表盘
-> AI: 收到。我建议使用 Next.js App Router + shadcn/ui。这是生成计划...
+$ARGUMENTS
 
 ---
 
-## 上游脚本流程补充（reference 对齐）
+## 任务
 
-创建流程完成后，应启动预览链路：
+此命令用于启动新应用创建流程。
 
-- `python .agent/scripts/auto_preview.py start [port]`
+### 步骤：
+
+1. **请求分析**
+   - 理解用户真正想要什么
+   - 若信息缺失，使用 `conversation-manager` 技能补充提问
+
+2. **项目规划**
+   - 使用 `project-planner` agent 做任务拆解
+   - 确定技术栈
+   - 规划文件结构
+   - 产出计划文件后再进入构建阶段
+
+3. **应用构建（经确认后）**
+   - 使用 `app-builder` 技能进行编排
+   - 协同专家 agent：
+     - `database-architect` → Schema
+     - `backend-specialist` → API
+     - `frontend-specialist` → UI
+
+4. **预览**
+   - 完成后使用 `auto_preview.py` 启动预览
+   - 将访问 URL 提供给用户
+
+---
+
+## 使用示例
+
+```
+/create blog site
+/create e-commerce app with product listing and cart
+/create todo app
+/create Instagram clone
+/create crm system with customer management
+```
+
+---
+
+## 开始前
+
+如果请求不够明确，先问以下问题：
+- 应用类型是什么？
+- 基础功能有哪些？
+- 谁会使用它？
+
+先使用默认值，后续再逐步补充细节。
