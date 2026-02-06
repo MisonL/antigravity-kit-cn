@@ -1,56 +1,55 @@
 ---
 name: architecture
-description: 架构决策框架、权衡分析与 ADR 文档
+description: 架构决策框架。需求分析、权衡评估、ADR 文档。在做架构决策或分析系统设计时使用。
 allowed-tools: Read, Glob, Grep
 ---
 
-# 软件架构 (Architecture)
+# Architecture Decision Framework - 架构决策框架
 
-## 核心理念
+> "需求驱动架构。权衡告知决策。ADR 记录理由。"
 
-架构就是**权衡 (Trade-offs)**。没有完美的架构，只有最适合当前场景的架构。
+## 🎯 选择性阅读规则
 
-## 决策框架
+**仅阅读与请求相关的文件！** 检查内容映射，找到你需要的内容。
 
-在做架构决策时，考虑以下维度：
+| 文件 (File)             | 描述 (Description)    | 何时阅读 (When to Read) |
+| ----------------------- | --------------------- | ----------------------- |
+| `context-discovery.md`  | 提问列表、项目分类    | 开始架构设计时          |
+| `trade-off-analysis.md` | ADR 模板、权衡框架    | 记录决策时              |
+| `pattern-selection.md`  | 决策树、反模式        | 选择模式时              |
+| `examples.md`           | MVP、SaaS、企业级示例 | 参考实现                |
+| `patterns-reference.md` | 模式快速查找          | 模式比较时              |
 
-1.  **可维护性 (Maintainability)**: 代码是否容易理解和修改？
-2.  **可扩展性 (Scalability)**: 能否支撑 10 倍用户量？
-3.  **性能 (Performance)**: 响应时间是否达标？
-4.  **成本 (Cost)**: 开发成本和运行成本。
-5.  **上市时间 (Time to Market)**: 能否快速发布？
+---
 
-## 常见模式
+## 🔗 相关 Skill
 
-- **单体 (Monolith)**: 适合初期，开发部署简单。
-- **微服务 (Microservices)**: 适合团队规模大、业务复杂的场景。
-- **Serverless**: 适合流量波动大、运维人力少的场景。
+| Skill                             | Use For            |
+| --------------------------------- | ------------------ |
+| `@[skills/database-design]`       | 数据库 Schema 设计 |
+| `@[skills/api-patterns]`          | API 设计模式       |
+| `@[skills/deployment-procedures]` | 部署架构           |
 
-## ADR (架构决策记录)
+---
 
-对于重要决策，必须记录 ADR：
+## 核心原则 (Core Principle)
 
-```markdown
-# ADR-001:这也是标题
+**"简单是终极的复杂。" (Simplicity is the ultimate sophistication.)**
 
-## 状态
+- 从简单开始
+- 仅在被证明必要时才增加复杂性
+- 你总是可以在以后添加模式
+- 移除复杂性远比增加它要困难得多
 
-已采纳
+---
 
-## 背景
+## 验证检查清单 (Validation Checklist)
 
-我们需要选择一个数据库。
+在最终确定架构之前：
 
-## 决策
-
-选择 PostgreSQL。
-
-## 后果
-
-- 优点: 关系型数据支持好，生态成熟。
-- 缺点: 对于非结构化数据不如 MongoDB 灵活。
-```
-
-## 上线前校验
-
-涉及关键架构改造时，建议在 `/deploy` 前先完成 ADR 评审与回滚演练。
+- [ ] 需求已清晰理解
+- [ ] 约束已识别
+- [ ] 每个决策都进行了权衡分析
+- [ ] 已考虑更简单的替代方案
+- [ ] 为重大决策编写了 ADR
+- [ ] 团队专长与所选模式匹配
