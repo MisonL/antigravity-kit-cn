@@ -40,7 +40,11 @@ node bin/ag-kit.js init --path /path/to/your-project
 如果您正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/` 文件夹添加到 `.gitignore` 可能会阻止 IDE 索引工作流。这会导致斜杠命令（如 `/plan`, `/debug`）无法在对话建议下拉菜单中显示。
 
 从当前版本开始，执行 `ag-kit init` / `ag-kit update` 时会自动扫描项目根目录 `.gitignore`，并移除会忽略 `.agent` 的规则，同时在终端提示具体处理结果。
-另外会自动检测全局是否已安装上游英文版 `@vudovn/ag-kit`；如检测到会提示冲突风险与卸载建议（不阻断当前安装）。
+另外会进行上游英文版冲突检测：
+- 在 `npm install -g .` 阶段通过 `postinstall` 检查全局是否存在 `@vudovn/ag-kit`
+- 在 `ag-kit init` / `ag-kit update` / `ag-kit update-all` 执行前再次检查
+
+如检测到会提示冲突风险与卸载建议（不阻断当前流程）。
 
 **推荐方案：**
 为了在保持 `.agent/` 文件夹本地化（不被 Git 追踪）的同时维持 AI 功能：
