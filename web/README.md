@@ -93,11 +93,6 @@ ag-kit update --target codex --dry-run
 ag-kit doctor --target codex --fix
 ```
 
-## 文档
-
-- 在线文档：<https://antigravity-kit.vercel.app/docs>
-- 示例导航：<https://antigravity-kit.vercel.app/docs/guide/examples/create>
-
 ## Buy me coffee
 
 > 本项目由 **Mison** 进行汉化处理与额外功能开发。
@@ -107,7 +102,7 @@ ag-kit doctor --target codex --fix
     <td align="center" width="50%">
       <strong>支持 Mison（本仓库维护者）</strong><br />
       <img src="../image/README/mison-wechat-pay.jpg" alt="Mison 微信赞赏码" width="260" /><br />
-      <sub>微信赞赏码（优先）</sub>
+      <sub>微信赞赏码</sub>
     </td>
     <td align="center" width="50%">
       <strong>感谢上游作者 vudovn 创建并维护 Antigravity-Kit</strong><br />

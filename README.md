@@ -242,11 +242,6 @@ ag-kit exclude remove --path /path/to/dir # 删除排除路径
 - 可通过 `ag-kit exclude add/remove/list` 维护自定义排除路径（支持排除整棵目录树）。
 - 也可通过环境变量 `AG_KIT_INDEX_PATH` 指定自定义索引路径（跨平台通用）。
 
-## 文档 (Documentation)
-
-- **[Web App 示例](https://antigravity-kit.vercel.app//docs/guide/examples/brainstorm)** - 创建 Web 应用的分步指南
-- **[在线文档](https://antigravity-kit.vercel.app//docs)** - 在线浏览所有文档
-
 ## 请我喝咖啡 (Buy me coffee)
 
 > 本项目由 **Mison** 进行汉化处理与额外功能开发。
@@ -256,7 +251,7 @@ ag-kit exclude remove --path /path/to/dir # 删除排除路径
     <td align="center" width="50%">
       <strong>支持 Mison（本仓库维护者）</strong><br />
       <img src="image/README/mison-wechat-pay.jpg" alt="Mison 微信赞赏码" width="260" /><br />
-      <sub>微信赞赏码（优先）</sub>
+      <sub>微信赞赏码</sub>
     </td>
     <td align="center" width="50%">
       <strong>感谢上游作者 vudovn 创建并维护 Antigravity-Kit</strong><br />
