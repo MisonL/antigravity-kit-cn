@@ -1,46 +1,86 @@
 ---
-description: 检查项目和智能体状态
+description: 展示 agent 与项目状态。用于进度跟踪与状态看板。
 ---
 
-# 状态 (Status Workflow)
+# /status - 查看状态
 
-**触发命令**: `/status`
-
-## 目的
-
-显示当前项目、任务和 Agent 的状态仪表盘。
-
-## 显示内容
-
-1. **当前任务**:
-    - 读取 `task.md`。
-    - 显示当前正在进行的项目 (In Progress)。
-    - 显示下一步计划。
-    - 显示已完成的里程碑。
-
-2. **Agent 状态**:
-    - 当前激活的 Agent。
-    - 当前加载的 Skills。
-    - 使用的模式 (Planning/Execution)。
-
-3. **项目健康度**:
-    - 上次测试结果。
-    - 待修复的 TODOs。
-
-## 示例
-
-> User: /status
-> AI:
-> 📊 **项目状态**: 开发中
-> 🔄 **当前任务**: 实现 JWT 认证 (Step 3/5)
-> 🤖 **当前 Agent**: Backend Specialist
-> ✅ **已完成**: 数据库 Schema, 登录接口
+$ARGUMENTS
 
 ---
 
-## 上游脚本流程补充（reference 对齐）
+## 任务
 
-状态流程应查询会话与预览状态：
+展示当前项目与 agent 状态。
 
+### 展示内容
+
+1. **项目信息**
+   - 项目名称与路径
+   - 技术栈
+   - 当前功能
+
+2. **Agent 状态看板**
+   - 正在运行的 agents
+   - 已完成任务
+   - 待处理工作
+
+3. **文件统计**
+   - 已创建文件数
+   - 已修改文件数
+
+4. **预览状态**
+   - 服务是否运行
+   - URL
+   - 健康检查结果
+
+---
+
+## 输出示例
+
+```
+=== Project Status ===
+
+📁 Project: my-ecommerce
+📂 Path: C:/projects/my-ecommerce
+🏷️ Type: nextjs-ecommerce
+📊 Status: active
+
+🔧 Tech Stack:
+   Framework: next.js
+   Database: postgresql
+   Auth: clerk
+   Payment: stripe
+
+✅ Features (5):
+   • product-listing
+   • cart
+   • checkout
+   • user-auth
+   • order-history
+
+⏳ Pending (2):
+   • admin-panel
+   • email-notifications
+
+📄 Files: 73 created, 12 modified
+
+=== Agent Status ===
+
+✅ database-architect → Completed
+✅ backend-specialist → Completed
+🔄 frontend-specialist → Dashboard components (60%)
+⏳ test-engineer → Waiting
+
+=== Preview ===
+
+🌐 URL: http://localhost:3000
+💚 Health: OK
+```
+
+---
+
+## 技术说明
+
+状态查询使用以下脚本：
 - `python .agent/scripts/session_manager.py status`
 - `python .agent/scripts/auto_preview.py status`
