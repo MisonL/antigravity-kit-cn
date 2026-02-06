@@ -1,29 +1,29 @@
 # 项目类型检测 (Project Type Detection)
 
-> 分析用户请求以确定项目类型和模版。
+> 分析用户请求以确定项目类型和模板。
 
-## 关键词矩阵
+## 关键词矩阵 (Keyword Matrix)
 
-| 关键词                                         | 项目类型             | 模版               |
-| ---------------------------------------------- | -------------------- | ------------------ |
-| blog, post, article, 博客, 文章                | Blog                 | astro-static       |
-| e-commerce, product, cart, payment, 电商, 支付 | E-commerce           | nextjs-saas        |
-| dashboard, panel, management, 仪表盘, 后台     | Admin Dashboard      | nextjs-fullstack   |
-| api, backend, service, rest, 接口, 服务        | API Service          | express-api        |
-| python, fastapi, django                        | Python API           | python-fastapi     |
-| mobile, android, ios, react native, 移动端     | Mobile App (RN)      | react-native-app   |
-| flutter, dart                                  | Mobile App (Flutter) | flutter-app        |
-| portfolio, personal, cv, 作品集, 简历          | Portfolio            | nextjs-static      |
-| crm, customer, sales, 客户管理                 | CRM                  | nextjs-fullstack   |
-| saas, subscription, stripe, 订阅               | SaaS                 | nextjs-saas        |
-| landing, promotional, marketing, 落地页        | Landing Page         | nextjs-static      |
-| docs, documentation, 文档                      | Documentation        | astro-static       |
-| extension, plugin, chrome, 插件, 扩展          | Browser Extension    | chrome-extension   |
-| desktop, electron, 桌面应用                    | Desktop App          | electron-desktop   |
-| cli, command line, terminal, 命令行            | CLI Tool             | cli-tool           |
-| monorepo, workspace, 工作区                    | Monorepo             | monorepo-turborepo |
+| 关键词                                                       | 项目类型             | 模板               |
+| ------------------------------------------------------------ | -------------------- | ------------------ |
+| blog, post, article, 博客, 文章                              | Blog                 | astro-static       |
+| e-commerce, product, cart, payment, 电商, 产品, 购物车, 支付 | E-commerce           | nextjs-saas        |
+| dashboard, panel, management, 仪表盘, 控制面板, 管理系统     | Admin Dashboard      | nextjs-fullstack   |
+| api, backend, service, rest, 接口, 后端, 服务                | API Service          | express-api        |
+| python, fastapi, django                                      | Python API           | python-fastapi     |
+| mobile, android, ios, react native, 移动端, 手机应用         | Mobile App (RN)      | react-native-app   |
+| flutter, dart                                                | Mobile App (Flutter) | flutter-app        |
+| portfolio, personal, cv, 作品集, 个人主页, 简历              | Portfolio            | nextjs-static      |
+| crm, customer, sales, 客户管理, 销售管理                     | CRM                  | nextjs-fullstack   |
+| saas, subscription, stripe, 订阅, 软件即服务                 | SaaS                 | nextjs-saas        |
+| landing, promotional, marketing, 落地页, 营销页              | Landing Page         | nextjs-static      |
+| docs, documentation, 文档                                    | Documentation        | astro-static       |
+| extension, plugin, chrome, 插件, 扩展                        | Browser Extension    | chrome-extension   |
+| desktop, electron, 桌面应用                                  | Desktop App          | electron-desktop   |
+| cli, command line, terminal, 命令行, 终端                    | CLI Tool             | cli-tool           |
+| monorepo, workspace, 工作区, 单体大仓                        | Monorepo             | monorepo-turborepo |
 
-## 检测流程
+## 检测流程 (Detection Process)
 
 ```
 1. 标记化用户请求
