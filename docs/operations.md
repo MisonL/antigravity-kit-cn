@@ -49,10 +49,6 @@
 - **智能覆盖**: 仅当文件确实是“用户修改且与新版本不同”时才备份；如果本地文件已与新版本一致，不会重复备份。
 - **解决**: 检查备份，将需要的修改迁移到上游源码或通过 Overlay 机制（未来特性）实现。
 
-### 2.2.1 历史 `.agents` 目录
-
-旧版本可能留下 `.agents` 目录。当前实现已移除镜像机制，`ag-kit update` 或 `ag-kit doctor --fix` 会自动清理该目录。
-
 ### 2.3 Windows 权限问题
 
 - 如果遇到 `EPERM` 或 `EBUSY`：
@@ -66,7 +62,6 @@ ag-kit doctor --fix
 ```
 
 - **功能**:
-    - 如果存在旧 `.agents`，会自动清理。
     - 如果 `manifest.json` 丢失，会对照当前文件状态重新生成（注意：这会假设当前状态是正确的）。
     - 会重同步 `AGENTS.md` 和 `antigravity.rules` 的托管区块。
     - `Gemini` 目标当前不支持自动修复，建议执行 `ag-kit update --target gemini`。

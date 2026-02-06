@@ -3,3 +3,5 @@ node_modules/
 .temp_ag_kit/
 antigravity-doc
 others
+reference/*
+!reference/.gitignore

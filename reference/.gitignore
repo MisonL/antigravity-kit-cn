@@ -1,0 +1,3 @@
+# Keep this file only; ignore imported upstream snapshots.
+*
+!.gitignore

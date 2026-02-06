@@ -54,15 +54,13 @@ cd /path/to/your-project
 ag-kit update
 ```
 
-### FAQ: 为什么可能还会看到 `.agents`？
-
-这是正常行为，不是重复安装：
+### 目录说明
 
 - `.agent`: Gemini 目标使用的目录。
 - `.codex`: Codex 目标的托管源目录（由 Ag-Kit 维护）。
-- `.agents`: 历史版本遗留目录。当前分支已移除镜像机制，后续 `update/doctor --fix` 会自动清理该目录。
+- `.codex-backup`: 漂移覆盖前自动备份目录。
 
-可用以下命令确认状态：
+可用以下命令确认当前状态：
 
 ```bash
 ag-kit status
@@ -89,14 +87,14 @@ macOS / Linux / WSL:
 
 ```bash
 cd /path/to/your-project
-rm -rf .agent .codex .agents .codex-backup
+rm -rf .agent .codex .codex-backup
 ```
 
 Windows PowerShell:
 
 ```powershell
 Set-Location C:\path\to\your-project
-Remove-Item .agent,.codex,.agents,.codex-backup -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item .agent,.codex,.codex-backup -Recurse -Force -ErrorAction SilentlyContinue
 ```
 
 Windows CMD:
@@ -105,7 +103,6 @@ Windows CMD:
 cd /d C:\path\to\your-project
 rmdir /s /q .agent
 rmdir /s /q .codex
-rmdir /s /q .agents
 rmdir /s /q .codex-backup
 ```
 

@@ -35,7 +35,6 @@ class RuleGenerator {
         agentsMd += `2. Codex ensures strict versioning of these capabilities.\n`;
         agentsMd += `3. Managed resources are synchronized under \`.codex/\`.\n`;
         agentsMd += `4. Use \`ag-kit doctor --target codex --fix\` to recover missing managed artifacts.\n`;
-        agentsMd += `5. Legacy \`.agents/\` directories (if any) are cleaned during update/doctor.\n`;
 
         // 3. Generate risk controls
         let antigravityRules = `# Antigravity Risk Controls (Codex Managed)\n\n`;
@@ -43,7 +42,6 @@ class RuleGenerator {
         antigravityRules += `generated_at: ${new Date().toISOString()}\n\n`;
         antigravityRules += `## Controls\n`;
         antigravityRules += `- Do not edit files under \`.codex/\` directly.\n`;
-        antigravityRules += `- Legacy \`.agents/\` directories are not a managed customization target.\n`;
         antigravityRules += `- Keep generated skill IDs with \`agk-\` prefix to avoid collisions.\n`;
         antigravityRules += `- If integrity checks fail, run \`ag-kit doctor --target codex --fix\`.\n`;
         antigravityRules += `- Before destructive updates, preserve manual edits in source control.\n`;
