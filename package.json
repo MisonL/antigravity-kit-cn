@@ -21,7 +21,8 @@
   "author": "vudovn",
   "license": "MIT",
   "scripts": {
-    "postinstall": "node scripts/postinstall-check.js"
+    "postinstall": "node scripts/postinstall-check.js",
+    "test": "node --test"
   },
   "bin": {
     "ag-kit": "./bin/ag-kit.js"

@@ -3,14 +3,17 @@
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { execSync } = require("child_process");
 
 const pkg = require("../package.json");
+const { readGlobalNpmDependencies } = require("./utils");
+const GeminiAdapter = require("./adapters/gemini");
+const CodexAdapter = require("./adapters/codex");
+const { selectTargets } = require("./interactive");
 
-const REPO_URL = "https://github.com/MisonL/antigravity-kit-cn.git";
 const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agent");
-const WORKSPACE_INDEX_VERSION = 1;
+const WORKSPACE_INDEX_VERSION = 2;
 const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
+const SUPPORTED_TARGETS = ["gemini", "codex"];
 
 function nowISO() {
     return new Date().toISOString();
@@ -35,9 +38,10 @@ function createEmptyWorkspaceIndex() {
 
 function printUsage() {
     console.log("用法:");
-    console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--quiet] [--dry-run]");
-    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--quiet] [--dry-run]");
-    console.log("  ag-kit update-all [--branch <name>] [--prune-missing] [--quiet] [--dry-run]");
+    console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--quiet] [--dry-run]");
+    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--quiet] [--dry-run]");
+    console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]");
+    console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]");
     console.log("  ag-kit exclude list [--quiet]");
     console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
     console.log("  ag-kit exclude remove --path <dir> [--dry-run] [--quiet]");
@@ -60,9 +64,12 @@ function parseArgs(argv) {
         quiet: false,
         dryRun: false,
         pruneMissing: false,
+        nonInteractive: false,
+        fix: false,
         subcommand: "",
         path: "",
         branch: "",
+        targets: [],
     };
 
     let startIndex = 1;
@@ -87,6 +94,10 @@ function parseArgs(argv) {
             options.dryRun = true;
         } else if (arg === "--prune-missing") {
             options.pruneMissing = true;
+        } else if (arg === "--non-interactive") {
+            options.nonInteractive = true;
+        } else if (arg === "--fix") {
+            options.fix = true;
         } else if (arg === "--path") {
             if (i + 1 >= argv.length) {
                 throw new Error("--path 需要一个目录参数");
@@ -97,6 +108,16 @@ function parseArgs(argv) {
                 throw new Error("--branch 需要一个分支名参数");
             }
             options.branch = argv[++i];
+        } else if (arg === "--target") {
+            if (i + 1 >= argv.length) {
+                throw new Error("--target 需要一个目标参数");
+            }
+            options.targets.push(argv[++i]);
+        } else if (arg === "--targets") {
+            if (i + 1 >= argv.length) {
+                throw new Error("--targets 需要一个参数");
+            }
+            options.targets.push(...String(argv[++i]).split(","));
         } else {
             throw new Error(`未知参数: ${arg}`);
         }
@@ -118,24 +139,6 @@ function log(options, message) {
     }
 }
 
-function copyDir(src, dest) {
-    fs.mkdirSync(dest, { recursive: true });
-    const entries = fs.readdirSync(src, { withFileTypes: true });
-
-    for (const entry of entries) {
-        const srcPath = path.join(src, entry.name);
-        const destPath = path.join(dest, entry.name);
-
-        if (entry.isDirectory()) {
-            copyDir(srcPath, destPath);
-        } else {
-            fs.copyFileSync(srcPath, destPath);
-        }
-    }
-}
-
-const { readGlobalNpmDependencies } = require("./utils");
-
 function normalizeAbsolutePath(inputPath) {
     return path.normalize(path.resolve(inputPath));
 }
@@ -146,31 +149,6 @@ function pathCompareKey(inputPath) {
         return normalized.toLowerCase();
     }
     return normalized;
-}
-
-function maybeWarnUpstreamGlobalConflict(command, options) {
-    if (options.quiet) {
-        return;
-    }
-    if (process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
-        return;
-    }
-    if (command !== "init" && command !== "update" && command !== "update-all") {
-        return;
-    }
-
-    const deps = readGlobalNpmDependencies();
-    if (!deps) {
-        return;
-    }
-
-    if (!Object.prototype.hasOwnProperty.call(deps, UPSTREAM_GLOBAL_PACKAGE)) {
-        return;
-    }
-
-    log(options, `⚠️ 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}。`);
-    log(options, "⚠️ 上游英文版与当前中文版共用 `ag-kit` 命令名，后安装者会覆盖命令入口。");
-    log(options, `👉 建议执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
 }
 
 function normalizePathList(items) {
@@ -224,6 +202,49 @@ function isToolkitSourceDirectory(workspacePath) {
     }
 }
 
+function normalizeTargetState(value) {
+    if (!value || typeof value !== "object") {
+        return null;
+    }
+    return {
+        version: typeof value.version === "string" ? value.version : "",
+        installedAt: typeof value.installedAt === "string" ? value.installedAt : "",
+        updatedAt: typeof value.updatedAt === "string" ? value.updatedAt : "",
+    };
+}
+
+function normalizeWorkspaceRecordV2(item, normalizedPath) {
+    const targets = {};
+    if (item && item.targets && typeof item.targets === "object") {
+        for (const [targetName, state] of Object.entries(item.targets)) {
+            const normalizedState = normalizeTargetState(state);
+            if (normalizedState) {
+                targets[targetName] = normalizedState;
+            }
+        }
+    }
+    return {
+        path: normalizedPath,
+        targets,
+    };
+}
+
+function migrateRecordV1ToV2(item, normalizedPath) {
+    const targets = {};
+    const installedAt = typeof item.installedAt === "string" ? item.installedAt : "";
+    if (installedAt) {
+        targets.gemini = {
+            version: typeof item.cliVersion === "string" ? item.cliVersion : "",
+            installedAt,
+            updatedAt: typeof item.lastUpdatedAt === "string" ? item.lastUpdatedAt : installedAt,
+        };
+    }
+    return {
+        path: normalizedPath,
+        targets,
+    };
+}
+
 function readWorkspaceIndex() {
     const indexPath = getWorkspaceIndexPath();
     if (!fs.existsSync(indexPath)) {
@@ -243,11 +264,11 @@ function readWorkspaceIndex() {
     }
 
     const normalized = createEmptyWorkspaceIndex();
-    normalized.version = WORKSPACE_INDEX_VERSION;
     normalized.updatedAt = typeof parsed.updatedAt === "string" ? parsed.updatedAt : "";
 
     const records = Array.isArray(parsed.workspaces) ? parsed.workspaces : [];
     const dedupMap = new Map();
+    const isV1 = !parsed.version || parsed.version === 1;
 
     for (const item of records) {
         if (!item || typeof item.path !== "string" || item.path.trim() === "") {
@@ -255,57 +276,50 @@ function readWorkspaceIndex() {
         }
 
         const workspacePath = normalizeAbsolutePath(item.path);
-        dedupMap.set(pathCompareKey(workspacePath), {
-            path: workspacePath,
-            installedAt: typeof item.installedAt === "string" ? item.installedAt : "",
-            lastUpdatedAt: typeof item.lastUpdatedAt === "string" ? item.lastUpdatedAt : "",
-            cliVersion: typeof item.cliVersion === "string" ? item.cliVersion : "",
-        });
+        const key = pathCompareKey(workspacePath);
+        const record = isV1
+            ? migrateRecordV1ToV2(item, workspacePath)
+            : normalizeWorkspaceRecordV2(item, workspacePath);
+
+        dedupMap.set(key, record);
     }
 
     normalized.workspaces = Array.from(dedupMap.values()).sort((a, b) => a.path.localeCompare(b.path));
-    const excluded = Array.isArray(parsed.excludedPaths) ? parsed.excludedPaths : [];
-    normalized.excludedPaths = normalizePathList(excluded);
+    normalized.excludedPaths = normalizePathList(Array.isArray(parsed.excludedPaths) ? parsed.excludedPaths : []);
     return { indexPath, index: normalized };
 }
 
 function writeWorkspaceIndex(indexPath, index) {
     const workspaceMap = new Map();
+
     for (const item of Array.isArray(index.workspaces) ? index.workspaces : []) {
         if (!item || typeof item.path !== "string" || item.path.trim() === "") {
             continue;
         }
+
         const normalizedPath = normalizeAbsolutePath(item.path);
-        workspaceMap.set(pathCompareKey(normalizedPath), {
-            path: normalizedPath,
-            installedAt: typeof item.installedAt === "string" ? item.installedAt : "",
-            lastUpdatedAt: typeof item.lastUpdatedAt === "string" ? item.lastUpdatedAt : "",
-            cliVersion: typeof item.cliVersion === "string" ? item.cliVersion : "",
-        });
+        const normalizedRecord = normalizeWorkspaceRecordV2(item, normalizedPath);
+        workspaceMap.set(pathCompareKey(normalizedPath), normalizedRecord);
     }
 
     const payload = {
         version: WORKSPACE_INDEX_VERSION,
         updatedAt: index.updatedAt || nowISO(),
-        workspaces: Array.from(workspaceMap.values()),
+        workspaces: Array.from(workspaceMap.values()).sort((a, b) => a.path.localeCompare(b.path)),
         excludedPaths: normalizePathList(Array.isArray(index.excludedPaths) ? index.excludedPaths : []),
     };
-
-    payload.workspaces = payload.workspaces
-        .sort((a, b) => a.path.localeCompare(b.path));
 
     fs.mkdirSync(path.dirname(indexPath), { recursive: true });
     fs.writeFileSync(indexPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
 }
 
 function evaluateWorkspaceExclusion(index, workspaceRoot) {
-    const normalizedPath = path.resolve(workspaceRoot);
+    const normalizedPath = normalizeAbsolutePath(workspaceRoot);
     const excludedPaths = Array.isArray(index.excludedPaths) ? index.excludedPaths : [];
 
     if (isPathExcludedByList(excludedPaths, normalizedPath)) {
         return {
             excluded: true,
-            code: "user_excluded",
             reason: "命中用户排除清单",
             path: normalizedPath,
         };
@@ -314,7 +328,6 @@ function evaluateWorkspaceExclusion(index, workspaceRoot) {
     if (isToolkitSourceDirectory(normalizedPath)) {
         return {
             excluded: true,
-            code: "default_source",
             reason: "检测为 antigravity-kit 源码目录（默认排除）",
             path: normalizedPath,
         };
@@ -322,7 +335,6 @@ function evaluateWorkspaceExclusion(index, workspaceRoot) {
 
     return {
         excluded: false,
-        code: "",
         reason: "",
         path: normalizedPath,
     };
@@ -336,41 +348,66 @@ function removeWorkspaceRecord(index, workspaceRoot) {
     return before - index.workspaces.length;
 }
 
-function previewWorkspaceIndexRegistration(workspaceRoot, options) {
-    const { indexPath, index } = readWorkspaceIndex();
-    const exclusion = evaluateWorkspaceExclusion(index, workspaceRoot);
+function upsertWorkspaceTarget(index, workspaceRoot, targetName, timestamp) {
     const normalizedPath = normalizeAbsolutePath(workspaceRoot);
     const targetKey = pathCompareKey(normalizedPath);
 
+    let record = index.workspaces.find((item) => pathCompareKey(item.path) === targetKey);
+    if (!record) {
+        record = { path: normalizedPath, targets: {} };
+        index.workspaces.push(record);
+    }
+
+    if (!record.targets || typeof record.targets !== "object") {
+        record.targets = {};
+    }
+
+    const prev = normalizeTargetState(record.targets[targetName]) || {
+        version: "",
+        installedAt: "",
+        updatedAt: "",
+    };
+
+    record.targets[targetName] = {
+        version: pkg.version,
+        installedAt: prev.installedAt || timestamp,
+        updatedAt: timestamp,
+    };
+}
+
+function previewWorkspaceIndexRegistration(workspaceRoot, targetName, options) {
+    const { indexPath, index } = readWorkspaceIndex();
+    const exclusion = evaluateWorkspaceExclusion(index, workspaceRoot);
+    const normalizedPath = normalizeAbsolutePath(workspaceRoot);
+
     if (exclusion.excluded) {
-        const removedCount = index.workspaces.filter((item) => pathCompareKey(item.path) === targetKey).length;
+        const exists = index.workspaces.some((item) => pathCompareKey(item.path) === pathCompareKey(normalizedPath));
         log(options, `[dry-run] 索引登记已跳过: ${exclusion.reason}`);
-        if (removedCount > 0) {
+        if (exists) {
             log(options, `[dry-run] 将从索引中移除已存在记录: ${normalizedPath}`);
         }
         return;
     }
 
-    const exists = index.workspaces.some((item) => pathCompareKey(item.path) === targetKey);
+    const exists = index.workspaces.some((item) => pathCompareKey(item.path) === pathCompareKey(normalizedPath));
     if (exists) {
-        log(options, `[dry-run] 将刷新工作区索引记录: ${normalizedPath}`);
+        log(options, `[dry-run] 将刷新工作区索引记录: ${normalizedPath} [${targetName}]`);
     } else {
-        log(options, `[dry-run] 将登记工作区到全局索引: ${normalizedPath}`);
+        log(options, `[dry-run] 将登记工作区到全局索引: ${normalizedPath} [${targetName}]`);
     }
     log(options, `[dry-run] 索引文件: ${indexPath}`);
 }
 
-function registerWorkspaceIndex(workspaceRoot, options) {
+function registerWorkspaceTarget(workspaceRoot, targetName, options) {
     const normalizedPath = normalizeAbsolutePath(workspaceRoot);
     const { indexPath, index } = readWorkspaceIndex();
-    const time = nowISO();
+    const timestamp = nowISO();
     const exclusion = evaluateWorkspaceExclusion(index, normalizedPath);
-    const targetKey = pathCompareKey(normalizedPath);
 
     if (exclusion.excluded) {
         const removedCount = removeWorkspaceRecord(index, normalizedPath);
-        if (removedCount > 0) {
-            index.updatedAt = time;
+        if (!options.dryRun && removedCount > 0) {
+            index.updatedAt = timestamp;
             writeWorkspaceIndex(indexPath, index);
         }
 
@@ -385,238 +422,210 @@ function registerWorkspaceIndex(workspaceRoot, options) {
         return;
     }
 
-    let inserted = true;
-    index.workspaces = index.workspaces.map((item) => {
-        if (pathCompareKey(item.path) !== targetKey) {
-            return item;
-        }
-        inserted = false;
-        return {
-            path: normalizedPath,
-            installedAt: item.installedAt || time,
-            lastUpdatedAt: time,
-            cliVersion: pkg.version,
-        };
-    });
-
-    if (inserted) {
-        index.workspaces.push({
-            path: normalizedPath,
-            installedAt: time,
-            lastUpdatedAt: time,
-            cliVersion: pkg.version,
-        });
+    if (options.dryRun) {
+        previewWorkspaceIndexRegistration(normalizedPath, targetName, options);
+        return;
     }
 
-    index.updatedAt = time;
+    upsertWorkspaceTarget(index, normalizedPath, targetName, timestamp);
+    index.updatedAt = timestamp;
     writeWorkspaceIndex(indexPath, index);
 
     if (!options.silentIndexLog) {
-        if (inserted) {
-            log(options, `🗂️ 已登记工作区到全局索引: ${normalizedPath}`);
-        } else {
-            log(options, `🗂️ 已刷新工作区索引记录: ${normalizedPath}`);
-        }
+        log(options, `🗂️ 已登记工作区索引: ${normalizedPath} [${targetName}]`);
         log(options, `   索引文件: ${indexPath}`);
     }
 }
 
-function isAgentIgnoreRule(line) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("!")) {
-        return false;
+function maybeWarnUpstreamGlobalConflict(command, options) {
+    if (options.quiet) {
+        return;
+    }
+    if (process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
+        return;
+    }
+    if (command !== "init" && command !== "update" && command !== "update-all") {
+        return;
     }
 
-    let pattern = trimmed;
-
-    while (pattern.startsWith("**/")) {
-        pattern = pattern.slice(3);
-    }
-    while (pattern.startsWith("/")) {
-        pattern = pattern.slice(1);
-    }
-    while (pattern.endsWith("/")) {
-        pattern = pattern.slice(0, -1);
-    }
-    while (pattern.endsWith("/**")) {
-        pattern = pattern.slice(0, -3);
+    const deps = readGlobalNpmDependencies();
+    if (!deps) {
+        return;
     }
 
-    if (!pattern) {
-        return false;
+    if (!Object.prototype.hasOwnProperty.call(deps, UPSTREAM_GLOBAL_PACKAGE)) {
+        return;
     }
 
-    const segments = pattern.split("/");
-    return segments.some((segment) => segment === ".agent");
+    log(options, `⚠️ 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}。`);
+    log(options, "⚠️ 上游英文版与当前中文版共用 `ag-kit` 命令名，后安装者会覆盖命令入口。");
+    log(options, `👉 建议执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
 }
 
-function removeAgentIgnoreRules(workspaceRoot, options) {
-    const gitIgnorePath = path.join(workspaceRoot, ".gitignore");
-    if (!fs.existsSync(gitIgnorePath)) {
-        return { fileExists: false, removedCount: 0, dryRun: options.dryRun };
-    }
+function normalizeTargets(rawTargets) {
+    const result = [];
+    const seen = new Set();
 
-    const original = fs.readFileSync(gitIgnorePath, "utf8");
-    const lineEnding = original.includes("\r\n") ? "\r\n" : "\n";
-    const hadTrailingNewline = /\r?\n$/.test(original);
-    const lines = original.split(/\r?\n/);
-
-    const kept = [];
-    let removedCount = 0;
-
-    for (const line of lines) {
-        if (isAgentIgnoreRule(line)) {
-            removedCount += 1;
+    for (const raw of rawTargets || []) {
+        if (typeof raw !== "string") {
             continue;
         }
-        kept.push(line);
+        const parts = raw.split(",");
+        for (const part of parts) {
+            const target = part.trim().toLowerCase();
+            if (!target) {
+                continue;
+            }
+            if (!SUPPORTED_TARGETS.includes(target)) {
+                throw new Error(`不支持的目标: ${target}（可选: ${SUPPORTED_TARGETS.join(", ")}）`);
+            }
+            if (!seen.has(target)) {
+                seen.add(target);
+                result.push(target);
+            }
+        }
     }
 
-    if (removedCount === 0) {
-        return { fileExists: true, removedCount: 0, dryRun: options.dryRun };
-    }
-
-    let updated = kept.join(lineEnding);
-    if (hadTrailingNewline) {
-        updated += lineEnding;
-    }
-
-    if (!options.dryRun) {
-        fs.writeFileSync(gitIgnorePath, updated, "utf8");
-    }
-
-    return { fileExists: true, removedCount, dryRun: options.dryRun };
+    return result;
 }
 
-function logGitIgnoreCleanup(workspaceRoot, cleanupResult, options) {
-    const gitIgnorePath = path.join(workspaceRoot, ".gitignore");
-
-    if (!cleanupResult.fileExists) {
-        log(options, "ℹ️ 未发现 .gitignore，跳过 Git 忽略规则扫描。");
-        return;
+function detectInstalledTargets(workspaceRoot) {
+    const targets = [];
+    if (fs.existsSync(path.join(workspaceRoot, ".agent"))) {
+        targets.push("gemini");
     }
-
-    if (cleanupResult.removedCount === 0) {
-        log(options, "ℹ️ Git 忽略规则检查完成：未发现会忽略 .agent 的规则。");
-        return;
+    if (fs.existsSync(path.join(workspaceRoot, ".codex"))) {
+        targets.push("codex");
     }
-
-    if (cleanupResult.dryRun) {
-        log(
-            options,
-            `[dry-run] 将从 ${gitIgnorePath} 移除 ${cleanupResult.removedCount} 条 .agent 忽略规则。`,
-        );
-        return;
-    }
-
-    log(options, `🧹 已从 ${gitIgnorePath} 移除 ${cleanupResult.removedCount} 条 .agent 忽略规则。`);
-    log(options, "✅ 已确保 .agent 不会因 .gitignore 配置而失效。");
+    return targets;
 }
 
-function cloneBranchAgentDir(branch, options) {
-    const safeBranch = branch.trim();
-    if (!/^[A-Za-z0-9._/-]+$/.test(safeBranch)) {
-        throw new Error(`非法分支名: ${branch}`);
+function isTargetInstalled(workspaceRoot, targetName) {
+    if (targetName === "gemini") {
+        return fs.existsSync(path.join(workspaceRoot, ".agent"));
     }
-
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-"));
-    log(options, `📥 正在从 ${REPO_URL} 拉取分支 ${safeBranch} ...`);
-
-    try {
-        execSync(`git clone --depth 1 --branch ${safeBranch} ${REPO_URL} "${tempDir}"`, {
-            stdio: options.quiet ? "ignore" : "pipe",
-        });
-    } catch (err) {
-        fs.rmSync(tempDir, { recursive: true, force: true });
-        throw new Error(`无法拉取分支 ${safeBranch}，请确认分支存在且网络可用`);
+    if (targetName === "codex") {
+        return fs.existsSync(path.join(workspaceRoot, ".codex"));
     }
-
-    const clonedAgentDir = path.join(tempDir, ".agent");
-    if (!fs.existsSync(clonedAgentDir)) {
-        fs.rmSync(tempDir, { recursive: true, force: true });
-        throw new Error(`分支 ${safeBranch} 中未找到 .agent 目录`);
-    }
-
-    return {
-        agentDir: clonedAgentDir,
-        cleanup: () => fs.rmSync(tempDir, { recursive: true, force: true }),
-    };
+    return false;
 }
 
-function installAgent(options) {
+function createAdapter(targetName, workspaceRoot, options) {
+    if (targetName === "gemini") {
+        return new GeminiAdapter(workspaceRoot, options);
+    }
+    if (targetName === "codex") {
+        return new CodexAdapter(workspaceRoot, options);
+    }
+    throw new Error(`未知目标: ${targetName}`);
+}
+
+async function resolveTargetsForInit(options) {
+    let targets = normalizeTargets(options.targets);
+
+    if (targets.length > 0) {
+        return targets;
+    }
+
+    if (options.nonInteractive) {
+        throw new Error("非交互模式下必须通过 --target 或 --targets 指定目标");
+    }
+
+    if (!process.stdin.isTTY || !process.stdout.isTTY) {
+        throw new Error("当前环境不是交互终端，请通过 --target 或 --targets 指定目标");
+    }
+
+    targets = normalizeTargets(await selectTargets(options));
+    if (targets.length === 0) {
+        throw new Error("必须选择至少一个目标");
+    }
+
+    return targets;
+}
+
+function resolveTargetsForUpdate(workspaceRoot, options) {
+    const requested = normalizeTargets(options.targets);
+    if (requested.length > 0) {
+        return requested;
+    }
+    return detectInstalledTargets(workspaceRoot);
+}
+
+async function commandInit(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
-    const targetDir = path.join(workspaceRoot, ".agent");
-    let sourceDir = BUNDLED_AGENT_DIR;
-    let cleanup = null;
+    const targets = await resolveTargetsForInit(options);
 
-    if (options.branch) {
-        const remote = cloneBranchAgentDir(options.branch, options);
-        sourceDir = remote.agentDir;
-        cleanup = remote.cleanup;
+    for (const target of targets) {
+        const adapter = createAdapter(target, workspaceRoot, options);
+        log(options, `📦 正在初始化目标 [${target}] ...`);
+        adapter.install(BUNDLED_AGENT_DIR);
+        registerWorkspaceTarget(workspaceRoot, target, options);
     }
 
-    try {
-        if (!fs.existsSync(sourceDir)) {
-            throw new Error(`未找到模板目录: ${sourceDir}`);
-        }
-
-        log(options, "🚀 正在初始化 Antigravity Kit ...");
-        log(options, `📂 目标目录: ${workspaceRoot}`);
-
-        if (fs.existsSync(targetDir)) {
-            if (!options.force) {
-                throw new Error(".agent 目录已存在。请使用 --force 覆盖。");
-            }
-            if (options.dryRun) {
-                log(options, `[dry-run] 将删除: ${targetDir}`);
-            } else {
-                fs.rmSync(targetDir, { recursive: true, force: true });
-                log(options, `🗑️  已删除旧目录: ${targetDir}`);
-            }
-        }
-
-        if (options.dryRun) {
-            log(options, `[dry-run] 将复制: ${sourceDir} -> ${targetDir}`);
-            const cleanupPreview = removeAgentIgnoreRules(workspaceRoot, options);
-            logGitIgnoreCleanup(workspaceRoot, cleanupPreview, options);
-            if (options.manageIndex !== false) {
-                previewWorkspaceIndexRegistration(workspaceRoot, options);
-            }
-            log(options, "✅ dry-run 完成，未写入任何文件。");
-            return;
-        }
-
-        fs.mkdirSync(workspaceRoot, { recursive: true });
-        copyDir(sourceDir, targetDir);
-        const cleanupResult = removeAgentIgnoreRules(workspaceRoot, options);
-        logGitIgnoreCleanup(workspaceRoot, cleanupResult, options);
-        if (options.manageIndex !== false) {
-            registerWorkspaceIndex(workspaceRoot, options);
-        }
-        log(options, "✅ .agent 已安装完成");
-        log(options, '👉 现在可以使用 "/brainstorm", "/create" 等命令');
-    } finally {
-        if (cleanup) {
-            cleanup();
-        }
+    if (targets.length > 0) {
+        log(options, `✅ 初始化完成 (Targets: ${targets.join(", ")})`);
     }
 }
 
-function commandInit(options) {
-    installAgent(options);
+async function commandUpdate(options) {
+    const workspaceRoot = resolveWorkspaceRoot(options.path);
+    const targets = resolveTargetsForUpdate(workspaceRoot, options);
+
+    if (targets.length === 0) {
+        throw new Error("此目录未检测到 Antigravity Kit 安装，无法更新。请先执行 init。");
+    }
+
+    log(options, `🔄 正在更新 Antigravity Kit (Targets: ${targets.join(", ")})...`);
+
+    let updatedAny = false;
+    for (const target of targets) {
+        if (!isTargetInstalled(workspaceRoot, target) && options.targets.length > 0) {
+            throw new Error(`目标未安装: ${target}`);
+        }
+        if (!isTargetInstalled(workspaceRoot, target)) {
+            log(options, `⏭️ 目标未安装，跳过: ${target}`);
+            continue;
+        }
+
+        const runOptions = { ...options, force: true };
+        const adapter = createAdapter(target, workspaceRoot, runOptions);
+        log(options, `📦 更新 [${target}] ...`);
+        adapter.update(BUNDLED_AGENT_DIR);
+        registerWorkspaceTarget(workspaceRoot, target, runOptions);
+        updatedAny = true;
+    }
+
+    if (!updatedAny) {
+        throw new Error("未找到可更新的目标");
+    }
 }
 
-function commandUpdate(options) {
-    const merged = { ...options, force: true };
-    log(merged, "🔄 正在更新 Antigravity Kit ...");
-    installAgent(merged);
+function mergeUpdatedTargets(record, workspacePath, targetNames, timestamp) {
+    const normalizedPath = normalizeAbsolutePath(workspacePath);
+    const next = normalizeWorkspaceRecordV2(record || {}, normalizedPath);
+
+    for (const target of targetNames) {
+        const prev = normalizeTargetState(next.targets[target]) || {
+            version: "",
+            installedAt: "",
+            updatedAt: "",
+        };
+        next.targets[target] = {
+            version: pkg.version,
+            installedAt: prev.installedAt || timestamp,
+            updatedAt: timestamp,
+        };
+    }
+
+    return next;
 }
 
-function commandUpdateAll(options) {
+async function commandUpdateAll(options) {
     if (options.path) {
         throw new Error("update-all 不支持 --path，请直接执行 ag-kit update-all");
     }
 
+    const requestedTargets = normalizeTargets(options.targets);
     const { indexPath, index } = readWorkspaceIndex();
     const records = index.workspaces || [];
 
@@ -638,23 +647,16 @@ function commandUpdateAll(options) {
     const nextRecords = [];
 
     for (let i = 0; i < records.length; i++) {
-        const item = records[i];
+        const item = normalizeWorkspaceRecordV2(records[i], normalizeAbsolutePath(records[i].path));
         const workspacePath = normalizeAbsolutePath(item.path);
-        const agentDir = path.join(workspacePath, ".agent");
         const exclusion = evaluateWorkspaceExclusion(index, workspacePath);
 
         if (exclusion.excluded) {
             removedExcluded += 1;
             if (options.dryRun) {
-                log(
-                    options,
-                    `[dry-run] [${i + 1}/${records.length}] 将从批量索引移除排除路径: ${workspacePath}（${exclusion.reason}）`,
-                );
+                log(options, `[dry-run] [${i + 1}/${records.length}] 将从批量索引移除排除路径: ${workspacePath}（${exclusion.reason}）`);
             } else {
-                log(
-                    options,
-                    `🧽 [${i + 1}/${records.length}] 已从批量索引中移除排除路径: ${workspacePath}（${exclusion.reason}）`,
-                );
+                log(options, `🧽 [${i + 1}/${records.length}] 已从批量索引中移除排除路径: ${workspacePath}（${exclusion.reason}）`);
             }
             continue;
         }
@@ -671,42 +673,61 @@ function commandUpdateAll(options) {
             continue;
         }
 
-        if (!fs.existsSync(agentDir)) {
+        let targets = Object.keys(item.targets || {});
+        if (targets.length === 0) {
+            targets = detectInstalledTargets(workspacePath);
+        }
+        if (requestedTargets.length > 0) {
+            targets = targets.filter((target) => requestedTargets.includes(target));
+        }
+        targets = normalizeTargets(targets);
+
+        if (targets.length === 0) {
             skipped += 1;
-            log(options, `⏭️ [${i + 1}/${records.length}] 未检测到 .agent，已跳过: ${workspacePath}`);
+            log(options, `⏭️ [${i + 1}/${records.length}] 未检测到可更新目标，已跳过: ${workspacePath}`);
             nextRecords.push(item);
             continue;
         }
 
-        log(options, `📦 [${i + 1}/${records.length}] 更新: ${workspacePath}`);
+        log(options, `📦 [${i + 1}/${records.length}] 更新: ${workspacePath} [${targets.join(", ")}]`);
 
-        try {
-            const runOptions = {
-                ...options,
-                force: true,
-                path: workspacePath,
-                manageIndex: false,
-            };
-            installAgent(runOptions);
-            updated += 1;
-            nextRecords.push({
-                path: workspacePath,
-                installedAt: item.installedAt || timestamp,
-                lastUpdatedAt: timestamp,
-                cliVersion: pkg.version,
-            });
-        } catch (err) {
-            failed += 1;
-            nextRecords.push(item);
-            if (!options.quiet) {
-                console.error(`❌ 更新失败: ${workspacePath}`);
-                console.error(`   ${err.message}`);
+        const updatedTargets = [];
+        for (const target of targets) {
+            if (!isTargetInstalled(workspacePath, target)) {
+                log(options, `⏭️ [${i + 1}/${records.length}] 目标未安装，跳过: ${target}`);
+                continue;
             }
+
+            try {
+                const runOptions = {
+                    ...options,
+                    force: true,
+                    path: workspacePath,
+                    silentIndexLog: true,
+                };
+                const adapter = createAdapter(target, workspacePath, runOptions);
+                adapter.update(BUNDLED_AGENT_DIR);
+                updatedTargets.push(target);
+            } catch (err) {
+                failed += 1;
+                if (!options.quiet) {
+                    console.error(`❌ 更新失败: ${workspacePath} [${target}]`);
+                    console.error(`   ${err.message}`);
+                }
+            }
+        }
+
+        if (updatedTargets.length > 0) {
+            updated += 1;
+            nextRecords.push(mergeUpdatedTargets(item, workspacePath, updatedTargets, timestamp));
+        } else {
+            skipped += 1;
+            nextRecords.push(item);
         }
     }
 
     if (!options.dryRun) {
-        index.workspaces = nextRecords;
+        index.workspaces = nextRecords.sort((a, b) => a.path.localeCompare(b.path));
         index.updatedAt = timestamp;
         writeWorkspaceIndex(indexPath, index);
     }
@@ -721,6 +742,67 @@ function commandUpdateAll(options) {
     }
 
     if (failed > 0) {
+        process.exitCode = 1;
+    }
+}
+
+async function commandDoctor(options) {
+    const workspaceRoot = resolveWorkspaceRoot(options.path);
+    let targets = normalizeTargets(options.targets);
+
+    if (targets.length === 0) {
+        targets = detectInstalledTargets(workspaceRoot);
+    }
+
+    if (targets.length === 0) {
+        throw new Error("未检测到已安装的目标。请指定 --target 或先执行 init。");
+    }
+
+    log(options, `🩺 开始诊断 (Targets: ${targets.join(", ")})...`);
+
+    let hasIssue = false;
+    for (const target of targets) {
+        const adapter = createAdapter(target, workspaceRoot, options);
+        console.log(`\n[${target.toUpperCase()}] 检查完整性...`);
+
+        let result = adapter.checkIntegrity();
+        if (result.status === "ok") {
+            console.log("  ✅ 状态正常");
+            continue;
+        }
+
+        let targetHasIssue = true;
+        console.log(`  ❌ 状态: ${result.status}`);
+        for (const issue of result.issues || []) {
+            console.log(`     - ${issue}`);
+        }
+
+        if (options.fix) {
+            const fixRes = adapter.fixIntegrity();
+            if (fixRes && fixRes.fixed) {
+                console.log(`  🛠️ 已修复: ${fixRes.summary}`);
+                result = adapter.checkIntegrity();
+                if (result.status === "ok") {
+                    console.log("  ✅ 修复后状态正常");
+                    targetHasIssue = false;
+                } else {
+                    console.log(`  ⚠️ 修复后仍有问题: ${result.status}`);
+                    for (const issue of result.issues || []) {
+                        console.log(`     - ${issue}`);
+                    }
+                    targetHasIssue = true;
+                }
+            } else {
+                console.log(`  ℹ️ 自动修复未执行: ${fixRes ? fixRes.summary : "无可用修复"}`);
+            }
+        }
+
+        if (targetHasIssue) {
+            hasIssue = true;
+        }
+    }
+
+    if (hasIssue) {
         process.exitCode = 1;
     }
 }
@@ -867,20 +949,16 @@ function countSkillsRecursive(dir) {
 
 function commandStatus(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
-    const agentDir = path.join(workspaceRoot, ".agent");
+    const installedTargets = detectInstalledTargets(workspaceRoot);
 
-    if (!fs.existsSync(agentDir)) {
+    if (installedTargets.length === 0) {
         if (!options.quiet) {
-            console.log("❌ 未检测到 .agent 安装");
+            console.log("❌ 未检测到 Antigravity Kit 安装");
             console.log(`   目标目录: ${workspaceRoot}`);
         }
         process.exitCode = 1;
         return;
     }
-
-    const agentsCount = countFilesIfExists(path.join(agentDir, "agents"), (name) => name.endsWith(".md"));
-    const workflowsCount = countFilesIfExists(path.join(agentDir, "workflows"), (name) => name.endsWith(".md"));
-    const skillsCount = countSkillsRecursive(path.join(agentDir, "skills"));
 
     if (options.quiet) {
         console.log("installed");
@@ -888,21 +966,44 @@ function commandStatus(options) {
     }
 
     console.log("✅ Antigravity Kit 已安装");
-    console.log(`   版本: ${pkg.version}`);
-    console.log(`   路径: ${agentDir}`);
-    console.log(`   Agents: ${agentsCount}`);
-    console.log(`   Skills: ${skillsCount}`);
-    console.log(`   Workflows: ${workflowsCount}`);
+    console.log(`   CLI 版本: ${pkg.version}`);
+    console.log(`   工作区: ${workspaceRoot}`);
+    console.log(`   Targets: ${installedTargets.join(", ")}`);
+
+    if (installedTargets.includes("gemini")) {
+        const agentDir = path.join(workspaceRoot, ".agent");
+        const agentsCount = countFilesIfExists(path.join(agentDir, "agents"), (name) => name.endsWith(".md"));
+        const workflowsCount = countFilesIfExists(path.join(agentDir, "workflows"), (name) => name.endsWith(".md"));
+        const skillsCount = countSkillsRecursive(path.join(agentDir, "skills"));
+        console.log("\n[gemini]");
+        console.log(`   路径: ${agentDir}`);
+        console.log(`   Agents: ${agentsCount}`);
+        console.log(`   Skills: ${skillsCount}`);
+        console.log(`   Workflows: ${workflowsCount}`);
+    }
+
+    if (installedTargets.includes("codex")) {
+        const codexDir = path.join(workspaceRoot, ".codex");
+        const skillsCount = countSkillsRecursive(path.join(codexDir, "skills"));
+        const hasManifest = fs.existsSync(path.join(codexDir, "manifest.json"));
+        const hasMirror = fs.existsSync(path.join(workspaceRoot, ".agents"));
+        console.log("\n[codex]");
+        console.log(`   路径: ${codexDir}`);
+        console.log(`   Skills: ${skillsCount}`);
+        console.log(`   Manifest: ${hasManifest ? "yes" : "no"}`);
+        console.log(`   Mirror(.agents): ${hasMirror ? "yes" : "no"}`);
+    }
 }
 
-function main() {
+async function main() {
     try {
         const { command, options } = parseArgs(process.argv.slice(2));
 
-        if (!command) {
+        if (!command || command === "--help" || command === "-h") {
             printUsage();
-            process.exitCode = 1;
-            return;
+            if (!command || command === "--help" || command === "-h") {
+                return;
+            }
         }
 
         if (command === "--version" || command === "-v") {
@@ -913,17 +1014,22 @@ function main() {
         maybeWarnUpstreamGlobalConflict(command, options);
 
         if (command === "init") {
-            commandInit(options);
+            await commandInit(options);
             return;
         }
 
         if (command === "update") {
-            commandUpdate(options);
+            await commandUpdate(options);
             return;
         }
 
         if (command === "update-all") {
-            commandUpdateAll(options);
+            await commandUpdateAll(options);
+            return;
+        }
+
+        if (command === "doctor") {
+            await commandDoctor(options);
             return;
         }
 
