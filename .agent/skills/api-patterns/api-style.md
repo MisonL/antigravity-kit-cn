@@ -1,29 +1,29 @@
-# API 风格选择 (API Style Selection)
+# API 风格选择 (2025)
 
-> REST vs GraphQL vs tRPC - 何时选择哪一个？
+> REST vs GraphQL vs tRPC - 在什么情况下选择哪种？
 
 ## 决策树
 
 ```
-API 消费者是谁？
+谁是 API 消费者？
 │
-├── 公共 API / 多个平台 (Web, Mobile, 3rd party)
-│   └── REST + OpenAPI (兼容性最广)
+├── 公共 API / 多平台支持
+│   └── REST + OpenAPI (最广泛的兼容性)
 │
-├── 复杂数据需求 / 多个前端
-│   └── GraphQL (灵活查询)
+├── 数据需求复杂 / 多个前端
+│   └── GraphQL (灵活的查询)
 │
 ├── TypeScript 前端 + 后端 (Monorepo)
 │   └── tRPC (端到端类型安全)
 │
-├── 实时 / 事件驱动
+├── 实时性 / 事件驱动
 │   └── WebSocket + AsyncAPI
 │
 └── 内部微服务
-    └── gRPC (高性能) 或 REST (简单)
+    └── gRPC (追求性能) 或 REST (追求简单)
 ```
 
-## 对比
+## 对比 (Comparison)
 
 | 因素              | REST           | GraphQL     | tRPC                |
 | :---------------- | :------------- | :---------- | :------------------ |
@@ -35,8 +35,8 @@ API 消费者是谁？
 
 ## 选择问题
 
-1.  谁是 API 消费者？
-2.  前端是 TypeScript 吗？
-3.  数据关系有多复杂？
-4.  缓存是否至关重要？
-5.  是公共 API 还是内部 API？
+1. 谁是 API 消费者？
+2. 前端是 TypeScript 吗？
+3. 数据关系有多复杂？
+4. 缓存是否至关重要？
+5. 是公共 API 还是内部 API？
