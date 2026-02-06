@@ -35,6 +35,35 @@ node bin/ag-kit.js init --path /path/to/your-project
 
 这将把包含所有模板的 `.agent` 文件夹安装到你的项目中。
 
+## 卸载 (Uninstall)
+
+### 卸载本机全局 CLI
+
+```bash
+npm uninstall -g antigravity-kit-cn
+```
+
+如果你同时安装过别名或上游英文版，可一并清理：
+
+```bash
+npm uninstall -g antigravity-kit @vudovn/ag-kit
+```
+
+### 卸载某个项目内的 Antigravity Kit
+
+```bash
+cd /path/to/your-project
+rm -rf .agent
+```
+
+### 清理批量更新索引（可选）
+
+```bash
+ag-kit exclude add --path /path/to/your-project
+```
+
+说明：全局卸载只会移除 `ag-kit` 命令，不会删除你本地 clone 的源码目录。
+
 ### ⚠️ 关于 `.gitignore` 的重要说明
 
 如果您正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/` 文件夹添加到 `.gitignore` 可能会阻止 IDE 索引工作流。这会导致斜杠命令（如 `/plan`, `/debug`）无法在对话建议下拉菜单中显示。

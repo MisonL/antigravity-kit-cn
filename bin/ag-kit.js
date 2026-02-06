@@ -42,6 +42,11 @@ function printUsage() {
     console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
     console.log("  ag-kit exclude remove --path <dir> [--dry-run] [--quiet]");
     console.log("  ag-kit status [--path <dir>] [--quiet]");
+    console.log("  ag-kit --version");
+}
+
+function printVersion() {
+    console.log(`ag-kit version ${pkg.version}`);
 }
 
 function parseArgs(argv) {
@@ -129,43 +134,7 @@ function copyDir(src, dest) {
     }
 }
 
-function parseJsonSafe(raw) {
-    try {
-        return JSON.parse(raw);
-    } catch (err) {
-        return null;
-    }
-}
-
-function readGlobalNpmDependencies() {
-    const cmd = "npm ls --global --depth=0 --json --silent";
-    let output = "";
-
-    try {
-        output = execSync(cmd, {
-            encoding: "utf8",
-            stdio: ["ignore", "pipe", "pipe"],
-        });
-    } catch (err) {
-        output = typeof err.stdout === "string" ? err.stdout : "";
-    }
-
-    if (!output || output.trim() === "") {
-        return null;
-    }
-
-    const data = parseJsonSafe(output);
-    if (!data || typeof data !== "object") {
-        return null;
-    }
-
-    const deps = data.dependencies;
-    if (!deps || typeof deps !== "object") {
-        return {};
-    }
-
-    return deps;
-}
+const { parseJsonSafe, readGlobalNpmDependencies } = require("./utils");
 
 function maybeWarnUpstreamGlobalConflict(command, options) {
     if (options.quiet) {
@@ -847,6 +816,21 @@ function countFilesIfExists(dir, filterFn) {
     return fs.readdirSync(dir).filter(filterFn).length;
 }
 
+function countSkillsRecursive(dir) {
+    if (!fs.existsSync(dir)) return 0;
+    let count = 0;
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+            count += countSkillsRecursive(fullPath);
+        } else if (entry.name === "SKILL.md") {
+            count += 1;
+        }
+    }
+    return count;
+}
+
 function commandStatus(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
     const agentDir = path.join(workspaceRoot, ".agent");
@@ -862,9 +846,7 @@ function commandStatus(options) {
 
     const agentsCount = countFilesIfExists(path.join(agentDir, "agents"), (name) => name.endsWith(".md"));
     const workflowsCount = countFilesIfExists(path.join(agentDir, "workflows"), (name) => name.endsWith(".md"));
-    const skillsCount = fs.existsSync(path.join(agentDir, "skills"))
-        ? execSync(`find "${path.join(agentDir, "skills")}" -name SKILL.md | wc -l`, { encoding: "utf8" }).trim()
-        : "0";
+    const skillsCount = countSkillsRecursive(path.join(agentDir, "skills"));
 
     if (options.quiet) {
         console.log("installed");
@@ -886,6 +868,11 @@ function main() {
         if (!command) {
             printUsage();
             process.exitCode = 1;
+            return;
+        }
+
+        if (command === "--version" || command === "-v") {
+            printVersion();
             return;
         }
 

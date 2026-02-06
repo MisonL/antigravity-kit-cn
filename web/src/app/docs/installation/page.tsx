@@ -130,6 +130,42 @@ node bin/ag-kit.js init --path /path/to/your-project`}
         </div>
       </section>
 
+      <section id="uninstall" className="mb-12 scroll-mt-16">
+        <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
+          卸载
+        </h2>
+        <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
+          可按需卸载全局 CLI、项目内 <code>.agent</code>，以及清理批量更新索引：
+        </p>
+
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+          卸载全局 CLI
+        </h3>
+        <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
+{`npm uninstall -g antigravity-kit-cn
+npm uninstall -g antigravity-kit @vudovn/ag-kit`}
+        </pre>
+
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+          卸载项目内模板
+        </h3>
+        <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
+{`cd /path/to/your-project
+rm -rf .agent`}
+        </pre>
+
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+          清理索引（可选）
+        </h3>
+        <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
+ag-kit exclude add --path /path/to/your-project
+        </pre>
+
+        <Callout type="info">
+          <strong>说明：</strong>全局卸载仅移除命令，不会删除本地 clone 的源码目录。
+        </Callout>
+      </section>
+
       <section id="requirements" className="mb-12 scroll-mt-16">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
           系统要求

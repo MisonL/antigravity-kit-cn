@@ -332,6 +332,42 @@ export default function CLIPage() {
                 </div>
             </section>
 
+            <section className="mb-12">
+                <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
+                    卸载与清理
+                </h2>
+                <div className="space-y-4">
+                    <div>
+                        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                            卸载全局 CLI
+                        </h3>
+                        <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                            <code className="text-zinc-100">{`npm uninstall -g antigravity-kit-cn
+npm uninstall -g antigravity-kit @vudovn/ag-kit`}</code>
+                        </pre>
+                    </div>
+
+                    <div>
+                        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                            删除项目中的 .agent
+                        </h3>
+                        <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                            <code className="text-zinc-100">{`cd /path/to/your-project
+rm -rf .agent`}</code>
+                        </pre>
+                    </div>
+
+                    <div>
+                        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                            清理批量更新索引（可选）
+                        </h3>
+                        <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                            <code className="text-zinc-100">ag-kit exclude add --path /path/to/your-project</code>
+                        </pre>
+                    </div>
+                </div>
+            </section>
+
             {/* 下一步 */}
             <section className="mb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
