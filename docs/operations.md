@@ -9,12 +9,13 @@
 ```text
 /my-project
 ├── .agent/             # [Legacy] Gemini 模式直连目录 (如果使用 Gemini)
-├── .codex/             # [Codex] 托管上游目录 (只读/自动管理)
+├── .agents/            # [Codex] 托管上游目录 (只读/自动管理)
 │   ├── manifest.json   # 完整性清单，用于漂移检测
 │   ├── AGENTS.md       # 核心规则源（由构建器生成）
 │   ├── antigravity.rules # 风险控制源（由构建器生成）
 │   └── skills/         # 编译后的技能
-├── .codex-backup/      # [Codex] 自动备份目录 (发生漂移覆盖时生成)
+├── .agents-backup/     # [Codex] 自动备份目录 (发生漂移覆盖时生成)
+├── .codex/             # [Legacy] 历史目录（更新/doctor 时自动迁移清理）
 ├── AGENTS.md           # 工作区主入口（保留用户内容 + 托管区块注入）
 ├── antigravity.rules   # 工作区风险规则（保留用户内容 + 托管区块注入）
 └── .gitignore          # 自动管理的忽略规则
@@ -43,16 +44,16 @@
 
 当 `ag-kit update` 或 `ag-kit doctor` 报告 Drift 时：
 
-- **原因**: 用户手动修改了 `.codex` 目录下的受管文件。
+- **原因**: 用户手动修改了 `.agents` 目录下的受管文件。
 - **后果**: 更新时会强制覆盖这些修改。
-- **自动备份**: 覆盖前，Ag-Kit 会将修改过的文件备份到 `.codex-backup/<timestamp>/`。
+- **自动备份**: 覆盖前，Ag-Kit 会将修改过的文件备份到 `.agents-backup/<timestamp>/`。
 - **智能覆盖**: 仅当文件确实是“用户修改且与新版本不同”时才备份；如果本地文件已与新版本一致，不会重复备份。
 - **解决**: 检查备份，将需要的修改迁移到上游源码或通过 Overlay 机制（未来特性）实现。
 
 ### 2.3 Windows 权限问题
 
 - 如果遇到 `EPERM` 或 `EBUSY`：
-    - 确保没有 IDE 或终端占用 `.codex` 目录。
+    - 确保没有 IDE 或终端占用 `.agents` 目录。
     - 关闭占用后重新执行 `ag-kit update` 或 `ag-kit doctor --fix`。
 
 ### 2.4 Doctor 自愈
@@ -82,8 +83,8 @@ npm install -g .
     ```bash
     ag-kit init --target codex --force
     ```
-2. 系统会自动识别旧版 `.agent`，将其编译为 `.codex` 结构。
-3. 确认 `.codex` 生成无误。
+2. 系统会自动识别旧版 `.agent`，将其编译为 `.agents` 结构。
+3. 确认 `.agents` 生成无误。
 4. 移除旧版 `.agent` (可选):
     ```bash
     rm -rf .agent

@@ -3,13 +3,13 @@ const assert = require('node:assert');
 const RuleGenerator = require('../bin/core/generator');
 
 describe('RuleGenerator', () => {
-    test('generate should keep codex managed guidance and remove legacy .agents wording', () => {
+    test('generate should keep codex managed guidance on .agents layout', () => {
         const transformResult = {
             metadata: [
                 {
-                    id: 'agk-test-skill',
+                    id: 'test-skill',
                     originalName: 'test-skill',
-                    path: 'skills/agk-test-skill/SKILL.md',
+                    path: 'skills/test-skill/SKILL.md',
                     type: 'skill',
                 },
             ],
@@ -17,16 +17,16 @@ describe('RuleGenerator', () => {
 
         const { agentsMd, antigravityRules, codexJson } = RuleGenerator.generate(transformResult, '2.0.1');
 
-        assert.ok(agentsMd.includes('agk-test-skill'));
+        assert.ok(agentsMd.includes('test-skill'));
         assert.ok(agentsMd.includes('ag-kit doctor --target codex --fix'));
-        assert.ok(!agentsMd.includes('.agents'));
+        assert.ok(agentsMd.includes('.agents/skills'));
 
-        assert.ok(antigravityRules.includes('Do not edit files under `.codex/` directly.'));
-        assert.ok(!antigravityRules.includes('.agents'));
+        assert.ok(antigravityRules.includes('Managed skills are stored under `.agents/skills`.'));
+        assert.ok(!antigravityRules.includes('.codex'));
 
         assert.strictEqual(codexJson.version, '2.0.1');
         assert.strictEqual(codexJson.skills.length, 1);
-        assert.strictEqual(codexJson.skills[0].id, 'agk-test-skill');
+        assert.strictEqual(codexJson.skills[0].id, 'test-skill');
     });
 
     test('generate should work with empty metadata', () => {

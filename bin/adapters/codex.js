@@ -9,21 +9,29 @@ const { upsertManagedBlock } = require("../utils/managed-block");
 const { cloneBranchAgentDir } = require("../utils");
 const pkg = require("../../package.json");
 
+const MANAGED_DIR_NAME = ".agents";
+const LEGACY_DIR_NAME = ".codex";
+
 class CodexAdapter extends BaseAdapter {
     get targetName() {
         return "codex";
     }
 
     getInstalledVersion() {
-        const manifestPath = path.join(this.workspaceRoot, ".codex", "manifest.json");
+        const managedManifest = path.join(this.workspaceRoot, MANAGED_DIR_NAME, "manifest.json");
+        const legacyManifest = path.join(this.workspaceRoot, LEGACY_DIR_NAME, "manifest.json");
+        const manifestPath = fs.existsSync(managedManifest) ? managedManifest : legacyManifest;
+
         if (!fs.existsSync(manifestPath)) {
             return null;
         }
+
         const manager = new ManifestManager(manifestPath, { target: "codex" });
         const manifest = manager.load();
         if (manifest && typeof manifest.kitVersion === "string" && manifest.kitVersion) {
             return manifest.kitVersion;
         }
+
         return "1.0.0";
     }
 
@@ -36,15 +44,18 @@ class CodexAdapter extends BaseAdapter {
     }
 
     _applyManagedFlow(mode, sourceDir) {
-        const codexDir = path.join(this.workspaceRoot, ".codex");
-        const agentsMirrorDir = path.join(this.workspaceRoot, ".agents");
-        const codexExists = fs.existsSync(codexDir);
+        const managedDir = path.join(this.workspaceRoot, MANAGED_DIR_NAME);
+        const legacyDir = path.join(this.workspaceRoot, LEGACY_DIR_NAME);
+        const managedExists = fs.existsSync(managedDir);
+        const legacyExists = fs.existsSync(legacyDir);
+        const hasExistingInstall = managedExists || legacyExists;
+        const currentDataDir = managedExists ? managedDir : legacyDir;
 
-        if (mode === "install" && codexExists && !this.options.force) {
-            throw new Error(".codex 目录已存在。请使用 --force 覆盖。");
+        if (mode === "install" && hasExistingInstall && !this.options.force) {
+            throw new Error(`${MANAGED_DIR_NAME} 或 ${LEGACY_DIR_NAME} 目录已存在。请使用 --force 覆盖。`);
         }
-        if (mode === "update" && !codexExists) {
-            throw new Error(".codex 目录不存在，无法更新。请先执行 init --target codex。");
+        if (mode === "update" && !hasExistingInstall) {
+            throw new Error(`${MANAGED_DIR_NAME} 目录不存在，无法更新。请先执行 init --target codex。`);
         }
 
         const { installSource, sourceLabel, cleanup } = this._resolveInstallSource(sourceDir);
@@ -57,16 +68,16 @@ class CodexAdapter extends BaseAdapter {
             incomingFiles = staging.incomingFiles;
 
             if (this.options.dryRun) {
-                this.log(`[dry-run] 将原子更新: ${codexDir}`);
-                if (fs.existsSync(agentsMirrorDir)) {
-                    this.log(`[dry-run] 将删除遗留目录: ${agentsMirrorDir}`);
+                this.log(`[dry-run] 将原子更新: ${managedDir}`);
+                if (legacyExists) {
+                    this.log(`[dry-run] 将删除遗留目录: ${legacyDir}`);
                 }
-                if (codexExists && this.options.force) {
-                    const candidates = this._collectBackupCandidates(codexDir, incomingFiles);
+                if (hasExistingInstall && this.options.force) {
+                    const candidates = this._collectBackupCandidates(currentDataDir, incomingFiles);
                     if (candidates.fullSnapshot) {
-                        this.log("[dry-run] 发现旧版或缺失 manifest，覆盖前将备份整目录 .codex");
+                        this.log(`[dry-run] 发现旧版或缺失 manifest，覆盖前将备份整目录 ${path.basename(currentDataDir)}`);
                     } else if (candidates.files.length > 0) {
-                        this.log(`[dry-run] 将备份 ${candidates.files.length} 个用户修改文件到 .codex-backup`);
+                        this.log(`[dry-run] 将备份 ${candidates.files.length} 个用户修改文件到 .agents-backup`);
                     }
                 }
                 this.log("[dry-run] 将更新工作区托管文件: AGENTS.md, antigravity.rules");
@@ -74,23 +85,23 @@ class CodexAdapter extends BaseAdapter {
                 return;
             }
 
-            if (codexExists && this.options.force) {
-                const candidates = this._collectBackupCandidates(codexDir, incomingFiles);
-                const backupResult = this._backupCandidates(codexDir, candidates);
+            if (hasExistingInstall && this.options.force) {
+                const candidates = this._collectBackupCandidates(currentDataDir, incomingFiles);
+                const backupResult = this._backupCandidates(currentDataDir, candidates);
                 if (backupResult) {
                     this.log(`📦 已备份覆盖前文件: ${backupResult.summary}`);
                 }
             }
 
-            AtomicWriter.atomicCopyDir(stagingDir, codexDir, { logger: this.log.bind(this) });
-            this.log("⚡️ .codex 原子更新完成");
+            AtomicWriter.atomicCopyDir(stagingDir, managedDir, { logger: this.log.bind(this) });
+            this.log(`⚡️ ${MANAGED_DIR_NAME} 原子更新完成`);
 
-            if (fs.existsSync(agentsMirrorDir)) {
-                fs.rmSync(agentsMirrorDir, { recursive: true, force: true });
-                this.log("🧹 已移除遗留 .agents 目录");
+            if (legacyExists) {
+                fs.rmSync(legacyDir, { recursive: true, force: true });
+                this.log(`🧹 已移除遗留 ${LEGACY_DIR_NAME} 目录`);
             }
 
-            this._syncWorkspaceManagedFiles(codexDir);
+            this._syncWorkspaceManagedFiles(managedDir);
             this._cleanupGitIgnore();
 
             this.log(`✅ [Codex] ${mode === "install" ? "安装" : "更新"}完成`);
@@ -182,8 +193,8 @@ class CodexAdapter extends BaseAdapter {
         };
     }
 
-    _collectBackupCandidates(codexDir, incomingFiles) {
-        const manifestPath = path.join(codexDir, "manifest.json");
+    _collectBackupCandidates(targetDir, incomingFiles) {
+        const manifestPath = path.join(targetDir, "manifest.json");
         if (!fs.existsSync(manifestPath)) {
             return { fullSnapshot: true, files: [] };
         }
@@ -204,27 +215,27 @@ class CodexAdapter extends BaseAdapter {
 
         return {
             fullSnapshot: false,
-            files: manager.collectSmartOverwriteConflicts(codexDir, incomingFiles),
+            files: manager.collectSmartOverwriteConflicts(targetDir, incomingFiles),
         };
     }
 
-    _backupCandidates(codexDir, candidates) {
+    _backupCandidates(targetDir, candidates) {
         if (!candidates.fullSnapshot && candidates.files.length === 0) {
             return null;
         }
 
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-        const backupRoot = path.join(this.workspaceRoot, ".codex-backup", timestamp);
+        const backupRoot = path.join(this.workspaceRoot, ".agents-backup", timestamp);
         fs.mkdirSync(backupRoot, { recursive: true });
 
         if (candidates.fullSnapshot) {
-            const snapshotDir = path.join(backupRoot, "codex-full-snapshot");
-            this._copyDir(codexDir, snapshotDir);
+            const snapshotDir = path.join(backupRoot, "full-snapshot");
+            this._copyDir(targetDir, snapshotDir);
             return { summary: `${backupRoot} (full snapshot)` };
         }
 
         for (const relPath of candidates.files) {
-            const src = path.join(codexDir, relPath);
+            const src = path.join(targetDir, relPath);
             if (!fs.existsSync(src)) {
                 continue;
             }
@@ -236,12 +247,12 @@ class CodexAdapter extends BaseAdapter {
         return { summary: `${backupRoot} (${candidates.files.length} files)` };
     }
 
-    _syncWorkspaceManagedFiles(codexDir) {
-        const codexAgentsPath = path.join(codexDir, "AGENTS.md");
-        const codexRulesPath = path.join(codexDir, "antigravity.rules");
+    _syncWorkspaceManagedFiles(managedDir) {
+        const managedAgentsPath = path.join(managedDir, "AGENTS.md");
+        const managedRulesPath = path.join(managedDir, "antigravity.rules");
 
-        if (fs.existsSync(codexAgentsPath)) {
-            const body = fs.readFileSync(codexAgentsPath, "utf8");
+        if (fs.existsSync(managedAgentsPath)) {
+            const body = fs.readFileSync(managedAgentsPath, "utf8");
             const outputPath = path.join(this.workspaceRoot, "AGENTS.md");
             const result = upsertManagedBlock(outputPath, "codex-core-rules", body, {
                 dryRun: this.options.dryRun,
@@ -249,8 +260,8 @@ class CodexAdapter extends BaseAdapter {
             this.log(`🧩 AGENTS.md 托管区块同步: ${result.action}`);
         }
 
-        if (fs.existsSync(codexRulesPath)) {
-            const body = fs.readFileSync(codexRulesPath, "utf8");
+        if (fs.existsSync(managedRulesPath)) {
+            const body = fs.readFileSync(managedRulesPath, "utf8");
             const outputPath = path.join(this.workspaceRoot, "antigravity.rules");
             const result = upsertManagedBlock(outputPath, "codex-risk-controls", body, {
                 dryRun: this.options.dryRun,
@@ -260,7 +271,7 @@ class CodexAdapter extends BaseAdapter {
     }
 
     _cleanupGitIgnore() {
-        const cleanupResult = GitHelper.removeIgnoreRules(this.workspaceRoot, [".codex"], this.options);
+        const cleanupResult = GitHelper.removeIgnoreRules(this.workspaceRoot, [MANAGED_DIR_NAME, LEGACY_DIR_NAME], this.options);
         if (cleanupResult.removedCount > 0) {
             this.log(`🧹 已从 .gitignore 移除 ${cleanupResult.removedCount} 条规则`);
         }
@@ -281,29 +292,35 @@ class CodexAdapter extends BaseAdapter {
     }
 
     checkIntegrity() {
-        const codexDir = path.join(this.workspaceRoot, ".codex");
-        const agentsMirrorDir = path.join(this.workspaceRoot, ".agents");
+        const managedDir = path.join(this.workspaceRoot, MANAGED_DIR_NAME);
+        const legacyDir = path.join(this.workspaceRoot, LEGACY_DIR_NAME);
         const result = { status: "ok", issues: [] };
 
-        if (!fs.existsSync(codexDir)) {
-            return { status: "missing", issues: ["Critical: .codex directory missing"] };
+        if (!fs.existsSync(managedDir)) {
+            if (fs.existsSync(legacyDir)) {
+                return {
+                    status: "broken",
+                    issues: [`Legacy: ${LEGACY_DIR_NAME} directory detected; run update to migrate to ${MANAGED_DIR_NAME}`],
+                };
+            }
+            return { status: "missing", issues: [`Critical: ${MANAGED_DIR_NAME} directory missing`] };
         }
 
-        const manifestPath = path.join(codexDir, "manifest.json");
+        const manifestPath = path.join(managedDir, "manifest.json");
         if (!fs.existsSync(manifestPath)) {
             result.status = "broken";
             result.issues.push("Critical: manifest.json missing");
             return result;
         }
 
-        if (fs.existsSync(agentsMirrorDir)) {
+        if (fs.existsSync(legacyDir)) {
             result.status = "broken";
-            result.issues.push("Legacy: .agents directory should be removed");
+            result.issues.push(`Legacy: ${LEGACY_DIR_NAME} directory should be removed`);
         }
 
         const manager = new ManifestManager(manifestPath, { target: "codex" });
         manager.load();
-        const drift = manager.checkDrift(codexDir);
+        const drift = manager.checkDrift(managedDir);
 
         if (drift.missing.length > 0) {
             result.status = "broken";
@@ -325,36 +342,43 @@ class CodexAdapter extends BaseAdapter {
     }
 
     fixIntegrity() {
-        const codexDir = path.join(this.workspaceRoot, ".codex");
-        const agentsMirrorDir = path.join(this.workspaceRoot, ".agents");
+        const managedDir = path.join(this.workspaceRoot, MANAGED_DIR_NAME);
+        const legacyDir = path.join(this.workspaceRoot, LEGACY_DIR_NAME);
         const fixes = [];
 
-        if (!fs.existsSync(codexDir)) {
-            return {
-                fixed: false,
-                summary: "缺少 .codex，无法自动修复。请执行 ag-kit init --target codex 或 ag-kit update。",
-            };
-        }
-        if (fs.existsSync(agentsMirrorDir)) {
-            fs.rmSync(agentsMirrorDir, { recursive: true, force: true });
-            fixes.push("removed stale .agents directory");
+        if (!fs.existsSync(managedDir)) {
+            if (fs.existsSync(legacyDir)) {
+                AtomicWriter.atomicCopyDir(legacyDir, managedDir, { logger: this.log.bind(this) });
+                fs.rmSync(legacyDir, { recursive: true, force: true });
+                fixes.push(`migrated ${LEGACY_DIR_NAME} to ${MANAGED_DIR_NAME}`);
+            } else {
+                return {
+                    fixed: false,
+                    summary: `缺少 ${MANAGED_DIR_NAME}，无法自动修复。请执行 ag-kit init --target codex 或 ag-kit update。`,
+                };
+            }
         }
 
-        const manifestPath = path.join(codexDir, "manifest.json");
+        if (fs.existsSync(legacyDir)) {
+            fs.rmSync(legacyDir, { recursive: true, force: true });
+            fixes.push(`removed stale ${LEGACY_DIR_NAME} directory`);
+        }
+
+        const manifestPath = path.join(managedDir, "manifest.json");
         if (!fs.existsSync(manifestPath)) {
             const manager = new ManifestManager(manifestPath, {
                 target: "codex",
                 kitVersion: pkg.version,
             });
-            manager.manifest.files = ManifestManager.generateFileEntriesFromDir(codexDir, {
-                baseDir: codexDir,
+            manager.manifest.files = ManifestManager.generateFileEntriesFromDir(managedDir, {
+                baseDir: managedDir,
                 sourcePrefix: "recovered",
             });
             manager.save();
             fixes.push("regenerated manifest.json");
         }
 
-        this._syncWorkspaceManagedFiles(codexDir);
+        this._syncWorkspaceManagedFiles(managedDir);
         this._cleanupGitIgnore();
 
         return {

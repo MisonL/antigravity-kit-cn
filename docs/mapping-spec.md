@@ -7,15 +7,15 @@ Codex 适配器包含一个内置的资源转换层 (`bin/core/`), 负责将通�
 ### 1. Skills (技能)
 
 - **源路径**: `.agent/skills/<name>/SKILL.md`
-- **Codex ID**: `agk-<name>`
-- **目标路径**: `.codex/skills/agk-<name>/SKILL.md`
+- **Codex ID**: `<name>`（保持与上游技能名一致）
+- **目标路径**: `.agents/skills/<name>/SKILL.md`
 
 ### 2. Workflows (工作流)
 
 - **源路径**: `.agent/workflows/<name>.md`
-- **Codex ID**: `agk-wf-<name>`
-- **目标路径**: `.codex/skills/agk-wf-<name>/SKILL.md`
-- **说明**: 工作流在 Codex 中被视为一种特殊的 Skill。
+- **Codex ID**: `workflow-<name>`
+- **目标路径**: `.agents/skills/workflow-<name>/SKILL.md`
+- **说明**: 工作流会转换为符合 Codex 规范的 `SKILL.md`（自动补齐 `name` / `description` frontmatter）。
 - **冲突处理**: 若生成 ID 与现有 Skill/Workflow 冲突，构建器会自动追加 `-2`、`-3`... 后缀，确保 ID 和目录唯一。
 
 ## 托管文件生成
@@ -43,9 +43,9 @@ Codex 适配器包含一个内置的资源转换层 (`bin/core/`), 负责将通�
   "target": "codex",
   "kitVersion": "2.0.1",
   "files": {
-    "skills/agk-xxx/SKILL.md": {
+    "skills/example-skill/SKILL.md": {
       "hash": "sha256...",
-      "source": "bundled/skills/agk-xxx/SKILL.md"
+      "source": "bundled/skills/example-skill/SKILL.md"
     }
   }
 }
@@ -60,6 +60,6 @@ Codex 适配器包含一个内置的资源转换层 (`bin/core/`), 负责将通�
 1. 克隆/读取源仓库。
 2. 识别为 Legacy 结构 (.agent/skills 存在但无 manifest.json)。
 3. 在临时目录启动构建流水线。
-4. 将构建产物安装到项目的 `.codex` 目录。
+4. 将构建产物安装到项目的 `.agents` 目录（若检测到旧版 `.codex` 会自动迁移/清理）。
 
 此过程对用户透明。

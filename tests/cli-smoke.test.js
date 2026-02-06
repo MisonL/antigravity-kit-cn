@@ -67,23 +67,23 @@ describe("CLI Smoke", () => {
         assert.strictEqual((doctorResult.stdout || "").trim(), "");
     });
 
-    test("doctor --fix should remove stale .agents directory", () => {
+    test("doctor --fix should remove stale .codex directory", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
             { env: { AG_KIT_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
-        fs.mkdirSync(path.join(workspaceDir, ".agents"), { recursive: true });
-        fs.writeFileSync(path.join(workspaceDir, ".agents", "legacy.txt"), "legacy");
-        assert.ok(fs.existsSync(path.join(workspaceDir, ".agents")));
+        fs.mkdirSync(path.join(workspaceDir, ".codex"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".codex", "legacy.txt"), "legacy");
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".codex")));
 
         const doctorFixResult = runCli(
             ["doctor", "--target", "codex", "--path", workspaceDir, "--fix", "--quiet"],
             { env: { AG_KIT_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(doctorFixResult.status, 0, doctorFixResult.stderr || doctorFixResult.stdout);
-        assert.ok(!fs.existsSync(path.join(workspaceDir, ".agents")));
+        assert.ok(!fs.existsSync(path.join(workspaceDir, ".codex")));
     });
 
     test("init should not index temporary workspace by default", () => {
@@ -102,33 +102,34 @@ describe("CLI Smoke", () => {
         assert.ok(!hasWorkspace, "temp workspace should not be persisted into global index");
     });
 
-    test("codex init should not create .agents mirror directory", () => {
+    test("codex init should create .agents managed directory", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
             { env: { AG_KIT_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
-        assert.ok(fs.existsSync(path.join(workspaceDir, ".codex")));
-        assert.ok(!fs.existsSync(path.join(workspaceDir, ".agents")));
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agents")));
+        assert.ok(!fs.existsSync(path.join(workspaceDir, ".codex")));
     });
 
-    test("codex update should remove pre-existing legacy .agents directory", () => {
+    test("codex update should remove pre-existing legacy .codex directory", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
             { env: { AG_KIT_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
-        assert.ok(fs.existsSync(path.join(workspaceDir, ".codex")));
-        fs.mkdirSync(path.join(workspaceDir, ".agents"), { recursive: true });
-        fs.writeFileSync(path.join(workspaceDir, ".agents", "legacy.txt"), "legacy");
         assert.ok(fs.existsSync(path.join(workspaceDir, ".agents")));
+        fs.mkdirSync(path.join(workspaceDir, ".codex"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".codex", "legacy.txt"), "legacy");
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".codex")));
 
         const updateResult = runCli(
             ["update", "--target", "codex", "--path", workspaceDir, "--quiet"],
             { env: { AG_KIT_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(updateResult.status, 0, updateResult.stderr || updateResult.stdout);
-        assert.ok(!fs.existsSync(path.join(workspaceDir, ".agents")));
+        assert.ok(!fs.existsSync(path.join(workspaceDir, ".codex")));
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agents")));
     });
 
     test("update-all should auto-clean temp workspace records from index", () => {

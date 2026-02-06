@@ -624,7 +624,7 @@ function detectInstalledTargets(workspaceRoot) {
     if (fs.existsSync(path.join(workspaceRoot, ".agent"))) {
         targets.push("gemini");
     }
-    if (fs.existsSync(path.join(workspaceRoot, ".codex"))) {
+    if (fs.existsSync(path.join(workspaceRoot, ".agents")) || fs.existsSync(path.join(workspaceRoot, ".codex"))) {
         targets.push("codex");
     }
     return targets;
@@ -635,7 +635,7 @@ function isTargetInstalled(workspaceRoot, targetName) {
         return fs.existsSync(path.join(workspaceRoot, ".agent"));
     }
     if (targetName === "codex") {
-        return fs.existsSync(path.join(workspaceRoot, ".codex"));
+        return fs.existsSync(path.join(workspaceRoot, ".agents")) || fs.existsSync(path.join(workspaceRoot, ".codex"));
     }
     return false;
 }
@@ -1118,13 +1118,19 @@ function commandStatus(options) {
     }
 
     if (installedTargets.includes("codex")) {
-        const codexDir = path.join(workspaceRoot, ".codex");
-        const skillsCount = countSkillsRecursive(path.join(codexDir, "skills"));
-        const hasManifest = fs.existsSync(path.join(codexDir, "manifest.json"));
+        const managedDir = path.join(workspaceRoot, ".agents");
+        const legacyDir = path.join(workspaceRoot, ".codex");
+        const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
+        const skillsCount = countSkillsRecursive(path.join(activeDir, "skills"));
+        const hasManifest = fs.existsSync(path.join(activeDir, "manifest.json"));
+        const legacyDetected = fs.existsSync(legacyDir);
         console.log("\n[codex]");
-        console.log(`   路径: ${codexDir}`);
+        console.log(`   路径: ${activeDir}`);
         console.log(`   Skills: ${skillsCount}`);
         console.log(`   Manifest: ${hasManifest ? "yes" : "no"}`);
+        if (legacyDetected) {
+            console.log("   Legacy: 检测到 .codex（建议执行 ag-kit update 迁移清理）");
+        }
     }
 }
 

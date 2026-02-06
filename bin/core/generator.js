@@ -31,18 +31,17 @@ class RuleGenerator {
         }
         
         agentsMd += `\n## Usage Rules\n\n`;
-        agentsMd += `1. Refer to skills by their ID (e.g., \`@[${metadata[0] ? metadata[0].id : "skill-id"}]\`).\n`;
-        agentsMd += `2. Codex ensures strict versioning of these capabilities.\n`;
-        agentsMd += `3. Managed resources are synchronized under \`.codex/\`.\n`;
-        agentsMd += `4. Use \`ag-kit doctor --target codex --fix\` to recover missing managed artifacts.\n`;
+        agentsMd += `1. Managed resources are synchronized under \`.agents/skills\`.\n`;
+        agentsMd += `2. Do not rename managed skill folders manually.\n`;
+        agentsMd += `3. Use \`ag-kit doctor --target codex --fix\` to recover missing managed artifacts.\n`;
 
         // 3. Generate risk controls
         let antigravityRules = `# Antigravity Risk Controls (Codex Managed)\n\n`;
         antigravityRules += `version: ${version}\n`;
         antigravityRules += `generated_at: ${new Date().toISOString()}\n\n`;
         antigravityRules += `## Controls\n`;
-        antigravityRules += `- Do not edit files under \`.codex/\` directly.\n`;
-        antigravityRules += `- Keep generated skill IDs with \`agk-\` prefix to avoid collisions.\n`;
+        antigravityRules += `- Managed skills are stored under \`.agents/skills\`.\n`;
+        antigravityRules += `- Keep generated skill IDs stable to avoid selector drift.\n`;
         antigravityRules += `- If integrity checks fail, run \`ag-kit doctor --target codex --fix\`.\n`;
         antigravityRules += `- Before destructive updates, preserve manual edits in source control.\n`;
 

@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 
 class ResourceTransformer {
@@ -24,26 +25,39 @@ class ResourceTransformer {
             return candidate;
         }
 
-        // 1. Process Skills
-        // Strategy: Skill folder -> .codex/skills/agk-<name>/SKILL.md
-        for (const skill of resources.skills) {
-            const codexName = allocateUniqueId(`agk-${skill.name}`);
-            const destDir = `skills/${codexName}`;
-            
-            // Map the main SKILL.md
-            result.mappedFiles.push({
-                src: path.join(skill.path, skill.entryFile),
-                destPath: `${destDir}/SKILL.md`
-            });
+        function parseFrontmatter(content) {
+            const normalized = String(content || "");
+            if (!normalized.startsWith("---")) {
+                return { frontmatter: {}, body: normalized };
+            }
 
-            // Map other resources in the skill folder
-            // TODO: Deep copy/scan for other files in skill dir?
-            // For v1, let's assume we copy the whole folder structure or just key files?
-            // The ResourceLoader only returned the entry point. 
-            // We might need to map the whole directory. 
-            // Let's defer directory copy logic to the installer using this map. 
-            // But wait, `src` is the folder for the skill.
-            
+            const match = normalized.match(/^---\n([\s\S]*?)\n---\n?/);
+            if (!match) {
+                return { frontmatter: {}, body: normalized };
+            }
+
+            const fmRaw = match[1];
+            const frontmatter = {};
+            for (const line of fmRaw.split("\n")) {
+                const idx = line.indexOf(":");
+                if (idx <= 0) continue;
+                const key = line.slice(0, idx).trim();
+                const value = line.slice(idx + 1).trim();
+                if (!key) continue;
+                frontmatter[key] = value;
+            }
+
+            const body = normalized.slice(match[0].length);
+            return { frontmatter, body };
+        }
+
+        // 1. Process Skills
+        // Strategy: Skill folder -> skills/<name>/SKILL.md
+        for (const skill of resources.skills) {
+            const codexName = allocateUniqueId(skill.name);
+            const destDir = `skills/${codexName}`;
+
+            // Keep the full skill folder to preserve resources/scripts exactly.
             result.mappedFiles.push({
                 src: skill.path, // The folder
                 destPath: destDir,
@@ -59,17 +73,31 @@ class ResourceTransformer {
         }
 
         // 2. Process Workflows
-        // Strategy: Workflow file -> .codex/skills/agk-wf-<name>/SKILL.md
-        // We convert workflows to skills in Codex? Or keep them as workflows?
-        // Implementation Plan says: "Workflow -> Skill Conversion".
-        // So we wrap them.
+        // Codex only understands skills. Convert each workflow markdown to a valid SKILL.md.
         for (const workflow of resources.workflows) {
-            const codexName = allocateUniqueId(`agk-wf-${workflow.name}`);
+            const codexName = allocateUniqueId(`workflow-${workflow.name}`);
             const destDir = `skills/${codexName}`;
-            
-            // We treat the workflow markdown as the SKILL.md
+
+            const rawWorkflow = fs.existsSync(workflow.path)
+                ? fs.readFileSync(workflow.path, "utf8")
+                : "";
+            const parsed = parseFrontmatter(rawWorkflow);
+            const descriptionRaw = parsed.frontmatter.description
+                || `Antigravity workflow bridge for /${workflow.name}`;
+            const description = JSON.stringify(String(descriptionRaw).replace(/\s+/g, " ").trim());
+
+            const generatedSkill = [
+                "---",
+                `name: ${codexName}`,
+                `description: ${description}`,
+                "---",
+                "",
+                parsed.body.trimStart(),
+                "",
+            ].join("\n");
+
             result.mappedFiles.push({
-                src: workflow.path, // The .md file
+                content: generatedSkill,
                 destPath: `${destDir}/SKILL.md`,
                 isDir: false
             });

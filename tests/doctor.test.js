@@ -15,8 +15,8 @@ describe('Doctor Command', () => {
         // Gemini
         fs.mkdirSync(path.join(workDir, '.agent'));
         // Codex
-        fs.mkdirSync(path.join(workDir, '.codex'));
-        fs.writeFileSync(path.join(workDir, '.codex', 'manifest.json'), JSON.stringify({ version: 2, target: 'codex', files: {} }));
+        fs.mkdirSync(path.join(workDir, '.agents'));
+        fs.writeFileSync(path.join(workDir, '.agents', 'manifest.json'), JSON.stringify({ version: 2, target: 'codex', files: {} }));
     });
 
     afterEach(() => {
@@ -43,26 +43,29 @@ describe('Doctor Command', () => {
     });
 
     test('CodexAdapter checkIntegrity missing', () => {
-        fs.rmSync(path.join(workDir, '.codex'), { recursive: true });
+        fs.rmSync(path.join(workDir, '.agents'), { recursive: true });
         const adapter = new CodexAdapter(workDir, { quiet: true });
         const res = adapter.checkIntegrity();
         assert.strictEqual(res.status, 'missing');
     });
 
-    test('CodexAdapter checkIntegrity should flag legacy .agents directory', () => {
-        fs.mkdirSync(path.join(workDir, '.agents'), { recursive: true });
+    test('CodexAdapter checkIntegrity should flag legacy .codex directory', () => {
+        fs.mkdirSync(path.join(workDir, '.codex'), { recursive: true });
         const adapter = new CodexAdapter(workDir, { quiet: true });
         const res = adapter.checkIntegrity();
         assert.strictEqual(res.status, 'broken');
-        assert.ok(res.issues.some((issue) => issue.includes('.agents')));
+        assert.ok(res.issues.some((issue) => issue.includes('.codex')));
     });
 
-    test('CodexAdapter fixIntegrity should remove legacy .agents directory', () => {
-        fs.mkdirSync(path.join(workDir, '.agents'), { recursive: true });
-        fs.writeFileSync(path.join(workDir, '.agents', 'legacy.txt'), 'legacy');
+    test('CodexAdapter fixIntegrity should migrate legacy .codex directory', () => {
+        fs.rmSync(path.join(workDir, '.agents'), { recursive: true, force: true });
+        fs.mkdirSync(path.join(workDir, '.codex'), { recursive: true });
+        fs.writeFileSync(path.join(workDir, '.codex', 'manifest.json'), JSON.stringify({ version: 2, target: 'codex', files: {} }));
+        fs.writeFileSync(path.join(workDir, '.codex', 'legacy.txt'), 'legacy');
         const adapter = new CodexAdapter(workDir, { quiet: true });
         const res = adapter.fixIntegrity();
         assert.ok(res.fixed);
-        assert.ok(!fs.existsSync(path.join(workDir, '.agents')));
+        assert.ok(fs.existsSync(path.join(workDir, '.agents')));
+        assert.ok(!fs.existsSync(path.join(workDir, '.codex')));
     });
 });

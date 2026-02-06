@@ -41,17 +41,16 @@ describe('Phase C Integration', () => {
         // Install from Gemini Repo Root
         adapter.install(geminiRepo);
         
-        const codexDir = path.join(workDir, '.codex');
+        const codexDir = path.join(workDir, '.agents');
         // Verification 1: Structure Created
         assert.ok(fs.existsSync(codexDir));
         
-        // Verification 2: Transformation Happened (agk- prefix)
-        // Skill: agk-test-skill
-        const builtSkill = path.join(codexDir, 'skills', 'agk-test-skill', 'SKILL.md');
+        // Verification 2: Transformation Happened
+        const builtSkill = path.join(codexDir, 'skills', 'test-skill', 'SKILL.md');
         assert.ok(fs.existsSync(builtSkill));
         
-        // Workflow: agk-wf-test-flow
-        const builtWorkflow = path.join(codexDir, 'skills', 'agk-wf-test-flow', 'SKILL.md');
+        // Workflow: workflow-test-flow
+        const builtWorkflow = path.join(codexDir, 'skills', 'workflow-test-flow', 'SKILL.md');
         assert.ok(fs.existsSync(builtWorkflow));
         
         // Verification 3: Manifest & Meta
@@ -60,14 +59,14 @@ describe('Phase C Integration', () => {
         assert.ok(fs.existsSync(path.join(codexDir, 'antigravity.rules')));
         
         const agentsMd = fs.readFileSync(path.join(codexDir, 'AGENTS.md'), 'utf8');
-        assert.ok(agentsMd.includes('agk-test-skill'));
+        assert.ok(agentsMd.includes('test-skill'));
         assert.ok(agentsMd.includes('(Codex Managed)'));
 
         // Verification 4: Workspace managed block injection
         const workspaceAgents = fs.readFileSync(path.join(workDir, 'AGENTS.md'), 'utf8');
         const workspaceRules = fs.readFileSync(path.join(workDir, 'antigravity.rules'), 'utf8');
         assert.ok(workspaceAgents.includes('BEGIN AG-KIT MANAGED BLOCK: codex-core-rules'));
-        assert.ok(workspaceAgents.includes('agk-test-skill'));
+        assert.ok(workspaceAgents.includes('test-skill'));
         assert.ok(workspaceRules.includes('BEGIN AG-KIT MANAGED BLOCK: codex-risk-controls'));
     });
 
@@ -81,7 +80,7 @@ describe('Phase C Integration', () => {
         adapter.install(geminiRepo);
 
         const codexJson = JSON.parse(
-            fs.readFileSync(path.join(workDir, '.codex', 'codex.json'), 'utf8')
+            fs.readFileSync(path.join(workDir, '.agents', 'codex.json'), 'utf8')
         );
         const collisionEntries = (codexJson.skills || []).filter(
             (item) => item.originalName === 'wf-test-flow' || item.originalName === 'test-flow'
@@ -95,7 +94,7 @@ describe('Phase C Integration', () => {
         );
 
         for (const entry of collisionEntries) {
-            const skillFile = path.join(workDir, '.codex', entry.path);
+            const skillFile = path.join(workDir, '.agents', entry.path);
             assert.ok(fs.existsSync(skillFile), `missing transformed file: ${entry.path}`);
         }
     });

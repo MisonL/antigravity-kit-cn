@@ -8,7 +8,7 @@
 graph TD
     CLI[ag-kit CLI] --> Router[Target Router]
     Router --> |target=gemini| Gemini[GeminiAdapter (.agent)]
-    Router --> |target=codex| Codex[CodexAdapter (.codex)]
+    Router --> |target=codex| Codex[CodexAdapter (.agents)]
 ```
 
 ## 支持的目标 (Targets)
@@ -24,12 +24,14 @@ graph TD
 
 - **标识**: `codex`
 - **存储**:
-    - `.codex/` (托管上游，用户不可修改)
+    - `.agents/` (托管上游，用户不可修改)
+    - `.agents-backup/` (发生覆盖冲突时自动备份)
     - `AGENTS.md` / `antigravity.rules` (工作区托管区块注入)
 - **特点**:
     - **漂移检测 (Drift Detection)**: 自动识别用户对托管文件的修改。
     - **原子更新 (Atomic Update)**: 防止更新中断导致损坏。
     - **资源映射**: 自动将标准 Skill/Workflow 转换为 Codex 规范。
+    - **遗留迁移**: 自动识别旧版 `.codex/` 并迁移到 `.agents/`。
 - **适用**: 团队协作，生产环境，需要严格版本管理和升级保障的场景。
 
 ## CLI 命令

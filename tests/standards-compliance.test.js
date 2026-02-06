@@ -41,7 +41,7 @@ describe('Standards Compliance', () => {
         }
     });
 
-    test('deprecated .agents mirror wording should be removed from user-facing docs and generator', () => {
+    test('deprecated .codex primary-layout wording should be removed from user-facing docs and generator', () => {
         const targets = [
             'README.md',
             'docs/operations.md',
@@ -52,8 +52,8 @@ describe('Standards Compliance', () => {
         for (const rel of targets) {
             const abs = path.resolve(rel);
             const content = fs.readFileSync(abs, 'utf8');
-            assert.ok(!content.includes('Legacy `.agents/` directories'), `${rel} still contains legacy wording`);
-            assert.ok(!content.includes('历史 `.agents` 目录'), `${rel} still contains Chinese legacy wording`);
+            assert.ok(!content.includes('Managed resources are synchronized under `.codex/`.'), `${rel} still contains deprecated .codex guidance`);
+            assert.ok(!content.includes('Do not edit files under `.codex/` directly.'), `${rel} still contains deprecated .codex guidance`);
         }
     });
 

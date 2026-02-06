@@ -18,7 +18,7 @@ npm install -g .
 ```bash
 cd /path/to/your-project
 ag-kit init --target gemini   # 安装 Gemini 结构(.agent)
-ag-kit init --target codex    # 安装 Codex 结构(.codex + 托管规则注入)
+ag-kit init --target codex    # 安装 Codex 结构(.agents + 托管规则注入)
 # 或者直接 ag-kit init，在 TTY 里交互选择目标
 ```
 
@@ -29,7 +29,7 @@ cd /path/to/antigravity-kit-cn
 node bin/ag-kit.js init --target codex --path /path/to/your-project
 ```
 
-这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .codex`），并把 Codex 托管规则注入工作区 `AGENTS.md` 与 `antigravity.rules`。
+这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .agents`），并把 Codex 托管规则注入工作区 `AGENTS.md` 与 `antigravity.rules`。
 
 ### 后续升级 (Upgrade)
 
@@ -51,8 +51,9 @@ ag-kit update
 ### 目录说明
 
 - `.agent`: Gemini 目标使用的目录。
-- `.codex`: Codex 目标的托管源目录（由 Ag-Kit 维护）。
-- `.codex-backup`: 漂移覆盖前自动备份目录。
+- `.agents`: Codex 目标的托管源目录（由 Ag-Kit 维护）。
+- `.agents-backup`: 漂移覆盖前自动备份目录。
+- `.codex`: 旧版遗留目录（会在更新/修复时自动迁移清理）。
 
 可用以下命令确认当前状态：
 
@@ -81,14 +82,14 @@ macOS / Linux / WSL:
 
 ```bash
 cd /path/to/your-project
-rm -rf .agent .codex .codex-backup
+rm -rf .agent .agents .agents-backup .codex
 ```
 
 Windows PowerShell:
 
 ```powershell
 Set-Location C:\path\to\your-project
-Remove-Item .agent,.codex,.codex-backup -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item .agent,.agents,.agents-backup,.codex -Recurse -Force -ErrorAction SilentlyContinue
 ```
 
 Windows CMD:
@@ -96,8 +97,9 @@ Windows CMD:
 ```cmd
 cd /d C:\path\to\your-project
 rmdir /s /q .agent
+rmdir /s /q .agents
+rmdir /s /q .agents-backup
 rmdir /s /q .codex
-rmdir /s /q .codex-backup
 ```
 
 ### 清理批量更新索引（可选）
@@ -110,9 +112,9 @@ ag-kit exclude add --path /path/to/your-project
 
 ### ⚠️ 关于 `.gitignore` 的重要说明
 
-如果您正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/`、`.codex/` 添加到 `.gitignore` 可能会阻止 IDE 索引工作流。这会导致斜杠命令（如 `/plan`, `/debug`）无法在对话建议下拉菜单中显示。
+如果您正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/`、`.agents/` 添加到 `.gitignore` 可能会阻止 IDE 索引工作流。这会导致斜杠命令（如 `/plan`, `/debug`）无法在对话建议下拉菜单中显示。
 
-从当前版本开始，执行 `ag-kit init` / `ag-kit update` 时会自动扫描项目根目录 `.gitignore`，并移除会忽略 `.agent`、`.codex` 的规则，同时在终端提示具体处理结果。
+从当前版本开始，执行 `ag-kit init` / `ag-kit update` 时会自动扫描项目根目录 `.gitignore`，并移除会忽略 `.agent`、`.agents`（以及遗留 `.codex`）的规则，同时在终端提示具体处理结果。
 另外会进行上游英文版冲突检测：
 - 在 `npm install -g .` 阶段通过 `postinstall` 检查全局是否存在 `@vudovn/ag-kit`
 - 在 `ag-kit init` / `ag-kit update` / `ag-kit update-all` 执行前再次检查
@@ -124,7 +126,7 @@ ag-kit exclude add --path /path/to/your-project
 **推荐方案：**
 为了在保持 `.agent/` 文件夹本地化（不被 Git 追踪）的同时维持 AI 功能：
 
-1. 确保 `.agent/`、`.codex/` **不要** 出现在项目的 `.gitignore` 中。
+1. 确保 `.agent/`、`.agents/` **不要** 出现在项目的 `.gitignore` 中。
 2. 作为一个替代方案，请将其添加到您的本地排除文件：`.git/info/exclude`
 
 ## 包含内容 (What's Included)

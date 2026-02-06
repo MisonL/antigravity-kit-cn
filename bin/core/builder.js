@@ -9,7 +9,7 @@ class CodexBuilder {
     /**
      * Build a Codex structure from a legacy/source repository
      * @param {string} sourceRoot Root of the repo (containing .agent/)
-     * @param {string} outputDir Directory to output the built .codex structure
+     * @param {string} outputDir Directory to output the built .agents-compatible structure
      */
     static build(sourceRoot, outputDir) {
         if (fs.existsSync(outputDir)) {
@@ -36,6 +36,8 @@ class CodexBuilder {
              if (map.isDir) {
                  // Recursive copy
                  CodexBuilder._copyDir(map.src, dest);
+             } else if (typeof map.content === "string") {
+                 fs.writeFileSync(dest, map.content);
              } else {
                  if (fs.existsSync(map.src)) {
                     fs.copyFileSync(map.src, dest);
