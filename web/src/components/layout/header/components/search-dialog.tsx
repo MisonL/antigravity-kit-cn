@@ -187,7 +187,7 @@ const searchGroups: SearchGroup[] = [
                 label: 'CLI 参考',
                 value: 'cli',
                 href: '/docs/cli',
-                keywords: 'command line interface init update update-all status options batch workspace index 命令行 批量更新 工作区 索引 选项'
+                keywords: 'command line interface init update update-all exclude status options batch workspace index ignore 命令行 批量更新 工作区 索引 排除 忽略 选项'
             },
         ],
     },

@@ -81,7 +81,7 @@ node bin/ag-kit.js init --path /path/to/your-project`}
         </Callout>
 
         <Callout type="info">
-          <strong>批量更新：</strong>每次执行 <code>ag-kit init</code> / <code>ag-kit update</code> 都会自动登记工作区到全局索引，后续可直接用 <code>ag-kit update-all</code> 一键批量更新所有已登记工作区。
+          <strong>批量更新：</strong>每次执行 <code>ag-kit init</code> / <code>ag-kit update</code> 都会自动登记工作区到全局索引，后续可直接用 <code>ag-kit update-all</code> 一键批量更新所有已登记工作区。默认会排除工具包源码目录；也可用 <code>ag-kit exclude add/remove/list</code> 维护自定义排除清单。
         </Callout>
       </section>
 

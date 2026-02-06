@@ -106,8 +106,31 @@ export default function CLIPage() {
                                 <li>• 读取全局索引文件 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">~/.ag-kit/workspaces.json</code></li>
                                 <li>• 对每个已登记且存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的工作区执行更新</li>
                                 <li>• 输出批量更新汇总（成功/跳过/失败）</li>
+                                <li>• 默认自动排除 antigravity-kit 源码目录，避免索引冲突</li>
                                 <li>• 历史项目需先执行一次 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">ag-kit update</code> 才会被纳入索引</li>
                             </ul>
+                        </div>
+                    </div>
+
+                    {/* exclude */}
+                    <div>
+                        <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
+                            <code className="font-mono">ag-kit exclude</code>
+                        </h3>
+                        <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
+                            管理全局索引排除清单，用于阻止特定目录（或目录树）被登记或批量更新。
+                        </p>
+
+                        <div className="space-y-3">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit exclude list</code>
+                            </pre>
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit exclude add --path /path/to/dir</code>
+                            </pre>
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit exclude remove --path /path/to/dir</code>
+                            </pre>
                         </div>
                     </div>
 
@@ -280,6 +303,28 @@ export default function CLIPage() {
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
                                 <code className="text-zinc-100">ag-kit update-all --prune-missing</code>
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                            添加排除路径
+                        </h3>
+                        <div className="relative group">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit exclude add --path /path/to/dir</code>
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                            查看排除清单
+                        </h3>
+                        <div className="relative group">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit exclude list</code>
                             </pre>
                         </div>
                     </div>

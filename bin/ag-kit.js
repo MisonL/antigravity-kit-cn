@@ -28,6 +28,7 @@ function createEmptyWorkspaceIndex() {
         version: WORKSPACE_INDEX_VERSION,
         updatedAt: "",
         workspaces: [],
+        excludedPaths: [],
     };
 }
 
@@ -36,6 +37,9 @@ function printUsage() {
     console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--quiet] [--dry-run]");
     console.log("  ag-kit update [--path <dir>] [--branch <name>] [--quiet] [--dry-run]");
     console.log("  ag-kit update-all [--branch <name>] [--prune-missing] [--quiet] [--dry-run]");
+    console.log("  ag-kit exclude list [--quiet]");
+    console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
+    console.log("  ag-kit exclude remove --path <dir> [--dry-run] [--quiet]");
     console.log("  ag-kit status [--path <dir>] [--quiet]");
 }
 
@@ -50,11 +54,23 @@ function parseArgs(argv) {
         quiet: false,
         dryRun: false,
         pruneMissing: false,
+        subcommand: "",
         path: "",
         branch: "",
     };
 
-    for (let i = 1; i < argv.length; i++) {
+    let startIndex = 1;
+    if (command === "exclude") {
+        if (argv.length > 1 && !argv[1].startsWith("--")) {
+            options.subcommand = argv[1];
+            startIndex = 2;
+        } else {
+            options.subcommand = "list";
+            startIndex = 1;
+        }
+    }
+
+    for (let i = startIndex; i < argv.length; i++) {
         const arg = argv[i];
 
         if (arg === "--force") {
@@ -112,6 +128,47 @@ function copyDir(src, dest) {
     }
 }
 
+function normalizePathList(items) {
+    const set = new Set();
+    for (const item of items) {
+        if (typeof item !== "string" || item.trim() === "") {
+            continue;
+        }
+        set.add(path.resolve(item));
+    }
+    return Array.from(set.values()).sort((a, b) => a.localeCompare(b));
+}
+
+function isPathInOrUnder(basePath, targetPath) {
+    if (targetPath === basePath) {
+        return true;
+    }
+    const prefix = basePath.endsWith(path.sep) ? basePath : `${basePath}${path.sep}`;
+    return targetPath.startsWith(prefix);
+}
+
+function isPathExcludedByList(excludedPaths, workspacePath) {
+    return excludedPaths.some((excludedPath) => isPathInOrUnder(excludedPath, workspacePath));
+}
+
+function isToolkitSourceDirectory(workspacePath) {
+    const packageJsonPath = path.join(workspacePath, "package.json");
+    const cliPath = path.join(workspacePath, "bin", "ag-kit.js");
+
+    if (!fs.existsSync(packageJsonPath) || !fs.existsSync(cliPath)) {
+        return false;
+    }
+
+    try {
+        const content = fs.readFileSync(packageJsonPath, "utf8");
+        const parsed = JSON.parse(content);
+        const name = typeof parsed.name === "string" ? parsed.name : "";
+        return name === "antigravity-kit-cn" || name === "antigravity-kit";
+    } catch (err) {
+        return false;
+    }
+}
+
 function readWorkspaceIndex() {
     const indexPath = getWorkspaceIndexPath();
     if (!fs.existsSync(indexPath)) {
@@ -152,6 +209,8 @@ function readWorkspaceIndex() {
     }
 
     normalized.workspaces = Array.from(dedupMap.values()).sort((a, b) => a.path.localeCompare(b.path));
+    const excluded = Array.isArray(parsed.excludedPaths) ? parsed.excludedPaths : [];
+    normalized.excludedPaths = normalizePathList(excluded);
     return { indexPath, index: normalized };
 }
 
@@ -160,6 +219,7 @@ function writeWorkspaceIndex(indexPath, index) {
         version: WORKSPACE_INDEX_VERSION,
         updatedAt: index.updatedAt || nowISO(),
         workspaces: Array.isArray(index.workspaces) ? index.workspaces : [],
+        excludedPaths: normalizePathList(Array.isArray(index.excludedPaths) ? index.excludedPaths : []),
     };
 
     payload.workspaces = payload.workspaces
@@ -176,10 +236,89 @@ function writeWorkspaceIndex(indexPath, index) {
     fs.writeFileSync(indexPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
 }
 
+function evaluateWorkspaceExclusion(index, workspaceRoot) {
+    const normalizedPath = path.resolve(workspaceRoot);
+    const excludedPaths = Array.isArray(index.excludedPaths) ? index.excludedPaths : [];
+
+    if (isPathExcludedByList(excludedPaths, normalizedPath)) {
+        return {
+            excluded: true,
+            code: "user_excluded",
+            reason: "命中用户排除清单",
+            path: normalizedPath,
+        };
+    }
+
+    if (isToolkitSourceDirectory(normalizedPath)) {
+        return {
+            excluded: true,
+            code: "default_source",
+            reason: "检测为 antigravity-kit 源码目录（默认排除）",
+            path: normalizedPath,
+        };
+    }
+
+    return {
+        excluded: false,
+        code: "",
+        reason: "",
+        path: normalizedPath,
+    };
+}
+
+function removeWorkspaceRecord(index, workspaceRoot) {
+    const normalizedPath = path.resolve(workspaceRoot);
+    const before = index.workspaces.length;
+    index.workspaces = index.workspaces.filter((item) => item.path !== normalizedPath);
+    return before - index.workspaces.length;
+}
+
+function previewWorkspaceIndexRegistration(workspaceRoot, options) {
+    const { indexPath, index } = readWorkspaceIndex();
+    const exclusion = evaluateWorkspaceExclusion(index, workspaceRoot);
+    const normalizedPath = path.resolve(workspaceRoot);
+
+    if (exclusion.excluded) {
+        const removedCount = index.workspaces.filter((item) => item.path === normalizedPath).length;
+        log(options, `[dry-run] 索引登记已跳过: ${exclusion.reason}`);
+        if (removedCount > 0) {
+            log(options, `[dry-run] 将从索引中移除已存在记录: ${normalizedPath}`);
+        }
+        return;
+    }
+
+    const exists = index.workspaces.some((item) => item.path === normalizedPath);
+    if (exists) {
+        log(options, `[dry-run] 将刷新工作区索引记录: ${normalizedPath}`);
+    } else {
+        log(options, `[dry-run] 将登记工作区到全局索引: ${normalizedPath}`);
+    }
+    log(options, `[dry-run] 索引文件: ${indexPath}`);
+}
+
 function registerWorkspaceIndex(workspaceRoot, options) {
     const normalizedPath = path.resolve(workspaceRoot);
     const { indexPath, index } = readWorkspaceIndex();
     const time = nowISO();
+    const exclusion = evaluateWorkspaceExclusion(index, normalizedPath);
+
+    if (exclusion.excluded) {
+        const removedCount = removeWorkspaceRecord(index, normalizedPath);
+        if (removedCount > 0) {
+            index.updatedAt = time;
+            writeWorkspaceIndex(indexPath, index);
+        }
+
+        if (!options.silentIndexLog) {
+            log(options, `⏭️ 已跳过索引登记: ${normalizedPath}`);
+            log(options, `   原因: ${exclusion.reason}`);
+            if (removedCount > 0) {
+                log(options, `🧹 已清理旧索引记录: ${normalizedPath}`);
+            }
+            log(options, `   索引文件: ${indexPath}`);
+        }
+        return;
+    }
 
     let inserted = true;
     index.workspaces = index.workspaces.map((item) => {
@@ -376,7 +515,7 @@ function installAgent(options) {
             const cleanupPreview = removeAgentIgnoreRules(workspaceRoot, options);
             logGitIgnoreCleanup(workspaceRoot, cleanupPreview, options);
             if (options.manageIndex !== false) {
-                log(options, `[dry-run] 将登记工作区到全局索引: ${workspaceRoot}`);
+                previewWorkspaceIndexRegistration(workspaceRoot, options);
             }
             log(options, "✅ dry-run 完成，未写入任何文件。");
             return;
@@ -428,7 +567,8 @@ function commandUpdateAll(options) {
     let updated = 0;
     let skipped = 0;
     let failed = 0;
-    let removed = 0;
+    let removedMissing = 0;
+    let removedExcluded = 0;
     const timestamp = nowISO();
     const nextRecords = [];
 
@@ -436,10 +576,27 @@ function commandUpdateAll(options) {
         const item = records[i];
         const workspacePath = path.resolve(item.path);
         const agentDir = path.join(workspacePath, ".agent");
+        const exclusion = evaluateWorkspaceExclusion(index, workspacePath);
+
+        if (exclusion.excluded) {
+            removedExcluded += 1;
+            if (options.dryRun) {
+                log(
+                    options,
+                    `[dry-run] [${i + 1}/${records.length}] 将从批量索引移除排除路径: ${workspacePath}（${exclusion.reason}）`,
+                );
+            } else {
+                log(
+                    options,
+                    `🧽 [${i + 1}/${records.length}] 已从批量索引中移除排除路径: ${workspacePath}（${exclusion.reason}）`,
+                );
+            }
+            continue;
+        }
 
         if (!fs.existsSync(workspacePath)) {
             if (options.pruneMissing) {
-                removed += 1;
+                removedMissing += 1;
                 log(options, `🧽 [${i + 1}/${records.length}] 已移除失效工作区索引: ${workspacePath}`);
             } else {
                 skipped += 1;
@@ -493,13 +650,132 @@ function commandUpdateAll(options) {
     log(options, `   成功: ${updated}`);
     log(options, `   跳过: ${skipped}`);
     log(options, `   失败: ${failed}`);
+    log(options, `   清理排除路径: ${removedExcluded}`);
     if (options.pruneMissing) {
-        log(options, `   清理失效索引: ${removed}`);
+        log(options, `   清理失效索引: ${removedMissing}`);
     }
 
     if (failed > 0) {
         process.exitCode = 1;
     }
+}
+
+function requirePathOption(options, commandUsage) {
+    if (!options.path) {
+        throw new Error(`${commandUsage} 需要 --path <dir> 参数`);
+    }
+    return resolveWorkspaceRoot(options.path);
+}
+
+function commandExcludeList(options) {
+    const { indexPath, index } = readWorkspaceIndex();
+    const excluded = Array.isArray(index.excludedPaths) ? index.excludedPaths : [];
+
+    if (options.quiet) {
+        for (const item of excluded) {
+            console.log(item);
+        }
+        return;
+    }
+
+    console.log("🛡️ 工作区排除清单");
+    console.log(`   索引文件: ${indexPath}`);
+    console.log("   默认规则: 自动排除 antigravity-kit 源码目录（无需手动添加）");
+
+    if (excluded.length === 0) {
+        console.log("   当前无自定义排除路径。");
+        return;
+    }
+
+    console.log(`   自定义排除路径 (${excluded.length}):`);
+    for (let i = 0; i < excluded.length; i++) {
+        console.log(`   ${i + 1}. ${excluded[i]}`);
+    }
+}
+
+function commandExcludeAdd(options) {
+    const targetPath = requirePathOption(options, "exclude add");
+    const { indexPath, index } = readWorkspaceIndex();
+    const normalizedTarget = path.resolve(targetPath);
+    const existed = index.excludedPaths.includes(normalizedTarget);
+
+    const matchedWorkspaces = index.workspaces.filter((item) => isPathInOrUnder(normalizedTarget, item.path));
+    const matchedCount = matchedWorkspaces.length;
+
+    if (options.dryRun) {
+        if (existed) {
+            log(options, `[dry-run] 排除路径已存在: ${normalizedTarget}`);
+        } else {
+            log(options, `[dry-run] 将新增排除路径: ${normalizedTarget}`);
+        }
+        if (matchedCount > 0) {
+            log(options, `[dry-run] 将移除 ${matchedCount} 条已登记工作区记录（位于该排除路径下）。`);
+        }
+        return;
+    }
+
+    if (!existed) {
+        index.excludedPaths.push(normalizedTarget);
+        index.excludedPaths = normalizePathList(index.excludedPaths);
+    }
+
+    index.workspaces = index.workspaces.filter((item) => !isPathInOrUnder(normalizedTarget, item.path));
+    index.updatedAt = nowISO();
+    writeWorkspaceIndex(indexPath, index);
+
+    if (existed) {
+        log(options, `ℹ️ 排除路径已存在: ${normalizedTarget}`);
+    } else {
+        log(options, `✅ 已新增排除路径: ${normalizedTarget}`);
+    }
+
+    if (matchedCount > 0) {
+        log(options, `🧹 已移除 ${matchedCount} 条已登记工作区记录（位于排除路径下）。`);
+    }
+    log(options, `📚 索引文件: ${indexPath}`);
+}
+
+function commandExcludeRemove(options) {
+    const targetPath = requirePathOption(options, "exclude remove");
+    const { indexPath, index } = readWorkspaceIndex();
+    const normalizedTarget = path.resolve(targetPath);
+    const existed = index.excludedPaths.includes(normalizedTarget);
+
+    if (!existed) {
+        log(options, `ℹ️ 排除路径不存在: ${normalizedTarget}`);
+        return;
+    }
+
+    if (options.dryRun) {
+        log(options, `[dry-run] 将移除排除路径: ${normalizedTarget}`);
+        return;
+    }
+
+    index.excludedPaths = index.excludedPaths.filter((item) => item !== normalizedTarget);
+    index.updatedAt = nowISO();
+    writeWorkspaceIndex(indexPath, index);
+
+    log(options, `✅ 已移除排除路径: ${normalizedTarget}`);
+    log(options, `📚 索引文件: ${indexPath}`);
+}
+
+function commandExclude(options) {
+    const subcommand = (options.subcommand || "list").toLowerCase();
+
+    if (subcommand === "list") {
+        commandExcludeList(options);
+        return;
+    }
+    if (subcommand === "add") {
+        commandExcludeAdd(options);
+        return;
+    }
+    if (subcommand === "remove") {
+        commandExcludeRemove(options);
+        return;
+    }
+
+    throw new Error(`未知 exclude 子命令: ${subcommand}`);
 }
 
 function countFilesIfExists(dir, filterFn) {
@@ -561,6 +837,11 @@ function main() {
 
         if (command === "update-all") {
             commandUpdateAll(options);
+            return;
+        }
+
+        if (command === "exclude") {
+            commandExclude(options);
             return;
         }
 
