@@ -9,14 +9,14 @@
 ```
 project-name/
 ├── src/
-│   ├── app/                        # 仅路由 (薄层)
+│   ├── app/                        # 仅路由层 (薄层)
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
 │   │   ├── globals.css
-│   │   ├── (auth)/                 # 路由组 - 认证页面
+│   │   ├── (auth)/                 # 路由分组 - 认证页面
 │   │   │   ├── login/page.tsx
 │   │   │   └── register/page.tsx
-│   │   ├── (dashboard)/            # 路由组 - 仪表盘布局
+│   │   ├── (dashboard)/            # 路由分组 - 仪表盘布局
 │   │   │   ├── layout.tsx
 │   │   │   └── page.tsx
 │   │   └── api/
@@ -36,12 +36,12 @@ project-name/
 │   │   └── cart/
 │   │       └── ...
 │   │
-│   ├── shared/                     # 共享实用程序
+│   ├── shared/                     # 共享公用代码
 │   │   ├── components/ui/          # 可复用 UI 组件
-│   │   ├── lib/                    # 工具, 助手函数
+│   │   ├── lib/                    # 工具函数, Helpers
 │   │   └── hooks/                  # 全局 Hooks
 │   │
-│   └── server/                     # 仅服务端代码
+│   └── server/                     # 仅限服务器端代码
 │       ├── db/                     # 数据库客户端 (Prisma)
 │       ├── auth/                   # 认证配置
 │       └── services/               # 外部 API 集成
@@ -62,33 +62,33 @@ project-name/
 
 ---
 
-## 结构原则
+## 结构原则 (Structure Principles)
 
-| 原则                  | 实现                                                      |
-| --------------------- | --------------------------------------------------------- |
-| **功能隔离**          | 每个功能在 `features/` 中，拥有自己的组件、hooks、actions |
-| **服务端/客户端分离** | 仅服务端代码在 `server/` 中，防止意外的客户端导入         |
-| **薄路由**            | `app/` 仅用于路由，逻辑存在于 `features/` 中              |
-| **路由组**            | `(groupName)/` 用于布局共享而不影响 URL                   |
-| **共享代码**          | `shared/` 用于真正可复用的 UI 和工具                      |
-
----
-
-## 核心文件
-
-| 文件                   | 用途                                   |
-| ---------------------- | -------------------------------------- |
-| `package.json`         | 依赖项                                 |
-| `tsconfig.json`        | TypeScript + 路径别名 (`@/features/*`) |
-| `tailwind.config.ts`   | Tailwind 配置                          |
-| `.env.example`         | 环境变量模版                           |
-| `README.md`            | 项目文档                               |
-| `.gitignore`           | Git 忽略规则                           |
-| `prisma/schema.prisma` | 数据库 Schema                          |
+| 原则                             | 实现方式                                                  |
+| -------------------------------- | --------------------------------------------------------- |
+| **功能隔离 (Feature isolation)** | 每个功能在 `features/` 下拥有自己的组件、hooks、actions   |
+| **服务器/客户端分离**            | 仅限服务器端的代码放在 `server/` 中，防止意外在客户端导入 |
+| **薄路由层 (Thin routes)**       | `app/` 仅负责路由，逻辑存放在 `features/` 中              |
+| **路由分组 (Route groups)**      | 使用 `(groupName)/` 共享布局而不影响 URL                  |
+| **共享代码 (Shared code)**       | `shared/` 存放真正可复用的 UI 和工具函数                  |
 
 ---
 
-## 路径别名 (tsconfig.json)
+## 核心文件 (Core Files)
+
+| 文件                   | 用途                                       |
+| ---------------------- | ------------------------------------------ |
+| `package.json`         | 依赖管理                                   |
+| `tsconfig.json`        | TypeScript 配置及路径别名 (`@/features/*`) |
+| `tailwind.config.ts`   | Tailwind CSS 配置                          |
+| `.env.example`         | 环境变量模板                               |
+| `README.md`            | 项目文档                                   |
+| `.gitignore`           | Git 忽略规则                               |
+| `prisma/schema.prisma` | 数据库 Schema                              |
+
+---
+
+## 路径别名 (Path Aliases - tsconfig.json)
 
 ```json
 {
@@ -105,7 +105,7 @@ project-name/
 
 ---
 
-## 何时使用何处
+## 何时使用何处 (When to Use What)
 
 | 需求              | 位置                          |
 | ----------------- | ----------------------------- |
