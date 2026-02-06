@@ -1,38 +1,113 @@
 ---
-description: 结构化头脑风暴，明确项目需求
+description: 面向项目与功能的结构化头脑风暴。在落地实现前先探索多个可选方案。
 ---
 
-# 头脑风暴 (Brainstorm Workflow)
+# /brainstorm - 结构化想法探索
 
-**触发命令**: `/brainstorm [topic]`
+$ARGUMENTS
+
+---
 
 ## 目的
 
-当用户只有一个模糊的想法，或者面临复杂问题不知从何下手时，使用此工作流。不要直接写代码，先理清思路。
+此命令会激活 BRAINSTORM 模式，用于结构化地探索思路。在承诺具体实现之前需要比较方案时使用。
 
-## 步骤流程
+---
 
-1. **初始提问**:
-    - 询问项目的核心目标 (Goal)。
-    - 询问目标用户 (Target User)。
-    - 询问核心价值 (Value Proposition)。
+## 行为
 
-2. **苏格拉底式追问 (Socratic Questioning)**:
-    - 基于用户的回答，提出 3 个以上的深化问题。
-    - 挑战用户的假设 (例如："如果用户离线了怎么办？")。
-    - 探索边界情况 (Edge Cases)。
+当触发 `/brainstorm` 时：
 
-3. **方案发散**:
-    - 提出至少 3 种可能的解决方案或技术路线。
-    - 分析每种方案的优缺点 (Pros & Cons)。
+1. **理解目标**
+   - 我们要解决什么问题？
+   - 用户是谁？
+   - 存在哪些约束？
 
-4. **收敛总结**:
-    - 如果用户选定了方案，生成一份 `requirements.md` 或 `feature_spec.md`。
-    - 建议下一步行动 (Next Steps)。
+2. **生成选项**
+   - 至少给出 3 种不同方案
+   - 每种方案都包含优缺点
+   - 适当考虑非常规方案
+
+3. **对比并推荐**
+   - 总结关键权衡
+   - 给出带理由的推荐
+
+---
+
+## 输出格式
+
+```markdown
+## 🧠 Brainstorm: [Topic]
+
+### Context
+[Brief problem statement]
+
+---
+
+### Option A: [Name]
+[Description]
+
+✅ **Pros:**
+- [benefit 1]
+- [benefit 2]
+
+❌ **Cons:**
+- [drawback 1]
+
+📊 **Effort:** Low | Medium | High
+
+---
+
+### Option B: [Name]
+[Description]
+
+✅ **Pros:**
+- [benefit 1]
+
+❌ **Cons:**
+- [drawback 1]
+- [drawback 2]
+
+📊 **Effort:** Low | Medium | High
+
+---
+
+### Option C: [Name]
+[Description]
+
+✅ **Pros:**
+- [benefit 1]
+
+❌ **Cons:**
+- [drawback 1]
+
+📊 **Effort:** Low | Medium | High
+
+---
+
+## 💡 Recommendation
+
+**Option [X]** because [reasoning].
+
+What direction would you like to explore?
+```
+
+---
 
 ## 示例
 
-> User: /brainstorm 我想做一个待办事项 App
-> AI: 没问题。市面上有很多 Todo App，你想解决什么特定的痛点？是针对极客的纯键盘操作？还是针对团队的协作？
+```
+/brainstorm authentication system
+/brainstorm state management for complex form
+/brainstorm database schema for social app
+/brainstorm caching strategy
+```
 
 ---
+
+## 关键原则
+
+- **不写代码** - 此流程关注想法，而不是直接实现
+- **必要时可视化** - 涉及架构时可使用图示
+- **诚实呈现权衡** - 不要隐藏复杂度
+- **由用户决策** - 提供选项，最终由用户选择方向
