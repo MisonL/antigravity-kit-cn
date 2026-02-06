@@ -4,27 +4,126 @@ description: SEO 基础、Google 算法原理解析
 allowed-tools: Read, Glob, Grep
 ---
 
-# SEO 基础 (Search Engine Optimization)
+# SEO Fundamentals - SEO 基础
 
-## 核心三要素 (E-E-A-T)
+> 搜索引擎可见性原则。
 
-Google 评估内容质量的标准：
+---
 
-1.  **Experience (经验)**: 作者是否亲自体验过？
-2.  **Expertise (专业性)**: 作者是否是该领域专家？
-3.  **Authoritativeness (权威性)**: 网站是否有权威外链？
-4.  **Trustworthiness (可信度)**: 网站是否安全 (HTTPS)？
+## 1. E-E-A-T 框架
 
-## 技术 SEO
+| 原则                           | 信号                     |
+| ------------------------------ | ------------------------ |
+| **经验 (Experience)**          | 第一手知识，真实案例     |
+| **专业性 (Expertise)**         | 凭证，知识深度           |
+| **权威性 (Authoritativeness)** | 反向链接，提及，行业认可 |
+| **可信度 (Trustworthiness)**   | HTTPS，透明度，准确信息  |
 
-1.  **Sitemap**: `sitemap.xml` 提交给 Search Console。
-2.  **Robots.txt**: 控制爬虫访问。
-3.  **Canonical Url**: 防止重复内容。
-4.  **SSR/SSG**: 确保爬虫能直接看到 HTML 内容（SPA 需要注意）。
+---
 
-## 页面优化 (On-Page)
+## 2. 核心 Web 指标 (Core Web Vitals)
 
-- **Title**: 包含核心关键词，吸引人点击。
-- **Meta Description**: 这是广告语，提高点击率 (CTR)。
-- **H1**: 每个页面只能有一个 H1。
-- **Alt Text**: 图片必须有描述。
+| 指标    | 目标    | 衡量       |
+| ------- | ------- | ---------- |
+| **LCP** | < 2.5s  | 加载性能   |
+| **INP** | < 200ms | 交互性     |
+| **CLS** | < 0.1   | 视觉稳定性 |
+
+---
+
+## 3. 技术 SEO 原则 (Technical SEO Principles)
+
+### 站点结构
+
+| 元素           | 目的     |
+| -------------- | -------- |
+| XML sitemap    | 帮助爬取 |
+| robots.txt     | 控制访问 |
+| Canonical tags | 防止重复 |
+| HTTPS          | 安全信号 |
+
+### 性能
+
+| 因素       | 影响           |
+| ---------- | -------------- |
+| 页面速度   | Core Web Vital |
+| 移动友好   | 排名因素       |
+| 干净的 URL | 可爬取性       |
+
+---
+
+## 4. 内容 SEO 原则 (Content SEO Principles)
+
+### 页面元素
+
+| 元素             | 最佳实践                 |
+| ---------------- | ------------------------ |
+| Title tag        | 50-60 字符，关键词在前   |
+| Meta description | 150-160 字符，引人注目   |
+| H1               | 每页一个，包含主要关键词 |
+| H2-H6            | 逻辑层级                 |
+| Alt text         | 描述性的，不要堆砌       |
+
+### 内容质量
+
+| 因素   | 重要性     |
+| ------ | ---------- |
+| 深度   | 全面覆盖   |
+| 新鲜度 | 定期更新   |
+| 独特性 | 原创价值   |
+| 可读性 | 清晰的写作 |
+
+---
+
+## 5. Schema 标记类型 (Schema Markup Types)
+
+| 类型           | 用途           |
+| -------------- | -------------- |
+| Article        | 博客文章，新闻 |
+| Organization   | 公司信息       |
+| Person         | 作者个人资料   |
+| FAQPage        | 问答内容       |
+| Product        | 电子商务       |
+| Review         | 评分           |
+| BreadcrumbList | 导航           |
+
+---
+
+## 6. AI 内容指南 (AI Content Guidelines)
+
+### Google 寻找什么
+
+| ✅ 要 (Do)         | ❌ 不要 (Don't)        |
+| ------------------ | ---------------------- |
+| AI 初稿 + 人工编辑 | 发布未经处理的 AI 内容 |
+| 添加原创见解       | 复制且无价值           |
+| 专家审查           | 跳过事实核查           |
+| 遵循 E-E-A-T       | 关键词堆砌             |
+
+---
+
+## 7. 排名因素 (优先级)
+
+| 优先级 | 因素                       |
+| ------ | -------------------------- |
+| 1      | 优质、相关的内容           |
+| 2      | 来自权威站点的反向链接     |
+| 3      | 页面体验 (Core Web Vitals) |
+| 4      | 移动端优化                 |
+| 5      | 技术 SEO 基础              |
+
+---
+
+## 8. 衡量 (Measurement)
+
+| 指标          | 工具                   |
+| ------------- | ---------------------- |
+| 排名          | Search Console, Ahrefs |
+| 流量          | Analytics              |
+| 核心 Web 指标 | PageSpeed Insights     |
+| 索引          | Search Console         |
+| 反向链接      | Ahrefs, Semrush        |
+
+---
+
+> **记住：** SEO 是一场持久战。优质内容 + 技术卓越 + 耐心 = 结果。
