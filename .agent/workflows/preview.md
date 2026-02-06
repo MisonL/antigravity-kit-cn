@@ -1,41 +1,80 @@
 ---
-description: 启动预览服务器并检查状态
+description: 预览服务器启动、停止与状态检查。本地开发服务管理。
 ---
 
-# 预览 (Preview Workflow)
+# /preview - 预览管理
 
-**触发命令**: `/preview`
-
-## 目的
-
-在本地启动开发服务器，让用户可以预览当前项目的效果。
-
-## 步骤流程
-
-1. **环境检查**:
-    - 检查 `package.json` 中的 `scripts`。
-    - 寻找 `dev`, `start`, `preview` 等命令。
-    - 检查端口占用情况。
-
-2. **启动服务**:
-    - 运行 `npm run dev` (或其他对应命令)。
-    - 获取 `localhost` 地址。
-
-3. **健康检查**:
-    - 确保服务成功启动且无报错。
-    - 输出访问地址。
-
-## 示例
-
-> User: /preview
-> AI: 正在启动开发服务器... 成功！请访问 http://localhost:3000
+$ARGUMENTS
 
 ---
 
-## 上游脚本流程补充（reference 对齐）
+## 任务
 
-预览流程依赖 `auto_preview.py`：
+管理预览服务器：启动、停止、状态检查。
 
-- `python .agent/scripts/auto_preview.py start [port]`
-- `python .agent/scripts/auto_preview.py stop`
-- `python .agent/scripts/auto_preview.py status`
+### 命令
+
+```
+/preview           - 显示当前状态
+/preview start     - 启动服务器
+/preview stop      - 停止服务器
+/preview restart   - 重启
+/preview check     - 健康检查
+```
+
+---
+
+## 使用示例
+
+### 启动服务器
+```
+/preview start
+
+Response:
+🚀 Starting preview...
+   Port: 3000
+   Type: Next.js
+
+✅ Preview ready!
+   URL: http://localhost:3000
+```
+
+### 状态检查
+```
+/preview
+
+Response:
+=== Preview Status ===
+
+🌐 URL: http://localhost:3000
+📁 Project: C:/projects/my-app
+🏷️ Type: nextjs
+💚 Health: OK
+```
+
+### 端口冲突
+```
+/preview start
+
+Response:
+⚠️ Port 3000 is in use.
+
+Options:
+1. Start on port 3001
+2. Close app on 3000
+3. Specify different port
+
+Which one? (default: 1)
+```
+
+---
+
+## 技术说明
+
+自动预览使用 `auto_preview.py` 脚本：
+
+```bash
+python .agent/scripts/auto_preview.py start [port]
+python .agent/scripts/auto_preview.py stop
+python .agent/scripts/auto_preview.py status
+```
