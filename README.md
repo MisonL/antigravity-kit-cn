@@ -44,7 +44,9 @@ node bin/ag-kit.js init --path /path/to/your-project
 - 在 `npm install -g .` 阶段通过 `postinstall` 检查全局是否存在 `@vudovn/ag-kit`
 - 在 `ag-kit init` / `ag-kit update` / `ag-kit update-all` 执行前再次检查
 
-如检测到会提示冲突风险与卸载建议（不阻断当前流程）。
+在 `npm install -g .` 阶段检测到冲突时，会交互确认是否自动卸载上游包：
+- 选择卸载：自动执行 `npm uninstall -g @vudovn/ag-kit`
+- 选择不卸载：明确提示“`ag-kit` 命令由最后安装的版本生效”，然后继续安装
 
 **推荐方案：**
 为了在保持 `.agent/` 文件夹本地化（不被 Git 追踪）的同时维持 AI 功能：
