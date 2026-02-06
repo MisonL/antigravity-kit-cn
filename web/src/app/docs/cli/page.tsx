@@ -85,6 +85,32 @@ export default function CLIPage() {
                         </div>
                     </div>
 
+                    {/* update-all */}
+                    <div>
+                        <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
+                            <code className="font-mono">ag-kit update-all</code>
+                        </h3>
+                        <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
+                            根据全局索引批量更新所有已登记的工作区。
+                        </p>
+
+                        <div className="relative group mb-4">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit update-all</code>
+                            </pre>
+                        </div>
+
+                        <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+                            <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
+                            <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
+                                <li>• 读取全局索引文件 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">~/.ag-kit/workspaces.json</code></li>
+                                <li>• 对每个已登记且存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的工作区执行更新</li>
+                                <li>• 输出批量更新汇总（成功/跳过/失败）</li>
+                                <li>• 历史项目需先执行一次 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">ag-kit update</code> 才会被纳入索引</li>
+                            </ul>
+                        </div>
+                    </div>
+
                     {/* status */}
                     <div>
                         <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
@@ -172,6 +198,14 @@ export default function CLIPage() {
                                     预览操作而不执行
                                 </td>
                             </tr>
+                            <tr>
+                                <td className="py-3 px-4">
+                                    <code className="font-mono text-zinc-900 dark:text-zinc-50">--prune-missing</code>
+                                </td>
+                                <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
+                                    批量更新时清理索引中已不存在的工作区路径（用于 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">update-all</code>）
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -224,6 +258,28 @@ export default function CLIPage() {
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
                                 <code className="text-zinc-100">ag-kit init --quiet --force</code>
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                            批量更新全部工作区
+                        </h3>
+                        <div className="relative group">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit update-all</code>
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
+                            批量更新并清理失效索引
+                        </h3>
+                        <div className="relative group">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit update-all --prune-missing</code>
                             </pre>
                         </div>
                     </div>

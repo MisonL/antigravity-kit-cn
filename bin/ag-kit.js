@@ -9,11 +9,33 @@ const pkg = require("../package.json");
 
 const REPO_URL = "https://github.com/MisonL/antigravity-kit-cn.git";
 const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agent");
+const WORKSPACE_INDEX_VERSION = 1;
+
+function nowISO() {
+    return new Date().toISOString();
+}
+
+function getWorkspaceIndexPath() {
+    const customPath = process.env.AG_KIT_INDEX_PATH;
+    if (customPath) {
+        return path.resolve(process.cwd(), customPath);
+    }
+    return path.join(os.homedir(), ".ag-kit", "workspaces.json");
+}
+
+function createEmptyWorkspaceIndex() {
+    return {
+        version: WORKSPACE_INDEX_VERSION,
+        updatedAt: "",
+        workspaces: [],
+    };
+}
 
 function printUsage() {
     console.log("用法:");
     console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--quiet] [--dry-run]");
     console.log("  ag-kit update [--path <dir>] [--branch <name>] [--quiet] [--dry-run]");
+    console.log("  ag-kit update-all [--branch <name>] [--prune-missing] [--quiet] [--dry-run]");
     console.log("  ag-kit status [--path <dir>] [--quiet]");
 }
 
@@ -27,6 +49,7 @@ function parseArgs(argv) {
         force: false,
         quiet: false,
         dryRun: false,
+        pruneMissing: false,
         path: "",
         branch: "",
     };
@@ -40,6 +63,8 @@ function parseArgs(argv) {
             options.quiet = true;
         } else if (arg === "--dry-run") {
             options.dryRun = true;
+        } else if (arg === "--prune-missing") {
+            options.pruneMissing = true;
         } else if (arg === "--path") {
             if (i + 1 >= argv.length) {
                 throw new Error("--path 需要一个目录参数");
@@ -84,6 +109,111 @@ function copyDir(src, dest) {
         } else {
             fs.copyFileSync(srcPath, destPath);
         }
+    }
+}
+
+function readWorkspaceIndex() {
+    const indexPath = getWorkspaceIndexPath();
+    if (!fs.existsSync(indexPath)) {
+        return { indexPath, index: createEmptyWorkspaceIndex() };
+    }
+
+    const raw = fs.readFileSync(indexPath, "utf8").trim();
+    if (!raw) {
+        return { indexPath, index: createEmptyWorkspaceIndex() };
+    }
+
+    let parsed;
+    try {
+        parsed = JSON.parse(raw);
+    } catch (err) {
+        throw new Error(`工作区索引文件解析失败: ${indexPath}`);
+    }
+
+    const normalized = createEmptyWorkspaceIndex();
+    normalized.version = WORKSPACE_INDEX_VERSION;
+    normalized.updatedAt = typeof parsed.updatedAt === "string" ? parsed.updatedAt : "";
+
+    const records = Array.isArray(parsed.workspaces) ? parsed.workspaces : [];
+    const dedupMap = new Map();
+
+    for (const item of records) {
+        if (!item || typeof item.path !== "string" || item.path.trim() === "") {
+            continue;
+        }
+
+        const workspacePath = path.resolve(item.path);
+        dedupMap.set(workspacePath, {
+            path: workspacePath,
+            installedAt: typeof item.installedAt === "string" ? item.installedAt : "",
+            lastUpdatedAt: typeof item.lastUpdatedAt === "string" ? item.lastUpdatedAt : "",
+            cliVersion: typeof item.cliVersion === "string" ? item.cliVersion : "",
+        });
+    }
+
+    normalized.workspaces = Array.from(dedupMap.values()).sort((a, b) => a.path.localeCompare(b.path));
+    return { indexPath, index: normalized };
+}
+
+function writeWorkspaceIndex(indexPath, index) {
+    const payload = {
+        version: WORKSPACE_INDEX_VERSION,
+        updatedAt: index.updatedAt || nowISO(),
+        workspaces: Array.isArray(index.workspaces) ? index.workspaces : [],
+    };
+
+    payload.workspaces = payload.workspaces
+        .filter((item) => item && typeof item.path === "string" && item.path.trim() !== "")
+        .map((item) => ({
+            path: path.resolve(item.path),
+            installedAt: typeof item.installedAt === "string" ? item.installedAt : "",
+            lastUpdatedAt: typeof item.lastUpdatedAt === "string" ? item.lastUpdatedAt : "",
+            cliVersion: typeof item.cliVersion === "string" ? item.cliVersion : "",
+        }))
+        .sort((a, b) => a.path.localeCompare(b.path));
+
+    fs.mkdirSync(path.dirname(indexPath), { recursive: true });
+    fs.writeFileSync(indexPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+}
+
+function registerWorkspaceIndex(workspaceRoot, options) {
+    const normalizedPath = path.resolve(workspaceRoot);
+    const { indexPath, index } = readWorkspaceIndex();
+    const time = nowISO();
+
+    let inserted = true;
+    index.workspaces = index.workspaces.map((item) => {
+        if (item.path !== normalizedPath) {
+            return item;
+        }
+        inserted = false;
+        return {
+            path: normalizedPath,
+            installedAt: item.installedAt || time,
+            lastUpdatedAt: time,
+            cliVersion: pkg.version,
+        };
+    });
+
+    if (inserted) {
+        index.workspaces.push({
+            path: normalizedPath,
+            installedAt: time,
+            lastUpdatedAt: time,
+            cliVersion: pkg.version,
+        });
+    }
+
+    index.updatedAt = time;
+    writeWorkspaceIndex(indexPath, index);
+
+    if (!options.silentIndexLog) {
+        if (inserted) {
+            log(options, `🗂️ 已登记工作区到全局索引: ${normalizedPath}`);
+        } else {
+            log(options, `🗂️ 已刷新工作区索引记录: ${normalizedPath}`);
+        }
+        log(options, `   索引文件: ${indexPath}`);
     }
 }
 
@@ -245,6 +375,9 @@ function installAgent(options) {
             log(options, `[dry-run] 将复制: ${sourceDir} -> ${targetDir}`);
             const cleanupPreview = removeAgentIgnoreRules(workspaceRoot, options);
             logGitIgnoreCleanup(workspaceRoot, cleanupPreview, options);
+            if (options.manageIndex !== false) {
+                log(options, `[dry-run] 将登记工作区到全局索引: ${workspaceRoot}`);
+            }
             log(options, "✅ dry-run 完成，未写入任何文件。");
             return;
         }
@@ -253,6 +386,9 @@ function installAgent(options) {
         copyDir(sourceDir, targetDir);
         const cleanupResult = removeAgentIgnoreRules(workspaceRoot, options);
         logGitIgnoreCleanup(workspaceRoot, cleanupResult, options);
+        if (options.manageIndex !== false) {
+            registerWorkspaceIndex(workspaceRoot, options);
+        }
         log(options, "✅ .agent 已安装完成");
         log(options, '👉 现在可以使用 "/brainstorm", "/create" 等命令');
     } finally {
@@ -270,6 +406,100 @@ function commandUpdate(options) {
     const merged = { ...options, force: true };
     log(merged, "🔄 正在更新 Antigravity Kit ...");
     installAgent(merged);
+}
+
+function commandUpdateAll(options) {
+    if (options.path) {
+        throw new Error("update-all 不支持 --path，请直接执行 ag-kit update-all");
+    }
+
+    const { indexPath, index } = readWorkspaceIndex();
+    const records = index.workspaces || [];
+
+    if (records.length === 0) {
+        log(options, "ℹ️ 全局索引为空，没有可批量更新的工作区。");
+        log(options, "   先在项目中执行 ag-kit init 或 ag-kit update 建立索引。");
+        return;
+    }
+
+    log(options, `🔄 开始批量更新工作区（共 ${records.length} 个）...`);
+    log(options, `📚 索引文件: ${indexPath}`);
+
+    let updated = 0;
+    let skipped = 0;
+    let failed = 0;
+    let removed = 0;
+    const timestamp = nowISO();
+    const nextRecords = [];
+
+    for (let i = 0; i < records.length; i++) {
+        const item = records[i];
+        const workspacePath = path.resolve(item.path);
+        const agentDir = path.join(workspacePath, ".agent");
+
+        if (!fs.existsSync(workspacePath)) {
+            if (options.pruneMissing) {
+                removed += 1;
+                log(options, `🧽 [${i + 1}/${records.length}] 已移除失效工作区索引: ${workspacePath}`);
+            } else {
+                skipped += 1;
+                log(options, `⏭️ [${i + 1}/${records.length}] 工作区不存在，已跳过: ${workspacePath}`);
+                nextRecords.push(item);
+            }
+            continue;
+        }
+
+        if (!fs.existsSync(agentDir)) {
+            skipped += 1;
+            log(options, `⏭️ [${i + 1}/${records.length}] 未检测到 .agent，已跳过: ${workspacePath}`);
+            nextRecords.push(item);
+            continue;
+        }
+
+        log(options, `📦 [${i + 1}/${records.length}] 更新: ${workspacePath}`);
+
+        try {
+            const runOptions = {
+                ...options,
+                force: true,
+                path: workspacePath,
+                manageIndex: false,
+            };
+            installAgent(runOptions);
+            updated += 1;
+            nextRecords.push({
+                path: workspacePath,
+                installedAt: item.installedAt || timestamp,
+                lastUpdatedAt: timestamp,
+                cliVersion: pkg.version,
+            });
+        } catch (err) {
+            failed += 1;
+            nextRecords.push(item);
+            if (!options.quiet) {
+                console.error(`❌ 更新失败: ${workspacePath}`);
+                console.error(`   ${err.message}`);
+            }
+        }
+    }
+
+    if (!options.dryRun) {
+        index.workspaces = nextRecords;
+        index.updatedAt = timestamp;
+        writeWorkspaceIndex(indexPath, index);
+    }
+
+    log(options, "📊 批量更新完成");
+    log(options, `   成功: ${updated}`);
+    log(options, `   跳过: ${skipped}`);
+    log(options, `   失败: ${failed}`);
+    if (options.pruneMissing) {
+        log(options, `   清理失效索引: ${removed}`);
+    }
+
+    if (failed > 0) {
+        process.exitCode = 1;
+    }
 }
 
 function countFilesIfExists(dir, filterFn) {
@@ -326,6 +556,11 @@ function main() {
 
         if (command === "update") {
             commandUpdate(options);
+            return;
+        }
+
+        if (command === "update-all") {
+            commandUpdateAll(options);
             return;
         }
 

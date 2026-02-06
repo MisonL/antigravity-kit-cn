@@ -79,6 +79,10 @@ node bin/ag-kit.js init --path /path/to/your-project`}
         <Callout type="info">
           <strong>自动修复：</strong>安装过程中会扫描项目根目录 <code>.gitignore</code>，并自动移除会忽略 <code>.agent</code> 的规则，避免工作流不生效。CLI 会在终端提示具体处理结果。
         </Callout>
+
+        <Callout type="info">
+          <strong>批量更新：</strong>每次执行 <code>ag-kit init</code> / <code>ag-kit update</code> 都会自动登记工作区到全局索引，后续可直接用 <code>ag-kit update-all</code> 一键批量更新所有已登记工作区。
+        </Callout>
       </section>
 
       <section id="structure" className="mb-12 scroll-mt-16">
