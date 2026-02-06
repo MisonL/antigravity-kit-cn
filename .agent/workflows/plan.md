@@ -1,39 +1,89 @@
 ---
-description: 制定详细的项目实施计划
+description: 使用 project-planner agent 创建项目计划。不写代码，只生成计划文件。
 ---
 
-# 计划 (Plan Workflow)
+# /plan - 项目规划模式
 
-**触发命令**: `/plan [project scope]`
-
-## 目的
-
-对于复杂任务，直接写代码容易迷失方向。此工作流用于生成一份详细的、分阶段的 `implementation_plan.md`。
-
-## 步骤流程
-
-1. **需求分析**:
-    - 阅读 `task.md` 或用户输入的上下文。
-    - 识别关键依赖和风险点。
-
-2. **任务拆解 (WBS)**:
-    - 将大目标拆解为 P0 (核心), P1 (重要), P2 (锦上添花)。
-    - 每个子任务应小于 2 小时的工作量。
-
-3. **撰写计划书**:
-    - 创建或更新 `implementation_plan.md`。
-    - 格式包含：目标、架构图、文件变更列表、验证步骤。
-
-4. **用户评审**:
-    - 使用 `notify_user` 请求用户确认计划。
-    - 根据反馈调整。
-
-## 输出工件
-
-- `implementation_plan.md`: 你的作战地图。
-
-## 关联工作流
-
-- 规划完成后，通常衔接 `/create` 进入实现阶段。
+$ARGUMENTS
 
 ---
+
+## 🔴 关键规则
+
+1. **禁止写代码** - 本命令仅创建计划文件
+2. **必须使用 project-planner agent** - 不是 Antigravity Agent 原生 Plan 模式
+3. **苏格拉底闸门** - 规划前先做澄清提问
+4. **动态命名** - 计划文件名需基于任务生成
+
+---
+
+## 任务
+
+使用 `project-planner` agent，并传入以下上下文：
+
+```
+CONTEXT:
+- User Request: $ARGUMENTS
+- Mode: PLANNING ONLY (no code)
+- Output: docs/PLAN-{task-slug}.md (dynamic naming)
+
+NAMING RULES:
+1. Extract 2-3 key words from request
+2. Lowercase, hyphen-separated
+3. Max 30 characters
+4. Example: "e-commerce cart" → PLAN-ecommerce-cart.md
+
+RULES:
+1. Follow project-planner.md Phase -1 (Context Check)
+2. Follow project-planner.md Phase 0 (Socratic Gate)
+3. Create PLAN-{slug}.md with task breakdown
+4. DO NOT write any code files
+5. REPORT the exact file name created
+```
+
+---
+
+## 预期输出
+
+| Deliverable | Location |
+|-------------|----------|
+| Project Plan | `docs/PLAN-{task-slug}.md` |
+| Task Breakdown | Inside plan file |
+| Agent Assignments | Inside plan file |
+| Verification Checklist | Phase X in plan file |
+
+---
+
+## 规划完成后
+
+告知用户：
+```
+[OK] Plan created: docs/PLAN-{slug}.md
+
+Next steps:
+- Review the plan
+- Run `/create` to start implementation
+- Or modify plan manually
+```
+
+---
+
+## 命名示例
+
+| Request | Plan File |
+|---------|-----------|
+| `/plan e-commerce site with cart` | `docs/PLAN-ecommerce-cart.md` |
+| `/plan mobile app for fitness` | `docs/PLAN-fitness-app.md` |
+| `/plan add dark mode feature` | `docs/PLAN-dark-mode.md` |
+| `/plan fix authentication bug` | `docs/PLAN-auth-fix.md` |
+| `/plan SaaS dashboard` | `docs/PLAN-saas-dashboard.md` |
+
+---
+
+## 使用方式
+
+```
+/plan e-commerce site with cart
+/plan mobile app for fitness tracking
+/plan SaaS dashboard with analytics
+```
