@@ -1,31 +1,31 @@
 # 功能构建 (Feature Building)
 
-> 如何分析和实现新功能。
+> 如何分析并实现新功能。
 
 ## 功能分析
 
 ```
-请求: "添加支付系统"
+请求: "增加支付系统"
 
 分析:
-├── 变更需求:
+├── 所需变更:
 │   ├── 数据库: orders, payments 表
-│   ├── 后端: /api/checkout, /api/webhooks/stripe
-│   ├── 前端: CheckoutForm, PaymentSuccess
-│   └── 配置: Stripe API keys
+│   ├── 后端: /api/checkout, /api/webhooks/stripe 端点
+│   ├── 前端: CheckoutForm, PaymentSuccess 组件
+│   └── 配置: Stripe API 密钥
 │
 ├── 依赖项:
-│   ├── stripe package
-│   └── 现有用户认证
+│   ├── stripe 软件包
+│   └── 现有的用户认证系统
 │
-└── 预估时间: 15-20 分钟
+└── 预计耗时: 15-20 分钟
 ```
 
 ## 迭代增强流程
 
 ```
 1. 分析现有项目
-2. 创建变更计划 (PLAN.md)
+2. 创建变更计划
 3. 向用户展示计划
 4. 获得批准
 5. 应用变更
@@ -49,5 +49,5 @@
 2. 尝试自动修复
 3. 如果失败，向用户报告
 4. 建议替代方案
-5. 必须时回滚
+5. 必要时回滚
 ```
