@@ -1,22 +1,22 @@
-# tRPC 原则
+# tRPC 原则 (tRPC Principles)
 
-> 为 TypeScript Monorepo 打造的端到端类型安全。
+> 为 TypeScript Monorepos 提供的端到端类型安全。
 
 ## 何时使用
 
 ```
 ✅ 完美契合:
 ├── 前后端均为 TypeScript
-├── Monorepo 项目结构
-├── 内部工具开发
-├── 快速开发迭代
-└── 类型安全至关重要
+├── Monorepo 结构
+├── 内部工具
+├── 快速迭代开发
+├── 类型安全至关重要
 
 ❌ 不契合:
 ├── 非 TypeScript 客户端
 ├── 公共 API 服务
 ├── 需要遵循 REST 惯例
-└── 多语言后端环境
+├── 多语言后端环境
 ```
 
 ## 核心优势
