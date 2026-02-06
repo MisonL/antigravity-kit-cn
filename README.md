@@ -24,7 +24,7 @@ npm install -g .
 ```bash
 cd /path/to/your-project
 ag-kit init --target gemini   # 安装 Gemini 结构(.agent)
-ag-kit init --target codex    # 安装 Codex 结构(.codex + .agents + 托管规则注入)
+ag-kit init --target codex    # 安装 Codex 结构(.codex + 托管规则注入)
 # 或者直接 ag-kit init，在 TTY 里交互选择目标
 ```
 
@@ -35,7 +35,39 @@ cd /path/to/antigravity-kit-cn
 node bin/ag-kit.js init --target codex --path /path/to/your-project
 ```
 
-这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .codex + .agents`），并把 Codex 托管规则注入工作区 `AGENTS.md` 与 `antigravity.rules`。
+这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .codex`），并把 Codex 托管规则注入工作区 `AGENTS.md` 与 `antigravity.rules`。
+
+### 后续升级 (Upgrade)
+
+当本仓库有更新时，先更新本地源码并重新全局安装 CLI：
+
+```bash
+cd /path/to/antigravity-kit-cn
+git pull
+npm install -g .
+```
+
+然后在你的项目内执行更新（会刷新已安装目标）：
+
+```bash
+cd /path/to/your-project
+ag-kit update
+```
+
+### FAQ: 为什么可能还会看到 `.agents`？
+
+这是正常行为，不是重复安装：
+
+- `.agent`: Gemini 目标使用的目录。
+- `.codex`: Codex 目标的托管源目录（由 Ag-Kit 维护）。
+- `.agents`: 历史版本遗留目录。当前分支已移除镜像机制，后续 `update/doctor --fix` 会自动清理该目录。
+
+可用以下命令确认状态：
+
+```bash
+ag-kit status
+ag-kit doctor --target codex --fix
+```
 
 ## 卸载 (Uninstall)
 
@@ -87,9 +119,9 @@ ag-kit exclude add --path /path/to/your-project
 
 ### ⚠️ 关于 `.gitignore` 的重要说明
 
-如果您正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/`、`.codex/`、`.agents/` 添加到 `.gitignore` 可能会阻止 IDE 索引工作流。这会导致斜杠命令（如 `/plan`, `/debug`）无法在对话建议下拉菜单中显示。
+如果您正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/`、`.codex/` 添加到 `.gitignore` 可能会阻止 IDE 索引工作流。这会导致斜杠命令（如 `/plan`, `/debug`）无法在对话建议下拉菜单中显示。
 
-从当前版本开始，执行 `ag-kit init` / `ag-kit update` 时会自动扫描项目根目录 `.gitignore`，并移除会忽略 `.agent`、`.codex`、`.agents` 的规则，同时在终端提示具体处理结果。
+从当前版本开始，执行 `ag-kit init` / `ag-kit update` 时会自动扫描项目根目录 `.gitignore`，并移除会忽略 `.agent`、`.codex` 的规则，同时在终端提示具体处理结果。
 另外会进行上游英文版冲突检测：
 - 在 `npm install -g .` 阶段通过 `postinstall` 检查全局是否存在 `@vudovn/ag-kit`
 - 在 `ag-kit init` / `ag-kit update` / `ag-kit update-all` 执行前再次检查
@@ -101,7 +133,7 @@ ag-kit exclude add --path /path/to/your-project
 **推荐方案：**
 为了在保持 `.agent/` 文件夹本地化（不被 Git 追踪）的同时维持 AI 功能：
 
-1. 确保 `.agent/`、`.codex/`、`.agents/` **不要** 出现在项目的 `.gitignore` 中。
+1. 确保 `.agent/`、`.codex/` **不要** 出现在项目的 `.gitignore` 中。
 2. 作为一个替代方案，请将其添加到您的本地排除文件：`.git/info/exclude`
 
 ## 包含内容 (What's Included)
@@ -109,7 +141,7 @@ ag-kit exclude add --path /path/to/your-project
 | 组件 (Component) | 数量 | 描述                                               |
 | ---------------- | ---- | -------------------------------------------------- |
 | **Agents**       | 20   | 专家级 AI 人格 (前端、后端、安全、产品经理、QA 等) |
-| **Skills**       | 37   | 特定领域的知识模块                                 |
+| **Skills**       | 48   | 特定领域的知识模块                                 |
 | **Workflows**    | 11   | 斜杠命令流程                                       |
 
 ## 使用方法 (Usage)
@@ -192,9 +224,11 @@ ag-kit init --target gemini --path ./myapp      # 安装 Gemini 到指定目录
 ag-kit init --target codex --path ./myapp       # 安装 Codex 到指定目录
 ag-kit init --targets gemini,codex --path ./myapp # 一次安装多个目标
 ag-kit init --non-interactive --target codex    # 非交互模式必须显式指定目标
+ag-kit init --target codex --no-index --path ./tmp-workspace # 安装但不写入全局索引
 ag-kit init --branch dev --force                # 覆盖安装并指定分支
 ag-kit init --quiet --dry-run                   # 预览操作而不执行
-ag-kit update --target codex --path ./myapp     # 更新指定目标
+ag-kit update --target codex --path ./myapp     # 更新指定目标（默认会刷新索引）
+ag-kit update --target codex --no-index --path ./myapp # 更新但不刷新索引
 ag-kit doctor --target codex --fix --path ./myapp # 检查并自动修复
 ag-kit update-all --targets codex               # 批量更新所有登记工作区里的 codex 目标
 ag-kit update-all --prune-missing # 清理索引中已失效的路径
@@ -208,10 +242,12 @@ ag-kit exclude remove --path /path/to/dir # 删除排除路径
 - 执行 `ag-kit init` / `ag-kit update` 时，CLI 会把工作区路径登记到全局索引文件：
   - macOS / Linux / WSL: `~/.ag-kit/workspaces.json`
   - Windows PowerShell / CMD: `%USERPROFILE%\.ag-kit\workspaces.json`
-- 默认会自动排除 antigravity-kit 源码目录，避免把工具包仓库本身登记进批量更新索引。
+- 默认会自动排除 antigravity-kit 源码目录和系统临时目录（如 macOS `/var/folders/...`、Linux `/tmp`、Windows `%TEMP%`）。
+- 可通过 `--no-index` 让 `init/update` 完全跳过索引登记（适合临时验证目录）。
+- `ag-kit update` 只依赖“当前目录（或 `--path` 指定目录）”的已安装目标，不依赖全局索引。
 - 执行 `ag-kit update-all` 时，会遍历该索引并批量更新每个工作区（可通过 `--targets` 限定目标）。
 - 可用 `--prune-missing` 自动移除索引里已不存在的工作区路径。
-- 对于历史项目（尚未登记），可在该项目执行一次 `ag-kit update`（或 `ag-kit init --force`）后纳入索引。
+- 对于历史项目（尚未登记，或曾经 `--no-index` 跳过登记），可在该项目执行一次不带 `--no-index` 的 `ag-kit update`（或 `ag-kit init --force`）后纳入索引。
 - 可通过 `ag-kit exclude add/remove/list` 维护自定义排除路径（支持排除整棵目录树）。
 - 也可通过环境变量 `AG_KIT_INDEX_PATH` 指定自定义索引路径（跨平台通用）。
 

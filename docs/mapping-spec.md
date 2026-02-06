@@ -13,9 +13,10 @@ Codex 适配器包含一个内置的资源转换层 (`bin/core/`), 负责将通�
 ### 2. Workflows (工作流)
 
 - **源路径**: `.agent/workflows/<name>.md`
-- **Codex ID**: `agk-workflow-<name>`
-- **目标路径**: `.codex/skills/agk-workflow-<name>/SKILL.md`
+- **Codex ID**: `agk-wf-<name>`
+- **目标路径**: `.codex/skills/agk-wf-<name>/SKILL.md`
 - **说明**: 工作流在 Codex 中被视为一种特殊的 Skill。
+- **冲突处理**: 若生成 ID 与现有 Skill/Workflow 冲突，构建器会自动追加 `-2`、`-3`... 后缀，确保 ID 和目录唯一。
 
 ## 托管文件生成
 

@@ -25,7 +25,6 @@ graph TD
 - **标识**: `codex`
 - **存储**:
     - `.codex/` (托管上游，用户不可修改)
-    - `.agents/` (用户上下文镜像，可安全修改)
     - `AGENTS.md` / `antigravity.rules` (工作区托管区块注入)
 - **特点**:
     - **漂移检测 (Drift Detection)**: 自动识别用户对托管文件的修改。
@@ -46,6 +45,9 @@ ag-kit init --target codex
 
 # 交互选择目标（TTY 下无默认值）
 ag-kit init
+
+# 临时目录验证（跳过全局索引登记）
+ag-kit init --target codex --no-index
 ```
 
 ### 更新
@@ -56,6 +58,9 @@ ag-kit update
 
 # 强制更新指定目标
 ag-kit update --target codex
+
+# 更新但不刷新全局索引
+ag-kit update --target codex --no-index
 ```
 
 ### 诊断与修复
@@ -64,6 +69,6 @@ ag-kit update --target codex
 # 检查所有目标健康状态
 ag-kit doctor
 
-# 尝试自动修复 (Codex 支持恢复镜像)
+# 尝试自动修复
 ag-kit doctor --fix
 ```
