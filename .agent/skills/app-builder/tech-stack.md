@@ -1,40 +1,40 @@
-# 技术栈选择 (Tech Stack Selection) (2026)
+# 技术栈选择 (Tech Stack Selection - 2026)
 
-> Web 应用程序的默认和替代技术选择。
+> Web 应用程序的默认及备选技术方案。
 
 ## 默认技术栈 (Web App - 2026)
 
 ```yaml
-Frontend:
-    framework: Next.js 16 (Stable)
-    language: TypeScript 5.7+
-    styling: Tailwind CSS v4
-    state: React 19 Actions / Server Components
-    bundler: Turbopack (Stable for Dev)
+前端 (Frontend):
+    框架 (Framework): Next.js 16 (Stable)
+    语言 (Language): TypeScript 5.7+
+    样式 (Styling): Tailwind CSS v4
+    状态管理 (State): React 19 Actions / Server Components
+    构建工具 (Bundler): Turbopack (Stable for Dev)
 
-Backend:
-    runtime: Node.js 23
-    framework: Next.js API Routes / Hono (for Edge)
-    validation: Zod / TypeBox
+后端 (Backend):
+    运行时 (Runtime): Node.js 23
+    框架 (Framework): Next.js API Routes / Hono (针对 Edge)
+    校验 (Validation): Zod / TypeBox
 
-Database:
-    primary: PostgreSQL
-    orm: Prisma / Drizzle
-    hosting: Supabase / Neon
+数据库 (Database):
+    主选 (Primary): PostgreSQL
+    ORM: Prisma / Drizzle
+    托管 (Hosting): Supabase / Neon
 
-Auth:
-    provider: Auth.js (v5) / Clerk
+身份认证 (Auth):
+    提供商 (Provider): Auth.js (v5) / Clerk
 
 Monorepo:
-    tool: Turborepo 2.0
+    工具 (Tool): Turborepo 2.0
 ```
 
-## 替代选项
+## 替代选项 (Alternative Options)
 
 | 需求     | 默认   | 替代方案                     |
 | -------- | ------ | ---------------------------- |
-| 实时     | -      | Supabase Realtime, Socket.io |
+| 实时通讯 | -      | Supabase Realtime, Socket.io |
 | 文件存储 | -      | Cloudinary, S3               |
-| 支付     | Stripe | LemonSqueezy, Paddle         |
-| 邮件     | -      | Resend, SendGrid             |
-| 搜索     | -      | Algolia, Typesense           |
+| 支付系统 | Stripe | LemonSqueezy, Paddle         |
+| 邮件服务 | -      | Resend, SendGrid             |
+| 搜索功能 | -      | Algolia, Typesense           |
