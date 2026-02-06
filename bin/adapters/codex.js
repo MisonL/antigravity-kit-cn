@@ -267,15 +267,23 @@ class CodexAdapter extends BaseAdapter {
 
     checkIntegrity() {
         const codexDir = path.join(this.workspaceRoot, ".codex");
+        const agentsMirrorDir = path.join(this.workspaceRoot, ".agents");
         const result = { status: "ok", issues: [] };
 
         if (!fs.existsSync(codexDir)) {
             return { status: "missing", issues: ["Critical: .codex directory missing"] };
         }
 
+        if (!fs.existsSync(agentsMirrorDir)) {
+            result.status = "broken";
+            result.issues.push("Critical: .agents mirror missing");
+        }
+
         const manifestPath = path.join(codexDir, "manifest.json");
         if (!fs.existsSync(manifestPath)) {
-            return { status: "broken", issues: ["Critical: manifest.json missing"] };
+            result.status = "broken";
+            result.issues.push("Critical: manifest.json missing");
+            return result;
         }
 
         const manager = new ManifestManager(manifestPath, { target: "codex" });
