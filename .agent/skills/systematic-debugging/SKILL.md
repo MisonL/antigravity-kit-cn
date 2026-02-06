@@ -1,36 +1,123 @@
 ---
 name: systematic-debugging
-description: 系统化调试方法论、根因分析
+description: 4 阶段系统化调试方法论，包括根因分析和基于证据的验证。用于调试复杂问题。
 allowed-tools: Read, Glob, Grep
 ---
 
-# 系统化调试 (Systematic Debugging)
+# Systematic Debugging - 系统化调试
 
-## 调试心法
+> 来源: obra/superpowers
 
-**不仅是修复 Bug，而是理解系统。**
+## 概述 (Overview)
 
-如果只是试错修好了 Bug，但不知道原因，这个 Bug 还会回来。
+此 Skill 提供了一种结构化的调试方法，防止随机猜测，确保问题在解决之前被正确理解。
 
-## 调试四步法
+## 4 阶段调试流程 (4-Phase Debugging Process)
 
-1.  **复现 (Reproduce)**
-    - 找到导致 Bug 的最小输入集合。
-    - 自动化复现步骤（编写一个脚本）。
+### 第一阶段：重现 (Phase 1: Reproduce)
 
-2.  **定位 (Locate)**
-    - **二分法 (Binary Search)**:
-        - 时间二分：Git Bisect。
-        - 空间二分：注释掉一半代码。
+在修复之前，可靠地重现问题。
 
-3.  **理解 (Understand)**
-    - 阅读代码，画出状态流转图。
-    - 解释为什么现在的输入导致了错误输出。
+```markdown
+## 重现步骤 (Reproduction Steps)
 
-4.  **修复 (Fix)**
-    - 修复根本原因。
-    - 添加回归测试 (Regression Test)。
+1. [重现的确切步骤]
+2. [下一步]
+3. [预期 vs 实际结果]
 
-## 橡皮鸭调试法 (Rubber Ducking)
+## 重现率 (Reproduction Rate)
 
-对着桌子上的橡皮鸭（或者我）一行一行解释你的代码。通常讲到一半你就发现问题了。
+- [ ] 总是 (100%)
+- [ ] 经常 (50-90%)
+- [ ] 有时 (10-50%)
+- [ ] 罕见 (<10%)
+```
+
+### 第二阶段：隔离 (Phase 2: Isolate)
+
+缩小来源范围。
+
+```markdown
+## 隔离问题 (Isolation Questions)
+
+- 什么时候开始发生的？
+- 最近有什么变化？
+- 在所有环境中都发生吗？
+- 能用最小的代码重现吗？
+- 触发它的最小变化是什么？
+```
+
+### 第三阶段：理解 (Phase 3: Understand)
+
+找到根本原因，而不仅仅是症状。
+
+```markdown
+## 根因分析 (Root Cause Analysis)
+
+### 5 个为什么 (The 5 Whys)
+
+1. 为什么: [第一个观察]
+2. 为什么: [更深的原因]
+3. 为什么: [再深一层]
+4. 为什么: [接近了]
+5. 为什么: [根本原因]
+```
+
+### 第四阶段：修复与验证 (Phase 4: Fix & Verify)
+
+修复并验证它确实修复了。
+
+```markdown
+## 修复验证 (Fix Verification)
+
+- [ ] Bug 不再重现
+- [ ] 相关功能仍然工作
+- [ ] 未引入新问题
+- [ ] 已添加测试以防止回归
+```
+
+## 调试检查清单 (Debugging Checklist)
+
+```markdown
+## 开始前
+
+- [ ] 能一致地重现
+- [ ] 有最小重现案例
+- [ ] 理解预期行为
+
+## 调查中
+
+- [ ] 检查最近的更改 (git log)
+- [ ] 检查日志中的错误
+- [ ] 如果需要，添加日志
+- [ ] 使用调试器/断点
+
+## 修复后
+
+- [ ] 根因已记录
+- [ ] 修复已验证
+- [ ] 已添加回归测试
+- [ ] 已检查类似代码
+```
+
+## 常用调试命令 (Common Debugging Commands)
+
+```bash
+# 最近的更改
+git log --oneline -20
+git diff HEAD~5
+
+# 搜索模式
+grep -r "errorPattern" --include="*.ts"
+
+# 检查日志
+pm2 logs app-name --err --lines 100
+```
+
+## 反模式 (Anti-Patterns)
+
+❌ **随机更改** - "也许如果我改这个..."
+❌ **忽略证据** - "那不可能是原因"
+❌ **假设** - "一定是 X" 而没有证据
+❌ **不先重现** - 盲目修复
+❌ **停止在症状** - 未找到根本原因
