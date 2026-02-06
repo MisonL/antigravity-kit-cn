@@ -48,7 +48,7 @@ const searchGroups: SearchGroup[] = [
                 label: '安装',
                 value: 'installation',
                 href: '/docs/installation',
-                keywords: 'install setup init npm npx global cli 安装 初始化'
+                keywords: 'install setup init npm git clone global cli 安装 初始化 克隆 本地安装'
             },
         ],
     },

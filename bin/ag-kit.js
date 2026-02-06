@@ -7,7 +7,7 @@ const { execSync } = require("child_process");
 
 const pkg = require("../package.json");
 
-const REPO_URL = "https://github.com/vudovn/antigravity-kit.git";
+const REPO_URL = "https://github.com/MisonL/antigravity-kit-cn.git";
 const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agent");
 
 function printUsage() {

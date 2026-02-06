@@ -26,7 +26,7 @@ export default function CLIPage() {
                     概览
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code> CLI 用于在多个项目中管理 Antigravity Kit 安装。
+                    <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code> CLI 用于在多个项目中管理 Antigravity Kit 安装。请先按安装指南完成本仓库本地安装。
                 </p>
             </section>
 
@@ -56,7 +56,7 @@ export default function CLIPage() {
                             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
                                 <li>• 在当前目录创建 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 文件夹</li>
-                                <li>• 从 GitHub 下载最新模板</li>
+                                <li>• 默认从当前 CLI 包内置模板复制内容（指定 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--branch</code> 时从 GitHub 拉取）</li>
                                 <li>• 若已存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 则跳过（使用 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--force</code> 覆盖）</li>
                             </ul>
                         </div>
@@ -245,7 +245,7 @@ export default function CLIPage() {
                         </p>
                     </Link>
                     <a
-                        href="https://github.com/vudovn/antigravity-kit"
+                        href="https://github.com/MisonL/antigravity-kit-cn"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
@@ -270,7 +270,7 @@ export default function CLIPage() {
                     工作流
                 </Link>
                 <a
-                    href="https://github.com/vudovn/antigravity-kit"
+                    href="https://github.com/MisonL/antigravity-kit-cn"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm font-medium text-zinc-900 dark:text-zinc-50 hover:underline flex items-center gap-1"

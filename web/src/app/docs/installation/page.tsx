@@ -32,32 +32,44 @@ export default function InstallationPage() {
           快速开始
         </h2>
         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-          在项目根目录使用 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">npx</code> 是最快的安装方式：
+          当前中文版本需要先克隆仓库，再进行本地安装：
         </p>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
-          npx @vudovn/ag-kit init
+{`git clone https://github.com/MisonL/antigravity-kit-cn.git
+cd antigravity-kit-cn`}
         </pre>
 
         <Callout type="info">
-          <strong>提示：</strong>此命令会在当前目录创建包含全部模板的 <code>.agent</code> 文件夹。
+          <strong>提示：</strong>完成克隆后，请继续执行下方的 CLI 安装步骤。
         </Callout>
       </section>
 
       <section id="global-install" className="mb-12 scroll-mt-16">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-          全局安装
+          安装 CLI 到本机
         </h2>
         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-          全局安装 CLI，即可在任意位置使用 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code>：
+          在仓库根目录执行本地全局安装，即可在任意位置使用 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code>：
         </p>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-2 text-sm font-mono text-zinc-100">
-          npm install -g @vudovn/ag-kit
+{`cd antigravity-kit-cn
+npm install -g .`}
         </pre>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
-          cd your-project && ag-kit init
+{`cd /path/to/your-project
+ag-kit init`}
+        </pre>
+
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
+          不想全局安装时，也可以直接在仓库内执行：
+        </p>
+
+        <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
+{`cd /path/to/antigravity-kit-cn
+node bin/ag-kit.js init --path /path/to/your-project`}
         </pre>
 
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">

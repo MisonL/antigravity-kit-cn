@@ -47,12 +47,12 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <a href="https://github.com/vudovn/antigravity-kit" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
+                                <a href="https://github.com/MisonL/antigravity-kit-cn" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
                                     示例
                                 </a>
                             </li>
                             <li>
-                                <a href="https://github.com/vudovn/antigravity-kit/releases" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
+                                <a href="https://github.com/MisonL/antigravity-kit-cn/releases" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
                                     更新日志
                                 </a>
                             </li>
@@ -64,22 +64,22 @@ export default function Footer() {
                         <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">社区</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
-                                <a href="https://github.com/vudovn/antigravity-kit" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
+                                <a href="https://github.com/MisonL/antigravity-kit-cn" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
                                     GitHub
                                 </a>
                             </li>
                             <li>
-                                <a href="https://github.com/vudovn/antigravity-kit/issues" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
+                                <a href="https://github.com/MisonL/antigravity-kit-cn/issues" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
                                     问题
                                 </a>
                             </li>
                             <li>
-                                <a href="https://github.com/vudovn/antigravity-kit/discussions" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
+                                <a href="https://github.com/MisonL/antigravity-kit-cn/discussions" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
                                     讨论
                                 </a>
                             </li>
                             <li>
-                                <a href="https://github.com/vudovn/antigravity-kit/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
+                                <a href="https://github.com/MisonL/antigravity-kit-cn/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
                                     贡献指南
                                 </a>
                             </li>
@@ -91,7 +91,7 @@ export default function Footer() {
                         <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-4">法律</h3>
                         <ul className="space-y-3 text-sm">
                             <li>
-                                <a href="https://github.com/vudovn/antigravity-kit/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
+                                <a href="https://github.com/MisonL/antigravity-kit-cn/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors">
                                     许可证
                                 </a>
                             </li>
@@ -126,7 +126,7 @@ export default function Footer() {
                     {/* Social Links */}
                     <div className="flex items-center gap-4">
                         <a
-                            href="https://github.com/vudovn/antigravity-kit"
+                            href="https://github.com/MisonL/antigravity-kit-cn"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors"

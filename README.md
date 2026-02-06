@@ -14,17 +14,26 @@
 ## 快速安装 (Quick Install)
 
 ```bash
-npx @vudovn/ag-kit init
+git clone https://github.com/MisonL/antigravity-kit-cn.git
+cd antigravity-kit-cn
+npm install -g .
 ```
 
-或者全局安装：
+然后在你的目标项目中初始化：
 
 ```bash
-npm install -g @vudovn/ag-kit
+cd /path/to/your-project
 ag-kit init
 ```
 
-这将把包含所有模版的 `.agent` 文件夹安装到你的项目中。
+可选：不做全局安装，直接在仓库目录执行：
+
+```bash
+cd /path/to/antigravity-kit-cn
+node bin/ag-kit.js init --path /path/to/your-project
+```
+
+这将把包含所有模板的 `.agent` 文件夹安装到你的项目中。
 
 ### ⚠️ 关于 `.gitignore` 的重要说明
 

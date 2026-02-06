@@ -62,7 +62,7 @@ export default function Header() {
                         {/* Desktop Nav */}
                         <nav className="hidden sm:flex items-center gap-1 flex-1 min-w-0">
                             <DonateDialog />
-                            <Link href="https://github.com/vudovn/antigravity-kit" target="_blank" rel="noopener noreferrer">
+                            <Link href="https://github.com/MisonL/antigravity-kit-cn" target="_blank" rel="noopener noreferrer">
                                 <Button variant="outline" className="hidden md:flex">
                                     <GithubIcon className="w-4 h-4 mr-2" />
                                     GitHub
