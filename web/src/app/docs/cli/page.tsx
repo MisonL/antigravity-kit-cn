@@ -104,7 +104,7 @@ export default function CLIPage() {
                         <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
                             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
-                                <li>• 读取全局索引文件 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">~/.ag-kit/workspaces.json</code></li>
+                                <li>• 读取全局索引文件（macOS / Linux / WSL：<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">~/.ag-kit/workspaces.json</code>；Windows：<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">%USERPROFILE%\.ag-kit\workspaces.json</code>）</li>
                                 <li>• 对每个已登记且存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的工作区执行更新</li>
                                 <li>• 输出批量更新汇总（成功/跳过/失败）</li>
                                 <li>• 默认自动排除 antigravity-kit 源码目录，避免索引冲突</li>
@@ -354,6 +354,15 @@ npm uninstall -g antigravity-kit @vudovn/ag-kit`}</code>
                         <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
                             <code className="text-zinc-100">{`cd /path/to/your-project
 rm -rf .agent`}</code>
+                        </pre>
+                        <pre className="mt-3 p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                            <code className="text-zinc-100">{`# Windows PowerShell
+Set-Location C:\\path\\to\\your-project
+Remove-Item .agent -Recurse -Force
+
+# Windows CMD
+cd /d C:\\path\\to\\your-project
+rmdir /s /q .agent`}</code>
                         </pre>
                     </div>
 

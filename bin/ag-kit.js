@@ -134,7 +134,19 @@ function copyDir(src, dest) {
     }
 }
 
-const { parseJsonSafe, readGlobalNpmDependencies } = require("./utils");
+const { readGlobalNpmDependencies } = require("./utils");
+
+function normalizeAbsolutePath(inputPath) {
+    return path.normalize(path.resolve(inputPath));
+}
+
+function pathCompareKey(inputPath) {
+    const normalized = normalizeAbsolutePath(inputPath);
+    if (process.platform === "win32") {
+        return normalized.toLowerCase();
+    }
+    return normalized;
+}
 
 function maybeWarnUpstreamGlobalConflict(command, options) {
     if (options.quiet) {
@@ -162,22 +174,32 @@ function maybeWarnUpstreamGlobalConflict(command, options) {
 }
 
 function normalizePathList(items) {
-    const set = new Set();
+    const map = new Map();
     for (const item of items) {
         if (typeof item !== "string" || item.trim() === "") {
             continue;
         }
-        set.add(path.resolve(item));
+        const normalizedPath = normalizeAbsolutePath(item);
+        const key = pathCompareKey(normalizedPath);
+        if (!map.has(key)) {
+            map.set(key, normalizedPath);
+        }
     }
-    return Array.from(set.values()).sort((a, b) => a.localeCompare(b));
+    return Array.from(map.values()).sort((a, b) => a.localeCompare(b));
 }
 
 function isPathInOrUnder(basePath, targetPath) {
-    if (targetPath === basePath) {
+    const normalizedBase = normalizeAbsolutePath(basePath);
+    const normalizedTarget = normalizeAbsolutePath(targetPath);
+    const baseKey = pathCompareKey(normalizedBase);
+    const targetKey = pathCompareKey(normalizedTarget);
+
+    if (targetKey === baseKey) {
         return true;
     }
-    const prefix = basePath.endsWith(path.sep) ? basePath : `${basePath}${path.sep}`;
-    return targetPath.startsWith(prefix);
+
+    const prefix = baseKey.endsWith(path.sep) ? baseKey : `${baseKey}${path.sep}`;
+    return targetKey.startsWith(prefix);
 }
 
 function isPathExcludedByList(excludedPaths, workspacePath) {
@@ -232,8 +254,8 @@ function readWorkspaceIndex() {
             continue;
         }
 
-        const workspacePath = path.resolve(item.path);
-        dedupMap.set(workspacePath, {
+        const workspacePath = normalizeAbsolutePath(item.path);
+        dedupMap.set(pathCompareKey(workspacePath), {
             path: workspacePath,
             installedAt: typeof item.installedAt === "string" ? item.installedAt : "",
             lastUpdatedAt: typeof item.lastUpdatedAt === "string" ? item.lastUpdatedAt : "",
@@ -248,21 +270,28 @@ function readWorkspaceIndex() {
 }
 
 function writeWorkspaceIndex(indexPath, index) {
+    const workspaceMap = new Map();
+    for (const item of Array.isArray(index.workspaces) ? index.workspaces : []) {
+        if (!item || typeof item.path !== "string" || item.path.trim() === "") {
+            continue;
+        }
+        const normalizedPath = normalizeAbsolutePath(item.path);
+        workspaceMap.set(pathCompareKey(normalizedPath), {
+            path: normalizedPath,
+            installedAt: typeof item.installedAt === "string" ? item.installedAt : "",
+            lastUpdatedAt: typeof item.lastUpdatedAt === "string" ? item.lastUpdatedAt : "",
+            cliVersion: typeof item.cliVersion === "string" ? item.cliVersion : "",
+        });
+    }
+
     const payload = {
         version: WORKSPACE_INDEX_VERSION,
         updatedAt: index.updatedAt || nowISO(),
-        workspaces: Array.isArray(index.workspaces) ? index.workspaces : [],
+        workspaces: Array.from(workspaceMap.values()),
         excludedPaths: normalizePathList(Array.isArray(index.excludedPaths) ? index.excludedPaths : []),
     };
 
     payload.workspaces = payload.workspaces
-        .filter((item) => item && typeof item.path === "string" && item.path.trim() !== "")
-        .map((item) => ({
-            path: path.resolve(item.path),
-            installedAt: typeof item.installedAt === "string" ? item.installedAt : "",
-            lastUpdatedAt: typeof item.lastUpdatedAt === "string" ? item.lastUpdatedAt : "",
-            cliVersion: typeof item.cliVersion === "string" ? item.cliVersion : "",
-        }))
         .sort((a, b) => a.path.localeCompare(b.path));
 
     fs.mkdirSync(path.dirname(indexPath), { recursive: true });
@@ -300,19 +329,21 @@ function evaluateWorkspaceExclusion(index, workspaceRoot) {
 }
 
 function removeWorkspaceRecord(index, workspaceRoot) {
-    const normalizedPath = path.resolve(workspaceRoot);
+    const normalizedPath = normalizeAbsolutePath(workspaceRoot);
+    const targetKey = pathCompareKey(normalizedPath);
     const before = index.workspaces.length;
-    index.workspaces = index.workspaces.filter((item) => item.path !== normalizedPath);
+    index.workspaces = index.workspaces.filter((item) => pathCompareKey(item.path) !== targetKey);
     return before - index.workspaces.length;
 }
 
 function previewWorkspaceIndexRegistration(workspaceRoot, options) {
     const { indexPath, index } = readWorkspaceIndex();
     const exclusion = evaluateWorkspaceExclusion(index, workspaceRoot);
-    const normalizedPath = path.resolve(workspaceRoot);
+    const normalizedPath = normalizeAbsolutePath(workspaceRoot);
+    const targetKey = pathCompareKey(normalizedPath);
 
     if (exclusion.excluded) {
-        const removedCount = index.workspaces.filter((item) => item.path === normalizedPath).length;
+        const removedCount = index.workspaces.filter((item) => pathCompareKey(item.path) === targetKey).length;
         log(options, `[dry-run] 索引登记已跳过: ${exclusion.reason}`);
         if (removedCount > 0) {
             log(options, `[dry-run] 将从索引中移除已存在记录: ${normalizedPath}`);
@@ -320,7 +351,7 @@ function previewWorkspaceIndexRegistration(workspaceRoot, options) {
         return;
     }
 
-    const exists = index.workspaces.some((item) => item.path === normalizedPath);
+    const exists = index.workspaces.some((item) => pathCompareKey(item.path) === targetKey);
     if (exists) {
         log(options, `[dry-run] 将刷新工作区索引记录: ${normalizedPath}`);
     } else {
@@ -330,10 +361,11 @@ function previewWorkspaceIndexRegistration(workspaceRoot, options) {
 }
 
 function registerWorkspaceIndex(workspaceRoot, options) {
-    const normalizedPath = path.resolve(workspaceRoot);
+    const normalizedPath = normalizeAbsolutePath(workspaceRoot);
     const { indexPath, index } = readWorkspaceIndex();
     const time = nowISO();
     const exclusion = evaluateWorkspaceExclusion(index, normalizedPath);
+    const targetKey = pathCompareKey(normalizedPath);
 
     if (exclusion.excluded) {
         const removedCount = removeWorkspaceRecord(index, normalizedPath);
@@ -355,7 +387,7 @@ function registerWorkspaceIndex(workspaceRoot, options) {
 
     let inserted = true;
     index.workspaces = index.workspaces.map((item) => {
-        if (item.path !== normalizedPath) {
+        if (pathCompareKey(item.path) !== targetKey) {
             return item;
         }
         inserted = false;
@@ -607,7 +639,7 @@ function commandUpdateAll(options) {
 
     for (let i = 0; i < records.length; i++) {
         const item = records[i];
-        const workspacePath = path.resolve(item.path);
+        const workspacePath = normalizeAbsolutePath(item.path);
         const agentDir = path.join(workspacePath, ".agent");
         const exclusion = evaluateWorkspaceExclusion(index, workspacePath);
 
@@ -729,8 +761,9 @@ function commandExcludeList(options) {
 function commandExcludeAdd(options) {
     const targetPath = requirePathOption(options, "exclude add");
     const { indexPath, index } = readWorkspaceIndex();
-    const normalizedTarget = path.resolve(targetPath);
-    const existed = index.excludedPaths.includes(normalizedTarget);
+    const normalizedTarget = normalizeAbsolutePath(targetPath);
+    const targetKey = pathCompareKey(normalizedTarget);
+    const existed = index.excludedPaths.some((item) => pathCompareKey(item) === targetKey);
 
     const matchedWorkspaces = index.workspaces.filter((item) => isPathInOrUnder(normalizedTarget, item.path));
     const matchedCount = matchedWorkspaces.length;
@@ -771,8 +804,9 @@ function commandExcludeAdd(options) {
 function commandExcludeRemove(options) {
     const targetPath = requirePathOption(options, "exclude remove");
     const { indexPath, index } = readWorkspaceIndex();
-    const normalizedTarget = path.resolve(targetPath);
-    const existed = index.excludedPaths.includes(normalizedTarget);
+    const normalizedTarget = normalizeAbsolutePath(targetPath);
+    const targetKey = pathCompareKey(normalizedTarget);
+    const existed = index.excludedPaths.some((item) => pathCompareKey(item) === targetKey);
 
     if (!existed) {
         log(options, `ℹ️ 排除路径不存在: ${normalizedTarget}`);
@@ -784,7 +818,7 @@ function commandExcludeRemove(options) {
         return;
     }
 
-    index.excludedPaths = index.excludedPaths.filter((item) => item !== normalizedTarget);
+    index.excludedPaths = index.excludedPaths.filter((item) => pathCompareKey(item) !== targetKey);
     index.updatedAt = nowISO();
     writeWorkspaceIndex(indexPath, index);
 

@@ -51,9 +51,25 @@ npm uninstall -g antigravity-kit @vudovn/ag-kit
 
 ### 卸载某个项目内的 Antigravity Kit
 
+macOS / Linux / WSL:
+
 ```bash
 cd /path/to/your-project
 rm -rf .agent
+```
+
+Windows PowerShell:
+
+```powershell
+Set-Location C:\path\to\your-project
+Remove-Item .agent -Recurse -Force
+```
+
+Windows CMD:
+
+```cmd
+cd /d C:\path\to\your-project
+rmdir /s /q .agent
 ```
 
 ### 清理批量更新索引（可选）
@@ -181,12 +197,14 @@ ag-kit exclude remove --path /path/to/dir # 删除排除路径
 ### 批量更新机制
 
 - 执行 `ag-kit init` / `ag-kit update` 时，CLI 会把工作区路径登记到全局索引文件：
-  - `~/.ag-kit/workspaces.json`
+  - macOS / Linux / WSL: `~/.ag-kit/workspaces.json`
+  - Windows PowerShell / CMD: `%USERPROFILE%\.ag-kit\workspaces.json`
 - 默认会自动排除 antigravity-kit 源码目录，避免把工具包仓库本身登记进批量更新索引。
 - 执行 `ag-kit update-all` 时，会遍历该索引并批量更新每个工作区。
 - 可用 `--prune-missing` 自动移除索引里已不存在的工作区路径。
 - 对于历史项目（尚未登记），可在该项目执行一次 `ag-kit update`（或 `ag-kit init --force`）后纳入索引。
 - 可通过 `ag-kit exclude add/remove/list` 维护自定义排除路径（支持排除整棵目录树）。
+- 也可通过环境变量 `AG_KIT_INDEX_PATH` 指定自定义索引路径（跨平台通用）。
 
 ## 文档 (Documentation)
 
