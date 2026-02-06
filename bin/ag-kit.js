@@ -10,6 +10,7 @@ const pkg = require("../package.json");
 const REPO_URL = "https://github.com/MisonL/antigravity-kit-cn.git";
 const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agent");
 const WORKSPACE_INDEX_VERSION = 1;
+const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
 
 function nowISO() {
     return new Date().toISOString();
@@ -126,6 +127,69 @@ function copyDir(src, dest) {
             fs.copyFileSync(srcPath, destPath);
         }
     }
+}
+
+function parseJsonSafe(raw) {
+    try {
+        return JSON.parse(raw);
+    } catch (err) {
+        return null;
+    }
+}
+
+function readGlobalNpmDependencies() {
+    const cmd = "npm ls --global --depth=0 --json --silent";
+    let output = "";
+
+    try {
+        output = execSync(cmd, {
+            encoding: "utf8",
+            stdio: ["ignore", "pipe", "pipe"],
+        });
+    } catch (err) {
+        output = typeof err.stdout === "string" ? err.stdout : "";
+    }
+
+    if (!output || output.trim() === "") {
+        return null;
+    }
+
+    const data = parseJsonSafe(output);
+    if (!data || typeof data !== "object") {
+        return null;
+    }
+
+    const deps = data.dependencies;
+    if (!deps || typeof deps !== "object") {
+        return {};
+    }
+
+    return deps;
+}
+
+function maybeWarnUpstreamGlobalConflict(command, options) {
+    if (options.quiet) {
+        return;
+    }
+    if (process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
+        return;
+    }
+    if (command !== "init" && command !== "update" && command !== "update-all") {
+        return;
+    }
+
+    const deps = readGlobalNpmDependencies();
+    if (!deps) {
+        return;
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(deps, UPSTREAM_GLOBAL_PACKAGE)) {
+        return;
+    }
+
+    log(options, `⚠️ 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}。`);
+    log(options, "⚠️ 上游英文版与当前中文版共用 `ag-kit` 命令名，后安装者会覆盖命令入口。");
+    log(options, `👉 建议执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
 }
 
 function normalizePathList(items) {
@@ -824,6 +888,8 @@ function main() {
             process.exitCode = 1;
             return;
         }
+
+        maybeWarnUpstreamGlobalConflict(command, options);
 
         if (command === "init") {
             commandInit(options);
