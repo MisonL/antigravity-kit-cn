@@ -58,6 +58,7 @@ export default function CLIPage() {
                                 <li>• 在当前目录创建 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 文件夹</li>
                                 <li>• 默认从当前 CLI 包内置模板复制内容（指定 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--branch</code> 时从 GitHub 拉取）</li>
                                 <li>• 若已存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 则跳过（使用 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--force</code> 覆盖）</li>
+                                <li>• 自动扫描并清理 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gitignore</code> 中会忽略 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的规则</li>
                             </ul>
                         </div>
                     </div>

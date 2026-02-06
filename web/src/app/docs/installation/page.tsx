@@ -75,6 +75,10 @@ node bin/ag-kit.js init --path /path/to/your-project`}
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
           其他命令请查看 <Link className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300" href="/docs/cli">CLI 参考</Link>。
         </p>
+
+        <Callout type="info">
+          <strong>自动修复：</strong>安装过程中会扫描项目根目录 <code>.gitignore</code>，并自动移除会忽略 <code>.agent</code> 的规则，避免工作流不生效。CLI 会在终端提示具体处理结果。
+        </Callout>
       </section>
 
       <section id="structure" className="mb-12 scroll-mt-16">

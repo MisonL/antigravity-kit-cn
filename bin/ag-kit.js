@@ -87,6 +87,98 @@ function copyDir(src, dest) {
     }
 }
 
+function isAgentIgnoreRule(line) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("!")) {
+        return false;
+    }
+
+    let pattern = trimmed;
+
+    while (pattern.startsWith("**/")) {
+        pattern = pattern.slice(3);
+    }
+    while (pattern.startsWith("/")) {
+        pattern = pattern.slice(1);
+    }
+    while (pattern.endsWith("/")) {
+        pattern = pattern.slice(0, -1);
+    }
+    while (pattern.endsWith("/**")) {
+        pattern = pattern.slice(0, -3);
+    }
+
+    if (!pattern) {
+        return false;
+    }
+
+    const segments = pattern.split("/");
+    return segments.some((segment) => segment === ".agent");
+}
+
+function removeAgentIgnoreRules(workspaceRoot, options) {
+    const gitIgnorePath = path.join(workspaceRoot, ".gitignore");
+    if (!fs.existsSync(gitIgnorePath)) {
+        return { fileExists: false, removedCount: 0, dryRun: options.dryRun };
+    }
+
+    const original = fs.readFileSync(gitIgnorePath, "utf8");
+    const lineEnding = original.includes("\r\n") ? "\r\n" : "\n";
+    const hadTrailingNewline = /\r?\n$/.test(original);
+    const lines = original.split(/\r?\n/);
+
+    const kept = [];
+    let removedCount = 0;
+
+    for (const line of lines) {
+        if (isAgentIgnoreRule(line)) {
+            removedCount += 1;
+            continue;
+        }
+        kept.push(line);
+    }
+
+    if (removedCount === 0) {
+        return { fileExists: true, removedCount: 0, dryRun: options.dryRun };
+    }
+
+    let updated = kept.join(lineEnding);
+    if (hadTrailingNewline) {
+        updated += lineEnding;
+    }
+
+    if (!options.dryRun) {
+        fs.writeFileSync(gitIgnorePath, updated, "utf8");
+    }
+
+    return { fileExists: true, removedCount, dryRun: options.dryRun };
+}
+
+function logGitIgnoreCleanup(workspaceRoot, cleanupResult, options) {
+    const gitIgnorePath = path.join(workspaceRoot, ".gitignore");
+
+    if (!cleanupResult.fileExists) {
+        log(options, "ℹ️ 未发现 .gitignore，跳过 Git 忽略规则扫描。");
+        return;
+    }
+
+    if (cleanupResult.removedCount === 0) {
+        log(options, "ℹ️ Git 忽略规则检查完成：未发现会忽略 .agent 的规则。");
+        return;
+    }
+
+    if (cleanupResult.dryRun) {
+        log(
+            options,
+            `[dry-run] 将从 ${gitIgnorePath} 移除 ${cleanupResult.removedCount} 条 .agent 忽略规则。`,
+        );
+        return;
+    }
+
+    log(options, `🧹 已从 ${gitIgnorePath} 移除 ${cleanupResult.removedCount} 条 .agent 忽略规则。`);
+    log(options, "✅ 已确保 .agent 不会因 .gitignore 配置而失效。");
+}
+
 function cloneBranchAgentDir(branch, options) {
     const safeBranch = branch.trim();
     if (!/^[A-Za-z0-9._/-]+$/.test(safeBranch)) {
@@ -151,12 +243,16 @@ function installAgent(options) {
 
         if (options.dryRun) {
             log(options, `[dry-run] 将复制: ${sourceDir} -> ${targetDir}`);
+            const cleanupPreview = removeAgentIgnoreRules(workspaceRoot, options);
+            logGitIgnoreCleanup(workspaceRoot, cleanupPreview, options);
             log(options, "✅ dry-run 完成，未写入任何文件。");
             return;
         }
 
         fs.mkdirSync(workspaceRoot, { recursive: true });
         copyDir(sourceDir, targetDir);
+        const cleanupResult = removeAgentIgnoreRules(workspaceRoot, options);
+        logGitIgnoreCleanup(workspaceRoot, cleanupResult, options);
         log(options, "✅ .agent 已安装完成");
         log(options, '👉 现在可以使用 "/brainstorm", "/create" 等命令');
     } finally {
