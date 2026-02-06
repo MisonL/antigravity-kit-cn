@@ -37,3 +37,10 @@ description: 检查项目和智能体状态
 > ✅ **已完成**: 数据库 Schema, 登录接口
 
 ---
+
+## 上游脚本流程补充（reference 对齐）
+
+状态流程应查询会话与预览状态：
+
+- `python .agent/scripts/session_manager.py status`
+- `python .agent/scripts/auto_preview.py status`

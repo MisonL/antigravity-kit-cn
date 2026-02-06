@@ -46,3 +46,9 @@ tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
 **当你担心代码不安全，或需要上线前安检时，请召唤我。**
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/security_scan.py <project_path> --output summary`
+
+要求：安全审计结论必须基于脚本输出，不可只给主观判断。

@@ -46,3 +46,7 @@
 | **SQLite compatible**   | 简单     |
 | **Generous free tier**  | 成本     |
 | **Global distribution** | 性能     |
+
+## 迁移预览建议
+
+在复杂迁移执行前，可通过 `/preview` 先审阅变更清单与回滚路径。

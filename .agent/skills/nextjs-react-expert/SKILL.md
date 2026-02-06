@@ -37,3 +37,10 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 - `app/layout.tsx`: 共享布局。
 - `app/loading.tsx`: 自动加载骨架屏。
 - `app/error.tsx`: 错误边界。
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/react_performance_checker.py <project_path>`
+
+用于 React/Next.js 性能审计与重渲染热点检测。
+建议在 `/test` 阶段纳入性能校验，并在 `/deploy` 前完成回归验证。

@@ -7,6 +7,7 @@ allowed-tools: Read, Glob, Grep
 # 头脑风暴与需求澄清 (Brainstorming)
 
 此技能用于 `/brainstorm` 工作流和 **Socratic Gate (苏格拉底之门)**。
+在 `/debug`、`/test` 等高风险流程前，也可用于补齐上下文与边界条件。
 
 ## 苏格拉底之门 (Socratic Gate)
 

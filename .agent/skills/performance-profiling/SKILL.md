@@ -36,3 +36,9 @@ allowed-tools: Read, Glob, Grep, Bash
 - **A**nimation: 60fps (16ms)
 - **I**dle: 利用空闲时间 (requestIdleCallback)
 - **L**oad: 首次加载 < 5s (3G)
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/lighthouse_audit.py https://example.com`
+
+用于 Lighthouse 性能与体验指标检查。

@@ -32,3 +32,9 @@ allowed-tools: Read, Glob, Grep
 
 - 字符串拼接：不同语言语序不同。不要用 `You have ` + count + ` messages`。使用插值 `{count, plural, ...}`。
 - 文本长度：德语单词通常比英语长 30%，预留 UI 空间。
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/i18n_checker.py <project_path>`
+
+用于检测硬编码文案、缺失翻译与 i18n 使用一致性。

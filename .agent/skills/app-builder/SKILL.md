@@ -42,3 +42,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 - **Bun 优先**: 默认使用 Bun 作为运行时和包管理器。
 - **TypeScript**: 默认开启严格模式。
 - **Monorepo**: 如果涉及多个包，推荐使用 Workspaces。
+
+## 脚本执行说明
+
+当模板包含自动化检查脚本时，统一使用 `python` 作为脚本执行入口。

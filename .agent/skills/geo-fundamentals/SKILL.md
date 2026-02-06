@@ -31,3 +31,9 @@ allowed-tools: Read, Glob, Grep
 - [ ] 关键事实是否有数据支持？
 - [ ] 语言是否简洁客观？
 - [ ] 是否包含比较表 (Comparison Tables)？(AI 特别喜欢表格)
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/geo_checker.py <project_path>`
+
+用于 GEO（生成引擎优化）与可引用性校验。

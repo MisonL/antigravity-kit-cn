@@ -57,3 +57,10 @@ tools: Read, Grep, Glob, Bash, Write, Edit, Agent
 ---
 
 **当任务复杂、涉及多领域时，请召唤我。**
+
+## 上游脚本流程补充（reference 对齐）
+
+编排阶段请明确识别并调度对应脚本：
+
+- Web 测试：`playwright_runner.py`
+- 安全审计：`security_scan.py`

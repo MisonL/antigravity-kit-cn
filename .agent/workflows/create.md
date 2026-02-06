@@ -38,3 +38,9 @@ description: 创建新项目或新功能，包含脚手架生成
 > AI: 收到。我建议使用 Next.js App Router + shadcn/ui。这是生成计划...
 
 ---
+
+## 上游脚本流程补充（reference 对齐）
+
+创建流程完成后，应启动预览链路：
+
+- `python .agent/scripts/auto_preview.py start [port]`

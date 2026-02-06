@@ -37,3 +37,14 @@ my_project/
 
 - 现代 Python 网络编程必须使用 `async/await`。
 - 尽量使用异步库 (`httpx` 代替 `requests`, `motor` 代替 `pymongo`)。
+
+## 上游脚本流程补充（reference 对齐）
+
+Python 流程中请保留测试与异步测试基线：
+
+- `pytest`
+- `pytest -q`
+- `pytest -k <pattern>`
+- 使用 `pytest-asyncio` 处理异步测试场景。
+
+推荐在 `/test` 工作流中统一执行上述测试命令并回填结果。

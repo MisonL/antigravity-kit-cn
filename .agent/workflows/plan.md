@@ -32,4 +32,8 @@ description: 制定详细的项目实施计划
 
 - `implementation_plan.md`: 你的作战地图。
 
+## 关联工作流
+
+- 规划完成后，通常衔接 `/create` 进入实现阶段。
+
 ---

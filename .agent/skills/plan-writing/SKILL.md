@@ -48,3 +48,16 @@ allowed-tools: Read, Glob, Grep
 - 运行 `npm test`
 - 手动测试登录流程
 ```
+
+## 上游脚本流程补充（reference 对齐）
+
+任务规划阶段应在任务条目中标注对应校验脚本：
+
+- 前端：`ux_audit.py`、`accessibility_checker.py`
+- 后端/API：`api_validator.py`、`security_scan.py`
+- 移动端：`mobile_audit.py`
+- 数据库：`schema_validator.py`
+
+## 交付建议
+
+计划落地后建议在 `/test` 阶段完成校验闭环，再标记任务完成。

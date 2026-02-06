@@ -56,3 +56,9 @@ allowed-tools: Read, Glob, Grep, Bash
 - **触摸心理学**: [touch-psychology.md](touch-psychology.md)
 - **iOS 平台指南**: [platform-ios.md](platform-ios.md)
 - **Android 平台指南**: [platform-android.md](platform-android.md)
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/mobile_audit.py <project_path>`
+
+用于移动端交互、触控与平台规范审查。

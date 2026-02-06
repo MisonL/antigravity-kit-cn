@@ -32,3 +32,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 - **禁用 Root 登录**。
 - **配置防火墙 (UFW/IPTables)**: 只开放 80, 443, 22。
 - **自动安全更新**: `unattended-upgrades`。
+
+## 协同建议
+
+- 遇到线上故障定位时，可配合 `/debug` 工作流先做根因定位，再执行运维修复。

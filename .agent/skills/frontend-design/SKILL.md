@@ -39,3 +39,10 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 - 加载骨架屏 (Skeleton)。
 - 模态框弹出动画。
 - 即时反馈 (点击后立即变色，不要等 API 返回)。
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/ux_audit.py <project_path>`
+- `python scripts/accessibility_checker.py <project_path>`
+
+用于 UX 与可访问性双维度审查。

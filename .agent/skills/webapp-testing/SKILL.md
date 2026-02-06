@@ -26,3 +26,11 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
   `expect(page).toHaveScreenshot()`
 
 这能发现 CSS 更改导致的意外布局崩坏。
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/playwright_runner.py https://example.com`
+- `python scripts/playwright_runner.py <url> --screenshot`
+- `python scripts/playwright_runner.py <url> --a11y`
+
+用于基础浏览器验证、截图留存与可访问性检查。

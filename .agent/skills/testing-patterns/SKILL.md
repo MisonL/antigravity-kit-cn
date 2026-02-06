@@ -43,3 +43,7 @@ test("should add numbers", () => {
     expect(result).toBe(3);
 });
 ```
+
+## 工作流建议
+
+测试执行建议统一从 `/test` 工作流触发，保证生成、执行与报告一致。

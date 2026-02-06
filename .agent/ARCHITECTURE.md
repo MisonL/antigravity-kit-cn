@@ -121,3 +121,32 @@ Agent 可以调用 `scripts/` 下的脚本，但必须遵循：
 
 - **Version**: 2.0.1
 - **Last Updated**: 2026-02-04
+
+## 上游脚本流程补充（reference 对齐）
+
+为避免翻译过程中丢失自动化校验链路，请保留以下核心脚本执行路径：
+
+- `python .agent/scripts/checklist.py .`
+- `python .agent/scripts/verify_all.py . --url http://localhost:3000`
+
+脚本职责：
+- `checklist.py`：核心检查（快速校验）。
+- `verify_all.py`：全量检查（发布前校验）。
+- `scripts/README.md`：脚本能力、参数与场景说明总览。
+- `scripts/references`：脚本执行时依赖的参考数据目录。
+
+## 工作流命令索引（Slash Commands）
+
+为保持与上游工作流入口一致，以下命令保持固定：
+
+- `/brainstorm`
+- `/create`
+- `/debug`
+- `/deploy`
+- `/enhance`
+- `/orchestrate`
+- `/plan`
+- `/preview`
+- `/status`
+- `/test`
+- `/ui-ux-pro-max`

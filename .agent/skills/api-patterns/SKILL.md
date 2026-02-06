@@ -49,3 +49,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 - `404 Not Found`: 资源不存在
 - `429 Too Many Requests`:请求过快
 - `500 Internal Server Error`: 服务器炸了
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/api_validator.py <project_path>`
+
+用于 API 端点与契约校验。

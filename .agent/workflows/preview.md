@@ -31,3 +31,11 @@ description: 启动预览服务器并检查状态
 > AI: 正在启动开发服务器... 成功！请访问 http://localhost:3000
 
 ---
+
+## 上游脚本流程补充（reference 对齐）
+
+预览流程依赖 `auto_preview.py`：
+
+- `python .agent/scripts/auto_preview.py start [port]`
+- `python .agent/scripts/auto_preview.py stop`
+- `python .agent/scripts/auto_preview.py status`

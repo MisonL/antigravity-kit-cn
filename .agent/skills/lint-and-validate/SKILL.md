@@ -28,3 +28,12 @@ Lint 工具能在代码运行前发现错误。它是成本最低的测试。
 
 - **Husky + lint-staged**: 在 commit 时自动运行 Lint，只检查修改过的文件。
 - **CI Pipeline**: 在合并代码前强制运行 Lint 检查。
+
+## 上游脚本流程补充（reference 对齐）
+
+- `python scripts/lint_runner.py <project_path>`
+- `python scripts/type_coverage.py <project_path>`
+
+用于统一 lint 与类型覆盖率检查。
+
+若在修复流程中仍存在一致性问题，可结合 `ag-kit doctor --fix` 做托管资源自愈。

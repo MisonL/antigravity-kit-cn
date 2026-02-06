@@ -39,3 +39,9 @@ description: 改进现有代码，添加功能或重构
 > AI: 好的，我会修改 `LoginForm.tsx`，添加 `isSubmitting` 状态并更新按钮 UI。
 
 ---
+
+## 上游脚本流程补充（reference 对齐）
+
+增强前先加载会话状态：
+
+- `python .agent/scripts/session_manager.py info`

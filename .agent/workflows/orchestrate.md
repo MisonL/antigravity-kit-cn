@@ -38,3 +38,12 @@ description: 多智能体协同，处理复杂任务
 > Phase 3: Frontend Specialist 生成页面...
 
 ---
+
+## 上游脚本流程补充（reference 对齐）
+
+编排流程应至少包含以下脚本校验：
+
+- `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .`
+- `python .agent/skills/lint-and-validate/scripts/lint_runner.py .`
+
+并在完成清单中记录脚本 Pass/Fail。
