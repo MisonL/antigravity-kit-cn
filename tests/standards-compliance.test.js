@@ -148,4 +148,96 @@ describe('Standards Compliance', () => {
         assert.ok(content.includes('path.join'), 'codex adapter should use path.join for managed paths');
         assert.ok(content.includes('os.tmpdir()'), 'codex adapter should use os.tmpdir() for temp paths');
     });
+
+    test('official antigravity docs baselines should be present in localized pages', () => {
+        const checks = [
+            {
+                file: 'web/src/app/docs/skills/page.tsx',
+                required: [
+                    'SKILL.md',
+                    'workspace-root',
+                    '~/.gemini/antigravity/skills',
+                    'description',
+                    'scripts/',
+                    'examples/',
+                    'resources/',
+                    'Discovery',
+                    'Activation',
+                    'Execution',
+                    '--help',
+                ],
+            },
+            {
+                file: 'web/src/app/docs/rules-workflows/page.tsx',
+                required: [
+                    '12,000',
+                    '~/.gemini/GEMINI.md',
+                    '.agent/rules',
+                    'Manual',
+                    'Always On',
+                    'Model Decision',
+                    'Glob',
+                    '@filename',
+                    '/workflow-name',
+                ],
+            },
+            {
+                file: 'web/src/app/docs/task-groups/page.tsx',
+                required: ['规划模式', '总体目标', '已编辑文件', '待处理区'],
+            },
+            {
+                file: 'web/src/app/docs/strict-mode/page.tsx',
+                required: ['Allowlist/Denylist', 'Request Review', '.gitignore', '工作区隔离'],
+            },
+            {
+                file: 'web/src/app/docs/sandbox-mode/page.tsx',
+                required: [
+                    'sandbox-exec',
+                    'Enable Terminal Sandboxing',
+                    'Sandbox Allow Network',
+                    'Bypass Sandbox',
+                    'Strict Mode',
+                ],
+            },
+            {
+                file: 'web/src/app/docs/mcp/page.tsx',
+                required: [
+                    'Model Context Protocol',
+                    'MCP Store',
+                    'Manage MCP Servers',
+                    'View raw config',
+                    'mcp_config.json',
+                ],
+            },
+            {
+                file: 'web/src/app/docs/command/page.tsx',
+                required: ['Command + I', 'Ctrl + I'],
+            },
+            {
+                file: 'web/src/app/docs/allowlist-denylist/page.tsx',
+                required: ['BadUrlsChecker', 'always allow', 'localhost'],
+            },
+            {
+                file: 'web/src/app/docs/browser-subagent/page.tsx',
+                required: ['DOM 捕获', '截图', '蓝色边框'],
+            },
+        ];
+
+        const missing = [];
+        for (const { file, required } of checks) {
+            const abs = path.resolve(file);
+            const content = fs.readFileSync(abs, 'utf8');
+            for (const token of required) {
+                if (!content.includes(token)) {
+                    missing.push(`${file} -> ${token}`);
+                }
+            }
+        }
+
+        assert.strictEqual(
+            missing.length,
+            0,
+            `localized docs missing official baseline tokens:\n${missing.join('\n')}`,
+        );
+    });
 });

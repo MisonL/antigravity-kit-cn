@@ -64,6 +64,34 @@ Antigravity Kit 不是一个简单的"提示词库"，而是一个**模块化的
 - **全局规则**：`~/.gemini/GEMINI.md`，跨工作区生效。
 - **全局技能**：`~/.gemini/antigravity/skills/<skill>/`，对所有项目可用。
 
+### 2.1 官方标准基线（Antigravity Docs 对齐）
+
+以下规范与 `https://antigravity.google/docs` 对齐，作为本仓库实现与文档基线：
+
+- **Skills**（`/docs/skills`）
+  - 技能目录必须包含 `SKILL.md`。
+  - frontmatter 中 `description` 必填，`name` 选填（默认文件夹名）。
+  - 可选目录：`scripts/`、`examples/`、`resources/`。
+  - 加载模型遵循 Discovery -> Activation -> Execution。
+- **Rules / Workflows**（`/docs/rules-workflows`）
+  - 规则与工作流均为 Markdown 文件。
+  - 单文件限制 12,000 字符。
+  - Workflow 通过 `/workflow-name` 触发，可在流程内调用其他 Workflow。
+- **Task Groups**（`/docs/task-groups`）
+  - 规划模式下拆分复杂任务，展示目标摘要、已编辑文件与待处理步骤区。
+- **Strict Mode**（`/docs/strict-mode`）
+  - 受 Allowlist/Denylist 约束。
+  - 终端自动执行、浏览器 JS 执行、Artifact 执行均固定为 `Request Review`。
+  - 严格遵循 `.gitignore` 且限制在工作区内访问。
+- **Sandboxing**（`/docs/sandbox-mode`）
+  - 基于 macOS `sandbox-exec`，默认关闭，可单独控制网络访问。
+  - 启用 Strict Mode 时自动启用沙箱并默认禁网。
+- **MCP**（`/docs/mcp`）
+  - 通过 MCP Store 管理。
+  - 自定义服务入口：`Manage MCP Servers -> View raw config -> mcp_config.json`。
+- **Command**（`/docs/command`）
+  - 快捷键：macOS `Command + I`，Windows/Linux `Ctrl + I`。
+
 ---
 
 ## 3. 核心协议 (Protocol)
@@ -106,7 +134,8 @@ Agent 可以调用 `scripts/` 下的脚本，但必须遵循：
 
 1. 在 `skills/` 下创建新目录 `new-skill/`。
 2. 创建 `SKILL.md` (核心指令)。
-3. (可选) 添加 `scripts/` 或 `rules/`。
+3. 在 `SKILL.md` 顶部提供 frontmatter（`description` 必填，`name` 可选）。
+4. (可选) 添加 `scripts/`、`examples/`、`resources/`。
 
 ### 如何添加新 Workflow？
 

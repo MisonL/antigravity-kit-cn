@@ -5,12 +5,6 @@
 
 > 包含技能 (Skills)、智能体 (Agents) 和工作流 (Workflows) 的 AI Agent 模版
 
-<div  align="center">
-    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit?theme=dark" alt="Antigravity Kit - Nổi bật trên Unikorn.vn" style="width: 210px; height: 54px;" width="210" height="54" /></a>
-    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit/rank?theme=dark&type=daily" alt="Antigravity Kit - Hàng ngày" style="width: 250px; height: 64px;" width="250" height="64" /></a>
-    <a href="https://launch.j2team.dev/products/antigravity-kit" target="_blank"><img src="https://launch.j2team.dev/badge/antigravity-kit/dark" alt="Antigravity Kit on J2TEAM Launch" width="250" height="54" /></a>
-</div>
-
 ## 快速安装 (Quick Install)
 
 ```bash
@@ -255,18 +249,25 @@ ag-kit exclude remove --path /path/to/dir # 删除排除路径
 
 ## 请我喝咖啡 (Buy me coffee)
 
-<p align="center">
-  <a href="https://buymeacoffee.com/vudovn">
-    <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee" />
-  </a>
-</p>
+> 本项目由 **Mison** 进行汉化处理与额外功能开发。
 
-<p align="center"> - or - </p>
-
-<p align="center">
-  <img src="https://img.vietqr.io/image/mbbank-0779440918-compact.jpg" alt="Buy me coffee" width="200" />
-</p>
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>支持 Mison（本仓库维护者）</strong><br />
+      <img src="image/README/mison-wechat-pay.jpg" alt="Mison 微信赞赏码" width="260" /><br />
+      <sub>微信赞赏码（优先）</sub>
+    </td>
+    <td align="center" width="50%">
+      <strong>感谢上游作者 vudovn 创建并维护 Antigravity-Kit</strong><br />
+      <a href="https://buymeacoffee.com/vudovn">
+        <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee" />
+      </a><br />
+      <img src="https://img.vietqr.io/image/mbbank-0779440918-compact.jpg" alt="Upstream donation channel" width="200" />
+    </td>
+  </tr>
+</table>
 
 ## 许可证 (License)
 
-MIT © Vudovn
+MIT © Vudovn, Mison

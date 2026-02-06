@@ -1,6 +1,6 @@
 # Ag-Kit 运维手册 (Operations Guide)
 
-本文档面向维护 Ag-Kit 及其管理的 Agent 资源的 DevOps 或高级用户。
+本文档面向维护 Ag-Kit 及其管理的智能体（Agent）资源的 DevOps 或高级用户。
 
 ## 1. 目录结构详解
 
