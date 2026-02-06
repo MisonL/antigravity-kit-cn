@@ -38,8 +38,8 @@ function createEmptyWorkspaceIndex() {
 
 function printUsage() {
     console.log("用法:");
-    console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--quiet] [--dry-run]");
-    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--quiet] [--dry-run]");
+    console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--no-index] [--quiet] [--dry-run]");
+    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--no-index] [--quiet] [--dry-run]");
     console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]");
     console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]");
     console.log("  ag-kit exclude list [--quiet]");
@@ -55,7 +55,7 @@ function printVersion() {
 
 function parseArgs(argv) {
     if (argv.length === 0) {
-        return { command: "", options: {} };
+        return { command: "", options: {}, providedFlags: [] };
     }
 
     const command = argv[0];
@@ -65,12 +65,14 @@ function parseArgs(argv) {
         dryRun: false,
         pruneMissing: false,
         nonInteractive: false,
+        noIndex: false,
         fix: false,
         subcommand: "",
         path: "",
         branch: "",
         targets: [],
     };
+    const providedFlags = [];
 
     let startIndex = 1;
     if (command === "exclude") {
@@ -87,33 +89,46 @@ function parseArgs(argv) {
         const arg = argv[i];
 
         if (arg === "--force") {
+            providedFlags.push(arg);
             options.force = true;
         } else if (arg === "--quiet") {
+            providedFlags.push(arg);
             options.quiet = true;
         } else if (arg === "--dry-run") {
+            providedFlags.push(arg);
             options.dryRun = true;
         } else if (arg === "--prune-missing") {
+            providedFlags.push(arg);
             options.pruneMissing = true;
         } else if (arg === "--non-interactive") {
+            providedFlags.push(arg);
             options.nonInteractive = true;
+        } else if (arg === "--no-index") {
+            providedFlags.push(arg);
+            options.noIndex = true;
         } else if (arg === "--fix") {
+            providedFlags.push(arg);
             options.fix = true;
         } else if (arg === "--path") {
+            providedFlags.push(arg);
             if (i + 1 >= argv.length) {
                 throw new Error("--path 需要一个目录参数");
             }
             options.path = argv[++i];
         } else if (arg === "--branch") {
+            providedFlags.push(arg);
             if (i + 1 >= argv.length) {
                 throw new Error("--branch 需要一个分支名参数");
             }
             options.branch = argv[++i];
         } else if (arg === "--target") {
+            providedFlags.push(arg);
             if (i + 1 >= argv.length) {
                 throw new Error("--target 需要一个目标参数");
             }
             options.targets.push(argv[++i]);
         } else if (arg === "--targets") {
+            providedFlags.push(arg);
             if (i + 1 >= argv.length) {
                 throw new Error("--targets 需要一个参数");
             }
@@ -123,7 +138,62 @@ function parseArgs(argv) {
         }
     }
 
-    return { command, options };
+    return { command, options, providedFlags };
+}
+
+const COMMAND_ALLOWED_FLAGS = {
+    init: ["--force", "--path", "--branch", "--target", "--targets", "--non-interactive", "--no-index", "--quiet", "--dry-run"],
+    update: ["--path", "--branch", "--target", "--targets", "--no-index", "--quiet", "--dry-run"],
+    "update-all": ["--branch", "--targets", "--prune-missing", "--quiet", "--dry-run"],
+    doctor: ["--path", "--target", "--targets", "--fix", "--quiet"],
+    status: ["--path", "--quiet"],
+    "exclude:list": ["--quiet"],
+    "exclude:add": ["--path", "--dry-run", "--quiet"],
+    "exclude:remove": ["--path", "--dry-run", "--quiet"],
+};
+
+function resolveAllowedFlags(command, options) {
+    if (command === "exclude") {
+        const subcommand = String(options.subcommand || "list").toLowerCase();
+        const key = `exclude:${subcommand}`;
+        return COMMAND_ALLOWED_FLAGS[key] || null;
+    }
+    return COMMAND_ALLOWED_FLAGS[command] || null;
+}
+
+function resolveCommandLabel(command, options) {
+    if (command === "exclude") {
+        const subcommand = String(options.subcommand || "list").toLowerCase();
+        return `exclude ${subcommand}`;
+    }
+    return command;
+}
+
+function validateOptionScope(command, options, providedFlags) {
+    const allowedFlags = resolveAllowedFlags(command, options);
+    if (!allowedFlags) {
+        return;
+    }
+
+    const allowedSet = new Set(allowedFlags);
+    const unsupported = [];
+    const seen = new Set();
+    for (const flag of providedFlags || []) {
+        if (allowedSet.has(flag)) {
+            continue;
+        }
+        if (!seen.has(flag)) {
+            unsupported.push(flag);
+            seen.add(flag);
+        }
+    }
+
+    if (unsupported.length === 0) {
+        return;
+    }
+
+    const commandLabel = resolveCommandLabel(command, options);
+    throw new Error(`命令 ${commandLabel} 不支持参数: ${unsupported.join(", ")}。可用参数: ${allowedFlags.join(", ")}`);
 }
 
 function resolveWorkspaceRoot(customPath) {
@@ -200,6 +270,50 @@ function isToolkitSourceDirectory(workspacePath) {
     } catch (err) {
         return false;
     }
+}
+
+function getSystemTempRoots() {
+    const rawRoots = [
+        os.tmpdir(),
+        process.env.TMPDIR,
+        process.env.TMP,
+        process.env.TEMP,
+    ];
+    const expandedRoots = [];
+
+    for (const root of rawRoots) {
+        if (typeof root !== "string" || root.trim() === "") {
+            continue;
+        }
+
+        expandedRoots.push(root);
+
+        const normalized = normalizeAbsolutePath(root);
+        try {
+            const realPath = fs.realpathSync.native
+                ? fs.realpathSync.native(normalized)
+                : fs.realpathSync(normalized);
+            expandedRoots.push(realPath);
+        } catch (err) {
+            // Ignore missing or inaccessible tmp roots from environment variables.
+        }
+
+        if (process.platform === "darwin") {
+            if (normalized === "/var" || normalized.startsWith("/var/")) {
+                expandedRoots.push(normalized.replace(/^\/var\b/, "/private/var"));
+            } else if (normalized === "/private/var" || normalized.startsWith("/private/var/")) {
+                expandedRoots.push(normalized.replace(/^\/private\/var\b/, "/var"));
+            }
+        }
+    }
+
+    return normalizePathList(expandedRoots);
+}
+
+const SYSTEM_TEMP_ROOTS = getSystemTempRoots();
+
+function isSystemTempDirectory(workspacePath) {
+    return SYSTEM_TEMP_ROOTS.some((tempRoot) => isPathInOrUnder(tempRoot, workspacePath));
 }
 
 function normalizeTargetState(value) {
@@ -333,6 +447,14 @@ function evaluateWorkspaceExclusion(index, workspaceRoot) {
         };
     }
 
+    if (isSystemTempDirectory(normalizedPath)) {
+        return {
+            excluded: true,
+            reason: "检测为系统临时目录（默认排除）",
+            path: normalizedPath,
+        };
+    }
+
     return {
         excluded: false,
         reason: "",
@@ -399,6 +521,14 @@ function previewWorkspaceIndexRegistration(workspaceRoot, targetName, options) {
 }
 
 function registerWorkspaceTarget(workspaceRoot, targetName, options) {
+    if (options.noIndex) {
+        if (!options.silentIndexLog) {
+            log(options, `⏭️ 已跳过索引登记: ${normalizeAbsolutePath(workspaceRoot)}`);
+            log(options, "   原因: 启用了 --no-index");
+        }
+        return;
+    }
+
     const normalizedPath = normalizeAbsolutePath(workspaceRoot);
     const { indexPath, index } = readWorkspaceIndex();
     const timestamp = nowISO();
@@ -673,12 +803,12 @@ async function commandUpdateAll(options) {
             continue;
         }
 
-        let targets = Object.keys(item.targets || {});
-        if (targets.length === 0) {
-            targets = detectInstalledTargets(workspacePath);
-        }
+        const installedTargets = detectInstalledTargets(workspacePath);
+        let targets = [];
         if (requestedTargets.length > 0) {
-            targets = targets.filter((target) => requestedTargets.includes(target));
+            targets = installedTargets.filter((target) => requestedTargets.includes(target));
+        } else {
+            targets = [...Object.keys(item.targets || {}), ...installedTargets];
         }
         targets = normalizeTargets(targets);
 
@@ -749,6 +879,11 @@ async function commandUpdateAll(options) {
 async function commandDoctor(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
     let targets = normalizeTargets(options.targets);
+    const out = (message) => {
+        if (!options.quiet) {
+            console.log(message);
+        }
+    };
 
     if (targets.length === 0) {
         targets = detectInstalledTargets(workspaceRoot);
@@ -763,37 +898,37 @@ async function commandDoctor(options) {
     let hasIssue = false;
     for (const target of targets) {
         const adapter = createAdapter(target, workspaceRoot, options);
-        console.log(`\n[${target.toUpperCase()}] 检查完整性...`);
+        out(`\n[${target.toUpperCase()}] 检查完整性...`);
 
         let result = adapter.checkIntegrity();
         if (result.status === "ok") {
-            console.log("  ✅ 状态正常");
+            out("  ✅ 状态正常");
             continue;
         }
 
         let targetHasIssue = true;
-        console.log(`  ❌ 状态: ${result.status}`);
+        out(`  ❌ 状态: ${result.status}`);
         for (const issue of result.issues || []) {
-            console.log(`     - ${issue}`);
+            out(`     - ${issue}`);
         }
 
         if (options.fix) {
             const fixRes = adapter.fixIntegrity();
             if (fixRes && fixRes.fixed) {
-                console.log(`  🛠️ 已修复: ${fixRes.summary}`);
+                out(`  🛠️ 已修复: ${fixRes.summary}`);
                 result = adapter.checkIntegrity();
                 if (result.status === "ok") {
-                    console.log("  ✅ 修复后状态正常");
+                    out("  ✅ 修复后状态正常");
                     targetHasIssue = false;
                 } else {
-                    console.log(`  ⚠️ 修复后仍有问题: ${result.status}`);
+                    out(`  ⚠️ 修复后仍有问题: ${result.status}`);
                     for (const issue of result.issues || []) {
-                        console.log(`     - ${issue}`);
+                        out(`     - ${issue}`);
                     }
                     targetHasIssue = true;
                 }
             } else {
-                console.log(`  ℹ️ 自动修复未执行: ${fixRes ? fixRes.summary : "无可用修复"}`);
+                out(`  ℹ️ 自动修复未执行: ${fixRes ? fixRes.summary : "无可用修复"}`);
             }
         }
 
@@ -827,7 +962,7 @@ function commandExcludeList(options) {
 
     console.log("🛡️ 工作区排除清单");
     console.log(`   索引文件: ${indexPath}`);
-    console.log("   默认规则: 自动排除 antigravity-kit 源码目录（无需手动添加）");
+    console.log("   默认规则: 自动排除 antigravity-kit 源码目录与系统临时目录（无需手动添加）");
 
     if (excluded.length === 0) {
         console.log("   当前无自定义排除路径。");
@@ -986,18 +1121,16 @@ function commandStatus(options) {
         const codexDir = path.join(workspaceRoot, ".codex");
         const skillsCount = countSkillsRecursive(path.join(codexDir, "skills"));
         const hasManifest = fs.existsSync(path.join(codexDir, "manifest.json"));
-        const hasMirror = fs.existsSync(path.join(workspaceRoot, ".agents"));
         console.log("\n[codex]");
         console.log(`   路径: ${codexDir}`);
         console.log(`   Skills: ${skillsCount}`);
         console.log(`   Manifest: ${hasManifest ? "yes" : "no"}`);
-        console.log(`   Mirror(.agents): ${hasMirror ? "yes" : "no"}`);
     }
 }
 
 async function main() {
     try {
-        const { command, options } = parseArgs(process.argv.slice(2));
+        const { command, options, providedFlags } = parseArgs(process.argv.slice(2));
 
         if (!command || command === "--help" || command === "-h") {
             printUsage();
@@ -1011,6 +1144,7 @@ async function main() {
             return;
         }
 
+        validateOptionScope(command, options, providedFlags);
         maybeWarnUpstreamGlobalConflict(command, options);
 
         if (command === "init") {
