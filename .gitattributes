@@ -1,6 +1,7 @@
 # Enforce LF for all executable scripts and code
-bin/*.js text eol=lf
-scripts/*.js text eol=lf
+bin/**/*.js text eol=lf
+scripts/**/*.js text eol=lf
+tests/**/*.js text eol=lf
 *.sh text eol=lf
 *.ts text eol=lf
 *.tsx text eol=lf
