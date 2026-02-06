@@ -1,38 +1,144 @@
 ---
-description: 生成测试用例并运行测试
+description: 测试生成与测试执行命令。用于创建并运行代码测试。
 ---
 
-# 测试 (Test Workflow)
+# /test - 测试生成与执行
 
-**触发命令**: `/test [scope]`
+$ARGUMENTS
+
+---
 
 ## 目的
 
-不仅仅是运行测试，而是**生成**测试、**修复**测试并**报告**结果。
+此命令用于生成测试、运行已有测试或检查测试覆盖率。
 
-## 步骤流程
+---
 
-1. **测试策略**:
-    - 分析目标代码。
-    - 决定测试类型 (Unit/Integration/E2E)。
-    - 选择测试框架 (Jest/Vitest/Playwright)。
+## 子命令
 
-2. **生成测试**:
-    - 如果测试不存在，创建测试文件 `*.test.ts`。
-    - 编写覆盖核心逻辑的测试用例。
-    - Mock 外部依赖。
+```
+/test                - 运行全部测试
+/test [file/feature] - 为指定目标生成测试
+/test coverage       - 显示覆盖率报告
+/test watch          - 以 watch 模式运行测试
+```
 
-3. **执行测试**:
-    - 运行 `npm test` 或特定命令。
+---
 
-4. **修复与重试**:
-    - 如果测试失败，分析错误。
-    - 自动修复代码或测试用例。
-    - 重新运行直到通过 (或达到重试上限)。
+## 行为
+
+### 生成测试
+
+当要求测试某个文件或功能时：
+
+1. **分析代码**
+   - 识别函数与方法
+   - 找到边界情况
+   - 识别需要 mock 的依赖
+
+2. **生成测试用例**
+   - Happy path 测试
+   - 错误场景测试
+   - 边界场景测试
+   - 集成测试（如有必要）
+
+3. **编写测试**
+   - 使用项目已有测试框架（Jest、Vitest 等）
+   - 遵循现有测试模式
+   - Mock 外部依赖
+
+---
+
+## 输出格式
+
+### 测试生成场景
+
+```markdown
+## 🧪 Tests: [Target]
+
+### Test Plan
+| Test Case | Type | Coverage |
+|-----------|------|----------|
+| Should create user | Unit | Happy path |
+| Should reject invalid email | Unit | Validation |
+| Should handle db error | Unit | Error case |
+
+### Generated Tests
+
+`tests/[file].test.ts`
+
+[Code block with tests]
+
+---
+
+Run with: `npm test`
+```
+
+### 测试执行场景
+
+```
+🧪 Running tests...
+
+✅ auth.test.ts (5 passed)
+✅ user.test.ts (8 passed)
+❌ order.test.ts (2 passed, 1 failed)
+
+Failed:
+  ✗ should calculate total with discount
+    Expected: 90
+    Received: 100
+
+Total: 15 tests (14 passed, 1 failed)
+```
+
+---
 
 ## 示例
 
-> User: /test utils/auth.ts
-> AI: 正在为 utils/auth.ts 生成单元测试... 运行 Jest... 所有测试通过 ✅。
+```
+/test src/services/auth.service.ts
+/test user registration flow
+/test coverage
+/test fix failed tests
+```
 
 ---
+
+## 测试模式
+
+### 单元测试结构
+
+```typescript
+describe('AuthService', () => {
+  describe('login', () => {
+    it('should return token for valid credentials', async () => {
+      // Arrange
+      const credentials = { email: 'test@test.com', password: 'pass123' };
+      
+      // Act
+      const result = await authService.login(credentials);
+      
+      // Assert
+      expect(result.token).toBeDefined();
+    });
+
+    it('should throw for invalid password', async () => {
+      // Arrange
+      const credentials = { email: 'test@test.com', password: 'wrong' };
+      
+      // Act & Assert
+      await expect(authService.login(credentials)).rejects.toThrow('Invalid credentials');
+    });
+  });
+});
+```
+
+---
+
+## 关键原则
+
+- **测试行为，不测实现细节**
+- **每个测试尽量单一断言**（在可行时）
+- **测试名称应有描述性**
+- **采用 Arrange-Act-Assert 模式**
+- **Mock 外部依赖**
