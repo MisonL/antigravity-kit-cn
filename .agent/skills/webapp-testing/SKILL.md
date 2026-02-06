@@ -4,33 +4,184 @@ description: Web 应用测试原则、E2E 测试策略
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# Web 应用测试 (Web App Testing)
+# Web App Testing - Web 应用测试
 
-## E2E 测试工具推荐
+> 发现并测试一切。不遗漏任何路由。
 
-- **Playwright**: 微软出品，现代、快速、支持多浏览器。**首选**。
-- **Cypress**: 开发者体验好，但有一些限制。
-- **Selenium**: 老牌，较慢，不推荐。
+## 🔧 运行时脚本 (Runtime Scripts)
 
-## 什么是好的 E2E 测试？
+**执行这些进行自动化浏览器测试：**
 
-1.  **关注用户行为**: 测试"用户点击登录"，而不是"调用登录函数"。
-2.  **使用可见定位器**: `getByText('Login')`, `getByRole('button')`。避免使用 CSS Selector (`.btn-primary`)，因为类名会变，但用户看到的内容不会变。
-3.  **独立性**: 每个测试用例应该负责自己的数据创建和清理。
+| 脚本                           | 用途           | 用法                                                      |
+| ------------------------------ | -------------- | --------------------------------------------------------- |
+| `scripts/playwright_runner.py` | 基础浏览器测试 | `python scripts/playwright_runner.py https://example.com` |
+|                                | 带截图         | `python scripts/playwright_runner.py <url> --screenshot`  |
+|                                | 无障碍检查     | `python scripts/playwright_runner.py <url> --a11y`        |
 
-## Visual Regression Testing (视觉回归测试)
+**需要：** `pip install playwright && playwright install chromium`
 
-不仅仅测试功能，还要测试样子。
+---
 
-- Playwright 支持截图对比：
-  `expect(page).toHaveScreenshot()`
+## 1. 深度审计方法 (Deep Audit Approach)
 
-这能发现 CSS 更改导致的意外布局崩坏。
+### 发现优先
 
-## 上游脚本流程补充（reference 对齐）
+| 目标     | 如何查找                       |
+| -------- | ------------------------------ |
+| 路由     | 扫描 app/, pages/, router 文件 |
+| API 端点 | Grep 搜索 HTTP 方法            |
+| 组件     | 查找组件目录                   |
+| 功能     | 阅读文档                       |
 
-- `python scripts/playwright_runner.py https://example.com`
-- `python scripts/playwright_runner.py <url> --screenshot`
-- `python scripts/playwright_runner.py <url> --a11y`
+### 系统化测试
 
-用于基础浏览器验证、截图留存与可访问性检查。
+1. **Map (映射)** - 列出所有路由/API
+2. **Scan (扫描)** - 验证它们是否响应
+3. **Test (测试)** - 覆盖关键路径
+
+---
+
+## 2. Web 测试金字塔 (Testing Pyramid for Web)
+
+```
+        /\          E2E (Few - 少)
+       /  \         关键用户流程 (Critical user flows)
+      /----\
+     /      \       Integration (Some - 一些)
+    /--------\      API, 数据流 (API, data flow)
+   /          \
+  /------------\    Component (Many - 多)
+                    独立 UI 片段 (Individual UI pieces)
+```
+
+---
+
+## 3. E2E 测试原则 (E2E Test Principles)
+
+### 测试什么
+
+| 优先级 | 测试                |
+| ------ | ------------------- |
+| 1      | Happy path 用户流程 |
+| 2      | 认证流程            |
+| 3      | 关键业务操作        |
+| 4      | 错误处理            |
+
+### E2E 最佳实践
+
+| 实践             | 为什么           |
+| ---------------- | ---------------- |
+| 使用 data-testid | 稳定的选择器     |
+| 等待元素         | 避免不稳定的测试 |
+| 干净状态         | 独立测试         |
+| 避免实现细节     | 测试用户行为     |
+
+---
+
+## 4. Playwright 原则
+
+### 核心概念
+
+| 概念              | 用途             |
+| ----------------- | ---------------- |
+| Page Object Model | 封装页面逻辑     |
+| Fixtures          | 可复用的测试设置 |
+| Assertions        | 内置自动等待     |
+| Trace Viewer      | 调试失败         |
+
+### 配置
+
+| 设置        | 推荐              |
+| ----------- | ----------------- |
+| Retries     | CI 上 2 次        |
+| Trace       | on-first-retry    |
+| Screenshots | on-failure        |
+| Video       | retain-on-failure |
+
+---
+
+## 5. 视觉测试 (Visual Testing)
+
+### 何时使用
+
+| 场景     | 价值 |
+| -------- | ---- |
+| 设计系统 | 高   |
+| 营销页面 | 高   |
+| 组件库   | 中   |
+| 动态内容 | 较低 |
+
+### 策略
+
+- 基线截图
+- 变更时比较
+- 审查视觉差异
+- 更新有意为之的变更
+
+---
+
+## 6. API 测试原则 (API Testing Principles)
+
+### 覆盖领域
+
+| 领域     | 测试               |
+| -------- | ------------------ |
+| 状态码   | 200, 400, 404, 500 |
+| 响应形状 | 匹配 Schema        |
+| 错误消息 | 用户友好           |
+| 边缘情况 | 空, 大, 特殊字符   |
+
+---
+
+## 7. 测试组织 (Test Organization)
+
+### 文件结构
+
+```
+tests/
+├── e2e/           # 完整用户流程
+├── integration/   # API, 数据
+├── component/     # UI 单元
+└── fixtures/      # 共享数据
+```
+
+### 命名约定
+
+| 模式     | 示例                        |
+| -------- | --------------------------- |
+| 基于特性 | `login.spec.ts`             |
+| 描述性   | `user-can-checkout.spec.ts` |
+
+---
+
+## 8. CI 集成 (CI Integration)
+
+### 流水线步骤
+
+1. 安装依赖
+2. 安装浏览器
+3. 运行测试
+4. 上传 Artifacts (traces, screenshots)
+
+### 并行化
+
+| 策略            | 用途            |
+| --------------- | --------------- |
+| 按文件          | Playwright 默认 |
+| 分片 (Sharding) | 大型套件        |
+| Workers         | 多个浏览器      |
+
+---
+
+## 9. 反模式 (Anti-Patterns)
+
+| ❌ 不要 (Don't)  | ✅ 要 (Do)   |
+| ---------------- | ------------ |
+| 测试实现         | 测试行为     |
+| 硬编码等待       | 使用自动等待 |
+| 跳过清理         | 隔离测试     |
+| 忽略不稳定的测试 | 修复根本原因 |
+
+---
+
+> **记住：** E2E 测试很昂贵。仅将其用于关键路径。
