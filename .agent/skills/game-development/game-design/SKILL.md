@@ -1,6 +1,7 @@
 ---
 name: game-design
 description: game-design skill module
+allowed-tools: Read, Glob, Grep
 ---
 
 # 游戏设计原则 (Game Design Principles)

@@ -1,6 +1,7 @@
 ---
 name: lint-and-validate
 description: 代码质量检查、Linting 配置与执行
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # Lint 与校验 (Lint and Validate)

@@ -91,6 +91,35 @@ const searchGroups: SearchGroup[] = [
                 href: '/docs/agent-modes-settings',
                 keywords: 'planning fast settings review policy allowlist denylist 模式 设置 审核'
             },
+            {
+                label: '模型',
+                value: 'models',
+                href: '/docs/models',
+                keywords: 'models reasoning gemini claude gpt selector rate limits 模型 推理 选择器'
+            },
+        ],
+    },
+    {
+        value: '安全控制',
+        items: [
+            {
+                label: 'Strict Mode',
+                value: 'strict-mode',
+                href: '/docs/strict-mode',
+                keywords: 'strict mode allowlist denylist review policy gitignore 隔离 严格模式'
+            },
+            {
+                label: '终端沙箱',
+                value: 'sandbox-mode',
+                href: '/docs/sandbox-mode',
+                keywords: 'sandboxing terminal sandbox network access 隔离 沙箱'
+            },
+            {
+                label: 'URL 允许/拒绝列表',
+                value: 'allowlist-denylist',
+                href: '/docs/allowlist-denylist',
+                keywords: 'allowlist denylist badurlschecker browser security url 允许列表 拒绝列表'
+            },
         ],
     },
     {

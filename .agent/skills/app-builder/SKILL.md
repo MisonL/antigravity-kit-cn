@@ -1,6 +1,7 @@
 ---
 name: app-builder
 description: 应用程序构建编排器，负责项目初始化和脚手架生成
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 ---
 
 # 应用构建器 (App Builder)

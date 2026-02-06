@@ -1,6 +1,7 @@
 ---
 name: intelligent-routing
 description: 智能路由算法与 Agent 自动选择逻辑
+version: 1.0.0
 ---
 
 # 智能路由 (Intelligent Routing)

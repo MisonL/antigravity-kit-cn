@@ -79,7 +79,7 @@ export default function DocsPage() {
                     如何使用文档
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
-                    文档分为 5 个主要板块：
+                    文档分为 6 个主要板块：
                 </p>
                 <div className="space-y-4 mb-6">
                     <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
@@ -95,7 +95,7 @@ export default function DocsPage() {
                             核心概念
                         </Link>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-                            了解智能体、技能与规则/工作流
+                            了解智能体、技能、模型与规则/工作流
                         </p>
                     </div>
                     <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
@@ -104,6 +104,14 @@ export default function DocsPage() {
                         </Link>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
                             Artifacts、Task List 与知识记忆
+                        </p>
+                    </div>
+                    <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">
+                        <Link href="/docs/strict-mode" className="font-semibold text-zinc-900 dark:text-zinc-50 hover:underline">
+                            安全控制
+                        </Link>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+                            Strict Mode、终端沙箱与 URL 允许/拒绝列表
                         </p>
                     </div>
                     <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800">

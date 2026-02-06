@@ -1,6 +1,7 @@
 ---
 name: 3d-games
 description: 3d-games skill module
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # 3D 游戏开发 (3D Game Development)

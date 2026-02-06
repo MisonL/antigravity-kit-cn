@@ -1,6 +1,7 @@
 ---
 name: tdd-workflow
 description: 测试驱动开发 (TDD) 工作流原则
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # TDD 工作流 (Test Driven Development)

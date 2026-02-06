@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -21,6 +20,15 @@ const navSections = [
             { href: '/docs/workflows', label: '斜杠工作流' },
             { href: '/docs/task-groups', label: '任务组' },
             { href: '/docs/agent-modes-settings', label: 'Agent 模式与设置' },
+            { href: '/docs/models', label: '模型' },
+        ],
+    },
+    {
+        title: '安全控制',
+        items: [
+            { href: '/docs/strict-mode', label: 'Strict Mode' },
+            { href: '/docs/sandbox-mode', label: '终端沙箱' },
+            { href: '/docs/allowlist-denylist', label: 'URL 允许/拒绝列表' },
         ],
     },
     {

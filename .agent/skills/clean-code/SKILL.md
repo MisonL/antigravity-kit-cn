@@ -1,6 +1,9 @@
 ---
 name: clean-code
 description: 务实的代码规范 - 简洁、直接、无过度设计
+allowed-tools: Read, Write, Edit
+version: 2.0
+priority: CRITICAL
 ---
 
 # 整洁代码 (Clean Code)

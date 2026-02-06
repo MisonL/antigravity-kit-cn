@@ -58,6 +58,27 @@ export const docsConfig = {
                     title: "Agent 模式与设置",
                     href: "/docs/agent-modes-settings",
                 },
+                {
+                    title: "模型",
+                    href: "/docs/models",
+                },
+            ],
+        },
+        {
+            title: "安全控制",
+            items: [
+                {
+                    title: "Strict Mode",
+                    href: "/docs/strict-mode",
+                },
+                {
+                    title: "终端沙箱",
+                    href: "/docs/sandbox-mode",
+                },
+                {
+                    title: "URL 允许/拒绝列表",
+                    href: "/docs/allowlist-denylist",
+                },
             ],
         },
         {

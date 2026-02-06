@@ -1,6 +1,7 @@
 ---
 name: systematic-debugging
 description: 系统化调试方法论、根因分析
+allowed-tools: Read, Glob, Grep
 ---
 
 # 系统化调试 (Systematic Debugging)

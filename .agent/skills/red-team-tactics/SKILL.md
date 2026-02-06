@@ -1,6 +1,7 @@
 ---
 name: red-team-tactics
 description: 红队战术原理、攻击阶段与检测规避
+allowed-tools: Read, Glob, Grep
 ---
 
 # 红队战术 (Red Team Tactics)

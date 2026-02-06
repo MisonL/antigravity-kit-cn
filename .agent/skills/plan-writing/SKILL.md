@@ -1,6 +1,7 @@
 ---
 name: plan-writing
 description: 结构化任务规划、WBS 分解与依赖管理
+allowed-tools: Read, Glob, Grep
 ---
 
 # 计划撰写 (Plan Writing)

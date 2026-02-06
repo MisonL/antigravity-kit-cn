@@ -1,6 +1,10 @@
 ---
 name: web-design-guidelines
 description: Web 界面指南 (WIG) 审查与无障碍检查
+metadata:
+  author: vercel
+  version: "1.0.0"
+  argument-hint: <file-or-pattern>
 ---
 
 # Web 设计指南 (Web Design Guidelines)

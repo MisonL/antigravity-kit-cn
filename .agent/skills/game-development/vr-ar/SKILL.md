@@ -1,6 +1,7 @@
 ---
 name: vr-ar
 description: vr-ar skill module
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # VR/AR 开发 (VR/AR Development)

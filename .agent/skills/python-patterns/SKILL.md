@@ -1,6 +1,7 @@
 ---
 name: python-patterns
 description: Python 开发原则、架构与工具链
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Python 最佳实践

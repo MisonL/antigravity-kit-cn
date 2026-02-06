@@ -204,14 +204,14 @@ trigger: always_on
 | 脚本                       | Skill                 | 何时使用      |
 | :------------------------- | :-------------------- | :------------ |
 | `security_scan.py`         | vulnerability-scanner | 部署时必跑    |
-| `dependency_analyzer.py`   | vulnerability-scanner | 每周 / 部署时 |
 | `lint_runner.py`           | lint-and-validate     | 每次代码变更  |
+| `type_coverage.py`         | lint-and-validate     | TS 变更后     |
 | `test_runner.py`           | testing-patterns      | 逻辑变更后    |
 | `schema_validator.py`      | database-design       | DB 变更后     |
 | `ux_audit.py`              | frontend-design       | UI 变更后     |
 | `accessibility_checker.py` | frontend-design       | UI 变更后     |
 | `seo_checker.py`           | seo-fundamentals      | 页面变更后    |
-| `bundle_analyzer.py`       | performance-profiling | 部署前        |
+| `react_performance_checker.py` | nextjs-react-expert | React/Next 变更后 |
 | `mobile_audit.py`          | mobile-design         | Mobile 变更后 |
 | `lighthouse_audit.py`      | performance-profiling | 部署前        |
 | `playwright_runner.py`     | webapp-testing        | 部署前        |
@@ -243,8 +243,8 @@ trigger: always_on
 
 | 任务         | 阅读                            |
 | :----------- | :------------------------------ |
-| Web UI/UX    | `.agent/frontend-specialist.md` |
-| Mobile UI/UX | `.agent/mobile-developer.md`    |
+| Web UI/UX    | `.agent/agents/frontend-specialist.md` |
+| Mobile UI/UX | `.agent/agents/mobile-developer.md`    |
 
 **这些 Agents 包含：**
 
@@ -267,8 +267,8 @@ trigger: always_on
 ### 关键脚本
 
 - **验证**: `.agent/scripts/verify_all.py`, `.agent/scripts/checklist.py`
-- **扫描器**: `security_scan.py`, `dependency_analyzer.py`
-- **审计**: `ux_audit.py`, `mobile_audit.py`, `lighthouse_audit.py`, `seo_checker.py`
-- **测试**: `playwright_runner.py`, `test_runner.py`
+- **扫描器**: `security_scan.py`
+- **审计**: `ux_audit.py`, `mobile_audit.py`, `lighthouse_audit.py`, `seo_checker.py`, `react_performance_checker.py`
+- **测试与质量**: `playwright_runner.py`, `test_runner.py`, `lint_runner.py`, `type_coverage.py`
 
 ---

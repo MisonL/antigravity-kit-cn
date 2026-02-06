@@ -1,6 +1,7 @@
 ---
 name: i18n-localization
 description: 国际化与本地化模式，RTL 支持
+allowed-tools: Read, Glob, Grep
 ---
 
 # 国际化 (i18n & l10n)

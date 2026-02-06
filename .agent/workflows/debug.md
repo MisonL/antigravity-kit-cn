@@ -1,8 +1,5 @@
 ---
 description: 调试模式。激活 DEBUG 模式以进行系统化问题排查。
-skills:
-    - systematic-debugging
-    - debugger
 ---
 
 # 调试命令 (Debug Command)

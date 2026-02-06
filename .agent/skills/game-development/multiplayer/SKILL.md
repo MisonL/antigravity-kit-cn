@@ -1,6 +1,7 @@
 ---
 name: multiplayer
 description: multiplayer skill module
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # 多人游戏开发 (Multiplayer Game Development)

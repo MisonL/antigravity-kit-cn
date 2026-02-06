@@ -1,9 +1,5 @@
 ---
 description: 创建具有高设计质量、可用于生产环境的前端界面
-skills:
-    - ui-ux-pro-max
-    - frontend-design
-    - tailwind-patterns
 ---
 
 # 极致UI (UI/UX Pro Max Workflow)

@@ -1,6 +1,7 @@
 ---
 name: game-development
 description: 游戏开发编排器，跨平台引擎选择与游戏设计模式
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # 游戏开发 (Game Development)

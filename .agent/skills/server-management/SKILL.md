@@ -1,6 +1,7 @@
 ---
 name: server-management
 description: 服务器管理原则、进程监控与扩缩容决策
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # 服务器管理 (Server Management)

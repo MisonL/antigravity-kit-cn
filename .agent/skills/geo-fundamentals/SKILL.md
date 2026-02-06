@@ -1,6 +1,7 @@
 ---
 name: geo-fundamentals
 description: 生成引擎优化 (GEO) 基础 - 针对 AI 搜索引擎优化内容
+allowed-tools: Read, Glob, Grep
 ---
 
 # GEO 基础 (Generative Engine Optimization)

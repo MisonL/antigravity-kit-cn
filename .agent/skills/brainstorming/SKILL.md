@@ -1,6 +1,7 @@
 ---
 name: brainstorming
 description: 苏格拉底式提问协议与需求澄清
+allowed-tools: Read, Glob, Grep
 ---
 
 # 头脑风暴与需求澄清 (Brainstorming)

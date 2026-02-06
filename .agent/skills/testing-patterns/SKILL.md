@@ -1,6 +1,7 @@
 ---
 name: testing-patterns
 description: 测试模式、Mocking 策略与测试金字塔
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # 测试模式 (Testing Patterns)

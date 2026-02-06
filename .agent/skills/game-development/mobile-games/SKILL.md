@@ -1,6 +1,7 @@
 ---
 name: mobile-games
 description: mobile-games skill module
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # 移动游戏开发 (Mobile Game Development)

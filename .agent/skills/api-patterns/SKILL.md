@@ -1,6 +1,7 @@
 ---
 name: api-patterns
 description: API 设计原则与最佳实践 (REST, GraphQL, tRPC)
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # API 设计模式 (API Patterns)

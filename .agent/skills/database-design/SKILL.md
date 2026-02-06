@@ -1,6 +1,7 @@
 ---
 name: database-design
 description: 数据库设计原则、Schema 设计与 ORM 选择
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # 数据库设计 (Database Design)

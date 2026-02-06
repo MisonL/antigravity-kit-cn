@@ -1,8 +1,5 @@
 ---
 description: 多智能体协同，处理复杂任务
-skills:
-    - parallel-agents
-    - orchestrator
 ---
 
 # 编排 (Orchestrate Workflow)

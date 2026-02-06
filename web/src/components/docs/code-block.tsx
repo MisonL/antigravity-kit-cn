@@ -5,12 +5,11 @@ import { CheckIcon, CopyIcon } from 'lucide-react';
 
 interface CodeBlockProps {
     code: string;
-    language?: string;
     showLineNumbers?: boolean;
     className?: string;
 }
 
-export function CodeBlock({ code, language = 'bash', showLineNumbers = false, className }: CodeBlockProps) {
+export function CodeBlock({ code, showLineNumbers = false, className }: CodeBlockProps) {
     const [copied, setCopied] = useState(false);
 
     const copyToClipboard = async () => {

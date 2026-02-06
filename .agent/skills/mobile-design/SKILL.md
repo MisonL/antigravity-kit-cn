@@ -1,6 +1,7 @@
 ---
 name: mobile-design
 description: 移动端优先设计思维、触摸交互与平台规范 (iOS/Android)
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # 移动端设计 (Mobile Design)

@@ -9,7 +9,10 @@ export default function ThemeToggle() {
     const { theme, setTheme } = useTheme();
 
     useEffect(() => {
-        setMounted(true);
+        const timer = setTimeout(() => {
+            setMounted(true);
+        }, 0);
+        return () => clearTimeout(timer);
     }, []);
 
     if (!mounted) {

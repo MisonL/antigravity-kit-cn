@@ -1,6 +1,7 @@
 ---
 name: behavioral-modes
 description: AI 行为模式 (Brainstorm, Implement, Debug, Review, Teach, Ship)
+allowed-tools: Read, Glob, Grep
 ---
 
 # 行为模式 (Behavioral Modes)

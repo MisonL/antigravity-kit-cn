@@ -1,6 +1,7 @@
 ---
 name: game-art
 description: game-art skill module
+allowed-tools: Read, Glob, Grep
 ---
 
 # 游戏美术原则 (Game Art Principles)

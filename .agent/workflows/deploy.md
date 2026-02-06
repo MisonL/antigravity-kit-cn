@@ -1,8 +1,5 @@
 ---
 description: 部署命令。用于生产环境发布。
-skills:
-    - deployment-procedures
-    - devops-engineer
 ---
 
 # 部署命令 (Deploy Command)

@@ -1,6 +1,7 @@
 ---
 name: game-audio
 description: game-audio skill module
+allowed-tools: Read, Glob, Grep
 ---
 
 # 游戏音频原则 (Game Audio Principles)

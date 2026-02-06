@@ -1,6 +1,7 @@
 ---
 name: frontend-design
 description: 网页 UI 设计思维、布局、排版与配色原则
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # 前端设计 (Frontend Design)

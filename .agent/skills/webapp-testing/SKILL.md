@@ -1,6 +1,7 @@
 ---
 name: webapp-testing
 description: Web 应用测试原则、E2E 测试策略
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Web 应用测试 (Web App Testing)

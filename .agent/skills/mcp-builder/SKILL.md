@@ -1,6 +1,7 @@
 ---
 name: mcp-builder
 description: MCP (模型上下文协议) 服务器构建原则、工具设计与资源模式
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # MCP 构建器 (MCP Builder)

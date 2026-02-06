@@ -1,6 +1,7 @@
 ---
 name: pc-games
 description: pc-games skill module
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # PC 与主机游戏开发 (PC & Console Game Development)

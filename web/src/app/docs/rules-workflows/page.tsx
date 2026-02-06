@@ -61,7 +61,7 @@ export default function RulesWorkflowsPage() {
                             <li><strong className="text-zinc-900 dark:text-zinc-50">Manual</strong>：通过在 Agent 输入框中 @ 提及手动启用。</li>
                             <li><strong className="text-zinc-900 dark:text-zinc-50">Always On</strong>：始终启用。</li>
                             <li><strong className="text-zinc-900 dark:text-zinc-50">Model Decision</strong>：根据规则的自然语言描述，由模型决定是否应用。</li>
-                            <li><strong className="text-zinc-900 dark:text-zinc-50">Glob</strong>：根据你设定的 glob 模式（如 .js、src/**/.ts）匹配文件时自动应用。</li>
+                            <li><strong className="text-zinc-900 dark:text-zinc-50">Glob</strong>：根据你设定的 glob 模式（如 *.js、src/**/*.ts）匹配文件时自动应用。</li>
                         </ul>
                     </div>
 

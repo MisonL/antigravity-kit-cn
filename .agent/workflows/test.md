@@ -1,8 +1,5 @@
 ---
 description: 生成测试用例并运行测试
-skills:
-    - testing-patterns
-    - webapp-testing
 ---
 
 # 测试 (Test Workflow)

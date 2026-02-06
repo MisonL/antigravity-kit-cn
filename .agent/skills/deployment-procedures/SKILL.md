@@ -1,6 +1,7 @@
 ---
 name: deployment-procedures
 description: 生产部署决策、安全部署流程与回滚策略
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # 部署程序 (Deployment Procedures)

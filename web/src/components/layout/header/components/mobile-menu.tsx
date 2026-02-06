@@ -24,6 +24,15 @@ const navSections = [
             { href: '/docs/workflows', label: '斜杠工作流' },
             { href: '/docs/task-groups', label: '任务组' },
             { href: '/docs/agent-modes-settings', label: 'Agent 模式与设置' },
+            { href: '/docs/models', label: '模型' },
+        ],
+    },
+    {
+        title: '安全控制',
+        items: [
+            { href: '/docs/strict-mode', label: 'Strict Mode' },
+            { href: '/docs/sandbox-mode', label: '终端沙箱' },
+            { href: '/docs/allowlist-denylist', label: 'URL 允许/拒绝列表' },
         ],
     },
     {
@@ -58,8 +67,10 @@ export default function MobileMenu() {
 
     // Close menu when route changes
     useEffect(() => {
-        // eslint-disable-next-line react-compiler/react-compiler
-        setIsOpen(false);
+        const timer = setTimeout(() => {
+            setIsOpen(false);
+        }, 0);
+        return () => clearTimeout(timer);
     }, [pathname]);
 
     return (

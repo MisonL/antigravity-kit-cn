@@ -1,6 +1,7 @@
 ---
 name: web-games
 description: web-games skill module
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Web 浏览器游戏开发 (Web Browser Game Development)

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -71,7 +72,14 @@ export default function DonateDialog({ className }: DonateDialogProps) {
                         <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
                             <div className="flex flex-col items-center gap-4">
                                 {/* QR Code Placeholder - Replace with actual QR code image */}
-                                <img className="w-48 h-48 rounded-lg" src="https://img.vietqr.io/image/mbbank-0779440918-compact.jpg" alt="" />
+                                <Image 
+                                    className="rounded-lg" 
+                                    src="https://img.vietqr.io/image/mbbank-0779440918-compact.jpg" 
+                                    alt="Payment QR Code" 
+                                    width={192} 
+                                    height={192} 
+                                    unoptimized 
+                                />
                                 {/* Bank Details */}
                                 <div className="text-center space-y-1">
                                     <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">

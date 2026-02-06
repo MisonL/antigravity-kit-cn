@@ -1,6 +1,7 @@
 ---
 name: 2d-games
 description: 2d-games skill module
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # 2D 游戏开发 (2D Game Development)

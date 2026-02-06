@@ -1,6 +1,7 @@
 ---
 name: tailwind-patterns
 description: Tailwind CSS v4 最佳实践、设计系统配置
+allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Tailwind CSS 模式
