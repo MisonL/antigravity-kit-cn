@@ -58,7 +58,9 @@ class CodexAdapter extends BaseAdapter {
 
             if (this.options.dryRun) {
                 this.log(`[dry-run] 将原子更新: ${codexDir}`);
-                this.log(`[dry-run] 将同步镜像: ${agentsMirrorDir}`);
+                if (fs.existsSync(agentsMirrorDir)) {
+                    this.log(`[dry-run] 将删除遗留目录: ${agentsMirrorDir}`);
+                }
                 if (codexExists && this.options.force) {
                     const candidates = this._collectBackupCandidates(codexDir, incomingFiles);
                     if (candidates.fullSnapshot) {
@@ -83,8 +85,10 @@ class CodexAdapter extends BaseAdapter {
             AtomicWriter.atomicCopyDir(stagingDir, codexDir, { logger: this.log.bind(this) });
             this.log("⚡️ .codex 原子更新完成");
 
-            AtomicWriter.atomicCopyDir(codexDir, agentsMirrorDir, { logger: this.log.bind(this) });
-            this.log("🪞 .agents 镜像同步完成");
+            if (fs.existsSync(agentsMirrorDir)) {
+                fs.rmSync(agentsMirrorDir, { recursive: true, force: true });
+                this.log("🧹 已移除遗留 .agents 目录");
+            }
 
             this._syncWorkspaceManagedFiles(codexDir);
             this._cleanupGitIgnore();
@@ -184,6 +188,17 @@ class CodexAdapter extends BaseAdapter {
             return { fullSnapshot: true, files: [] };
         }
 
+        try {
+            const raw = fs.readFileSync(manifestPath, "utf8");
+            const parsed = JSON.parse(raw);
+            const files = parsed && typeof parsed.files === "object" ? parsed.files : null;
+            if (!files || Object.keys(files).length === 0) {
+                return { fullSnapshot: true, files: [] };
+            }
+        } catch (err) {
+            return { fullSnapshot: true, files: [] };
+        }
+
         const manager = new ManifestManager(manifestPath, { target: "codex" });
         manager.load();
 
@@ -245,7 +260,7 @@ class CodexAdapter extends BaseAdapter {
     }
 
     _cleanupGitIgnore() {
-        const cleanupResult = GitHelper.removeIgnoreRules(this.workspaceRoot, [".codex", ".agents"], this.options);
+        const cleanupResult = GitHelper.removeIgnoreRules(this.workspaceRoot, [".codex"], this.options);
         if (cleanupResult.removedCount > 0) {
             this.log(`🧹 已从 .gitignore 移除 ${cleanupResult.removedCount} 条规则`);
         }
@@ -274,16 +289,16 @@ class CodexAdapter extends BaseAdapter {
             return { status: "missing", issues: ["Critical: .codex directory missing"] };
         }
 
-        if (!fs.existsSync(agentsMirrorDir)) {
-            result.status = "broken";
-            result.issues.push("Critical: .agents mirror missing");
-        }
-
         const manifestPath = path.join(codexDir, "manifest.json");
         if (!fs.existsSync(manifestPath)) {
             result.status = "broken";
             result.issues.push("Critical: manifest.json missing");
             return result;
+        }
+
+        if (fs.existsSync(agentsMirrorDir)) {
+            result.status = "broken";
+            result.issues.push("Legacy: .agents directory should be removed");
         }
 
         const manager = new ManifestManager(manifestPath, { target: "codex" });
@@ -320,10 +335,9 @@ class CodexAdapter extends BaseAdapter {
                 summary: "缺少 .codex，无法自动修复。请执行 ag-kit init --target codex 或 ag-kit update。",
             };
         }
-
-        if (!fs.existsSync(agentsMirrorDir)) {
-            AtomicWriter.atomicCopyDir(codexDir, agentsMirrorDir, { logger: this.log.bind(this) });
-            fixes.push("restored .agents mirror");
+        if (fs.existsSync(agentsMirrorDir)) {
+            fs.rmSync(agentsMirrorDir, { recursive: true, force: true });
+            fixes.push("removed stale .agents directory");
         }
 
         const manifestPath = path.join(codexDir, "manifest.json");

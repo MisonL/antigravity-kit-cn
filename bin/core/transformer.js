@@ -11,11 +11,23 @@ class ResourceTransformer {
             mappedFiles: [], // List of { src, destPath }
             metadata: []     // List of desc for rules
         };
+        const usedIds = new Set();
+
+        function allocateUniqueId(baseId) {
+            let candidate = baseId;
+            let suffix = 2;
+            while (usedIds.has(candidate)) {
+                candidate = `${baseId}-${suffix}`;
+                suffix += 1;
+            }
+            usedIds.add(candidate);
+            return candidate;
+        }
 
         // 1. Process Skills
         // Strategy: Skill folder -> .codex/skills/agk-<name>/SKILL.md
         for (const skill of resources.skills) {
-            const codexName = `agk-${skill.name}`;
+            const codexName = allocateUniqueId(`agk-${skill.name}`);
             const destDir = `skills/${codexName}`;
             
             // Map the main SKILL.md
@@ -47,12 +59,12 @@ class ResourceTransformer {
         }
 
         // 2. Process Workflows
-        // Strategy: Workflow file -> .codex/skills/agk-workflow-<name>/SKILL.md
+        // Strategy: Workflow file -> .codex/skills/agk-wf-<name>/SKILL.md
         // We convert workflows to skills in Codex? Or keep them as workflows?
         // Implementation Plan says: "Workflow -> Skill Conversion".
         // So we wrap them.
         for (const workflow of resources.workflows) {
-            const codexName = `agk-workflow-${workflow.name}`;
+            const codexName = allocateUniqueId(`agk-wf-${workflow.name}`);
             const destDir = `skills/${codexName}`;
             
             // We treat the workflow markdown as the SKILL.md
