@@ -1,39 +1,49 @@
 ---
 name: lint-and-validate
-description: 代码质量检查、Linting 配置与执行
+description: 自动质量控制、Lint 检查和静态分析程序。在每次代码修改后使用，以确保语法的正确性和项目标准。触发关键词：lint, format, check, validate, types, static analysis。
 allowed-tools: Read, Glob, Grep, Bash
 ---
 
-# Lint 与校验 (Lint and Validate)
+# Lint and Validate Skill - Lint 与验证
 
-## 为什么需要 Lint？
+> **强制要求 (MANDATORY):** 每次代码变更后运行适当的验证工具。在代码无错误之前，不要完成任务。
 
-Lint 工具能在代码运行前发现错误。它是成本最低的测试。
+### 0. 生态系统程序 (Procedures by Ecosystem)
 
-## 推荐配置
+#### Node.js / TypeScript
 
-1.  **ESLint** (JavaScript/TypeScript)
-    - 推荐 `eslint-config-standard` 或 `antfu/eslint-config`。
-    - 关注：未使用的变量、潜在的死循环、Hook 规则。
+1. **Lint/Fix:** `npm run lint` 或 `npx eslint "path" --fix`
+2. **Types:** `npx tsc --noEmit`
+3. **Security:** `npm audit --audit-level=high`
 
-2.  **Prettier / Biome** (Formatting)
-    - 自动化代码风格（缩进、分号、单引号）。
-    - 再也不用在 Code Review 中争论代码风格了。
+#### Python
 
-3.  **TypeScript** (Type Checking)
-    - `strict: true` 是必须的。
-    - 不要忽略 `any` 警告。
+1. **Linter (Ruff):** `ruff check "path" --fix` (快速且现代)
+2. **Security (Bandit):** `bandit -r "path" -ll`
+3. **Types (MyPy):** `mypy "path"`
 
-## 自动化 (Automation)
+## 1. 质量循环 (The Quality Loop)
 
-- **Husky + lint-staged**: 在 commit 时自动运行 Lint，只检查修改过的文件。
-- **CI Pipeline**: 在合并代码前强制运行 Lint 检查。
+1. **编写/编辑代码 (Write/Edit Code)**
+2. **运行审计 (Run Audit):** `npm run lint && npx tsc --noEmit`
+3. **分析报告 (Analyze Report):** 检查 "FINAL AUDIT REPORT" 部分。
+4. **修复并重复 (Fix & Repeat):** **不允许** 提交有 "FINAL AUDIT" 失败的代码。
 
-## 上游脚本流程补充（reference 对齐）
+## 2. 错误处理 (Error Handling)
 
-- `python scripts/lint_runner.py <project_path>`
-- `python scripts/type_coverage.py <project_path>`
+- 如果 `lint` 失败：立即修复样式或语法问题。
+- 如果 `tsc` 失败：在继续之前更正类型不匹配。
+- 如果未配置工具：检查项目根目录是否有 `.eslintrc`, `tsconfig.json`, `pyproject.toml` 并建议创建一个。
 
-用于统一 lint 与类型覆盖率检查。
+---
 
-若在修复流程中仍存在一致性问题，可结合 `ag-kit doctor --fix` 做托管资源自愈。
+**严格规则 (Strict Rule):** 任何代码在通过这些检查之前，都不应被提交或报告为“完成”。
+
+---
+
+## 脚本 (Scripts)
+
+| Script                     | Purpose        | Command                                          |
+| -------------------------- | -------------- | ------------------------------------------------ |
+| `scripts/lint_runner.py`   | 统一 Lint 检查 | `python scripts/lint_runner.py <project_path>`   |
+| `scripts/type_coverage.py` | 类型覆盖率分析 | `python scripts/type_coverage.py <project_path>` |
