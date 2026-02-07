@@ -4,32 +4,32 @@ description: 4 阶段系统化调试方法论，包括根因分析和基于证�
 allowed-tools: Read, Glob, Grep
 ---
 
-# 系统化调试 (Systematic Debugging)
+# 系统化调试
 
 > 来源：obra/superpowers
 
 ---
 
-## 概览 (Overview)
+## 概览
 
 本技能提供了一种结构化的调试方法，旨在防止盲目猜测，并确保在着手解决问题之前，已对其进行了彻底的理解。
 
 ---
 
-## 4 阶段调试流程 (4-Phase Process)
+## 4 阶段调试流程
 
-### 阶段 1：复现 (Reproduce)
+### 阶段 1：复现
 
 在修复之前，必须能够稳定地复现该问题。
 
 ```markdown
-## 复现步骤 (Reproduction Steps)
+## 复现步骤
 
 1. [详细的复现步骤]
 2. [下一步操作]
 3. [预期结果 vs 实际观测到的结果]
 
-## 复现率 (Reproduction Rate)
+## 复现率
 
 - [ ] 必现 (100%)
 - [ ] 经常 (50-90%)
@@ -37,12 +37,12 @@ allowed-tools: Read, Glob, Grep
 - [ ] 极罕见 (<10%)
 ```
 
-### 阶段 2：隔离 (Isolate)
+### 阶段 2：隔离
 
 缩小问题发生的范围。
 
 ```markdown
-## 隔离问题 (Isolation Questions)
+## 隔离问题
 
 - 问题是从什么时候开始出现的？
 - 最近发生了哪些改动？
@@ -51,14 +51,14 @@ allowed-tools: Read, Glob, Grep
 - 触发该问题的最小改动是什么？
 ```
 
-### 阶段 3：理解 (Understand)
+### 阶段 3：理解
 
-寻找根本原因 (Root cause)，而非仅仅关注表面症状。
+寻找根本原因（Root cause），而非仅仅关注表面症状。
 
 ```markdown
-## 根因分析 (Root Cause Analysis)
+## 根因分析
 
-### “5 个为什么”分析法 (The 5 Whys)
+### “5 个为什么”分析法
 
 1. 为什么：[第一个观测到的现象]
 2. 为什么：[更深一层的因果关系]
@@ -67,22 +67,22 @@ allowed-tools: Read, Glob, Grep
 5. 为什么：[锁定根本原因]
 ```
 
-### 阶段 4：修复与验证 (Fix & Verify)
+### 阶段 4：修复与验证
 
 着手修复并确认问题已彻底解决。
 
 ```markdown
-## 修复验证清单 (Fix Verification)
+## 修复验证清单
 
 - [ ] 该 Bug 不再复现。
 - [ ] 相关关联功能依然正常工作。
 - [ ] 未引入任何新的问题。
-- [ ] 已添加测试用例以防止回归 (Regression)。
+- [ ] 已添加测试用例以防止回归（Regression）。
 ```
 
 ---
 
-## 调试检查清单 (Debugging Checklist)
+## 调试检查清单
 
 ```markdown
 ## 开始之前
@@ -93,10 +93,10 @@ allowed-tools: Read, Glob, Grep
 
 ## 调查执行期间
 
-- [ ] 检查最近的提交记录 (git log)。
+- [ ] 检查最近的提交记录（git log）。
 - [ ] 查阅日志文件中的报错信息。
 - [ ] 必要时增加埋点日志。
-- [ ] 使用调试器 (Debugger)/断点。
+- [ ] 使用调试器（Debugger）/断点。
 
 ## 完成修复之后
 
@@ -108,7 +108,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 常用调试命令 (Common Commands)
+## 常用调试命令
 
 ```bash
 # 查看最近的变动
@@ -124,7 +124,7 @@ pm2 logs app-name --err --lines 100
 
 ---
 
-## 应避免的反模式 (Anti-Patterns)
+## 应避免的反模式
 
 ❌ **盲目改动** —— “也许我改一下这里就能好了……”
 ❌ **忽视证据** —— “那绝对不可能是导致问题的原因。”
@@ -133,4 +133,3 @@ pm2 logs app-name --err --lines 100
 ❌ **止步于表面症状** —— 未能挖掘出真正的根本原因。
 
 ---
-
