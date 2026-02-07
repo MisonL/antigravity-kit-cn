@@ -1,35 +1,35 @@
-# 技术栈选择 (Tech Stack Selection - 2026)
+# 技术栈选择
 
 > Web 应用程序的默认及备选技术方案。
 
-## 默认技术栈 (Web App - 2026)
+## 默认技术栈（2026）
 
 ```yaml
-前端 (Frontend):
-    框架 (Framework): Next.js 16 (Stable)
-    语言 (Language): TypeScript 5.7+
-    样式 (Styling): Tailwind CSS v4
-    状态管理 (State): React 19 Actions / Server Components
-    构建工具 (Bundler): Turbopack (Stable for Dev)
+前端（Frontend）:
+    框架（Framework）: Next.js 16（Stable）
+    语言（Language）: TypeScript 5.7+
+    样式（Styling）: Tailwind CSS v4
+    状态管理（State）: React 19 Actions / Server Components
+    构建工具（Bundler）: Turbopack（开发稳定）
 
-后端 (Backend):
-    运行时 (Runtime): Node.js 23
-    框架 (Framework): Next.js API Routes / Hono (针对 Edge)
-    校验 (Validation): Zod / TypeBox
+后端（Backend）:
+    运行时（Runtime）: Node.js 23
+    框架（Framework）: Next.js API Routes / Hono（针对 Edge 边缘）
+    校验（Validation）: Zod / TypeBox
 
-数据库 (Database):
-    主选 (Primary): PostgreSQL
+数据库（Database）:
+    主选（Primary）: PostgreSQL
     ORM: Prisma / Drizzle
-    托管 (Hosting): Supabase / Neon
+    托管（Hosting）: Supabase / Neon
 
-身份认证 (Auth):
-    提供商 (Provider): Auth.js (v5) / Clerk
+身份认证（Auth）:
+    提供商（Provider）: Auth.js（v5） / Clerk
 
 Monorepo:
-    工具 (Tool): Turborepo 2.0
+    工具（Tool）: Turborepo 2.0
 ```
 
-## 替代选项 (Alternative Options)
+## 替代选项
 
 | 需求     | 默认   | 替代方案                     |
 | -------- | ------ | ---------------------------- |
