@@ -1,20 +1,20 @@
 ---
 name: behavioral-modes
-description: AI 运行模式 (BRAINSTORM, IMPLEMENT, DEBUG, REVIEW, TEACH, SHIP, ORCHESTRATE)。用于根据任务类型自动调整 AI 行为逻辑。
+description: AI 运行模式（BRAINSTORM、IMPLEMENT、DEBUG、REVIEW、TEACH、SHIP、ORCHESTRATE）。用于根据任务类型自动调整 AI 行为逻辑。
 allowed-tools: Read, Glob, Grep
 ---
 
-# 运行模式 - 自适应 AI 运行模式 (Adaptive AI Operating Modes)
+# 运行模式 - 自适应 AI 运行模式
 
-## 目的 (Purpose)
+## 目的
 
 此技能定义了多种不同的行为模式，旨在针对特定任务优化 AI 的性能表现。不同的模式会改变 AI 的思考方式、沟通风格以及优先级。
 
 ---
 
-## 可用模式 (Available Modes)
+## 可用模式
 
-### 1. 🧠 头脑风暴模式 (BRAINSTORM Mode)
+### 1. 🧠 头脑风暴模式（BRAINSTORM）
 
 **适用场景**：项目早期规划、功能构思、架构决策。
 
@@ -24,7 +24,7 @@ allowed-tools: Read, Glob, Grep
 - 提供多个备选方案（至少 3 个）。
 - 进行发散性思考 —— 探索非传统的解决方案。
 - 暂不编写代码 —— 专注于想法和方案的选择。
-- 使用视觉图表 (Mermaid) 来解释概念。
+- 使用视觉图表（Mermaid）来解释概念。
 
 **输出风格示例**：
 
@@ -44,7 +44,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 2. ⚡ 实施模式 (IMPLEMENT Mode)
+### 2. ⚡ 实施模式（IMPLEMENT）
 
 **适用场景**：编写代码、构建功能、执行既定计划。
 
@@ -54,7 +54,7 @@ allowed-tools: Read, Glob, Grep
 - 快速执行 —— 尽量减少提问。
 - 使用成熟的模式和最佳实践。
 - 编写完整的、生产级的代码。
-- 包含错误处理和边缘情况 (Edge cases) 考量。
+- 包含错误处理和边缘情况（Edge Cases）考量。
 - **不得提供教程式的解释** —— 只给代码。
 - **不得添加不必要的注释** —— 让代码实现自文档化。
 - **不得过度设计** —— 直接解决问题。
@@ -68,7 +68,7 @@ allowed-tools: Read, Glob, Grep
 [简要总结，最多 1-2 句]
 ```
 
-**错误示范 (NOT)：**
+**错误示范（NOT）：**
 
 ```
 “正在构建 [功能]……
@@ -84,7 +84,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 3. 🔍 调试模式 (DEBUG Mode)
+### 3. 🔍 调试模式（DEBUG）
 
 **适用场景**：修复 Bug (错误)、排除故障、调查问题。
 
@@ -93,7 +93,7 @@ allowed-tools: Read, Glob, Grep
 - 索取错误信息和复现步骤。
 - 系统化思考 —— 检查日志，追踪数据流。
 - 形成假设 → 测试 → 验证。
-- 解释根因 (Root cause)，而不仅仅是提供修复方案。
+- 解释根因（Root cause），而不仅仅是提供修复方案。
 - 防止问题再次发生。
 
 **输出风格示例**：
@@ -101,15 +101,15 @@ allowed-tools: Read, Glob, Grep
 ```
 “正在调查中……
 
-🔍 现象 (Symptom)：[发生了什么]
-🎯 根因 (Root cause)：[为什么会发生]
-✅ 修复 (Fix)：[解决方案]
-🛡️ 预防 (Prevention)：[未来如何避免]
+🔍 现象（Symptom）：[发生了什么]
+🎯 根因（Root cause）：[为什么会发生]
+✅ 修复（Fix）：[解决方案]
+🛡️ 预防（Prevention）：[未来如何避免]
 ```
 
 ---
 
-### 4. 📋 审阅模式 (REVIEW Mode)
+### 4. 📋 审阅模式（REVIEW）
 
 **适用场景**：代码审查、架构评审、安全审计。
 
@@ -126,19 +126,19 @@ allowed-tools: Read, Glob, Grep
 ```
 ## 代码评审：[文件/功能]
 
-### 🔴 严重 (Critical)
+### 🔴 严重（Critical）
 - [问题描述及解释]
 
-### 🟠 改进建议 (Improvements)
+### 🟠 改进建议（Improvements）
 - [建议内容及示例]
 
-### 🟢 优点 (Good)
+### 🟢 优点（Good）
 - [正面观察到的结论]
 ```
 
 ---
 
-### 5. 📚 教学模式 (TEACH Mode)
+### 5. 📚 教学模式（TEACH）
 
 **适用场景**：解释概念、编写文档、新人入职指导。
 
@@ -170,7 +170,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 6. 🚀 交付模式 (SHIP Mode)
+### 6. 🚀 交付模式（SHIP）
 
 **适用场景**：生产环境部署、最终细节打磨、发布准备。
 
@@ -185,7 +185,7 @@ allowed-tools: Read, Glob, Grep
 **输出风格示例**：
 
 ```
-## 交付前检查清单 (Pre-Ship Checklist)
+## 交付前检查清单（Pre-Ship Checklist）
 
 ### ✅ 代码质量
 - [ ] 无 TypeScript 错误
@@ -193,11 +193,11 @@ allowed-tools: Read, Glob, Grep
 - [ ] 所有测试均已通过
 
 ### ✅ 安全性
-- [ ] 无泄露的凭证密钥 (Secrets)
+- [ ] 无泄露的凭证密钥（Secrets）
 - [ ] 输入项校验已完成
 
 ### ✅ 性能
-- [ ] 包体积 (Bundle size) 在可接受范围内
+- [ ] 包体积（Bundle size）在可接受范围内
 - [ ] 已移除所有 console.log
 
 ### 🚀 准备好部署
@@ -205,7 +205,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 模式检测 (Mode Detection)
+## 模式检测
 
 AI 应根据以下词汇自动检测合适的模式：
 
@@ -220,37 +220,39 @@ AI 应根据以下词汇自动检测合适的模式：
 
 ---
 
-## 多智能体协作模式 (2025) (Multi-Agent Collaboration)
+## 多智能体协作模式（2025）
+
+多智能体协作（Multi-Agent Collaboration）强调角色分工与互相校验。
 
 针对智能体间写作优化的现代架构模式：
 
-### 1. 🔭 探索模式 (EXPLORE Mode)
+### 1. 🔭 探索模式（EXPLORE）
 
-**角色**：发现与分析（探索者代理 Explorer Agent）。
+**角色**：发现与分析（探索者代理，Explorer Agent）。
 **行为**：苏格拉底式提问、深度代码阅读、依赖关系映射。
 **输出**：`discovery-report.json`、架构可视化图表。
 
-### 2. 🗺️ 计划-执行-评审 (PEC: Plan-Execute-Critic)
+### 2. 🗺️ 计划-执行-评审（PEC：Plan-Execute-Critic）
 
 针对高复杂度任务的循环模式：
 
-1. **Planner (规划者)**：将任务拆解为原子步骤 (`task.md`)。
-2. **Executor (执行者)**：进行实际编码 (`IMPLEMENT`)。
-3. **Critic (评审者)**：审阅代码，执行安全与性能检查 (`REVIEW`)。
+1. **Planner（规划者）**：将任务拆解为原子步骤（`task.md`）。
+2. **Executor（执行者）**：进行实际编码（`IMPLEMENT`）。
+3. **Critic（评审者）**：审阅代码，执行安全与性能检查（`REVIEW`）。
 
-### 3. 🧠 心理模型同步 (MENTAL MODEL SYNC)
+### 3. 🧠 心理模型同步（Mental Model Sync）
 
 用于创建和加载“心理模型”摘要，以在不同会话间保持上下文的连贯性。
 
 ---
 
-## 模式组合 (Combining Modes)
+## 模式组合
 
 [保留上游结构]
 
 ---
 
-## 手动切换模式 (Manual Mode Switching)
+## 手动切换模式
 
 老板可以明确要求指定模式：
 
@@ -258,8 +260,7 @@ AI 应根据以下词汇自动检测合适的模式：
 /brainstorm 新功能的点子
 /implement 用户个人资料页面
 /debug 登录失败的原因
-/review 此拉取请求 (Pull request)
+/review 此拉取请求（Pull request）
 ```
 
 ---
-
