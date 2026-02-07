@@ -1,47 +1,47 @@
-# Mobile Backend Patterns
+# 移动端后端模式（Mobile Backend Patterns）
 
-> **This file covers backend/API patterns SPECIFIC to mobile clients.**
-> Generic backend patterns are in `nodejs-best-practices` and `api-patterns`.
-> **Mobile backend is NOT the same as web backend. Different constraints, different patterns.**
+> **本文件专门覆盖移动端客户端所需的后端/API 模式。**
+> 通用后端模式请参考 `nodejs-best-practices` 与 `api-patterns`。
+> **移动端后端 ≠ Web 后端，约束不同，模式不同。**
 
 ---
 
-## 🧠 MOBILE BACKEND MINDSET
+## 🧠 移动端后端思维（MOBILE BACKEND MINDSET）
 
 ```
-Mobile clients are DIFFERENT from web clients:
-├── Unreliable network (2G, subway, elevator)
-├── Battery constraints (minimize wake-ups)
-├── Limited storage (can't cache everything)
-├── Interrupted sessions (calls, notifications)
-├── Diverse devices (old phones to flagships)
-└── Binary updates are slow (App Store review)
+移动端客户端与 Web 完全不同：
+├── 网络不稳定（2G/地铁/电梯）
+├── 电量敏感（减少唤醒）
+├── 存储有限（不能全量缓存）
+├── 会话频繁中断（电话/通知）
+├── 设备差异极大（老机到旗舰）
+└── 二进制更新很慢（App Store 审核）
 ```
 
-**Your backend must compensate for ALL of these.**
+**后端必须补偿以上全部问题。**
 
 ---
 
-## 🚫 AI MOBILE BACKEND ANTI-PATTERNS
+## 🚫 AI 移动端后端反模式（ANTI-PATTERNS）
 
-### These are common AI mistakes when building mobile backends:
+### AI 常见移动端后端错误
 
-| ❌ AI Default | Why It's Wrong | ✅ Mobile-Correct |
-|---------------|----------------|-------------------|
-| Same API for web and mobile | Mobile needs compact responses | Separate mobile endpoints OR field selection |
-| Full object responses | Wastes bandwidth, battery | Partial responses, pagination |
-| No offline consideration | App crashes without network | Offline-first design, sync queues |
-| WebSocket for everything | Battery drain | Push notifications + polling fallback |
-| No app versioning | Can't force updates, breaking changes | Version headers, minimum version check |
-| Generic error messages | Users can't fix issues | Mobile-specific error codes + recovery actions |
-| Session-based auth | Mobile apps restart | Token-based with refresh |
-| Ignore device info | Can't debug issues | Device ID, app version in headers |
+| ❌ AI 默认 | 为什么错 | ✅ 移动端正确做法 |
+|-----------|----------|------------------|
+| Web 与移动共用同一 API | 移动端需要更紧凑响应 | 独立移动端接口或字段选择 |
+| 全对象返回 | 浪费带宽与电量 | 部分字段 + 分页 |
+| 不考虑离线 | 断网即崩 | Offline-first + 同步队列 |
+| 全用 WebSocket | 电量消耗大 | Push + 轮询兜底 |
+| 不做版本管理 | 无法强更，破坏兼容 | 版本头 + 最低版本检查 |
+| 泛化错误信息 | 用户无法自救 | 移动端错误码 + 复原动作 |
+| Session 认证 | App 重启丢状态 | Token + Refresh |
+| 忽略设备信息 | 无法定位问题 | 设备 ID/版本入 Header |
 
 ---
 
-## 1. Push Notifications
+## 1. 推送通知（Push Notifications）
 
-### Platform Architecture
+### 平台架构（Platform Architecture）
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -62,145 +62,145 @@ Mobile clients are DIFFERENT from web clients:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Push Types
+### Push 类型（Push Types）
 
-| Type | Use Case | User Sees |
-|------|----------|-----------|
-| **Display** | New message, order update | Notification banner |
-| **Silent** | Background sync, content update | Nothing (background) |
-| **Data** | Custom handling by app | Depends on app logic |
+| 类型（Type） | 场景（Use Case） | 用户可见（User Sees） |
+|-------------|------------------|-----------------------|
+| **Display** | 新消息、订单更新 | 通知横幅 |
+| **Silent** | 后台同步、内容更新 | 用户不可见（后台） |
+| **Data** | App 自定义处理 | 由 App 决定 |
 
-### Anti-Patterns
+### 反模式（Anti-Patterns）
 
 | ❌ NEVER | ✅ ALWAYS |
 |----------|----------|
-| Send sensitive data in push | Push says "New message", app fetches content |
-| Overload with pushes | Batch, dedupe, respect quiet hours |
-| Same message to all | Segment by user preference, timezone |
-| Ignore failed tokens | Clean up invalid tokens regularly |
-| Skip APNs for iOS | FCM alone doesn't guarantee iOS delivery |
+| 推送中携带敏感数据 | Push 只提示“新消息”，内容由 App 拉取 |
+| 高强度推送轰炸 | 合并、去重、尊重静默时段 |
+| 所有人同文案 | 按用户偏好/时区分组 |
+| 忽略失效 token | 定期清理无效 token |
+| iOS 不走 APNs | 仅 FCM 无法保证 iOS 投递 |
 
-### Token Management
-
-```
-TOKEN LIFECYCLE:
-├── App registers → Get token → Send to backend
-├── Token can change → App must re-register on start
-├── Token expires → Clean from database
-├── User uninstalls → Token becomes invalid (detect via error)
-└── Multiple devices → Store multiple tokens per user
-```
-
----
-
-## 2. Offline Sync & Conflict Resolution
-
-### Sync Strategy Selection
+### Token 管理（Token Management）
 
 ```
-WHAT TYPE OF DATA?
-        │
-        ├── Read-only (news, catalog)
-        │   └── Simple cache + TTL
-        │       └── ETag/Last-Modified for invalidation
-        │
-        ├── User-owned (notes, todos)
-        │   └── Last-write-wins (simple)
-        │       └── Or timestamp-based merge
-        │
-        ├── Collaborative (shared docs)
-        │   └── CRDT or OT required
-        │       └── Consider Firebase/Supabase
-        │
-        └── Critical (payments, inventory)
-            └── Server is source of truth
-                └── Optimistic UI + server confirmation
-```
-
-### Conflict Resolution Strategies
-
-| Strategy | How It Works | Best For |
-|----------|--------------|----------|
-| **Last-write-wins** | Latest timestamp overwrites | Simple data, single user |
-| **Server-wins** | Server always authoritative | Critical transactions |
-| **Client-wins** | Offline changes prioritized | Offline-heavy apps |
-| **Merge** | Combine changes field-by-field | Documents, rich content |
-| **CRDT** | Mathematically conflict-free | Real-time collaboration |
-
-### Sync Queue Pattern
-
-```
-CLIENT SIDE:
-├── User makes change → Write to local DB
-├── Add to sync queue → { action, data, timestamp, retries }
-├── Network available → Process queue FIFO
-├── Success → Remove from queue
-├── Failure → Retry with backoff (max 5 retries)
-└── Conflict → Apply resolution strategy
-
-SERVER SIDE:
-├── Accept change with client timestamp
-├── Compare with server version
-├── Apply conflict resolution
-├── Return merged state
-└── Client updates local with server response
+TOKEN 生命周期：
+├── App 注册 → 获取 token → 回传后端
+├── Token 可能变化 → App 启动需重新注册
+├── Token 过期 → 从数据库清理
+├── 用户卸载 → token 失效（靠错误反馈识别）
+└── 多设备登录 → 同一用户多 token
 ```
 
 ---
 
-## 3. Mobile API Optimization
+## 2. 离线同步与冲突处理（Offline Sync & Conflict Resolution）
 
-### Response Size Reduction
-
-| Technique | Savings | Implementation |
-|-----------|---------|----------------|
-| **Field selection** | 30-70% | `?fields=id,name,thumbnail` |
-| **Compression** | 60-80% | gzip/brotli (automatic) |
-| **Pagination** | Varies | Cursor-based for mobile |
-| **Image variants** | 50-90% | `/image?w=200&q=80` |
-| **Delta sync** | 80-95% | Only changed records since timestamp |
-
-### Pagination: Cursor vs Offset
+### 同步策略选择（Sync Strategy Selection）
 
 ```
-OFFSET (Bad for mobile):
+数据类型是什么？
+        │
+        ├── 只读（新闻、目录）
+        │   └── 简单缓存 + TTL
+        │       └── ETag/Last-Modified 做失效
+        │
+        ├── 用户私有（笔记、待办）
+        │   └── Last-write-wins（简单）
+        │       └── 或时间戳合并
+        │
+        ├── 协作（共享文档）
+        │   └── 必须 CRDT 或 OT
+        │       └── 可考虑 Firebase/Supabase
+        │
+        └── 关键交易（支付、库存）
+            └── 服务器为事实源
+                └── Optimistic UI + 服务端确认
+```
+
+### 冲突处理策略（Conflict Resolution Strategies）
+
+| 策略（Strategy） | 机制（How It Works） | 适用（Best For） |
+|------------------|----------------------|------------------|
+| **Last-write-wins** | 最新时间戳覆盖 | 单人简单数据 |
+| **Server-wins** | 服务端绝对权威 | 关键交易 |
+| **Client-wins** | 优先离线变更 | 离线重应用 |
+| **Merge** | 字段级合并 | 文档、富文本 |
+| **CRDT** | 数学级无冲突 | 实时协作 |
+
+### 同步队列模式（Sync Queue Pattern）
+
+```
+客户端：
+├── 用户操作 → 写本地 DB
+├── 入同步队列 → { action, data, timestamp, retries }
+├── 网络可用 → FIFO 处理队列
+├── 成功 → 移除队列
+├── 失败 → 退避重试（最多 5 次）
+└── 冲突 → 应用冲突策略
+
+服务端：
+├── 接收带客户端时间戳的数据
+├── 与服务端版本比较
+├── 应用冲突策略
+├── 返回合并结果
+└── 客户端以服务端结果更新本地
+```
+
+---
+
+## 3. 移动端 API 优化（Mobile API Optimization）
+
+### 响应体积缩减（Response Size Reduction）
+
+| 技术（Technique） | 节省（Savings） | 实现（Implementation） |
+|------------------|----------------|------------------------|
+| **字段选择** | 30-70% | `?fields=id,name,thumbnail` |
+| **压缩** | 60-80% | gzip/brotli（自动） |
+| **分页** | 视情况 | 移动端优先 Cursor |
+| **图像变体** | 50-90% | `/image?w=200&q=80` |
+| **Delta 同步** | 80-95% | 仅拉变更记录 |
+
+### 分页：Cursor vs Offset
+
+```
+OFFSET（移动端不友好）：
 ├── Page 1: OFFSET 0 LIMIT 20
 ├── Page 2: OFFSET 20 LIMIT 20
-├── Problem: New item added → duplicates!
-└── Problem: Large offset = slow query
+├── 问题：新增数据会重复/错位
+└── 问题：offset 越大越慢
 
-CURSOR (Good for mobile):
+CURSOR（移动端友好）：
 ├── First: ?limit=20
 ├── Next: ?limit=20&after=cursor_abc123
-├── Cursor = encoded (id + sort values)
-├── No duplicates on data changes
-└── Consistent performance
+├── Cursor = 编码后的 id + sort
+├── 数据变化不重复
+└── 性能稳定
 ```
 
-### Batch Requests
+### 批量请求（Batch Requests）
 
 ```
-Instead of:
+不要这样：
 GET /users/1
-GET /users/2  
+GET /users/2
 GET /users/3
-(3 round trips, 3x latency)
+（3 次往返，3 倍延迟）
 
-Use:
+应该这样：
 POST /batch
 { requests: [
     { method: "GET", path: "/users/1" },
     { method: "GET", path: "/users/2" },
     { method: "GET", path: "/users/3" }
 ]}
-(1 round trip)
+（1 次往返）
 ```
 
 ---
 
-## 4. App Versioning
+## 4. 应用版本管理（App Versioning）
 
-### Version Check Endpoint
+### 版本检查接口（Version Check Endpoint）
 
 ```
 GET /api/app-config
@@ -224,68 +224,68 @@ Response:
 }
 ```
 
-### Version Comparison Logic
+### 版本比较逻辑（Version Comparison Logic）
 
 ```
 CLIENT VERSION vs MINIMUM VERSION:
-├── client >= minimum → Continue normally
-├── client < minimum → Show force update screen
-│   └── Block app usage until updated
-└── client < latest → Show optional update prompt
+├── client >= minimum → 正常继续
+├── client < minimum → 强制更新页
+│   └── 未更新不可用
+└── client < latest → 弹出可选升级提示
 
-FEATURE FLAGS:
-├── Enable/disable features without app update
-├── A/B testing by version/device
-└── Gradual rollout (10% → 50% → 100%)
+FEATURE FLAGS：
+├── 不用发版就能开关功能
+├── 按版本/设备做 A/B
+└── 灰度发布（10% → 50% → 100%）
 ```
 
 ---
 
-## 5. Authentication for Mobile
+## 5. 移动端认证（Authentication for Mobile）
 
-### Token Strategy
-
-```
-ACCESS TOKEN:
-├── Short-lived (15 min - 1 hour)
-├── Stored in memory (not persistent)
-├── Used for API requests
-└── Refresh when expired
-
-REFRESH TOKEN:
-├── Long-lived (30-90 days)
-├── Stored in SecureStore/Keychain
-├── Used only to get new access token
-└── Rotate on each use (security)
-
-DEVICE TOKEN:
-├── Identifies this device
-├── Allows "log out all devices"
-├── Stored alongside refresh token
-└── Server tracks active devices
-```
-
-### Silent Re-authentication
+### Token 策略（Token Strategy）
 
 ```
-REQUEST FLOW:
-├── Make request with access token
-├── 401 Unauthorized?
-│   ├── Have refresh token?
-│   │   ├── Yes → Call /auth/refresh
-│   │   │   ├── Success → Retry original request
-│   │   │   └── Failure → Force logout
-│   │   └── No → Force logout
-│   └── Token just expired (not invalid)
-│       └── Auto-refresh, user doesn't notice
-└── Success → Continue
+ACCESS TOKEN：
+├── 短期（15 分钟 - 1 小时）
+├── 存内存（非持久化）
+├── API 请求使用
+└── 过期自动刷新
+
+REFRESH TOKEN：
+├── 长期（30-90 天）
+├── 存 SecureStore/Keychain
+├── 仅用于换新 access token
+└── 每次使用轮换（安全）
+
+DEVICE TOKEN：
+├── 标识设备
+├── 支持“一键登出所有设备”
+├── 与 refresh token 绑定
+└── 服务端追踪设备列表
+```
+
+### 静默续期（Silent Re-authentication）
+
+```
+请求流程：
+├── 带 access token 请求
+├── 401 Unauthorized？
+│   ├── 有 refresh token？
+│   │   ├── Yes → 调 /auth/refresh
+│   │   │   ├── 成功 → 重试原请求
+│   │   │   └── 失败 → 强制登出
+│   │   └── No → 强制登出
+│   └── 仅过期（非失效）
+│       └── 静默刷新，用户无感
+└── 成功 → 继续
 ```
 
 ---
 
-## 6. Error Handling for Mobile
+## 6. 移动端错误处理（Error Handling for Mobile）
 
-### Mobile-Specific Error Format
+### 移动端错误格式（Mobile-Specific Error Format）
 
 ```json
 {
@@ -305,38 +305,38 @@ REQUEST FLOW:
 }
 ```
 
-### Error Categories
+### 错误分类（Error Categories）
 
-| Code Range | Category | Mobile Handling |
-|------------|----------|-----------------|
-| 400-499 | Client error | Show message, user action needed |
-| 401 | Auth expired | Silent refresh or re-login |
-| 403 | Forbidden | Show upgrade/permission screen |
-| 404 | Not found | Remove from local cache |
-| 409 | Conflict | Show sync conflict UI |
-| 429 | Rate limit | Retry after header, backoff |
-| 500-599 | Server error | Retry with backoff, show "try later" |
-| Network | No connection | Use cached data, queue for sync |
+| 码段（Code Range） | 分类 | 移动端处理 |
+|--------------------|------|------------|
+| 400-499 | 客户端错误 | 提示用户并要求操作 |
+| 401 | 认证过期 | 静默刷新或重新登录 |
+| 403 | 无权限 | 显示升级/权限页 |
+| 404 | 不存在 | 本地移除缓存 |
+| 409 | 冲突 | 显示冲突处理 UI |
+| 429 | 限流 | 读取 Retry-After 退避 |
+| 500-599 | 服务端错误 | 退避重试 + 稍后再试 |
+| Network | 无网络 | 用缓存 + 入队同步 |
 
 ---
 
-## 7. Media & Binary Handling
+## 7. 媒体与二进制处理（Media & Binary Handling）
 
-### Image Optimization
+### 图片优化（Image Optimization）
 
 ```
 CLIENT REQUEST:
 GET /images/{id}?w=400&h=300&q=80&format=webp
 
 SERVER RESPONSE:
-├── Resize on-the-fly OR use CDN
-├── WebP for Android (smaller)
-├── HEIC for iOS 14+ (if supported)
-├── JPEG fallback
+├── 动态裁剪或 CDN 变体
+├── Android 用 WebP（更小）
+├── iOS 14+ 可用 HEIC（支持时）
+├── JPEG 兜底
 └── Cache-Control: max-age=31536000
 ```
 
-### Chunked Upload (Large Files)
+### 分片上传（Chunked Upload, 大文件）
 
 ```
 UPLOAD FLOW:
@@ -345,147 +345,147 @@ UPLOAD FLOW:
    → { upload_id, chunk_size }
 
 2. PUT /uploads/{upload_id}/chunks/{n}
-   → Upload each chunk (1-5 MB)
-   → Can resume if interrupted
+   → 上传每个分片（1-5 MB）
+   → 可断点续传
 
 3. POST /uploads/{upload_id}/complete
-   → Server assembles chunks
-   → Return final file URL
+   → 服务端拼装分片
+   → 返回最终文件 URL
 ```
 
-### Streaming Audio/Video
+### 音视频流媒体（Streaming Audio/Video）
 
 ```
-REQUIREMENTS:
-├── HLS (HTTP Live Streaming) for iOS
-├── DASH or HLS for Android
-├── Multiple quality levels (adaptive bitrate)
-├── Range request support (seeking)
-└── Offline download chunks
+要求：
+├── iOS 使用 HLS
+├── Android 用 DASH 或 HLS
+├── 多码率自适应
+├── 支持 Range 请求（seek）
+└── 支持离线下载分片
 
-ENDPOINTS:
+接口：
 GET /media/{id}/manifest.m3u8  → HLS manifest
-GET /media/{id}/segment_{n}.ts → Video segment
-GET /media/{id}/download       → Full file for offline
+GET /media/{id}/segment_{n}.ts → 视频分片
+GET /media/{id}/download       → 离线完整文件
 ```
 
 ---
 
-## 8. Security for Mobile
+## 8. 移动端安全（Security for Mobile）
 
-### Device Attestation
-
-```
-VERIFY REAL DEVICE (not emulator/bot):
-├── iOS: DeviceCheck API
-│   └── Server verifies with Apple
-├── Android: Play Integrity API (replaces SafetyNet)
-│   └── Server verifies with Google
-└── Fail closed: Reject if attestation fails
-```
-
-### Request Signing
+### 设备证明（Device Attestation）
 
 ```
-CLIENT:
-├── Create signature = HMAC(timestamp + path + body, secret)
-├── Send: X-Signature: {signature}
-├── Send: X-Timestamp: {timestamp}
-└── Send: X-Device-ID: {device_id}
-
-SERVER:
-├── Validate timestamp (within 5 minutes)
-├── Recreate signature with same inputs
-├── Compare signatures
-└── Reject if mismatch (tampering detected)
+验证真机（非模拟器/机器人）：
+├── iOS：DeviceCheck API
+│   └── 服务端向 Apple 验证
+├── Android：Play Integrity API（替代 SafetyNet）
+│   └── 服务端向 Google 验证
+└── 失败即拒绝（Fail closed）
 ```
 
-### Rate Limiting
+### 请求签名（Request Signing）
 
 ```
-MOBILE-SPECIFIC LIMITS:
-├── Per device (X-Device-ID)
-├── Per user (after auth)
-├── Per endpoint (stricter for sensitive)
-└── Sliding window preferred
+CLIENT：
+├── signature = HMAC(timestamp + path + body, secret)
+├── 发送：X-Signature: {signature}
+├── 发送：X-Timestamp: {timestamp}
+└── 发送：X-Device-ID: {device_id}
 
-HEADERS:
+SERVER：
+├── 校验时间戳（5 分钟内）
+├── 用同样规则生成签名
+├── 比对签名
+└── 不匹配则拒绝（篡改）
+```
+
+### 限流（Rate Limiting）
+
+```
+移动端建议限流维度：
+├── 每设备（X-Device-ID）
+├── 每用户（鉴权后）
+├── 每接口（敏感接口更严）
+└── 推荐滑动窗口
+
+返回 Header：
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 95
 X-RateLimit-Reset: 1609459200
-Retry-After: 60 (when 429)
+Retry-After: 60（当 429）
 ```
 
 ---
 
-## 9. Monitoring & Analytics
+## 9. 监控与分析（Monitoring & Analytics）
 
-### Required Headers from Mobile
+### 移动端必须携带的 Header
 
 ```
-Every mobile request should include:
+每个移动请求必须包含：
 ├── X-App-Version: 2.1.0
 ├── X-Platform: ios | android
 ├── X-OS-Version: 17.0
 ├── X-Device-Model: iPhone15,2
-├── X-Device-ID: uuid (persistent)
-├── X-Request-ID: uuid (per request, for tracing)
+├── X-Device-ID: uuid（持久）
+├── X-Request-ID: uuid（单次请求追踪）
 ├── Accept-Language: tr-TR
 └── X-Timezone: Europe/Istanbul
 ```
 
-### What to Log
+### 需要记录的内容（What to Log）
 
 ```
-FOR EACH REQUEST:
-├── All headers above
-├── Endpoint, method, status
-├── Response time
-├── Error details (if any)
-└── User ID (if authenticated)
+每个请求：
+├── 上述 Header
+├── Endpoint / method / status
+├── 响应时间
+├── 错误细节（如有）
+└── User ID（已登录）
 
-ALERTS:
-├── Error rate > 5% per version
-├── P95 latency > 2 seconds
-├── Specific version crash spike
-├── Auth failure spike (attack?)
-└── Push delivery failure spike
+告警：
+├── 版本级错误率 > 5%
+├── P95 延迟 > 2s
+├── 某版本崩溃突增
+├── 认证失败异常（可能攻击）
+└── Push 投递失败激增
 ```
 
 ---
 
-## 📝 MOBILE BACKEND CHECKLIST
+## 📝 移动端后端清单（MOBILE BACKEND CHECKLIST）
 
-### Before API Design
-- [ ] Identified mobile-specific requirements?
-- [ ] Planned offline behavior?
-- [ ] Designed sync strategy?
-- [ ] Considered bandwidth constraints?
+### API 设计前
+- [ ] 已识别移动端特有需求？
+- [ ] 离线行为已规划？
+- [ ] 同步策略已设计？
+- [ ] 带宽约束已考虑？
 
-### For Every Endpoint
-- [ ] Response as small as possible?
-- [ ] Pagination cursor-based?
-- [ ] Proper caching headers?
-- [ ] Mobile error format with actions?
+### 每个接口
+- [ ] 响应尽量小？
+- [ ] 分页是 cursor-based？
+- [ ] 缓存头正确？
+- [ ] 错误格式含行动指引？
 
-### Authentication
-- [ ] Token refresh implemented?
-- [ ] Silent re-auth flow?
-- [ ] Multi-device logout?
-- [ ] Secure token storage guidance?
+### 认证
+- [ ] Token 刷新机制？
+- [ ] 静默续期流程？
+- [ ] 多设备登出？
+- [ ] 安全存储指引？
 
-### Push Notifications
-- [ ] FCM + APNs configured?
-- [ ] Token lifecycle managed?
-- [ ] Silent vs display push defined?
-- [ ] Sensitive data NOT in push payload?
+### 推送通知
+- [ ] FCM + APNs 配置？
+- [ ] Token 生命周期管理？
+- [ ] Silent/Display 分工明确？
+- [ ] Push 不含敏感数据？
 
-### Release
-- [ ] Version check endpoint ready?
-- [ ] Feature flags configured?
-- [ ] Force update mechanism?
-- [ ] Monitoring headers required?
+### 发布
+- [ ] 版本检查接口已就绪？
+- [ ] Feature flags 配置？
+- [ ] 强制更新机制？
+- [ ] 监控 Header 强制要求？
 
 ---
 
-> **Remember:** Mobile backend must be resilient to bad networks, respect battery life, and handle interrupted sessions gracefully. The client cannot be trusted, but it also cannot be hung up—provide offline capabilities and clear error recovery paths.
+> **记住（Remember）**：移动端后端必须能在差网环境、低电量、会话中断的情况下仍可用。客户端不可完全信任，但也不能“挂死”；要提供离线能力与清晰可恢复的错误路径。
