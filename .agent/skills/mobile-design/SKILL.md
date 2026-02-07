@@ -1,128 +1,128 @@
 ---
 name: mobile-design
-description: Mobile-first design thinking and decision-making for iOS and Android apps. Touch interaction, performance patterns, platform conventions. Teaches principles, not fixed values. Use when building React Native, Flutter, or native mobile apps.
+description: 面向 iOS 与 Android 的移动优先设计思维与决策方法。覆盖触控交互、性能模式与平台规范。强调原则，不给固定模板。适用于 React Native、Flutter 或原生移动应用开发。
 allowed-tools: Read, Glob, Grep, Bash
 ---
 
-# Mobile Design System
+# 移动端设计系统 (Mobile Design System)
 
-> **Philosophy:** Touch-first. Battery-conscious. Platform-respectful. Offline-capable.
-> **Core Principle:** Mobile is NOT a small desktop. THINK mobile constraints, ASK platform choice.
+> **理念 (Philosophy)：** 触控优先、关注电量、尊重平台、支持离线。  
+> **核心原则 (Core Principle)：** 移动端不是缩小版桌面端。请按移动约束思考，并先确认平台选择。
 
 ---
 
-## 🔧 Runtime Scripts
+## 🔧 运行时脚本 (Runtime Scripts)
 
-**Execute these for validation (don't read, just run):**
+**执行以下脚本进行验证（不要阅读脚本内容，直接运行）：**
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
-| `scripts/mobile_audit.py` | Mobile UX & Touch Audit | `python scripts/mobile_audit.py <project_path>` |
+| `scripts/mobile_audit.py` | 移动端 UX 与触控审计 | `python scripts/mobile_audit.py <project_path>` |
 
 ---
 
-## 🔴 MANDATORY: Read Reference Files Before Working!
+## 🔴 强制：开始工作前先阅读参考文件 (MANDATORY)
 
-**⛔ DO NOT start development until you read the relevant files:**
+**⛔ 在读完相关文件前，不要开始开发。**
 
-### Universal (Always Read)
+### 通用文件（始终必读）(Universal / Always Read)
 
 | File | Content | Status |
 |------|---------|--------|
-| **[mobile-design-thinking.md](mobile-design-thinking.md)** | **⚠️ ANTI-MEMORIZATION: Forces thinking, prevents AI defaults** | **⬜ CRITICAL FIRST** |
-| **[touch-psychology.md](touch-psychology.md)** | **Fitts' Law, gestures, haptics, thumb zone** | **⬜ CRITICAL** |
-| **[mobile-performance.md](mobile-performance.md)** | **RN/Flutter performance, 60fps, memory** | **⬜ CRITICAL** |
-| **[mobile-backend.md](mobile-backend.md)** | **Push notifications, offline sync, mobile API** | **⬜ CRITICAL** |
-| **[mobile-testing.md](mobile-testing.md)** | **Testing pyramid, E2E, platform-specific** | **⬜ CRITICAL** |
-| **[mobile-debugging.md](mobile-debugging.md)** | **Native vs JS debugging, Flipper, Logcat** | **⬜ CRITICAL** |
-| [mobile-navigation.md](mobile-navigation.md) | Tab/Stack/Drawer, deep linking | ⬜ Read |
-| [mobile-typography.md](mobile-typography.md) | System fonts, Dynamic Type, a11y | ⬜ Read |
-| [mobile-color-system.md](mobile-color-system.md) | OLED, dark mode, battery-aware | ⬜ Read |
-| [decision-trees.md](decision-trees.md) | Framework/state/storage selection | ⬜ Read |
+| **[mobile-design-thinking.md](mobile-design-thinking.md)** | **⚠️ 反记忆化：强制思考，避免 AI 默认套路** | **⬜ CRITICAL FIRST** |
+| **[touch-psychology.md](touch-psychology.md)** | **Fitts' Law、手势、触觉反馈、拇指区** | **⬜ CRITICAL** |
+| **[mobile-performance.md](mobile-performance.md)** | **RN/Flutter 性能、60fps、内存** | **⬜ CRITICAL** |
+| **[mobile-backend.md](mobile-backend.md)** | **推送通知、离线同步、移动端 API** | **⬜ CRITICAL** |
+| **[mobile-testing.md](mobile-testing.md)** | **测试金字塔、E2E、平台差异** | **⬜ CRITICAL** |
+| **[mobile-debugging.md](mobile-debugging.md)** | **Native vs JS 调试、Flipper、Logcat** | **⬜ CRITICAL** |
+| [mobile-navigation.md](mobile-navigation.md) | Tab/Stack/Drawer、深链路 | ⬜ Read |
+| [mobile-typography.md](mobile-typography.md) | 系统字体、Dynamic Type、a11y | ⬜ Read |
+| [mobile-color-system.md](mobile-color-system.md) | OLED、深色模式、电量意识 | ⬜ Read |
+| [decision-trees.md](decision-trees.md) | 框架/状态/存储选型 | ⬜ Read |
 
-> 🧠 **mobile-design-thinking.md is PRIORITY!** This file ensures AI thinks instead of using memorized patterns.
+> 🧠 **mobile-design-thinking.md 是最高优先级。** 该文件保证 AI 基于上下文思考，而不是套记忆模板。
 
-### Platform-Specific (Read Based on Target)
+### 平台专项文件（按目标平台阅读）(Platform-Specific)
 
 | Platform | File | Content | When to Read |
 |----------|------|---------|--------------|
-| **iOS** | [platform-ios.md](platform-ios.md) | Human Interface Guidelines, SF Pro, SwiftUI patterns | Building for iPhone/iPad |
-| **Android** | [platform-android.md](platform-android.md) | Material Design 3, Roboto, Compose patterns | Building for Android |
-| **Cross-Platform** | Both above | Platform divergence points | React Native / Flutter |
+| **iOS** | [platform-ios.md](platform-ios.md) | Human Interface Guidelines、SF Pro、SwiftUI 模式 | iPhone/iPad 项目 |
+| **Android** | [platform-android.md](platform-android.md) | Material Design 3、Roboto、Compose 模式 | Android 项目 |
+| **Cross-Platform** | Both above | 平台差异点 | React Native / Flutter |
 
-> 🔴 **If building for iOS → Read platform-ios.md FIRST!**
-> 🔴 **If building for Android → Read platform-android.md FIRST!**
-> 🔴 **If cross-platform → Read BOTH and apply conditional platform logic!**
+> 🔴 **做 iOS → 先读 platform-ios.md**  
+> 🔴 **做 Android → 先读 platform-android.md**  
+> 🔴 **做跨平台 → 两份都读，并应用条件化平台逻辑**
 
 ---
 
-## ⚠️ CRITICAL: ASK BEFORE ASSUMING (MANDATORY)
+## ⚠️ 强制：先问再假设 (ASK BEFORE ASSUMING)
 
-> **STOP! If the user's request is open-ended, DO NOT default to your favorites.**
+> **停止！如果用户需求是开放式的，不要默认你常用的方案。**
 
-### You MUST Ask If Not Specified:
+### 未明确时必须询问：
 
 | Aspect | Ask | Why |
 |--------|-----|-----|
-| **Platform** | "iOS, Android, or both?" | Affects EVERY design decision |
-| **Framework** | "React Native, Flutter, or native?" | Determines patterns and tools |
-| **Navigation** | "Tab bar, drawer, or stack-based?" | Core UX decision |
-| **State** | "What state management? (Zustand/Redux/Riverpod/BLoC?)" | Architecture foundation |
-| **Offline** | "Does this need to work offline?" | Affects data strategy |
-| **Target devices** | "Phone only, or tablet support?" | Layout complexity |
+| **Platform** | "iOS、Android，还是双端？" | 影响所有设计决策 |
+| **Framework** | "React Native、Flutter，还是原生？" | 决定实现模式与工具链 |
+| **Navigation** | "Tab、Drawer，还是 Stack 导航？" | 核心 UX 架构决策 |
+| **State** | "状态管理用什么？（Zustand/Redux/Riverpod/BLoC）" | 架构基础 |
+| **Offline** | "是否需要离线可用？" | 决定数据策略 |
+| **Target devices** | "仅手机，还是也要支持平板？" | 影响布局复杂度 |
 
-### ⛔ AI MOBILE ANTI-PATTERNS (YASAK LİSTESİ)
+### ⛔ 移动端 AI 反模式清单 (AI MOBILE ANTI-PATTERNS)
 
-> 🚫 **These are AI default tendencies that MUST be avoided!**
+> 🚫 **以下是 AI 常见默认错误，必须避免。**
 
-#### Performance Sins
-
-| ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
-|-------------|----------------|--------------|
-| **ScrollView for long lists** | Renders ALL items, memory explodes | Use `FlatList` / `FlashList` / `ListView.builder` |
-| **Inline renderItem function** | New function every render, all items re-render | `useCallback` + `React.memo` |
-| **Missing keyExtractor** | Index-based keys cause bugs on reorder | Unique, stable ID from data |
-| **Skip getItemLayout** | Async layout = janky scroll | Provide when items have fixed height |
-| **setState() everywhere** | Unnecessary widget rebuilds | Targeted state, `const` constructors |
-| **Native driver: false** | Animations blocked by JS thread | `useNativeDriver: true` always |
-| **console.log in production** | Blocks JS thread severely | Remove before release build |
-| **Skip React.memo/const** | Every item re-renders on any change | Memoize list items ALWAYS |
-
-#### Touch/UX Sins
+#### 性能类禁忌 (Performance Sins)
 
 | ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
 |-------------|----------------|--------------|
-| **Touch target < 44px** | Impossible to tap accurately, frustrating | Minimum 44pt (iOS) / 48dp (Android) |
-| **Spacing < 8px between targets** | Accidental taps on neighbors | Minimum 8-12px gap |
-| **Gesture-only interactions** | Motor impaired users excluded | Always provide button alternative |
-| **No loading state** | User thinks app crashed | ALWAYS show loading feedback |
-| **No error state** | User stuck, no recovery path | Show error with retry option |
-| **No offline handling** | Crash/block when network lost | Graceful degradation, cached data |
-| **Ignore platform conventions** | Users confused, muscle memory broken | iOS feels iOS, Android feels Android |
+| **长列表用 ScrollView** | 一次渲染所有项，内存暴涨 | 用 `FlatList` / `FlashList` / `ListView.builder` |
+| **renderItem 内联函数** | 每次渲染创建新函数，列表全量重渲染 | `useCallback` + `React.memo` |
+| **缺少 keyExtractor** | 用索引做 key，重排时易错 | 使用稳定唯一 ID |
+| **不写 getItemLayout** | 异步测量导致滚动抖动 | 固定高度项必须提供 |
+| **到处 setState()** | 引发不必要重建 | 精准状态管理 + `const` 构造 |
+| **Native driver: false** | 动画受 JS 线程阻塞 | 一律 `useNativeDriver: true` |
+| **生产环境保留 console.log** | 严重阻塞 JS 线程 | 发布前清理日志 |
+| **不做 React.memo/const** | 任意变化触发全量重渲染 | 列表项默认做 memo |
 
-#### Security Sins
-
-| ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
-|-------------|----------------|--------------|
-| **Token in AsyncStorage** | Easily accessible, stolen on rooted device | `SecureStore` / `Keychain` / `EncryptedSharedPreferences` |
-| **Hardcode API keys** | Reverse engineered from APK/IPA | Environment variables, secure storage |
-| **Skip SSL pinning** | MITM attacks possible | Pin certificates in production |
-| **Log sensitive data** | Logs can be extracted | Never log tokens, passwords, PII |
-
-#### Architecture Sins
+#### 触控/UX 禁忌 (Touch/UX Sins)
 
 | ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
 |-------------|----------------|--------------|
-| **Business logic in UI** | Untestable, unmaintainable | Service layer separation |
-| **Global state for everything** | Unnecessary re-renders, complexity | Local state default, lift when needed |
-| **Deep linking as afterthought** | Notifications, shares broken | Plan deep links from day one |
-| **Skip dispose/cleanup** | Memory leaks, zombie listeners | Clean up subscriptions, timers |
+| **点击区 < 44px** | 难以准确点击，挫败感高 | 最小 44pt（iOS）/48dp（Android） |
+| **目标间距 < 8px** | 易误触相邻元素 | 保持 8-12px 间距 |
+| **仅提供手势交互** | 运动能力受限用户无法操作 | 始终提供按钮备选 |
+| **无加载态** | 用户误以为应用卡死 | 必须给出加载反馈 |
+| **无错误态** | 用户无恢复路径 | 显示错误并提供重试 |
+| **无离线处理** | 断网即崩溃/卡死 | 优雅降级 + 本地缓存 |
+| **忽视平台习惯** | 用户肌肉记忆被破坏 | iOS 像 iOS，Android 像 Android |
+
+#### 安全类禁忌 (Security Sins)
+
+| ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
+|-------------|----------------|--------------|
+| **Token 放 AsyncStorage** | root 后易被窃取 | `SecureStore` / `Keychain` / `EncryptedSharedPreferences` |
+| **硬编码 API Key** | APK/IPA 可逆向提取 | 用环境变量 + 安全存储 |
+| **跳过 SSL Pinning** | 易受 MITM 攻击 | 生产环境启用证书绑定 |
+| **日志输出敏感数据** | 日志可被导出分析 | 禁止记录 token/password/PII |
+
+#### 架构类禁忌 (Architecture Sins)
+
+| ❌ NEVER DO | Why It's Wrong | ✅ ALWAYS DO |
+|-------------|----------------|--------------|
+| **业务逻辑写在 UI 层** | 难测试、难维护 | 分离 service 层 |
+| **所有状态都放全局** | 重渲染增多、复杂度暴涨 | 默认局部状态，必要时再提升 |
+| **把 deep linking 当补丁** | 通知分享场景会断裂 | 从第一天规划 deep links |
+| **不做 dispose/cleanup** | 内存泄漏、僵尸监听 | 清理订阅与计时器 |
 
 ---
 
-## 📱 Platform Decision Matrix
+## 📱 平台决策矩阵 (Platform Decision Matrix)
 
-### When to Unify vs Diverge
+### 何时统一，何时分化 (When to Unify vs Diverge)
 
 ```
                     UNIFY (same on both)          DIVERGE (platform-specific)
@@ -140,23 +140,23 @@ Typography          -                             ✅ SF Pro vs Roboto (or custo
 Error Dialogs       -                             ✅ Platform conventions for alerts
 ```
 
-### Quick Reference: Platform Defaults
+### 快速参考：平台默认值 (Platform Defaults)
 
 | Element | iOS | Android |
 |---------|-----|---------|
 | **Primary Font** | SF Pro / SF Compact | Roboto |
 | **Min Touch Target** | 44pt × 44pt | 48dp × 48dp |
-| **Back Navigation** | Edge swipe left | System back button/gesture |
+| **Back Navigation** | 左缘滑返 | 系统返回手势/按键 |
 | **Bottom Tab Icons** | SF Symbols | Material Symbols |
-| **Action Sheet** | UIActionSheet from bottom | Bottom Sheet / Dialog |
-| **Progress** | Spinner | Linear progress (Material) |
-| **Pull to Refresh** | Native UIRefreshControl | SwipeRefreshLayout |
+| **Action Sheet** | 自底部 UIActionSheet | Bottom Sheet / Dialog |
+| **Progress** | Spinner | 线性进度（Material） |
+| **Pull to Refresh** | UIRefreshControl | SwipeRefreshLayout |
 
 ---
 
-## 🧠 Mobile UX Psychology (Quick Reference)
+## 🧠 移动端 UX 心理学（速查）(Mobile UX Psychology)
 
-### Fitts' Law for Touch
+### 触控版 Fitts' Law
 
 ```
 Desktop: Cursor is precise (1px)
@@ -167,7 +167,7 @@ Mobile:  Finger is imprecise (~7mm contact area)
 → Destructive actions AWAY from easy reach
 ```
 
-### Thumb Zone (One-Handed Usage)
+### 拇指舒适区（单手使用）(Thumb Zone)
 
 ```
 ┌─────────────────────────────┐
@@ -183,23 +183,23 @@ Mobile:  Finger is imprecise (~7mm contact area)
         [  HOME  ]
 ```
 
-### Mobile-Specific Cognitive Load
+### 移动端认知负荷差异 (Mobile-Specific Cognitive Load)
 
 | Desktop | Mobile Difference |
 |---------|-------------------|
-| Multiple windows | ONE task at a time |
-| Keyboard shortcuts | Touch gestures |
-| Hover states | NO hover (tap or nothing) |
-| Large viewport | Limited space, scroll vertical |
-| Stable attention | Interrupted constantly |
+| 多窗口并行 | 通常一次只处理一个任务 |
+| 键盘快捷键 | 触控与手势 |
+| Hover 状态 | 无 Hover（点即触发） |
+| 大视口 | 空间受限、以纵向滚动为主 |
+| 注意力稳定 | 高频被打断 |
 
-For deep dive: [touch-psychology.md](touch-psychology.md)
+深入阅读： [touch-psychology.md](touch-psychology.md)
 
 ---
 
-## ⚡ Performance Principles (Quick Reference)
+## ⚡ 性能原则（速查）(Performance Principles)
 
-### React Native Critical Rules
+### React Native 关键规则
 
 ```typescript
 // ✅ CORRECT: Memoized renderItem + React.memo wrapper
@@ -230,7 +230,7 @@ const renderItem = useCallback(
 />
 ```
 
-### Flutter Critical Rules
+### Flutter 关键规则
 
 ```dart
 // ✅ CORRECT: const constructors prevent rebuilds
@@ -256,7 +256,7 @@ ValueListenableBuilder<int>(
 )
 ```
 
-### Animation Performance
+### 动画性能
 
 ```
 GPU-accelerated (FAST):     CPU-bound (SLOW):
@@ -266,13 +266,13 @@ GPU-accelerated (FAST):     CPU-bound (SLOW):
                             └── (AVOID animating these)
 ```
 
-For complete guide: [mobile-performance.md](mobile-performance.md)
+完整指南： [mobile-performance.md](mobile-performance.md)
 
 ---
 
-## 📝 CHECKPOINT (MANDATORY Before Any Mobile Work)
+## 📝 检查点（开始移动端工作前强制执行）(CHECKPOINT)
 
-> **Before writing ANY mobile code, you MUST complete this checkpoint:**
+> **在写任何移动端代码前，必须填写此检查点：**
 
 ```
 🧠 CHECKPOINT:
@@ -291,7 +291,7 @@ Anti-Patterns I Will Avoid:
 2. _______________
 ```
 
-**Example:**
+**示例：**
 ```
 🧠 CHECKPOINT:
 
@@ -310,11 +310,11 @@ Anti-Patterns I Will Avoid:
 3. AsyncStorage for tokens → SecureStore
 ```
 
-> 🔴 **Can't fill the checkpoint? → GO BACK AND READ THE SKILL FILES.**
+> 🔴 **如果填不出检查点内容：回去先读技能文件。**
 
 ---
 
-## 🔧 Framework Decision Tree
+## 🔧 框架决策树 (Framework Decision Tree)
 
 ```
 WHAT ARE YOU BUILDING?
@@ -336,59 +336,59 @@ WHAT ARE YOU BUILDING?
             └── ✅ Flutter
 ```
 
-For complete decision trees: [decision-trees.md](decision-trees.md)
+完整决策树： [decision-trees.md](decision-trees.md)
 
 ---
 
-## 📋 Pre-Development Checklist
+## 📋 开发前检查清单 (Pre-Development Checklist)
 
-### Before Starting ANY Mobile Project
+### 开始任何移动端项目前
 
-- [ ] **Platform confirmed?** (iOS / Android / Both)
-- [ ] **Framework chosen?** (RN / Flutter / Native)
-- [ ] **Navigation pattern decided?** (Tabs / Stack / Drawer)
-- [ ] **State management selected?** (Zustand / Redux / Riverpod / BLoC)
-- [ ] **Offline requirements known?**
-- [ ] **Deep linking planned from day one?**
-- [ ] **Target devices defined?** (Phone / Tablet / Both)
+- [ ] **平台已确认？**（iOS / Android / Both）
+- [ ] **框架已确定？**（RN / Flutter / Native）
+- [ ] **导航模式已确定？**（Tabs / Stack / Drawer）
+- [ ] **状态管理已选型？**（Zustand / Redux / Riverpod / BLoC）
+- [ ] **离线需求是否明确？**
+- [ ] **Deep linking 是否从第一天规划？**
+- [ ] **目标设备范围明确？**（Phone / Tablet / Both）
 
-### Before Every Screen
+### 每做一个屏幕前
 
-- [ ] **Touch targets ≥ 44-48px?**
-- [ ] **Primary CTA in thumb zone?**
-- [ ] **Loading state exists?**
-- [ ] **Error state with retry exists?**
-- [ ] **Offline handling considered?**
-- [ ] **Platform conventions followed?**
+- [ ] **触控目标 ≥ 44-48px？**
+- [ ] **主要 CTA 在拇指舒适区？**
+- [ ] **是否有加载态？**
+- [ ] **是否有带重试的错误态？**
+- [ ] **是否考虑离线处理？**
+- [ ] **是否遵循平台交互习惯？**
 
-### Before Release
+### 发布前
 
-- [ ] **console.log removed?**
-- [ ] **SecureStore for sensitive data?**
-- [ ] **SSL pinning enabled?**
-- [ ] **Lists optimized (memo, keyExtractor)?**
-- [ ] **Memory cleanup on unmount?**
-- [ ] **Tested on low-end devices?**
-- [ ] **Accessibility labels on all interactive elements?**
+- [ ] **已移除 console.log？**
+- [ ] **敏感数据使用 SecureStore？**
+- [ ] **已启用 SSL pinning？**
+- [ ] **列表已优化（memo、keyExtractor）？**
+- [ ] **unmount 时已做内存清理？**
+- [ ] **已在低端设备实测？**
+- [ ] **所有交互元素有无障碍标签？**
 
 ---
 
-## 📚 Reference Files
+## 📚 参考文件 (Reference Files)
 
-For deeper guidance on specific areas:
+针对具体领域深入阅读：
 
 | File | When to Use |
 |------|-------------|
-| [mobile-design-thinking.md](mobile-design-thinking.md) | **FIRST! Anti-memorization, forces context-based thinking** |
-| [touch-psychology.md](touch-psychology.md) | Understanding touch interaction, Fitts' Law, gesture design |
-| [mobile-performance.md](mobile-performance.md) | Optimizing RN/Flutter, 60fps, memory/battery |
-| [platform-ios.md](platform-ios.md) | iOS-specific design, HIG compliance |
-| [platform-android.md](platform-android.md) | Android-specific design, Material Design 3 |
-| [mobile-navigation.md](mobile-navigation.md) | Navigation patterns, deep linking |
-| [mobile-typography.md](mobile-typography.md) | Type scale, system fonts, accessibility |
-| [mobile-color-system.md](mobile-color-system.md) | OLED optimization, dark mode, battery |
-| [decision-trees.md](decision-trees.md) | Framework, state, storage decisions |
+| [mobile-design-thinking.md](mobile-design-thinking.md) | **第一优先：反记忆化，强制上下文思考** |
+| [touch-psychology.md](touch-psychology.md) | 触控交互、Fitts' Law、手势设计 |
+| [mobile-performance.md](mobile-performance.md) | RN/Flutter 优化、60fps、内存/电量 |
+| [platform-ios.md](platform-ios.md) | iOS 专项设计与 HIG 对齐 |
+| [platform-android.md](platform-android.md) | Android 专项设计与 Material 3 对齐 |
+| [mobile-navigation.md](mobile-navigation.md) | 导航模式与深链路 |
+| [mobile-typography.md](mobile-typography.md) | 字体系统、可访问性、字阶 |
+| [mobile-color-system.md](mobile-color-system.md) | OLED 优化、深色模式、电量策略 |
+| [decision-trees.md](decision-trees.md) | 框架、状态与存储决策 |
 
 ---
 
-> **Remember:** Mobile users are impatient, interrupted, and using imprecise fingers on small screens. Design for the WORST conditions: bad network, one hand, bright sun, low battery. If it works there, it works everywhere.
+> **牢记：** 移动端用户往往不耐心、易被打断，且在小屏上用不精确的手指操作。请按最差条件设计：弱网、单手、强光、低电量。能在这些条件下稳定可用，才算真正可用。

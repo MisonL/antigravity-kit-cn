@@ -1,178 +1,178 @@
 ---
 name: testing-patterns
-description: Testing patterns and principles. Unit, integration, mocking strategies.
+description: 测试模式与原则。覆盖单元测试、集成测试与 Mock 策略。
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# Testing Patterns
+# 测试模式 (Testing Patterns)
 
-> Principles for reliable test suites.
+> 构建可靠测试体系的原则。
 
 ---
 
-## 1. Testing Pyramid
+## 1. 测试金字塔 (Testing Pyramid)
 
 ```
-        /\          E2E (Few)
-       /  \         Critical flows
+        /\          E2E（少量）
+       /  \         关键流程
       /----\
-     /      \       Integration (Some)
-    /--------\      API, DB queries
+     /      \       Integration（中量）
+    /--------\      API、数据库查询
    /          \
-  /------------\    Unit (Many)
-                    Functions, classes
+  /------------\    Unit（大量）
+                    函数、类等基础逻辑
 ```
 
 ---
 
-## 2. AAA Pattern
+## 2. AAA 模式 (AAA Pattern)
 
 | Step | Purpose |
 |------|---------|
-| **Arrange** | Set up test data |
-| **Act** | Execute code under test |
-| **Assert** | Verify outcome |
+| **Arrange** | 准备测试数据与上下文 |
+| **Act** | 执行被测代码 |
+| **Assert** | 断言结果是否符合预期 |
 
 ---
 
-## 3. Test Type Selection
+## 3. 测试类型选择 (Test Type Selection)
 
-### When to Use Each
+### 各类型使用时机 (When to Use Each)
 
 | Type | Best For | Speed |
 |------|----------|-------|
-| **Unit** | Pure functions, logic | Fast (<50ms) |
-| **Integration** | API, DB, services | Medium |
-| **E2E** | Critical user flows | Slow |
+| **Unit** | 纯函数、核心逻辑 | 快（<50ms） |
+| **Integration** | API、数据库、服务协作 | 中 |
+| **E2E** | 关键用户流程 | 慢 |
 
 ---
 
-## 4. Unit Test Principles
+## 4. 单元测试原则 (Unit Test Principles)
 
-### Good Unit Tests
+### 优秀单元测试特征 (Good Unit Tests)
 
 | Principle | Meaning |
 |-----------|---------|
-| Fast | < 100ms each |
-| Isolated | No external deps |
-| Repeatable | Same result always |
-| Self-checking | No manual verification |
-| Timely | Written with code |
+| 快速 (Fast) | 单个用例 < 100ms |
+| 隔离 (Isolated) | 不依赖外部系统 |
+| 可重复 (Repeatable) | 每次结果一致 |
+| 自校验 (Self-checking) | 无需手工验证 |
+| 及时 (Timely) | 与代码同步编写 |
 
-### What to Unit Test
+### 单元测试该测什么 (What to Unit Test)
 
 | Test | Don't Test |
 |------|------------|
-| Business logic | Framework code |
-| Edge cases | Third-party libs |
-| Error handling | Simple getters |
+| 业务逻辑 | 框架内部实现 |
+| 边界条件 | 第三方库本身 |
+| 错误处理 | 过于简单的 getter |
 
 ---
 
-## 5. Integration Test Principles
+## 5. 集成测试原则 (Integration Test Principles)
 
-### What to Test
+### 重点覆盖 (What to Test)
 
 | Area | Focus |
 |------|-------|
-| API endpoints | Request/response |
-| Database | Queries, transactions |
-| External services | Contracts |
+| API 端点 | 请求/响应链路 |
+| 数据库 | 查询与事务行为 |
+| 外部服务 | 契约一致性 |
 
-### Setup/Teardown
+### Setup/Teardown 约定
 
 | Phase | Action |
 |-------|--------|
-| Before All | Connect resources |
-| Before Each | Reset state |
-| After Each | Clean up |
-| After All | Disconnect |
+| Before All | 建立资源连接 |
+| Before Each | 重置状态 |
+| After Each | 执行清理 |
+| After All | 释放连接 |
 
 ---
 
-## 6. Mocking Principles
+## 6. Mock 原则 (Mocking Principles)
 
-### When to Mock
+### 何时需要 Mock (When to Mock)
 
 | Mock | Don't Mock |
 |------|------------|
-| External APIs | The code under test |
-| Database (unit) | Simple dependencies |
-| Time/random | Pure functions |
-| Network | In-memory stores |
+| 外部 API | 被测代码本身 |
+| 数据库（单元测试） | 简单依赖对象 |
+| 时间/随机数 | 纯函数 |
+| 网络请求 | 内存型替代实现 |
 
-### Mock Types
+### Mock 类型 (Mock Types)
 
 | Type | Use |
 |------|-----|
-| Stub | Return fixed values |
-| Spy | Track calls |
-| Mock | Set expectations |
-| Fake | Simplified implementation |
+| Stub | 返回固定值 |
+| Spy | 跟踪调用行为 |
+| Mock | 预设期望并校验 |
+| Fake | 提供简化实现 |
 
 ---
 
-## 7. Test Organization
+## 7. 测试组织方式 (Test Organization)
 
-### Naming
+### 命名规范 (Naming)
 
 | Pattern | Example |
 |---------|---------|
-| Should behavior | "should return error when..." |
-| When condition | "when user not found..." |
+| Should 行为式 | "should return error when..." |
+| When 条件式 | "when user not found..." |
 | Given-when-then | "given X, when Y, then Z" |
 
-### Grouping
+### 分组方式 (Grouping)
 
 | Level | Use |
 |-------|-----|
-| describe | Group related tests |
-| it/test | Individual case |
-| beforeEach | Common setup |
+| describe | 归类相关测试 |
+| it/test | 单个测试用例 |
+| beforeEach | 共享初始化逻辑 |
 
 ---
 
-## 8. Test Data
+## 8. 测试数据策略 (Test Data)
 
-### Strategies
+### 常见策略 (Strategies)
 
 | Approach | Use |
 |----------|-----|
-| Factories | Generate test data |
-| Fixtures | Predefined datasets |
-| Builders | Fluent object creation |
+| Factories | 动态生成测试数据 |
+| Fixtures | 预定义数据集 |
+| Builders | 链式构建对象 |
 
-### Principles
+### 基本原则 (Principles)
 
-- Use realistic data
-- Randomize non-essential values (faker)
-- Share common fixtures
-- Keep data minimal
+- 使用贴近真实的数据
+- 非关键字段可随机化（faker）
+- 共享公共 fixtures
+- 保持最小必要数据集
 
 ---
 
-## 9. Best Practices
+## 9. 最佳实践 (Best Practices)
 
 | Practice | Why |
 |----------|-----|
-| One assert per test | Clear failure reason |
-| Independent tests | No order dependency |
-| Fast tests | Run frequently |
-| Descriptive names | Self-documenting |
-| Clean up | Avoid side effects |
+| 单测关注单一断言目标 | 失败原因更清晰 |
+| 用例相互独立 | 避免顺序依赖 |
+| 保持测试快速 | 能高频执行 |
+| 命名具描述性 | 测试即文档 |
+| 严格清理状态 | 避免副作用污染 |
 
 ---
 
-## 10. Anti-Patterns
+## 10. 反模式 (Anti-Patterns)
 
 | ❌ Don't | ✅ Do |
 |----------|-------|
-| Test implementation | Test behavior |
-| Duplicate test code | Use factories |
-| Complex test setup | Simplify or split |
-| Ignore flaky tests | Fix root cause |
-| Skip cleanup | Reset state |
+| 测实现细节 | 测可观察行为 |
+| 重复测试代码 | 使用 factories 复用 |
+| 测试前置过于复杂 | 简化或拆分场景 |
+| 忽略 flaky 测试 | 修复根因 |
+| 不做清理 | 重置状态 |
 
 ---
 
-> **Remember:** Tests are documentation. If someone can't understand what the code does from the tests, rewrite them.
+> **牢记：** 测试本身就是文档。如果别人无法通过测试理解代码行为，就应该重写测试。

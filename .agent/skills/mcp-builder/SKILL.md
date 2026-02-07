@@ -1,34 +1,34 @@
 ---
 name: mcp-builder
-description: MCP (Model Context Protocol) server building principles. Tool design, resource patterns, best practices.
+description: MCP（Model Context Protocol）服务构建原则。覆盖工具设计、资源模式与最佳实践。
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# MCP Builder
+# MCP 构建器 (MCP Builder)
 
-> Principles for building MCP servers.
+> MCP 服务器构建原则。
 
 ---
 
-## 1. MCP Overview
+## 1. MCP 概览 (MCP Overview)
 
-### What is MCP?
+### 什么是 MCP？(What is MCP?)
 
-Model Context Protocol - standard for connecting AI systems with external tools and data sources.
+Model Context Protocol：用于连接 AI 系统与外部工具、数据源的标准协议。
 
-### Core Concepts
+### 核心概念 (Core Concepts)
 
 | Concept | Purpose |
 |---------|---------|
-| **Tools** | Functions AI can call |
-| **Resources** | Data AI can read |
-| **Prompts** | Pre-defined prompt templates |
+| **Tools** | AI 可调用的函数能力 |
+| **Resources** | AI 可读取的数据资源 |
+| **Prompts** | 预定义提示词模板 |
 
 ---
 
-## 2. Server Architecture
+## 2. 服务架构 (Server Architecture)
 
-### Project Structure
+### 项目结构 (Project Structure)
 
 ```
 my-mcp-server/
@@ -38,49 +38,49 @@ my-mcp-server/
 └── tsconfig.json
 ```
 
-### Transport Types
+### 传输类型 (Transport Types)
 
 | Type | Use |
 |------|-----|
-| **Stdio** | Local, CLI-based |
-| **SSE** | Web-based, streaming |
-| **WebSocket** | Real-time, bidirectional |
+| **Stdio** | 本地、CLI 场景 |
+| **SSE** | Web 场景、流式输出 |
+| **WebSocket** | 实时、双向通信 |
 
 ---
 
-## 3. Tool Design Principles
+## 3. 工具设计原则 (Tool Design Principles)
 
-### Good Tool Design
+### 优秀工具设计 (Good Tool Design)
 
 | Principle | Description |
 |-----------|-------------|
-| Clear name | Action-oriented (get_weather, create_user) |
-| Single purpose | One thing well |
-| Validated input | Schema with types and descriptions |
-| Structured output | Predictable response format |
+| 名称清晰 | 动作导向（如 `get_weather`、`create_user`） |
+| 单一职责 | 一次只做好一件事 |
+| 输入可校验 | 使用含类型与描述的 schema |
+| 输出结构化 | 响应格式可预测、可消费 |
 
-### Input Schema Design
+### 输入 Schema 设计 (Input Schema Design)
 
 | Field | Required? |
 |-------|-----------|
-| Type | Yes - object |
-| Properties | Define each param |
-| Required | List mandatory params |
-| Description | Human-readable |
+| Type | 是，通常为 object |
+| Properties | 定义每个参数 |
+| Required | 列出必填参数 |
+| Description | 人类可读说明 |
 
 ---
 
-## 4. Resource Patterns
+## 4. 资源模式 (Resource Patterns)
 
-### Resource Types
+### 资源类型 (Resource Types)
 
 | Type | Use |
 |------|-----|
-| Static | Fixed data (config, docs) |
-| Dynamic | Generated on request |
-| Template | URI with parameters |
+| Static | 固定数据（配置、文档） |
+| Dynamic | 按请求动态生成 |
+| Template | 含参数的 URI 模板 |
 
-### URI Patterns
+### URI 模式 (URI Patterns)
 
 | Pattern | Example |
 |---------|---------|
@@ -90,87 +90,87 @@ my-mcp-server/
 
 ---
 
-## 5. Error Handling
+## 5. 错误处理 (Error Handling)
 
-### Error Types
+### 错误类型 (Error Types)
 
 | Situation | Response |
 |-----------|----------|
-| Invalid params | Validation error message |
-| Not found | Clear "not found" |
-| Server error | Generic error, log details |
+| 参数无效 | 返回明确校验错误信息 |
+| 资源不存在 | 返回清晰 “not found” 信息 |
+| 服务器错误 | 返回通用错误，对内记录详细日志 |
 
-### Best Practices
+### 最佳实践 (Best Practices)
 
-- Return structured errors
-- Don't expose internal details
-- Log for debugging
-- Provide actionable messages
+- 返回结构化错误对象
+- 不暴露内部实现细节
+- 记录可追踪日志用于调试
+- 提供可执行的错误提示
 
 ---
 
-## 6. Multimodal Handling
+## 6. 多模态处理 (Multimodal Handling)
 
-### Supported Types
+### 支持类型 (Supported Types)
 
 | Type | Encoding |
 |------|----------|
-| Text | Plain text |
+| Text | 纯文本 (Plain text) |
 | Images | Base64 + MIME type |
 | Files | Base64 + MIME type |
 
 ---
 
-## 7. Security Principles
+## 7. 安全原则 (Security Principles)
 
-### Input Validation
+### 输入校验 (Input Validation)
 
-- Validate all tool inputs
-- Sanitize user-provided data
-- Limit resource access
+- 校验所有工具输入
+- 清洗用户提供的数据
+- 限制资源访问范围
 
-### API Keys
+### API 密钥管理 (API Keys)
 
-- Use environment variables
-- Don't log secrets
-- Validate permissions
+- 使用环境变量存储
+- 禁止日志输出密钥
+- 校验调用权限
 
 ---
 
-## 8. Configuration
+## 8. 配置 (Configuration)
 
-### Claude Desktop Config
+### Claude Desktop 配置 (Claude Desktop Config)
 
 | Field | Purpose |
 |-------|---------|
-| command | Executable to run |
-| args | Command arguments |
-| env | Environment variables |
+| command | 要执行的命令 |
+| args | 命令参数 |
+| env | 环境变量 |
 
 ---
 
-## 9. Testing
+## 9. 测试 (Testing)
 
-### Test Categories
+### 测试类别 (Test Categories)
 
 | Type | Focus |
 |------|-------|
-| Unit | Tool logic |
-| Integration | Full server |
-| Contract | Schema validation |
+| Unit | 工具逻辑正确性 |
+| Integration | 服务整体协作 |
+| Contract | Schema 契约校验 |
 
 ---
 
-## 10. Best Practices Checklist
+## 10. 最佳实践检查清单 (Best Practices Checklist)
 
-- [ ] Clear, action-oriented tool names
-- [ ] Complete input schemas with descriptions
-- [ ] Structured JSON output
-- [ ] Error handling for all cases
-- [ ] Input validation
-- [ ] Environment-based configuration
-- [ ] Logging for debugging
+- [ ] 工具名称清晰且动作导向
+- [ ] 输入 schema 完整且含说明
+- [ ] 输出为结构化 JSON
+- [ ] 覆盖各类错误处理场景
+- [ ] 输入校验到位
+- [ ] 使用环境变量进行配置
+- [ ] 日志可用于排障与调试
 
 ---
 
-> **Remember:** MCP tools should be simple, focused, and well-documented. The AI relies on descriptions to use them correctly.
+> **牢记：** MCP 工具应保持简单、聚焦且文档完善。AI 依赖描述来正确调用它们。

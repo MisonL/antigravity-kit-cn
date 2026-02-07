@@ -1,100 +1,100 @@
 ---
 name: python-patterns
-description: Python development principles and decision-making. Framework selection, async patterns, type hints, project structure. Teaches thinking, not copying.
+description: Python 开发原则与决策方法。覆盖框架选型、异步模式、类型标注与项目结构。强调思考而非照抄。
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# Python Patterns
+# Python 模式 (Python Patterns)
 
-> Python development principles and decision-making for 2025.
-> **Learn to THINK, not memorize patterns.**
-
----
-
-## ⚠️ How to Use This Skill
-
-This skill teaches **decision-making principles**, not fixed code to copy.
-
-- ASK user for framework preference when unclear
-- Choose async vs sync based on CONTEXT
-- Don't default to same framework every time
+> 面向 2025 的 Python 开发原则与决策方法。  
+> **学习如何思考，不要只记模式。**
 
 ---
 
-## 1. Framework Selection (2025)
+## ⚠️ 本技能使用方式 (How to Use This Skill)
 
-### Decision Tree
+本技能强调**决策原则**，不是固定代码模板。
+
+- 需求不明确时，先询问用户框架偏好
+- 根据上下文 (CONTEXT) 决定 async 或 sync
+- 不要每次都默认同一框架
+
+---
+
+## 1. 框架选型（2025）(Framework Selection)
+
+### 决策树 (Decision Tree)
 
 ```
-What are you building?
+你要构建什么？
 │
-├── API-first / Microservices
-│   └── FastAPI (async, modern, fast)
+├── API-first / 微服务
+│   └── FastAPI（async、现代、速度快）
 │
-├── Full-stack web / CMS / Admin
-│   └── Django (batteries-included)
+├── 全栈 Web / CMS / 管理后台
+│   └── Django（batteries-included）
 │
-├── Simple / Script / Learning
-│   └── Flask (minimal, flexible)
+├── 简单应用 / 脚本 / 学习
+│   └── Flask（极简、灵活）
 │
-├── AI/ML API serving
-│   └── FastAPI (Pydantic, async, uvicorn)
+├── AI/ML API 服务化
+│   └── FastAPI（Pydantic、async、uvicorn）
 │
-└── Background workers
-    └── Celery + any framework
+└── 后台任务
+    └── Celery + 任意 Web 框架
 ```
 
-### Comparison Principles
+### 对比原则 (Comparison Principles)
 
 | Factor | FastAPI | Django | Flask |
 |--------|---------|--------|-------|
-| **Best for** | APIs, microservices | Full-stack, CMS | Simple, learning |
-| **Async** | Native | Django 5.0+ | Via extensions |
-| **Admin** | Manual | Built-in | Via extensions |
-| **ORM** | Choose your own | Django ORM | Choose your own |
+| **Best for** | API、微服务 | 全栈、CMS | 简单项目、学习 |
+| **Async** | 原生支持 | Django 5.0+ | 依赖扩展 |
+| **Admin** | 手动构建 | 内置 Admin | 依赖扩展 |
+| **ORM** | 自由选择 | Django ORM | 自由选择 |
 | **Learning curve** | Low | Medium | Low |
 
-### Selection Questions to Ask:
-1. Is this API-only or full-stack?
-2. Need admin interface?
-3. Team familiar with async?
-4. Existing infrastructure?
+### 选型前必须询问：
+1. 是纯 API 还是全栈应用？
+2. 是否需要后台管理界面？
+3. 团队是否熟悉 async？
+4. 是否有现有基础设施约束？
 
 ---
 
-## 2. Async vs Sync Decision
+## 2. Async vs Sync 决策 (Async vs Sync Decision)
 
-### When to Use Async
+### 何时使用 Async
 
 ```
-async def is better when:
-├── I/O-bound operations (database, HTTP, file)
-├── Many concurrent connections
-├── Real-time features
-├── Microservices communication
+async def 更适合：
+├── I/O 密集操作（数据库、HTTP、文件）
+├── 大量并发连接
+├── 实时交互场景
+├── 微服务通信
 └── FastAPI/Starlette/Django ASGI
 
-def (sync) is better when:
-├── CPU-bound operations
-├── Simple scripts
-├── Legacy codebase
-├── Team unfamiliar with async
-└── Blocking libraries (no async version)
+def（sync）更适合：
+├── CPU 密集操作
+├── 简单脚本
+├── 遗留代码库
+├── 团队不熟悉 async
+└── 依赖阻塞型库（无 async 版本）
 ```
 
-### The Golden Rule
+### 黄金法则 (The Golden Rule)
 
 ```
-I/O-bound → async (waiting for external)
-CPU-bound → sync + multiprocessing (computing)
+I/O-bound → async（等待外部资源）
+CPU-bound → sync + multiprocessing（本地计算）
 
-Don't:
-├── Mix sync and async carelessly
-├── Use sync libraries in async code
-└── Force async for CPU work
+不要：
+├── 随意混用 sync 与 async
+├── 在 async 代码里调用阻塞库
+└── 为 CPU 任务强行上 async
 ```
 
-### Async Library Selection
+### Async 库选型 (Async Library Selection)
 
 | Need | Async Library |
 |------|---------------|
@@ -106,36 +106,36 @@ Don't:
 
 ---
 
-## 3. Type Hints Strategy
+## 3. 类型标注策略 (Type Hints Strategy)
 
-### When to Type
+### 哪些地方要标注 (When to Type)
 
 ```
-Always type:
-├── Function parameters
-├── Return types
-├── Class attributes
-├── Public APIs
+必须标注：
+├── 函数参数
+├── 返回类型
+├── 类属性
+├── 对外公开 API
 
-Can skip:
-├── Local variables (let inference work)
-├── One-off scripts
-├── Tests (usually)
+可省略：
+├── 局部变量（让推断工作）
+├── 一次性脚本
+├── 测试代码（通常可选）
 ```
 
-### Common Type Patterns
+### 常见类型模式 (Common Type Patterns)
 
 ```python
-# These are patterns, understand them:
+# 下面是模式示例，请理解其语义：
 
-# Optional → might be None
+# Optional → 可能为 None
 from typing import Optional
 def find_user(id: int) -> Optional[User]: ...
 
-# Union → one of multiple types
+# Union → 多类型之一
 def process(data: str | dict) -> None: ...
 
-# Generic collections
+# 泛型集合
 def get_items() -> list[Item]: ...
 def get_mapping() -> dict[str, int]: ...
 
@@ -144,35 +144,35 @@ from typing import Callable
 def apply(fn: Callable[[int], str]) -> str: ...
 ```
 
-### Pydantic for Validation
+### 用 Pydantic 做校验 (Pydantic for Validation)
 
 ```
-When to use Pydantic:
-├── API request/response models
-├── Configuration/settings
-├── Data validation
-├── Serialization
+适用场景：
+├── API 请求/响应模型
+├── 配置与 settings
+├── 数据校验
+├── 序列化
 
-Benefits:
-├── Runtime validation
-├── Auto-generated JSON schema
-├── Works with FastAPI natively
-└── Clear error messages
+收益：
+├── 运行时校验
+├── 自动生成 JSON Schema
+├── 与 FastAPI 原生协同
+└── 清晰错误提示
 ```
 
 ---
 
-## 4. Project Structure Principles
+## 4. 项目结构原则 (Project Structure Principles)
 
-### Structure Selection
+### 结构选择 (Structure Selection)
 
 ```
-Small project / Script:
+小项目 / 脚本：
 ├── main.py
 ├── utils.py
 └── requirements.txt
 
-Medium API:
+中型 API：
 ├── app/
 │   ├── __init__.py
 │   ├── main.py
@@ -183,7 +183,7 @@ Medium API:
 ├── tests/
 └── pyproject.toml
 
-Large application:
+大型应用：
 ├── src/
 │   └── myapp/
 │       ├── core/
@@ -195,19 +195,19 @@ Large application:
 └── pyproject.toml
 ```
 
-### FastAPI Structure Principles
+### FastAPI 结构原则
 
 ```
-Organize by feature or layer:
+可按“分层”或“按功能”组织：
 
-By layer:
-├── routes/ (API endpoints)
-├── services/ (business logic)
-├── models/ (database models)
-├── schemas/ (Pydantic models)
-└── dependencies/ (shared deps)
+按分层：
+├── routes/（API 端点）
+├── services/（业务逻辑）
+├── models/（数据库模型）
+├── schemas/（Pydantic 模型）
+└── dependencies/（共享依赖）
 
-By feature:
+按功能：
 ├── users/
 │   ├── routes.py
 │   ├── service.py
@@ -218,170 +218,170 @@ By feature:
 
 ---
 
-## 5. Django Principles (2025)
+## 5. Django 原则（2025）(Django Principles)
 
-### Django Async (Django 5.0+)
+### Django Async（Django 5.0+）
 
 ```
-Django supports async:
+Django 已支持 async：
 ├── Async views
 ├── Async middleware
-├── Async ORM (limited)
-└── ASGI deployment
+├── Async ORM（部分能力）
+└── ASGI 部署
 
-When to use async in Django:
-├── External API calls
-├── WebSocket (Channels)
-├── High-concurrency views
-└── Background task triggering
+Django 中适合 async 的场景：
+├── 调用外部 API
+├── WebSocket（Channels）
+├── 高并发视图
+└── 触发后台任务
 ```
 
-### Django Best Practices
+### Django 最佳实践
 
 ```
-Model design:
+模型设计：
 ├── Fat models, thin views
-├── Use managers for common queries
-├── Abstract base classes for shared fields
+├── 通过 manager 抽共用查询
+├── 共享字段放抽象基类
 
-Views:
-├── Class-based for complex CRUD
-├── Function-based for simple endpoints
-├── Use viewsets with DRF
+视图选择：
+├── 复杂 CRUD 用 class-based views
+├── 简单接口用 function-based views
+├── DRF 场景可用 viewsets
 
-Queries:
-├── select_related() for FKs
-├── prefetch_related() for M2M
-├── Avoid N+1 queries
-└── Use .only() for specific fields
+查询优化：
+├── 外键用 select_related()
+├── 多对多用 prefetch_related()
+├── 避免 N+1 查询
+└── 用 .only() 限定字段
 ```
 
 ---
 
-## 6. FastAPI Principles
+## 6. FastAPI 原则 (FastAPI Principles)
 
-### async def vs def in FastAPI
-
-```
-Use async def when:
-├── Using async database drivers
-├── Making async HTTP calls
-├── I/O-bound operations
-└── Want to handle concurrency
-
-Use def when:
-├── Blocking operations
-├── Sync database drivers
-├── CPU-bound work
-└── FastAPI runs in threadpool automatically
-```
-
-### Dependency Injection
+### FastAPI 中 `async def` vs `def`
 
 ```
-Use dependencies for:
-├── Database sessions
-├── Current user / Auth
-├── Configuration
-├── Shared resources
+适用 async def：
+├── 使用 async 数据库驱动
+├── 发起 async HTTP 调用
+├── I/O 密集操作
+└── 需要高并发吞吐
 
-Benefits:
-├── Testability (mock dependencies)
-├── Clean separation
-├── Automatic cleanup (yield)
+适用 def：
+├── 阻塞型操作
+├── sync 数据库驱动
+├── CPU 密集任务
+└── FastAPI 会自动放入线程池执行
 ```
 
-### Pydantic v2 Integration
+### 依赖注入 (Dependency Injection)
+
+```
+依赖注入适用：
+├── 数据库会话
+├── 当前用户 / 鉴权
+├── 配置对象
+├── 共享资源
+
+收益：
+├── 可测试性提升（可 mock）
+├── 职责清晰分离
+├── 可自动清理资源（yield）
+```
+
+### Pydantic v2 集成
 
 ```python
-# FastAPI + Pydantic are tightly integrated:
+# FastAPI 与 Pydantic 深度集成：
 
-# Request validation
+# 请求校验
 @app.post("/users")
 async def create(user: UserCreate) -> UserResponse:
-    # user is already validated
+    # user 在进入业务前已完成校验
     ...
 
-# Response serialization
-# Return type becomes response schema
+# 响应序列化
+# 返回类型会成为响应 schema
 ```
 
 ---
 
-## 7. Background Tasks
+## 7. 后台任务 (Background Tasks)
 
-### Selection Guide
+### 方案选择指南 (Selection Guide)
 
 | Solution | Best For |
 |----------|----------|
-| **BackgroundTasks** | Simple, in-process tasks |
-| **Celery** | Distributed, complex workflows |
-| **ARQ** | Async, Redis-based |
-| **RQ** | Simple Redis queue |
-| **Dramatiq** | Actor-based, simpler than Celery |
+| **BackgroundTasks** | 简单、进程内任务 |
+| **Celery** | 分布式、复杂工作流 |
+| **ARQ** | 异步 + Redis |
+| **RQ** | 简单 Redis 队列 |
+| **Dramatiq** | Actor 模式，比 Celery 更轻量 |
 
-### When to Use Each
+### 各方案适用场景 (When to Use Each)
 
 ```
-FastAPI BackgroundTasks:
-├── Quick operations
-├── No persistence needed
+FastAPI BackgroundTasks：
+├── 短平快任务
+├── 不要求持久化
 ├── Fire-and-forget
-└── Same process
+└── 与 Web 进程同进程运行
 
-Celery/ARQ:
-├── Long-running tasks
-├── Need retry logic
-├── Distributed workers
-├── Persistent queue
-└── Complex workflows
+Celery/ARQ：
+├── 长耗时任务
+├── 需要重试机制
+├── 分布式 worker
+├── 持久化队列
+└── 复杂工作流
 ```
 
 ---
 
-## 8. Error Handling Principles
+## 8. 错误处理原则 (Error Handling Principles)
 
-### Exception Strategy
-
-```
-In FastAPI:
-├── Create custom exception classes
-├── Register exception handlers
-├── Return consistent error format
-└── Log without exposing internals
-
-Pattern:
-├── Raise domain exceptions in services
-├── Catch and transform in handlers
-└── Client gets clean error response
-```
-
-### Error Response Philosophy
+### 异常策略 (Exception Strategy)
 
 ```
-Include:
-├── Error code (programmatic)
-├── Message (human readable)
-├── Details (field-level when applicable)
-└── NOT stack traces (security)
+在 FastAPI 中：
+├── 定义自定义异常类
+├── 注册统一异常处理器
+├── 返回一致的错误格式
+└── 记录日志但不暴露内部细节
+
+推荐模式：
+├── service 层抛领域异常
+├── handler 层转换为 HTTP 响应
+└── 客户端收到干净错误对象
+```
+
+### 错误响应哲学 (Error Response Philosophy)
+
+```
+应包含：
+├── Error code（程序处理用）
+├── Message（人类可读）
+├── Details（字段级细节，按需）
+└── NOT stack traces（出于安全）
 ```
 
 ---
 
-## 9. Testing Principles
+## 9. 测试原则 (Testing Principles)
 
-### Testing Strategy
+### 测试策略 (Testing Strategy)
 
 | Type | Purpose | Tools |
 |------|---------|-------|
-| **Unit** | Business logic | pytest |
-| **Integration** | API endpoints | pytest + httpx/TestClient |
-| **E2E** | Full workflows | pytest + DB |
+| **Unit** | 业务逻辑 | pytest |
+| **Integration** | API 端点 | pytest + httpx/TestClient |
+| **E2E** | 完整工作流 | pytest + DB |
 
-### Async Testing
+### 异步测试 (Async Testing)
 
 ```python
-# Use pytest-asyncio for async tests
+# 异步测试使用 pytest-asyncio
 
 import pytest
 from httpx import AsyncClient
@@ -393,49 +393,49 @@ async def test_endpoint():
         assert response.status_code == 200
 ```
 
-### Fixtures Strategy
+### Fixtures 策略
 
 ```
-Common fixtures:
-├── db_session → Database connection
-├── client → Test client
-├── authenticated_user → User with token
-└── sample_data → Test data setup
+常用 fixtures：
+├── db_session → 数据库连接
+├── client → 测试客户端
+├── authenticated_user → 带 token 的用户
+└── sample_data → 测试数据准备
 ```
 
 ---
 
-## 10. Decision Checklist
+## 10. 决策检查清单 (Decision Checklist)
 
-Before implementing:
+开始实现前：
 
-- [ ] **Asked user about framework preference?**
-- [ ] **Chosen framework for THIS context?** (not just default)
-- [ ] **Decided async vs sync?**
-- [ ] **Planned type hint strategy?**
-- [ ] **Defined project structure?**
-- [ ] **Planned error handling?**
-- [ ] **Considered background tasks?**
+- [ ] **是否询问了用户的框架偏好？**
+- [ ] **是否针对当前上下文选了框架？**（而非默认）
+- [ ] **是否明确了 async vs sync？**
+- [ ] **是否规划了类型标注策略？**
+- [ ] **是否确定了项目结构？**
+- [ ] **是否设计了错误处理方案？**
+- [ ] **是否评估了后台任务需求？**
 
 ---
 
-## 11. Anti-Patterns to Avoid
+## 11. 需要避免的反模式 (Anti-Patterns to Avoid)
 
 ### ❌ DON'T:
-- Default to Django for simple APIs (FastAPI may be better)
-- Use sync libraries in async code
-- Skip type hints for public APIs
-- Put business logic in routes/views
-- Ignore N+1 queries
-- Mix async and sync carelessly
+- 简单 API 也默认 Django（FastAPI 往往更合适）
+- 在 async 代码里用 sync 库
+- 对公开 API 跳过类型标注
+- 把业务逻辑塞进 routes/views
+- 忽略 N+1 查询
+- 粗糙混用 async 与 sync
 
 ### ✅ DO:
-- Choose framework based on context
-- Ask about async requirements
-- Use Pydantic for validation
-- Separate concerns (routes → services → repos)
-- Test critical paths
+- 基于上下文选框架
+- 先确认 async 需求
+- 用 Pydantic 做数据校验
+- 分层解耦（routes → services → repos）
+- 覆盖关键路径测试
 
 ---
 
-> **Remember**: Python patterns are about decision-making for YOUR specific context. Don't copy code—think about what serves your application best.
+> **牢记：** Python 模式的核心是“按当前场景做决策”。不要抄代码，先判断什么最适合你的应用。
