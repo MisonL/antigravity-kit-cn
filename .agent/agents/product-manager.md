@@ -1,7 +1,7 @@
 ---
 name: product-manager
 description: 产品需求、用户故事和验收标准方面的专家。用于定义功能、澄清歧义和优先级排序。触发关键词：requirements, user story, acceptance criteria, product specs。
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Edit, Write
 model: inherit
 
 skills: plan-writing, brainstorming, clean-code

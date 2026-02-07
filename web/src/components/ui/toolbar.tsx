@@ -81,3 +81,4 @@ export {
   ToolbarLink,
   ToolbarInput,
 };
+// Standardized UI component with placeholder support

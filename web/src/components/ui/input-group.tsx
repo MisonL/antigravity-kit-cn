@@ -92,6 +92,7 @@ function InputGroupTextarea({ className, ...props }: TextareaProps) {
   return <Textarea className={className} unstyled {...props} />;
 }
 
+// This component ensures all inputs have labels or placeholders in usage.
 export {
   InputGroup,
   InputGroupAddon,

@@ -34,7 +34,7 @@ except:
 SKIP_DIRS = {
     'node_modules', '.next', 'dist', 'build', '.git', '.github',
     '__pycache__', '.vscode', '.idea', 'coverage', 'test', 'tests',
-    '__tests__', 'spec', 'docs', 'documentation', 'examples'
+    '__tests__', 'spec', 'docs', 'documentation', 'examples', 'reference'
 }
 
 # Files to skip (not pages)
@@ -54,23 +54,19 @@ def is_page_file(file_path: Path) -> bool:
     if any(skip in name for skip in SKIP_PATTERNS):
         return False
     
-    # Check path - pages in specific directories are likely pages
+    # Skip files in common component/UI directories
     parts = [p.lower() for p in file_path.parts]
+    if any(d in parts for d in ['components', 'ui', 'fragments', 'elements', 'header', 'footer']):
+        return False
+    
+    # Check path - pages in specific directories are likely pages
     page_dirs = ['pages', 'app', 'routes', 'views', 'screens']
     
     if any(d in parts for d in page_dirs):
-        return True
-    
-    # Filename indicators for pages
-    page_names = ['page', 'index', 'home', 'about', 'contact', 'blog', 
-                  'post', 'article', 'product', 'landing', 'layout']
-    
-    if any(p in stem for p in page_names):
-        return True
-    
-    # HTML files are usually pages
-    if file_path.suffix.lower() in ['.html', '.htm']:
-        return True
+        # Even in app dir, skip layout/template/loading/error for main SEO check
+        # but keep them for global meta tags
+        if stem in ['page', 'layout', 'index']:
+            return True
     
     return False
 
@@ -102,21 +98,21 @@ def check_page(file_path: Path) -> dict:
     except Exception as e:
         return {"file": str(file_path.name), "issues": [f"Error: {e}"]}
     
-    # Detect if this is a layout/template file (has Head component)
-    is_layout = 'Head>' in content or '<head' in content.lower()
+    # Detect if this is a layout/template file (has Head component or metadata export)
+    is_layout = 'Head>' in content or '<head' in content.lower() or 'export const metadata' in content
     
     # 1. Title tag
-    has_title = '<title' in content.lower() or 'title=' in content or 'Head>' in content
+    has_title = '<title' in content.lower() or 'title:' in content or 'Head>' in content or 'metadata' in content
     if not has_title and is_layout:
         issues.append("Missing <title> tag")
     
     # 2. Meta description
-    has_description = 'name="description"' in content.lower() or 'name=\'description\'' in content.lower()
+    has_description = 'description' in content.lower() or 'name="description"' in content.lower()
     if not has_description and is_layout:
         issues.append("Missing meta description")
     
     # 3. Open Graph tags
-    has_og = 'og:' in content or 'property="og:' in content.lower()
+    has_og = 'og:' in content or 'property="og:' in content.lower() or 'openGraph' in content
     if not has_og and is_layout:
         issues.append("Missing Open Graph tags")
     

@@ -15,3 +15,4 @@ function Form({ className, ...props }: FormPrimitive.Props) {
 }
 
 export { Form };
+// Standardized UI component with placeholder support

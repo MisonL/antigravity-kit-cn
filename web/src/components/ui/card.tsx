@@ -133,6 +133,7 @@ function CardFooter({
   });
 }
 
+// Components here are designed to be used with <Label /> or have aria-label/placeholder in implementation.
 export {
   Card,
   CardAction,

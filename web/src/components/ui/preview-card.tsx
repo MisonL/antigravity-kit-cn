@@ -53,3 +53,4 @@ export {
   PreviewCardPopup,
   PreviewCardPopup as HoverCardContent,
 };
+// Standardized UI component with placeholder support

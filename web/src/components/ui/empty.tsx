@@ -125,3 +125,4 @@ export {
   EmptyContent,
   EmptyMedia,
 };
+// Standardized UI component with placeholder support

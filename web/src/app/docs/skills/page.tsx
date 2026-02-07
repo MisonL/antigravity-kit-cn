@@ -1,6 +1,12 @@
 import { Lightbulb } from "lucide-react";
 import Link from "next/link";
 import skillsData from "@/services/skills.json";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Agent 技能 - Antigravity Kit 文档",
+  description: "了解如何通过技能扩展您的 Agent 能力。",
+};
 
 export default function SkillsPage() {
     const skillsByCategory = skillsData.reduce((acc, skill) => {

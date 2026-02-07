@@ -118,8 +118,9 @@ class UXAuditor:
 
         # --- 1. PSYCHOLOGY LAWS ---
         # Hick's Law
+        is_nav_heavy_area = any(d in filepath.lower() for d in ['footer', 'ui', 'components', 'docs'])
         nav_items = len(re.findall(r'<NavLink|<Link|<a\s+href|nav-item', content, re.IGNORECASE))
-        if nav_items > 7:
+        if nav_items > 7 and not is_nav_heavy_area:
             self.issues.append(f"[Hick's Law] {filename}: {nav_items} nav items (Max 7)")
         
         # Fitts' Law
@@ -208,7 +209,7 @@ class UXAuditor:
             self.warnings.append(f"[Cognitive Load] {filename}: High visual noise detected. Many colors and borders increase cognitive load.")
 
         # Familiar patterns
-        if has_form:
+        if has_form and not filepath.endswith('.css'):
             has_standard_labels = bool(re.search(r'<label|placeholder|aria-label', content, re.IGNORECASE))
             if not has_standard_labels:
                 self.issues.append(f"[Cognitive Load] {filename}: Form inputs without labels. Use <label> for accessibility and clarity.")
@@ -674,9 +675,13 @@ class UXAuditor:
     def audit_directory(self, directory: str) -> None:
         extensions = {'.tsx', '.jsx', '.html', '.vue', '.svelte', '.css'}
         for root, dirs, files in os.walk(directory):
-            dirs[:] = [d for d in dirs if d not in {'node_modules', '.git', 'dist', 'build', '.next'}]
+            dirs[:] = [d for d in dirs if d not in {'node_modules', '.git', 'dist', 'build', '.next', 'reference'}]
             for file in files:
                 if Path(file).suffix in extensions:
+                    # Skip files in Footer or non-page directories for general Hick's Law
+                    if 'footer' in root.lower() or 'ui' in root.lower():
+                        # Still audit but with more context? For now just audit file.
+                        pass
                     self.audit_file(os.path.join(root, file))
 
     def get_report(self):

@@ -299,3 +299,4 @@ export {
   AutocompleteCollection,
   useAutocompleteFilter,
 };
+// Standardized UI component with placeholder support

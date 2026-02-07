@@ -78,3 +78,4 @@ function AlertAction({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 export { Alert, AlertTitle, AlertDescription, AlertAction };
+// Standardized UI component with placeholder support

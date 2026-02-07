@@ -31,18 +31,20 @@
 
 ### Neon (Serverless PostgreSQL)
 
-| Feature | Benefit |
-|---------|---------|
-| Scale to zero | 节省成本 |
+| Feature           | Benefit           |
+| ----------------- | ----------------- |
+| Scale to zero     | 节省成本          |
 | Instant branching | 开发/预览环境方便 |
-| Full PostgreSQL | 兼容生态成熟 |
-| Autoscaling | 自动应对流量波动 |
+| Full PostgreSQL   | 兼容生态成熟      |
+| Autoscaling       | 自动应对流量波动  |
 
 ### Turso (Edge SQLite)
 
-| Feature | Benefit |
-|---------|---------|
-| Edge locations | 超低延迟 |
-| SQLite compatible | 使用简单 |
-| Generous free tier | 成本友好 |
+| Feature             | Benefit          |
+| ------------------- | ---------------- |
+| Edge locations      | 超低延迟         |
+| SQLite compatible   | 使用简单         |
+| Generous free tier  | 成本友好         |
 | Global distribution | 全球访问性能更好 |
+
+<!-- /preview -->
