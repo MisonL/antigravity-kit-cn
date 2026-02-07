@@ -4,173 +4,173 @@ description: MCP (Model Context Protocol) server building principles. Tool desig
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# MCP Builder
+# MCP 构建器 (MCP Builder)
 
-> Principles for building MCP servers.
-
----
-
-## 1. MCP Overview
-
-### What is MCP?
-
-Model Context Protocol - standard for connecting AI systems with external tools and data sources.
-
-### Core Concepts
-
-| Concept       | Purpose                      |
-| ------------- | ---------------------------- |
-| **Tools**     | Functions AI can call        |
-| **Resources** | Data AI can read             |
-| **Prompts**   | Pre-defined prompt templates |
+> 构建 MCP 服务器的原则与最佳实践。
 
 ---
 
-## 2. Server Architecture
+## 1. MCP 概览 (MCP Overview)
 
-### Project Structure
+### 什么是 MCP？
+
+模型上下文协议 (Model Context Protocol) —— 连接 AI 系统与外部工具、数据源的统一标准。
+
+### 核心概念 (Core Concepts)
+
+| 概念          | 用途                             |
+| ------------- | -------------------------------- |
+| **Tools**     | AI 可以调用的函数/能力           |
+| **Resources** | AI 可以读取的数据 (如文件、文档) |
+| **Prompts**   | 预定义的提示词模板               |
+
+---
+
+## 2. 服务器架构 (Server Architecture)
+
+### 项目结构示例
 
 ```
 my-mcp-server/
 ├── src/
-│   └── index.ts      # Main entry
+│   └── index.ts      # 主入口文件
 ├── package.json
 └── tsconfig.json
 ```
 
-### Transport Types
+### 传输类型 (Transport Types)
 
-| Type          | Use                      |
-| ------------- | ------------------------ |
-| **Stdio**     | Local, CLI-based         |
-| **SSE**       | Web-based, streaming     |
-| **WebSocket** | Real-time, bidirectional |
-
----
-
-## 3. Tool Design Principles
-
-### Good Tool Design
-
-| Principle         | Description                                |
-| ----------------- | ------------------------------------------ |
-| Clear name        | Action-oriented (get_weather, create_user) |
-| Single purpose    | One thing well                             |
-| Validated input   | Schema with types and descriptions         |
-| Structured output | Predictable response format                |
-
-### Input Schema Design
-
-| Field       | Required?             |
-| ----------- | --------------------- |
-| Type        | Yes - object          |
-| Properties  | Define each param     |
-| Required    | List mandatory params |
-| Description | Human-readable        |
+| 类型          | 适用场景               |
+| ------------- | ---------------------- |
+| **Stdio**     | 本地运行、基于命令行   |
+| **SSE**       | 基于 Web、支持流式传输 |
+| **WebSocket** | 实时、双向通信         |
 
 ---
 
-## 4. Resource Patterns
+## 3. 工具设计原则 (Tool Design Principles)
 
-### Resource Types
+### 好的工具设计
 
-| Type     | Use                       |
-| -------- | ------------------------- |
-| Static   | Fixed data (config, docs) |
-| Dynamic  | Generated on request      |
-| Template | URI with parameters       |
+| 原则       | 描述                                       |
+| ---------- | ------------------------------------------ |
+| 名称清晰   | 面向动作 (如 `get_weather`, `create_user`) |
+| 职责单一   | 一个工具只做好一件事                       |
+| 输入校验   | 带有类型和描述的完整 Schema                |
+| 结构化输出 | 可预测的、易于解析的响应格式               |
 
-### URI Patterns
+### 输入 Schema 设计
 
-| Pattern       | Example             |
-| ------------- | ------------------- |
-| Fixed         | `docs://readme`     |
-| Parameterized | `users://{userId}`  |
-| Collection    | `files://project/*` |
-
----
-
-## 5. Error Handling
-
-### Error Types
-
-| Situation      | Response                   |
-| -------------- | -------------------------- |
-| Invalid params | Validation error message   |
-| Not found      | Clear "not found"          |
-| Server error   | Generic error, log details |
-
-### Best Practices
-
-- Return structured errors
-- Don't expose internal details
-- Log for debugging
-- Provide actionable messages
+| 字段        | 必填?          |
+| ----------- | -------------- |
+| Type        | 是 - object    |
+| Properties  | 定义每个参数   |
+| Required    | 列出必填参数   |
+| Description | 人类可读的描述 |
 
 ---
 
-## 6. Multimodal Handling
+## 4. 资源模式 (Resource Patterns)
 
-### Supported Types
+### 资源类型
 
-| Type   | Encoding           |
-| ------ | ------------------ |
-| Text   | Plain text         |
-| Images | Base64 + MIME type |
-| Files  | Base64 + MIME type |
+| 类型            | 用途                        |
+| --------------- | --------------------------- |
+| Static (静态)   | 固定数据 (如配置、静态文档) |
+| Dynamic (动态)  | 根据请求即时生成的数据      |
+| Template (模板) | 带有参数的 URI 路径         |
 
----
+### URI 模式
 
-## 7. Security Principles
-
-### Input Validation
-
-- Validate all tool inputs
-- Sanitize user-provided data
-- Limit resource access
-
-### API Keys
-
-- Use environment variables
-- Don't log secrets
-- Validate permissions
+| 模式                   | 示例                |
+| ---------------------- | ------------------- |
+| Fixed (固定)           | `docs://readme`     |
+| Parameterized (参数化) | `users://{userId}`  |
+| Collection (集合)      | `files://project/*` |
 
 ---
 
-## 8. Configuration
+## 5. 错误处理 (Error Handling)
 
-### Claude Desktop Config
+### 错误类型
 
-| Field   | Purpose               |
-| ------- | --------------------- |
-| command | Executable to run     |
-| args    | Command arguments     |
-| env     | Environment variables |
+| 情景       | 响应方式                           |
+| ---------- | ---------------------------------- |
+| 参数无效   | 返回详细的校验错误信息             |
+| 未找到     | 返回明确的 "Not Found" 状态        |
+| 服务器错误 | 返回通用错误，但在后台记录详细日志 |
 
----
+### 最佳实践
 
-## 9. Testing
-
-### Test Categories
-
-| Type        | Focus             |
-| ----------- | ----------------- |
-| Unit        | Tool logic        |
-| Integration | Full server       |
-| Contract    | Schema validation |
+- 返回结构化的错误
+- 不暴露内部细节
+- 记录日志以便调试
+- 提供可操作的错误信息
 
 ---
 
-## 10. Best Practices Checklist
+## 6. 多模态处理 (Multimodal Handling)
 
-- [ ] Clear, action-oriented tool names
-- [ ] Complete input schemas with descriptions
-- [ ] Structured JSON output
-- [ ] Error handling for all cases
-- [ ] Input validation
-- [ ] Environment-based configuration
-- [ ] Logging for debugging
+### 支持的类型
+
+| 类型 | 编码方式           |
+| ---- | ------------------ |
+| 文本 | 纯文本             |
+| 图像 | Base64 + MIME 类型 |
+| 文件 | Base64 + MIME 类型 |
 
 ---
 
-> **Remember:** MCP tools should be simple, focused, and well-documented. The AI relies on descriptions to use them correctly.
+## 7. 安全原则 (Security Principles)
+
+### 输入验证
+
+- 严格校验所有工具的输入参数
+- 脱敏处理用户提供的数据
+- 限制资源访问权限
+
+### API 密钥
+
+- 使用环境变量
+- 严禁将 Secret 写入日志
+- 验证权限
+
+---
+
+## 8. 配置 (Configuration)
+
+### Claude Desktop 配置
+
+| 字段    | 用途               |
+| ------- | ------------------ |
+| command | 要运行的可执行文件 |
+| args    | 命令参数           |
+| env     | 环境变量           |
+
+---
+
+## 9. 测试 (Testing)
+
+### 测试分类
+
+| 类型                   | 焦点                |
+| ---------------------- | ------------------- |
+| 单元测试 (Unit)        | 工具的核心逻辑      |
+| 集成测试 (Integration) | 完整的服务器链路    |
+| 契约测试 (Contract)    | Schema 的合法性验证 |
+
+---
+
+## 10. 最佳实践检查清单 (Best Practices Checklist)
+
+- [ ] 清晰且面向动作的工具命名
+- [ ] 带有描述的完整输入 Schema
+- [ ] 结构化的 JSON 输出
+- [ ] 涵盖各种情况的错误处理
+- [ ] 输入验证
+- [ ] 基于环境变量的配置
+- [ ] 用于调试的日志记录
+
+---
+
+> **记住：** MCP 工具应该保持简单、专注且文档齐全。AI 极度依赖工具描述来判断何时以及如何使用它们。
