@@ -11,7 +11,7 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## ⚠️ 如何使用此技能
+## ⚠️ 如何使用此技能 (How to Use This Skill)
 
 本技能教授的是 **部署原则**，而非可以直接复制的 Bash 脚本。
 
@@ -214,7 +214,7 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 9. 决策检查清单
+## 9. 决策检查清单 (Decision Checklist)
 
 在部署之前：
 
@@ -227,7 +227,7 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 10. 最佳实践
+## 10. 最佳实践 (Best Practices)
 
 1. **小而频繁的部署** 优于大版本发布
 2. **特性开关 (Feature flags)** 用于风险变更
