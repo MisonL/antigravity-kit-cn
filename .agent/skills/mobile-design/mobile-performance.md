@@ -1,213 +1,242 @@
----
-description: 移动性能优化、FlashList 对策、图片缓存与内存管理
----
+# 移动端性能参考指南 (Mobile Performance Reference)
 
-# 移动端性能参考 (Mobile Performance Reference)
-
-> 移动性能优化、FlashList 对策、图片缓存与内存管理。
-> **性能不是一种特性——它是最基本的功能。**
+> 深入探讨 React Native 和 Flutter 的性能优化、60fps 动画、内存管理以及电池电量考量。
+> **此文件涵盖了 AI 生成代码中最容易失败 (FAIL) 的首要领域。**
 
 ---
 
-## 1. 移动端性能黄金法则
+## 1. 移动端性能思维 (The Mobile Performance Mindset)
+
+### 为什么移动端性能与众不同
 
 ```
-60 FPS 法则:
-├── 必须在 16.67ms 内完成每帧渲染
-├── 如果错过 → 掉帧 (Jank)
-├── 掉帧 = 用户感知为"卡顿"、"廉价"、"低质量"
-
-JS 线程 vs UI 线程:
-├── UI 线程 (Main): 负责渲染、滚动、原生手势。
-└── JS 线程: 负责 React 逻辑、状态更新、API 处理。
-
-❌ 阻塞 JS 线程 → 按钮无反应。
-❌ 阻塞 UI 线程 → 滚动冻结 (最坏情况)。
+桌面端 (DESKTOP):                    移动端 (MOBILE):
+├── 电源无限 (Unlimited power)      ├── 电池容量有限 (Battery matters)
+├── 内存充足 (Abundant RAM)         ├── 内存共享且有限 (RAM is limited)
+├── 网络稳定 (Stable network)       ├── 网络不可靠 (Network is unreliable)
+└── CPU 始终可用                    └── CPU 发热时会降频 (Throttles when hot)
 ```
 
-### 关键指标
+### 性能预算概念 (Performance Budget Concept)
 
-| 指标         | 目标               | 测量工具                          |
-| :----------- | :----------------- | :-------------------------------- |
-| **FPS**      | 始终 60 (理想 120) | React DevTools / Android Profiler |
-| **App 启动** | < 2 秒             | Flipper / Xcode Instruments       |
-| **交互响应** | < 100ms            | 你的感觉 / 性能监视器             |
-| **内存使用** | 无泄漏             | Android Profiler / Instruments    |
+```
+每一帧必须在以下时间内完成：
+├── 60fps → 每帧 16.67ms
+└── 120fps (ProMotion) → 每帧 8.33ms
+
+如果你的代码耗时更长：
+├── 掉帧 (Frame drops) → 滚动/动画卡顿 (Janky)
+└── 用户会流失 (They WILL uninstall)
+```
 
 ---
 
-## 2. 列表性能 (List Performance)
+## 2. React Native 性能优化 (React Native Performance)
 
-列表是移动端性能问题的**头号原因**。
-
-### FlashList (Shopify) vs FlatList
-
-| 特性         | FlashList             | FlatList            |
-| :----------- | :-------------------- | :------------------ |
-| **渲染速度** | ⚡⚡ 5-10x 更快       | 🐢 慢，尤其在低端机 |
-| **回收机制** | 回收 View 实例 (即时) | 销毁并重新创建 (慢) |
-| **内存占用** | 极低                  | 随列表长度增加      |
-| **空白区域** | 极少                  | 快速滚动时常见      |
-
-**规则: 新列表默认使用 FlashList。**
-
-### FlashList 检查清单
+### 🚫 典型的 AI 错误：在列表使用 ScrollView
 
 ```javascript
-<FlashList
-    data={data}
+// ❌ 严禁这样做 - AI 最容易犯的致命错误
+<ScrollView>
+    {items.map((item) => (
+        <ItemComponent key={item.id} item={item} />
+    ))}
+</ScrollView>
+
+// 为什么这是灾难性的：
+// ├── 立即渲染所有项 (1000 个项 = 1000 次渲染)
+// ├── 内存爆炸 (Memory explodes)
+// └── 滚动变得极其卡顿
+```
+
+### FlatList 优化清单
+
+```javascript
+// ✅ 正确：应用了所有优化
+
+// 1. 使用 React.memo 包装组件
+const ListItem = React.memo(({ item }) => (
+    <Pressable style={styles.item}>
+        <Text>{item.title}</Text>
+    </Pressable>
+));
+
+// 2. 使用 useCallback 记忆 renderItem
+const renderItem = useCallback(({ item }) => <ListItem item={item} />, []);
+
+// 3. 稳定的 keyExtractor (严禁使用 index!)
+const keyExtractor = useCallback((item) => item.id, []);
+
+// 4. 为固定高度项目提供 getItemLayout
+const getItemLayout = useCallback(
+    (data, index) => ({
+        length: ITEM_HEIGHT,
+        offset: ITEM_HEIGHT * index,
+        index,
+    }),
+    [],
+);
+
+// 5. 应用到 FlatList
+<FlatList
+    data={items}
     renderItem={renderItem}
-    estimatedItemSize={100} // ⚠️ 必须设置且要准确！
-    keyExtractor={(item) => item.id}
-    getItemType={(item) => item.type} // ⚠️ 对不同类型的行至关重要
-/>
+    keyExtractor={keyExtractor}
+    getItemLayout={getItemLayout}
+    removeClippedSubviews={true} // Android: 卸载屏幕外视图
+    maxToRenderPerBatch={10} // 每次增量渲染数量
+    windowSize={5} // 渲染窗口大小
+/>;
 ```
 
-1.  **estimatedItemSize**: 如果不设置，性能与 FlatList 一样差。
-2.  **getItemType**: 如果有多种行布局，必须使用此属性，否则回收机制会失效。
-3.  **Components**: 列表项组件应该使用 `React.memo` 包装。
-4.  **匿名函数**: 避免在 `renderItem` 中使用内联箭头函数。
-
----
-
-## 3. 图片优化 (Image Optimization)
-
-移动端图片是**二号性能杀手**。
-
-| 策略               | 实现                                               | 为什么                   |
-| :----------------- | :------------------------------------------------- | :----------------------- |
-| **正确的尺寸**     | 请求 `w=300` 而不是 `w=3000`                       | 减少内存解码压力         |
-| **缓存 (Caching)** | `react-native-fast-image` / `cached_network_image` | 这里是移动端，网络不可靠 |
-| **格式**           | WebP / AVIF                                        | 比 PNG/JPG 小 30-50%     |
-| **预加载**         | 关键图片 (Hero images)                             | 避免闪烁                 |
-| **占位符**         | Blurhash / 骨架屏                                  | 即时视觉反馈             |
-
-### 内存中的图片
-
-一张 4K 图片 (3840x2160) 占用多少内存？
-
-- 文件大小: 2MB (压缩后)
-- **内存解码大小**: 3840 _ 2160 _ 4 bytes ≈ **32MB**!
-
-**危险:** 一个包含 10 张全尺寸图片的列表 = **320MB 内存** → App 崩溃 (OOM)。
-**解决方案:** 始终调整图片大小至显示尺寸 (Resize to exact display dimensions)。
-
----
-
-## 4. 渲染优化 (Render Optimization)
-
-### 避免过度渲染 (Over-rendering)
-
-React Native / Flutter 特有的痛点：
-
-1.  **Context 地狱**:
-    - 如果 Context 更新，所有消费者都会重新渲染。
-    - **修复**: 拆分 Context，或使用 Zustand/Riverpod (原子化更新)。
-
-2.  **内联对象/函数**:
-    - `style={{ margin: 10 }}` → 每次都创建新对象 → 破坏 memoization。
-    - **修复**: `const styles = StyleSheet.create(...)`。
-
-3.  **Memoization (记忆化)**:
-    - 使用 `useMemo` 计算复杂数据。
-    - 使用 `useCallback` 缓存处理函数。
-    - 使用 `React.memo` 缓存子组件。
-
-### 桥接 (The Bridge) - RN 遗留问题
-
-(注意: 新架构/Fabric 解决了大部分问题，但老代码仍需注意)
-
-- JS 和 Native 之间的通信通过"桥"进行。
-- **瓶颈**: 发送大量数据过桥 (例如：Base64 图片，大量 JSON)。
-- **规则**: 保持过桥数据序列化轻量。动画使用 Native Driver (Worklet)。
-
----
-
-## 5. 启动时间 (Startup Time)
-
-用户等待 2 秒就会开始流失。
-
-| 阶段               | 罪魁祸首            | 修复                                     |
-| :----------------- | :------------------ | :--------------------------------------- |
-| **Pre-main**       | 太多原生 SDK 初始化 | 延迟初始化非关键 SDK                     |
-| **JS Bundle**      | 巨大的 Bundle 体积  | 代码拆分 (Code splitting)、Lazy require  |
-| **Native Modules** | 同步加载所有模块    | TurboModules (按需加载)                  |
-| **首屏渲染**       | 复杂的首页结构      | 缓存首页数据，显示骨架屏                 |
-| **Hermes**         | 未开启 Hermes       | **必须开启 Hermes** (提高字节码加载速度) |
-
-### Hermes 引擎
-
-- **必须开启**。
-- Android: 大幅减少启动时间 (2x faster)。
-- iOS: 减少内存占用。
-
----
-
-## 6. 动画性能
-
-### 黄金法则
-
-1.  **使用 UI 线程**: 动画必须在 UI 线程运行 (Native Driver / Reanimated Worklets)。
-2.  **避免布局抖动**: 动画 `transform` (scale, translate) 和 `opacity`。
-3.  **不要动画化**: `width`, `height`, `margin`, `padding`, `top`, `left` (这会触发布局重算)。
-
-### reanimated 3
+### 动画性能 (Animation Performance)
 
 ```javascript
-// ✅ GOOD: 运行在 UI 线程 (Worklet)
-const style = useAnimatedStyle(() => {
-  return {
-    transform: [{ translateX: withSpring(offset.value) }]
-  };
-});
+// ❌ JS 线程动画 (会阻塞 JS 线程)
+Animated.timing(value, { useNativeDriver: false }).start();
 
-// ❌ BAD: 运行在 JS 线程，导致掉帧
-Animated.View style={{ left: this.state.x }}
+// ✅ 原生驱动动画 (在 UI 线程运行)
+Animated.timing(value, { useNativeDriver: true }).start();
+
+// 原生驱动仅支持：transform 和 opacity
 ```
 
 ---
 
-## 7. 离线优先架构 (Offline-First)
+## 3. Flutter 性能优化 (Flutter Performance)
 
-这不是纯粹的"速度"，而是"感知性能"。
+### 🚫 典型的 AI 错误：过度使用 setState
 
-- **乐观 UI (Optimistic UI)**:
-    - 点击 "Like" → 立即变红 → 后台发请求。
-    - 如果失败 → 变回原样 + 提示错误。
-    - **效果**: App 感觉是即时的 (0ms 延迟)。
+```dart
+// ❌ 错误：setState 会重建整个 Widget 树
+void _increment() {
+  setState(() { _counter++; }); // 重建了下方所有昂贵的 Widget
+}
+```
 
-- **本地优先 (Local-First)**:
-    - 先读 DB (WatermelonDB / Realm / SQLite)。
-    - 渲染数据。
-    - 然后从 API 更新数据。
-    - **效果**: 永远无需等待加载圈。
+### `const` 构造函数革命
 
----
+```dart
+// ✅ 正确：使用 const 防止不必要的重建
+Column(
+  children: [
+    Text('Counter: $_counter'),
+    const ExpensiveWidget(), // 永远不会重复重建！
+  ],
+)
+```
 
-## 8. Android 特定优化
+### ListView 优化
 
-Android 设备碎片化严重，低端机性能差。
+```dart
+// ❌ 错误：不带 builder 的 ListView (一次性渲染所有)
+ListView(children: items.map((e) => Item(e)).toList())
 
-1.  **开启 `enableFreeze` (React Freeze)**: 冻结不可见的屏幕，释放 CPU。
-2.  **减少过度绘制 (Overdraw)**: 不要堆叠不必要的背景色。
-3.  **使用 ProGuard/R8**: 混淆并移除未使用的代码，减小 APK 体积。
-4.  **扁平化视图层级**: 嵌套越深，渲染越慢。
-
----
-
-## 9. 性能检查清单
-
-### 发布前检查
-
-- [ ] **Hermes 已开启？**
-- [ ] **列表使用 FlashList 且定义了 estimatedItemSize？**
-- [ ] **图片使用适当尺寸的 CDN URL？**
-- [ ] **没有 `console.log` 遗留？** (极慢)
-- [ ] **使用了生产环境构建？** (**DEV**=false)
-- [ ] **关键动画在 UI 线程运行？**
-- [ ] **Android 低端机测试过？**
-- [ ] **首屏加载有骨架屏/缓存？**
+// ✅ 正确：ListView.builder (延迟渲染/懒加载)
+ListView.builder(
+  itemCount: items.length,
+  itemBuilder: (context, index) => ItemWidget(items[index]),
+  itemExtent: 56, // 固定高度提升性能
+)
+```
 
 ---
 
-> **记住:** 开发者通常用高端 iPhone。用户通常用低端 Android。**在最差的设备上测试性能，而不是最好的设备。**
+## 4. 动画性能 (跨平台原则)
+
+### GPU vs CPU 动画
+
+```
+GPU 加速 (快):                   CPU 绑定 (慢):
+├── transform: translate         ├── width, height
+├── transform: scale             ├── top, left, right, bottom
+├── transform: rotate            ├── margin, padding
+└── opacity                      └── box-shadow (带动画)
+
+规则：仅对 transform 和 opacity 进行动画处理。
+```
+
+---
+
+## 5. 内存管理 (Memory Management)
+
+### 常见内存泄漏 (Memory Leaks)
+
+- **定时器 (Timers)**: 未在 cleanup/dispose 中清除。
+- **侦听器 (Listeners)**: 未移除。
+- **大图 (Large images)**: 未设置缓存限制或未调整大小。
+
+### 图像内存计算
+
+```
+内存占用 = 宽 × 高 × 4 字节 (RGBA)
+1080p = 8.3 MB | 4K = 33.2 MB
+规则：始终将图像缩放到显示大小 (Retina 屏则 2-3 倍)。
+```
+
+---
+
+## 6. 电池优化 (Battery Optimization)
+
+| 来源         | 影响    | 缓解措施                   |
+| ------------ | ------- | -------------------------- |
+| **屏幕常亮** | 🔴 最高 | OLED 使用深色模式          |
+| **持续 GPS** | 🔴 极高 | 使用显著位置变更监听       |
+| **网络请求** | 🟡 高   | 批量处理 (Batch), 激进缓存 |
+
+### OLED 省电规则
+
+```
+OLED 屏幕：黑色像素 = 关闭 = 零功耗
+规则：在深色模式下，背景使用纯黑 (#000000) 而非深灰。
+```
+
+---
+
+## 7. 网络性能 (Network Performance)
+
+### 离线优先架构 (Offline-First)
+
+1. **优先读取缓存** (Instant UI)。
+2. **后台同步网络**。
+3. **减少冗余请求**。
+
+---
+
+## 8. 性能测试 (Performance Testing)
+
+### 性能指标
+
+- **帧率**: ≥ 60fps。
+- **冷启动**: < 2s。
+- **内存**: 保持稳定，无持续增长。
+
+### ⚠️ 严禁仅在以下环境测试：
+
+- 模拟器/仿真器 (比实机快)。
+- 开发模式 (比发布模式慢)。
+- 仅使用高端设备。
+
+---
+
+## 9. 快速参考手册 (Quick Reference)
+
+### React Native 要点
+
+```javascript
+// 列表：始终使用 FlatList/FlashList
+// 动画：始终 useNativeDriver: true
+// 清理：始终在 useEffect 中 return 清除函数
+```
+
+### Flutter 要点
+
+```dart
+// 组件：始终使用 const
+// 列表：始终使用 builder
+// 销毁：始终在 dispose() 中处理 controller
+```
+
+---
+
+> **记住：** 性能不是一种“优化”——它是基础质量。慢速的应用就是损坏的应用。
