@@ -4,7 +4,7 @@ description: Database design principles and decision-making. Schema design, inde
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# 数据库设计 (Database Design)
+# 数据库设计
 
 > **学会思考，而不是复制 SQL 模式。**
 
@@ -12,18 +12,18 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 **仅阅读与请求相关的目标文件！** 请先检查内容地图，找到你需要的内容。
 
-| 文件                    | 描述                                                        | 何时阅读                   |
-| ----------------------- | ----------------------------------------------------------- | -------------------------- |
-| `database-selection.md` | PostgreSQL vs Neon vs Turso vs SQLite                       | 选择数据库时               |
-| `orm-selection.md`      | Drizzle vs Prisma vs Kysely                                 | 选择 ORM (对象关系映射) 时 |
-| `schema-design.md`      | Normalization (规范化), PKs (主键), relationships (关系)    | 设计 Schema (模式) 时      |
-| `indexing.md`           | Index types (索引类型), composite indexes (复合索引)        | 性能调优时                 |
-| `optimization.md`       | N+1, EXPLAIN ANALYZE                                        | 查询优化时                 |
-| `migrations.md`         | Safe migrations (安全迁移), serverless DBs (无服务器数据库) | Schema 变更时              |
+| 文件                    | 描述                                  | 何时阅读                   |
+| ----------------------- | ------------------------------------- | -------------------------- |
+| `database-selection.md` | PostgreSQL vs Neon vs Turso vs SQLite | 选择数据库时               |
+| `orm-selection.md`      | Drizzle vs Prisma vs Kysely           | 选择 ORM (对象关系映射) 时 |
+| `schema-design.md`      | 规范化, 主键, 关系                    | 设计 Schema 时             |
+| `indexing.md`           | 索引类型, 复合索引                    | 性能调优时                 |
+| `optimization.md`       | N+1, EXPLAIN ANALYZE                  | 查询优化时                 |
+| `migrations.md`         | 安全迁移, 无服务器数据库              | Schema 变更时              |
 
 ---
 
-## ⚠️ 核心原则 (Core Principle)
+## ⚠️ 核心原则
 
 - 询问用户不明确的数据库偏好
 - 根据上下文选择 Database/ORM
@@ -31,7 +31,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 决策检查清单 (Decision Checklist)
+## 决策检查清单
 
 在设计 Schema 之前：
 
@@ -43,7 +43,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 反模式 (Anti-Patterns)
+## 反模式
 
 ❌ 对于简单应用默认使用 PostgreSQL (SQLite 可能就够了)
 ❌ 跳过索引

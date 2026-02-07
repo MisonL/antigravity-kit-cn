@@ -4,15 +4,15 @@ description: Bash/Linux terminal patterns. Critical commands, piping, error hand
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# Bash Linux 模式 (Bash Linux Patterns)
+# Bash Linux 模式
 
 > Linux/macOS 上的 Bash 基础模式。
 
 ---
 
-## 1. 运算符语法 (Operator Syntax)
+## 1. 运算符语法
 
-### 链接命令 (Chaining Commands)
+### 链接命令
 
 | 运算符 | 含义                 | 示例                                |
 | ------ | -------------------- | ----------------------------------- |
@@ -23,9 +23,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 2. 文件操作 (File Operations)
+## 2. 文件操作
 
-### 基础命令 (Essential Commands)
+### 基础命令
 
 | 任务         | 命令                                 |
 | ------------ | ------------------------------------ |
@@ -41,7 +41,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 3. 进程管理 (Process Management)
+## 3. 进程管理
 
 | 任务               | 命令                          |
 | ------------------ | ----------------------------- |
@@ -56,9 +56,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 4. 文本处理 (Text Processing)
+## 4. 文本处理
 
-### 核心工具 (Core Tools)
+### 核心工具
 
 | 工具   | 用途     | 示例                            |
 | ------ | -------- | ------------------------------- |
@@ -72,7 +72,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 5. 环境变量 (Environment Variables)
+## 5. 环境变量
 
 | 任务         | 命令                            |
 | ------------ | ------------------------------- |
@@ -84,7 +84,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 6. 网络 (Network)
+## 6. 网络
 
 | 任务      | 命令                                                                        |
 | --------- | --------------------------------------------------------------------------- |
@@ -96,7 +96,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 7. 脚本模板 (Script Template)
+## 7. 脚本模板
 
 ```bash
 #!/bin/bash
@@ -126,7 +126,7 @@ main "$@"
 
 ---
 
-## 8. 常见模式 (Common Patterns)
+## 8. 常见模式
 
 ### 检查命令是否存在
 
@@ -160,7 +160,7 @@ done
 
 ---
 
-## 9. 与 PowerShell 的区别 (Differences from PowerShell)
+## 9. 与 PowerShell 的区别
 
 | 任务       | PowerShell               | Bash                  |
 | ---------- | ------------------------ | --------------------- |
@@ -169,11 +169,11 @@ done
 | 环境变量   | `$env:VAR`               | `$VAR`                |
 | 字符串拼接 | `"$a$b"`                 | `"$a$b"` (相同)       |
 | 空值检查   | `if ($x)`                | `if [ -n "$x" ]`      |
-| 管道       | Object-based (基于对象)  | Text-based (基于文本) |
+| 管道       | 基于对象 (Object-based)  | 基于文本 (Text-based) |
 
 ---
 
-## 10. 错误处理 (Error Handling)
+## 10. 错误处理
 
 ### 设置选项
 
@@ -184,7 +184,7 @@ set -o pipefail # 管道失败退出
 set -x          # 调试：打印命令
 ```
 
-### 清理陷阱 (Trap for cleanup)
+### 清理陷阱
 
 ```bash
 cleanup() {
@@ -193,7 +193,5 @@ cleanup() {
 }
 trap cleanup EXIT
 ```
-
----
 
 > **记住：** Bash 是基于文本的。使用 `&&` 链接成功操作，使用 `set -e` 保证安全，并且记得给变量加引号！

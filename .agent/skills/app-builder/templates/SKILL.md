@@ -4,7 +4,7 @@ description: 新应用程序的项目脚手架模版。在从头创建新项目�
 allowed-tools: Read, Glob, Grep
 ---
 
-# 项目模版 (Project Templates)
+# 项目模版
 
 > 用于搭建新项目的快速启动模版。
 

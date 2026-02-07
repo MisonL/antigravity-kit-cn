@@ -4,15 +4,15 @@ description: Socratic questioning protocol + user communication. MANDATORY for c
 allowed-tools: Read, Glob, Grep
 ---
 
-# 头脑风暴与沟通协议 (Brainstorming & Communication Protocol)
+# 头脑风暴与沟通协议
 
 > **MANDATORY (强制):** 用于复杂/模糊的请求、新功能、更新。
 
 ---
 
-## 🛑 苏格拉底之门 (强制实施) - SOCRATIC GATE (ENFORCEMENT)
+## 🛑 苏格拉底之门 (强制实施) - SOCRATIC GATE
 
-### 何时触发 (When to Trigger)
+### 何时触发
 
 | 模式                                                         | 行动                                                      |
 | ------------------------------------------------------------ | --------------------------------------------------------- |
@@ -32,11 +32,11 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 🧠 动态提问生成 (Dynamic Question Generation)
+## 🧠 动态提问生成
 
 **⛔ NEVER use static templates (绝不使用静态模板)。** 阅读 `dynamic-questioning.md` 了解原则。
 
-### 核心原则 (Core Principles)
+### 核心原则
 
 | 原则                                                    | 以此为原则                                                                    |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
@@ -45,7 +45,7 @@ allowed-tools: Read, Glob, Grep
 | **Minimum Viable Questions (最小可行问题)**             | 每个问题必须消除实施路径                                                      |
 | **Generate Data, Not Assumptions (生成数据，而非假设)** | 不要猜测——用权衡来提问                                                        |
 
-### 问题生成流程 (Question Generation Process)
+### 问题生成流程
 
 ```
 1. Parse request (解析请求) → Extract domain (提取领域), features (功能), scale indicators (规模指标)
@@ -78,17 +78,17 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 进度报告 (基于原则) - Progress Reporting (PRINCIPLE-BASED)
+## 进度报告 (基于原则) - Progress Reporting
 
 **PRINCIPLE (原则):** Transparency builds trust (透明建立信任)。Status must be visible and actionable (状态必须可见且可操作)。
 
-### 状态板格式 (Status Board Format)
+### 状态板格式
 
 | Agent        | 状态       | 当前任务   | 进度        |
 | ------------ | ---------- | ---------- | ----------- |
 | [Agent Name] | ✅🔄⏳❌⚠️ | [任务描述] | [% 或 计数] |
 
-### 状态图标 (Status Icons)
+### 状态图标
 
 | 图标 | 含义               | 用法             |
 | ---- | ------------------ | ---------------- |
@@ -100,11 +100,11 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 错误处理 (基于原则) - Error Handling (PRINCIPLE-BASED)
+## 错误处理 (基于原则) - Error Handling
 
 **PRINCIPLE (原则):** Errors are opportunities for clear communication (错误是清晰沟通的机会)。
 
-### 错误响应模式 (Error Response Pattern)
+### 错误响应模式
 
 ```
 1. Acknowledge the error (承认错误)
@@ -113,7 +113,7 @@ allowed-tools: Read, Glob, Grep
 4. Ask user to choose or provide alternative (请用户选择或提供替代方案)
 ```
 
-### 错误类别 (Error Categories)
+### 错误类别
 
 | 类别                              | 响应策略                   |
 | --------------------------------- | -------------------------- |
@@ -124,11 +124,11 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 完成消息 (基于原则) - Completion Message (PRINCIPLE-BASED)
+## 完成消息 (基于原则) - Completion Message
 
 **PRINCIPLE (原则):** Celebrate success, guide next steps (庆祝成功，引导后续步骤)。
 
-### 完成结构 (Completion Structure)
+### 完成结构
 
 ```
 1. Success confirmation (celebrate briefly) (成功确认 (简短庆祝))
@@ -139,7 +139,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 沟通原则 (Communication Principles)
+## 沟通原则
 
 | 原则                        | 实施                                                          |
 | --------------------------- | ------------------------------------------------------------- |

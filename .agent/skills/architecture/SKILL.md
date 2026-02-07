@@ -4,7 +4,7 @@ description: Architectural decision-making framework. Requirements analysis, tra
 allowed-tools: Read, Glob, Grep
 ---
 
-# 架构决策框架 (Architecture Decision Framework)
+# 架构决策框架
 
 > "需求驱动架构。权衡告知决策。ADR (架构决策记录) 记录理由。"
 
@@ -12,17 +12,17 @@ allowed-tools: Read, Glob, Grep
 
 **仅阅读与请求相关的目标文件！** 请先检查内容地图，找到你需要的内容。
 
-| 文件                    | 描述                                                 | 何时阅读       |
-| ----------------------- | ---------------------------------------------------- | -------------- |
-| `context-discovery.md`  | Questions (问题), project classification (项目分类)  | 开始架构设计时 |
-| `trade-off-analysis.md` | ADR templates (模板), trade-off framework (权衡框架) | 记录决策时     |
-| `pattern-selection.md`  | Decision trees (决策树), anti-patterns (反模式)      | 选择模式时     |
-| `examples.md`           | MVP, SaaS, Enterprise examples (企业示例)            | 参考实现时     |
-| `patterns-reference.md` | Quick lookup (快速查找)                              | 模式比较时     |
+| 文件                    | 描述                                      | 何时阅读       |
+| ----------------------- | ----------------------------------------- | -------------- |
+| `context-discovery.md`  | 问题, 项目分类                            | 开始架构设计时 |
+| `trade-off-analysis.md` | ADR 模板, 权衡框架                        | 记录决策时     |
+| `pattern-selection.md`  | 决策树, 反模式                            | 选择模式时     |
+| `examples.md`           | MVP, SaaS, 企业示例 (Enterprise examples) | 参考实现时     |
+| `patterns-reference.md` | 快速查找                                  | 模式比较时     |
 
 ---
 
-## 🔗 相关 Skill (Related Skills)
+## 🔗 相关 Skill
 
 | Skill (技能)                      | 用于               |
 | --------------------------------- | ------------------ |
@@ -32,7 +32,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 核心原则 (Core Principle)
+## 核心原则
 
 **"简单是终极的复杂。"**
 
@@ -43,7 +43,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 验证检查清单 (Validation Checklist)
+## 验证检查清单
 
 在最终确定架构之前：
 

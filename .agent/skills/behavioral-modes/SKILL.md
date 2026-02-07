@@ -4,17 +4,17 @@ description: AI operational modes (brainstorm, implement, debug, review, teach, 
 allowed-tools: Read, Glob, Grep
 ---
 
-# 行为模式 (Behavioral Modes) - 自适应 AI 运行模式
+# 行为模式 - 自适应 AI 运行模式
 
-## 目的 (Purpose)
+## 目的
 
 本技能定义了独特的行为模式 (Behavioral Modes) 以优化 AI 在特定任务中的表现。不同模式会改变 AI 处理问题、沟通和优先级排列的方式。
 
 ---
 
-## 可用模式 (Available Modes)
+## 可用模式
 
-### 1. 🧠 头脑风暴模式 (BRAINSTORM Mode)
+### 1. 🧠 头脑风暴模式 (Brainstorm Mode)
 
 **何时使用：** 早期项目规划、功能构思、架构决策
 
@@ -44,7 +44,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 2. ⚡ 实现模式 (IMPLEMENT Mode)
+### 2. ⚡ 实现模式 (Implement Mode)
 
 **何时使用：** 编写代码、构建功能、执行计划
 
@@ -84,7 +84,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 3. 🔍 调试模式 (DEBUG Mode)
+### 3. 🔍 调试模式 (Debug Mode)
 
 **何时使用：** 修复 Bug、排查错误、调查问题
 
@@ -109,7 +109,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 4. 📋 审查模式 (REVIEW Mode)
+### 4. 📋 审查模式 (Review Mode)
 
 **何时使用：** 代码审查、架构审查、安全审计
 
@@ -126,19 +126,19 @@ allowed-tools: Read, Glob, Grep
 ```
 ## 代码审查: [文件/功能]
 
-### 🔴 严重 (Critical)
+### 🔴 严重
 - [问题及解释]
 
-### 🟠 改进 (Improvements)
+### 🟠 改进
 - [建议及示例]
 
-### 🟢 良好 (Good)
+### 🟢 良好
 - [积极的观察]
 ```
 
 ---
 
-### 5. 📚 教学模式 (TEACH Mode)
+### 5. 📚 教学模式 (Teach Mode)
 
 **何时使用：** 解释概念、编写文档、入职培训
 
@@ -170,7 +170,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 6. 🚀 发布模式 (SHIP Mode)
+### 6. 🚀 发布模式 (Ship Mode)
 
 **何时使用：** 生产部署、最终润色、发布准备
 
@@ -185,7 +185,7 @@ allowed-tools: Read, Glob, Grep
 **输出风格：**
 
 ```
-## 发布前检查清单 (Pre-Ship Checklist)
+## 发布前检查清单
 
 ### ✅ 代码质量
 - [ ] 无 TypeScript 错误
@@ -205,7 +205,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 模式检测 (Mode Detection)
+## 模式检测
 
 AI 应根据以下触发词自动检测合适的模式：
 
@@ -220,17 +220,17 @@ AI 应根据以下触发词自动检测合适的模式：
 
 ---
 
-## 多智能体协同模式 (2025) (Multi-Agent Collaboration Patterns)
+## 多智能体协同模式 (2025)
 
 针对 Agent (智能体) 之间协作优化的现代架构：
 
-### 1. 🔭 探索模式 (EXPLORE Mode)
+### 1. 🔭 探索模式 (Explorer Mode)
 
 **角色：** 发现与分析 (Explorer Agent)
 **行为：** 苏格拉底式提问、深入代码阅读、依赖关系映射。
 **输出：** `discovery-report.json`、架构可视化。
 
-### 2. 🗺️ 计划-执行-批判 (PEC)
+### 2. 🗺️ 计划-执行-批判
 
 针对高复杂度任务的循环模式转换：
 
@@ -238,17 +238,17 @@ AI 应根据以下触发词自动检测合适的模式：
 2. **Executor (执行者):** 执行实际编码 (`IMPLEMENT`)。
 3. **Critic (批判者):** 审查代码，执行安全和性能检查 (`REVIEW`)。
 
-### 3. 🧠 心智模型同步 (MENTAL MODEL SYNC)
+### 3. 🧠 心智模型同步
 
 用于创建和加载“心智模型”摘要以保留会话间上下文的行为。
 
 ---
 
-## 组合模式 (Combining Modes)
+## 组合模式
 
 ---
 
-## 手动模式切换 (Manual Mode Switching)
+## 手动模式切换
 
 用户可以显式请求特定模式：
 

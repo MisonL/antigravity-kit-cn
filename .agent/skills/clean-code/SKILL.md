@@ -6,13 +6,13 @@ version: 2.0
 priority: CRITICAL
 ---
 
-# 整洁代码 (Clean Code) - 务实的 AI 编码标准
+# 整洁代码 - 务实的 AI 编码标准
 
-> **关键技能 (CRITICAL SKILL)** - 保持 **简洁、直接且以解决方案为中心**。
+> **关键技能** - 保持 **简洁、直接且以解决方案为中心**。
 
 ---
 
-## 核心原则 (Core Principles)
+## 核心原则
 
 | 原则          | 规则                                                           |
 | ------------- | -------------------------------------------------------------- |
@@ -24,7 +24,7 @@ priority: CRITICAL
 
 ---
 
-## 命名规则 (Naming Rules)
+## 命名规则
 
 | 元素                  | 约定                                                |
 | --------------------- | --------------------------------------------------- |
@@ -33,11 +33,11 @@ priority: CRITICAL
 | **布尔值 (Booleans)** | 疑问句形式：`isActive`, `hasPermission`, `canEdit`  |
 | **常量 (Constants)**  | 全部大写下划线 (SCREAMING_SNAKE)：`MAX_RETRY_COUNT` |
 
-> **规则 (Rule):** 如果你需要注释来解释一个名称，请重命名它。
+> **规则:** 如果你需要注释来解释一个名称，请重命名它。
 
 ---
 
-## 函数规则 (Function Rules)
+## 函数规则
 
 | 规则                           | 描述                         |
 | ------------------------------ | ---------------------------- |
@@ -49,7 +49,7 @@ priority: CRITICAL
 
 ---
 
-## 代码结构 (Code Structure)
+## 代码结构
 
 | 模式                            | 应用                     |
 | ------------------------------- | ------------------------ |
@@ -60,7 +60,7 @@ priority: CRITICAL
 
 ---
 
-## AI 编码风格 (AI Coding Style)
+## AI 编码风格
 
 | 情景         | 行动             |
 | ------------ | ---------------- |
@@ -70,7 +70,7 @@ priority: CRITICAL
 
 ---
 
-## 反模式 (Anti-Patterns) - 不要 (DON'T)
+## 反模式 - 不要 (DON'T)
 
 | ❌ 模式                  | ✅ 修复              |
 | ------------------------ | -------------------- |
@@ -104,12 +104,12 @@ File to edit: UserService.ts
 └── Do they need changes too? → Check function signatures
 ```
 
-> 🔴 **规则 (Rule):** 在同一个任务中编辑该文件 + 所有依赖文件。
+> 🔴 **规则:** 在同一个任务中编辑该文件 + 所有依赖文件。
 > 🔴 **永远不要留下损坏的导入或缺失的更新。**
 
 ---
 
-## 总结 (Summary)
+## 总结
 
 | 要 (Do)        | 不要 (Don't)       |
 | -------------- | ------------------ |
@@ -136,35 +136,35 @@ File to edit: UserService.ts
 | ✅ **无错误？**     | Lint 和 TypeScript 通过了吗？ |
 | ✅ **无遗漏？**     | 有遗漏任何边缘情况吗？        |
 
-> 🔴 **规则 (Rule):** 如果任何检查失败，在完成之前修复它。
+> 🔴 **规则:** 如果任何检查失败，在完成之前修复它。
 
 ---
 
 ## 验证脚本 (强制执行)
 
-> 🔴 **关键 (CRITICAL):** 每个 Agent (智能体) 在完成工作后仅运行自己 Skill (技能) 的脚本。
+> 🔴 **关键:** 每个 Agent (智能体) 在完成工作后仅运行自己 Skill (技能) 的脚本。
 
 ### Agent → 脚本映射
 
-| Agent                     | 脚本                    | 命令                                                                           |
-| ------------------------- | ----------------------- | ------------------------------------------------------------------------------ |
-| **frontend-specialist**   | UX 审计                 | `python .agent/skills/frontend-design/scripts/ux_audit.py .`                   |
-| **frontend-specialist**   | 无障碍检查 (A11y Check) | `python .agent/skills/frontend-design/scripts/accessibility_checker.py .`      |
-| **backend-specialist**    | API 验证器              | `python .agent/skills/api-patterns/scripts/api_validator.py .`                 |
-| **mobile-developer**      | 移动端审计              | `python .agent/skills/mobile-design/scripts/mobile_audit.py .`                 |
-| **database-architect**    | Schema 验证             | `python .agent/skills/database-design/scripts/schema_validator.py .`           |
-| **security-auditor**      | 安全扫描                | `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .`        |
-| **seo-specialist**        | SEO 检查                | `python .agent/skills/seo-fundamentals/scripts/seo_checker.py .`               |
-| **seo-specialist**        | GEO 检查                | `python .agent/skills/geo-fundamentals/scripts/geo_checker.py .`               |
-| **performance-optimizer** | Lighthouse              | `python .agent/skills/performance-profiling/scripts/lighthouse_audit.py <url>` |
-| **test-engineer**         | 测试运行器              | `python .agent/skills/testing-patterns/scripts/test_runner.py .`               |
-| **test-engineer**         | Playwright              | `python .agent/skills/webapp-testing/scripts/playwright_runner.py <url>`       |
-| **任意 Agent**            | Lint 检查               | `python .agent/skills/lint-and-validate/scripts/lint_runner.py .`              |
-| **任意 Agent**            | 类型覆盖率              | `python .agent/skills/lint-and-validate/scripts/type_coverage.py .`            |
-| **任意 Agent**            | 国际化 (i18n) 检查      | `python .agent/skills/i18n-localization/scripts/i18n_checker.py .`             |
+| Agent                     | 脚本               | 命令                                                                           |
+| ------------------------- | ------------------ | ------------------------------------------------------------------------------ |
+| **frontend-specialist**   | UX 审计            | `python .agent/skills/frontend-design/scripts/ux_audit.py .`                   |
+| **frontend-specialist**   | 无障碍检查         | `python .agent/skills/frontend-design/scripts/accessibility_checker.py .`      |
+| **backend-specialist**    | API 验证器         | `python .agent/skills/api-patterns/scripts/api_validator.py .`                 |
+| **mobile-developer**      | 移动端审计         | `python .agent/skills/mobile-design/scripts/mobile_audit.py .`                 |
+| **database-architect**    | Schema 验证        | `python .agent/skills/database-design/scripts/schema_validator.py .`           |
+| **security-auditor**      | 安全扫描           | `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .`        |
+| **seo-specialist**        | SEO 检查           | `python .agent/skills/seo-fundamentals/scripts/seo_checker.py .`               |
+| **seo-specialist**        | GEO 检查           | `python .agent/skills/geo-fundamentals/scripts/geo_checker.py .`               |
+| **performance-optimizer** | Lighthouse         | `python .agent/skills/performance-profiling/scripts/lighthouse_audit.py <url>` |
+| **test-engineer**         | 测试运行器         | `python .agent/skills/testing-patterns/scripts/test_runner.py .`               |
+| **test-engineer**         | Playwright         | `python .agent/skills/webapp-testing/scripts/playwright_runner.py <url>`       |
+| **任意 Agent**            | Lint 检查          | `python .agent/skills/lint-and-validate/scripts/lint_runner.py .`              |
+| **任意 Agent**            | 类型覆盖率         | `python .agent/skills/lint-and-validate/scripts/type_coverage.py .`            |
+| **任意 Agent**            | 国际化 (i18n) 检查 | `python .agent/skills/i18n-localization/scripts/i18n_checker.py .`             |
 
-> ❌ **错误 (WRONG):** `test-engineer` 运行 `ux_audit.py`
-> ✅ **正确 (CORRECT):** `frontend-specialist` 运行 `ux_audit.py`
+> ❌ **错误:** `test-engineer` 运行 `ux_audit.py`
+> ✅ **正确:** `frontend-specialist` 运行 `ux_audit.py`
 
 ---
 
@@ -199,6 +199,6 @@ File to edit: UserService.ts
 4. **等待用户确认** 再进行修复
 5. **修复后** → 重新运行脚本以确认
 
-> 🔴 **违规 (VIOLATION):** 运行脚本忽略输出 = 任务失败。
-> 🔴 **违规 (VIOLATION):** 未经询问自动修复 = 不允许。
-> 🔴 **规则 (Rule):** 始终 读取输出 → 总结 → 询问 → 然后修复。
+> 🔴 **违规:** 运行脚本忽略输出 = 任务失败。
+> 🔴 **违规:** 未经询问自动修复 = 不允许。
+> 🔴 **规则:** 始终 读取输出 → 总结 → 询问 → 然后修复。
