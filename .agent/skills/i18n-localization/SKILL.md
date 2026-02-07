@@ -4,9 +4,9 @@ description: 国际化与本地化模式。包含硬编码字符串检测、翻�
 allowed-tools: Read, Glob, Grep
 ---
 
-# i18n 与本地化 (i18n & Localization)
+# i18n 与本地化
 
-> 国际化 (i18n) 与本地化 (L10n) 最佳实践。
+> 国际化（i18n）与本地化（L10n）最佳实践。
 
 ---
 
@@ -14,10 +14,10 @@ allowed-tools: Read, Glob, Grep
 
 | 术语       | 含义                                                     |
 | ---------- | -------------------------------------------------------- |
-| **i18n**   | 国际化 (Internationalization) —— 使应用具备可翻译性      |
-| **L10n**   | 本地化 (Localization) —— 实际的翻译实施过程              |
-| **Locale** | 语言 + 地区代码 (例如：en-US, zh-CN)                     |
-| **RTL**    | 从右向左阅读的语言 (Right-to-left，如阿拉伯语、希伯来语) |
+| **i18n**   | 国际化（Internationalization）—— 使应用具备可翻译性      |
+| **L10n**   | 本地化（Localization）—— 实际的翻译实施过程              |
+| **Locale** | 语言 + 地区代码（例如：en-US, zh-CN）                    |
+| **RTL**    | 从右向左阅读的语言（Right-to-left，如阿拉伯语、希伯来语） |
 
 ---
 
@@ -35,7 +35,7 @@ allowed-tools: Read, Glob, Grep
 
 ## 3. 实现模式
 
-### React (react-i18next)
+### React（react-i18next）
 
 ```tsx
 import { useTranslation } from 'react-i18next';
@@ -46,7 +46,7 @@ function Welcome() {
 }
 ```
 
-### Next.js (next-intl)
+### Next.js（next-intl）
 
 ```tsx
 import { useTranslations } from 'next-intl';
@@ -57,7 +57,7 @@ export default function Page() {
 }
 ```
 
-### Python (gettext)
+### Python（gettext）
 
 ```python
 from gettext import gettext as _
@@ -89,16 +89,16 @@ locales/
 
 ### 推荐 ✅
 
-- 使用翻译键值 (Keys)，而非原始文本。
-- 按功能模块对翻译进行命名空间 (Namespace) 划分。
-- 支持复数形式 (Pluralization)。
+- 使用翻译键值（Keys），而非原始文本。
+- 按功能模块对翻译进行命名空间（Namespace）划分。
+- 支持复数形式（Pluralization）。
 - 根据不同地区处理日期/数字格式。
 - 从项目开始就规划对 RTL 的支持。
 - 针对复杂字符串使用 ICU 消息格式。
 
 ### 避免 ❌
 
-- 在组件中硬编码 (Hardcode) 字符串。
+- 在组件中硬编码（Hardcode）字符串。
 - 将多个翻译片段手动拼接。
 - 假设所有语言的文本长度一致（例如德语通常比英语长 30%）。
 - 忘记考虑 RTL 布局的特殊性。
@@ -110,7 +110,7 @@ locales/
 
 | 问题现象         | 解决方案                       |
 | ---------------- | ------------------------------ |
-| 缺少翻译内容     | 回退 (Fallback) 到默认语言     |
+| 缺少翻译内容     | 回退（Fallback）到默认语言     |
 | 存在硬编码字符串 | 使用 Linter 或检查脚本进行检测 |
 | 日期格式不统一   | 使用 Intl.DateTimeFormat API   |
 | 数字格式不统一   | 使用 Intl.NumberFormat API     |
