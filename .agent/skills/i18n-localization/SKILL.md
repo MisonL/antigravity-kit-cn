@@ -10,7 +10,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 1. 核心概念 (Core Concepts)
+## 1. 核心概念
 
 | 术语       | 含义                                                     |
 | ---------- | -------------------------------------------------------- |
@@ -21,7 +21,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 2. 何时使用 i18n (When to Use i18n)
+## 2. 何时使用 i18n
 
 | 项目类型      | 是否需要 i18n？         |
 | ------------- | ----------------------- |
@@ -33,31 +33,31 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 3. 实现模式 (Implementation Patterns)
+## 3. 实现模式
 
-### React (使用 react-i18next)
+### React (react-i18next)
 
 ```tsx
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 function Welcome() {
-    const { t } = useTranslation();
-    return <h1>{t("welcome.title")}</h1>;
+  const { t } = useTranslation();
+  return <h1>{t('welcome.title')}</h1>;
 }
 ```
 
-### Next.js (使用 next-intl)
+### Next.js (next-intl)
 
 ```tsx
-import { useTranslations } from "next-intl";
+import { useTranslations } from 'next-intl';
 
 export default function Page() {
-    const t = useTranslations("Home");
-    return <h1>{t("title")}</h1>;
+  const t = useTranslations('Home');
+  return <h1>{t('title')}</h1>;
 }
 ```
 
-### Python (使用 gettext)
+### Python (gettext)
 
 ```python
 from gettext import gettext as _
@@ -67,27 +67,27 @@ print(_("Welcome to our app"))
 
 ---
 
-## 4. 文件结构 (File Structure)
+## 4. 文件结构
 
 ```
 locales/
-├── en/          # 英语
+├── en/
 │   ├── common.json
 │   ├── auth.json
 │   └── errors.json
-├── zh/          # 中文
+├── tr/
 │   ├── common.json
 │   ├── auth.json
 │   └── errors.json
-└── ar/          # RTL 语言 (阿拉伯语)
+└── ar/          # RTL
     └── ...
 ```
 
 ---
 
-## 5. 最佳实践 (Best Practices)
+## 5. 最佳实践
 
-### 推荐做法 (DO) ✅
+### 推荐 ✅
 
 - 使用翻译键值 (Keys)，而非原始文本。
 - 按功能模块对翻译进行命名空间 (Namespace) 划分。
@@ -96,7 +96,7 @@ locales/
 - 从项目开始就规划对 RTL 的支持。
 - 针对复杂字符串使用 ICU 消息格式。
 
-### 禁止行为 (DON'T) ❌
+### 避免 ❌
 
 - 在组件中硬编码 (Hardcode) 字符串。
 - 将多个翻译片段手动拼接。
@@ -106,7 +106,7 @@ locales/
 
 ---
 
-## 6. 常见问题 (Common Issues)
+## 6. 常见问题
 
 | 问题现象         | 解决方案                       |
 | ---------------- | ------------------------------ |
@@ -118,24 +118,23 @@ locales/
 
 ---
 
-## 7. RTL 支持 (RTL Support)
+## 7. RTL 支持
 
 ```css
-/* 使用 CSS 逻辑属性 (Logical Properties) */
+/* CSS Logical Properties */
 .container {
-    margin-inline-start: 1rem; /* 而非 margin-left */
-    padding-inline-end: 1rem; /* 而非 padding-right */
+  margin-inline-start: 1rem;  /* Not margin-left */
+  padding-inline-end: 1rem;   /* Not padding-right */
 }
 
-/* 针对 RTL 翻转图标 */
 [dir="rtl"] .icon {
-    transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 ```
 
 ---
 
-## 8. 检查清单 (Checklist)
+## 8. 检查清单
 
 在正式发布前：
 
@@ -148,11 +147,8 @@ locales/
 
 ---
 
-## 运行脚本 (Script)
+## 脚本
 
 | 脚本                      | 用途                         | 执行命令                                    |
 | ------------------------- | ---------------------------- | ------------------------------------------- |
 | `scripts/i18n_checker.py` | 检测硬编码字符串及缺失的翻译 | `python scripts/i18n_checker.py <project_path>` |
-
----
-
