@@ -1,12 +1,12 @@
-# Mobile Debugging Guide
+# 移动端调试指南 (Mobile Debugging Guide)
 
-> **Stop console.log() debugging!**
-> Mobile apps have complex native layers. Text logs are not enough.
-> **This file teaches effective mobile debugging strategies.**
+> **停止只靠 console.log() 调试！**  
+> 移动应用存在复杂原生层，文本日志远远不够。  
+> **本文件提供高效移动端调试策略。**
 
 ---
 
-## 🧠 MOBILE DEBUGGING MINDSET
+## 🧠 移动端调试思维 (MOBILE DEBUGGING MINDSET)
 
 ```
 Web Debugging:      Mobile Debugging:
@@ -18,105 +18,105 @@ Web Debugging:      Mobile Debugging:
                     └──────────────┘
 ```
 
-**Key Differences:**
-1.  **Native Layer:** JS code works, but app crashes? It's likely native (Java/Obj-C).
-2.  **Deployment:** You can't just "refresh". State gets lost or stuck.
-3.  **Network:** SSL Pinning, proxy settings are harder.
-4.  **Device Logs:** `adb logcat` and `Console.app` are your truth.
+**关键差异：**
+1. **原生层问题：** JS 看起来正常但应用崩溃，通常是原生层（Java/Obj-C）问题。
+2. **部署特性：** 不能像 Web 一样随意刷新，状态可能丢失或卡死。
+3. **网络调试：** SSL Pinning、代理配置更复杂。
+4. **设备日志：** `adb logcat` 与 `Console.app` 才是最终真相。
 
 ---
 
-## 🚫 AI DEBUGGING ANTI-PATTERNS
+## 🚫 AI 调试反模式 (AI DEBUGGING ANTI-PATTERNS)
 
 | ❌ Default | ✅ Mobile-Correct |
 |------------|-------------------|
-| "Add console.logs" | Use Flipper / Reactotron |
-| "Check network tab" | Use Charles Proxy / Proxyman |
-| "It works on simulator" | **Test on Real Device** (HW specific bugs) |
-| "Reinstall node_modules" | **Clean Native Build** (Gradle/Pod cache) |
-| Ignored native logs | Read `logcat` / Xcode logs |
+| "Add console.logs" | 使用 Flipper / Reactotron |
+| "Check network tab" | 使用 Charles Proxy / Proxyman |
+| "It works on simulator" | **必须真机测试**（硬件相关 bug） |
+| "Reinstall node_modules" | **清理原生构建缓存**（Gradle/Pod） |
+| Ignored native logs | 读取 `logcat` / Xcode logs |
 
 ---
 
-## 1. The Toolset
+## 1. 工具集 (The Toolset)
 
 ### ⚡ React Native & Expo
 
 | Tool | Purpose | Best For |
 |------|---------|----------|
-| **Reactotron** | State/API/Redux | JS side debugging |
-| **Flipper** | Layout/Network/db | Native + JS bridge |
-| **Expo Tools** | Element inspector | Quick UI checks |
+| **Reactotron** | 状态/API/Redux 观测 | JS 侧调试 |
+| **Flipper** | 布局/网络/数据库 | 原生 + JS Bridge 调试 |
+| **Expo Tools** | 元素检查器 | 快速 UI 核查 |
 
-### 🛠️ Native Layer (The Deep Dive)
+### 🛠️ 原生层（深度排查）
 
 | Tool | Platform | Command | Why Use? |
 |------|----------|---------|----------|
-| **Logcat** | Android | `adb logcat` | Native crashes, ANRs |
-| **Console** | iOS | via Xcode | Native exceptions, memory |
-| **Layout Insp.** | Android | Android Studio | UI hierarchy bugs |
-| **View Insp.** | iOS | Xcode | UI hierarchy bugs |
+| **Logcat** | Android | `adb logcat` | 原生崩溃、ANR |
+| **Console** | iOS | via Xcode | 原生异常、内存问题 |
+| **Layout Insp.** | Android | Android Studio | UI 层级错误 |
+| **View Insp.** | iOS | Xcode | UI 层级错误 |
 
 ---
 
-## 2. Common Debugging Workflows
+## 2. 常见调试工作流 (Common Debugging Workflows)
 
-### 🕵️ "The App Just Crashed" (Red Screen vs Crash to Home)
+### 🕵️ “应用崩了” (Red Screen vs Crash to Home)
 
-**Scenario A: Red Screen (JS Error)**
-- **Cause:** Undefined is not an object, import error.
-- **Fix:** Read the stack trace on screen. It's usually clear.
+**场景 A：Red Screen（JS 错误）**
+- **原因：** `undefined is not an object`、导入错误等。
+- **处理：** 直接看屏幕堆栈，通常定位清晰。
 
-**Scenario B: Crash to Home Screen (Native Crash)**
-- **Cause:** Native module failure, memory OOM, permission usage without declaration.
-- **Tools:**
-    - **Android:** `adb logcat *:E` (Filter for Errors)
-    - **iOS:** Open Xcode → Window → Devices → View Device Logs
+**场景 B：闪退回桌面（原生崩溃）**
+- **原因：** 原生模块失败、内存 OOM、权限声明缺失等。
+- **工具：**
+    - **Android:** `adb logcat *:E`（只看 Error）
+    - **iOS:** Xcode → Window → Devices → View Device Logs
 
-> **💡 Pro Tip:** If app crashes immediately on launch, it's almost 100% a native configuration issue (Info.plist, AndroidManifest.xml).
+> **💡 提示：** 应用启动即崩，通常 100% 与原生配置有关（Info.plist、AndroidManifest.xml）。
 
-### 🌐 "API Request Failed" (Network)
+### 🌐 “API 请求失败” (Network)
 
-**Web:** Open Chrome DevTools → Network.
-**Mobile:** *You usually can't see this easily.*
+**Web：** 打开 Chrome DevTools → Network。  
+**Mobile：** 通常没这么直接。
 
-**Solution 1: Reactotron/Flipper**
-- View network requests in the monitoring app.
+**方案 1：Reactotron / Flipper**
+- 在监控面板中查看网络请求。
 
-**Solution 2: Proxy (Charles/Proxyman)**
-- **Hard but powerful.** See ALL traffic even from native SDKs.
-- Requires installing SSL cert on device.
+**方案 2：代理工具（Charles/Proxyman）**
+- **复杂但强大。** 可观察原生 SDK 流量。
+- 需要在设备安装 SSL 证书。
 
-### 🐢 "The UI is Laggy" (Performance)
+### 🐢 “UI 很卡” (Performance)
 
-**Don't guess.** measure.
-- **React Native:** Performance Monitor (Shake menu).
-- **Android:** "Profile GPU Rendering" in Developer Options.
-- **Issues:**
-    - **JS FPS drop:** Heavy calculation in JS thread.
-    - **UI FPS drop:** Too many views, intricate hierarchy, heavy images.
+**不要猜，要测。**
+- **React Native：** Performance Monitor（摇一摇菜单）。
+- **Android：** 开发者选项中的 “Profile GPU Rendering”。
+- **常见问题：**
+    - **JS FPS 下降：** JS 线程计算过重。
+    - **UI FPS 下降：** 视图层级过深、图片过重、布局复杂。
 
 ---
 
-## 3. Platform-Specific Nightmares
+## 3. 平台特有噩梦 (Platform-Specific Nightmares)
 
 ### Android
-- **Gradle Sync Fail:** Usually Java version mismatch or duplicate classes.
-- **Emulator Network:** Emulator `localhost` is `10.0.2.2`, NOT `127.0.0.1`.
-- **Cached Builds:** `./gradlew clean` is your best friend.
+- **Gradle Sync 失败：** 多见于 Java 版本冲突或重复类。
+- **模拟器网络：** 模拟器的 `localhost` 是 `10.0.2.2`，不是 `127.0.0.1`。
+- **构建缓存：** `./gradlew clean` 往往能救命。
 
 ### iOS
-- **Pod Issues:** `pod deintegrate && pod install`.
-- **Signing Errors:** Check Team ID and Bundle Identifier.
-- **Cache:** Xcode → Product → Clean Build Folder.
+- **Pod 问题：** `pod deintegrate && pod install`。
+- **签名错误：** 检查 Team ID 与 Bundle Identifier。
+- **缓存清理：** Xcode → Product → Clean Build Folder。
 
 ---
 
-## 📝 DEBUGGING CHECKLIST
+## 📝 调试检查清单 (DEBUGGING CHECKLIST)
 
-- [ ] **Is it a JS or Native crash?** (Red screen or home screen?)
-- [ ] **Did you clean build?** (Native caches are aggressive)
-- [ ] **Are you on a real device?** (Simulators hide concurrency bugs)
-- [ ] **Did you check the native logs?** (Not just terminal output)
+- [ ] **这是 JS 崩溃还是原生崩溃？**（红屏还是退桌面）
+- [ ] **你清理过构建缓存吗？**（原生缓存很“顽固”）
+- [ ] **你在真机上测过吗？**（模拟器会掩盖并发问题）
+- [ ] **你看过原生日志吗？**（不仅是终端输出）
 
-> **Remember:** If JavaScript looks perfect but the app fails, look closer at the Native side.
+> **牢记：** JavaScript 看起来没问题但应用失败时，请优先排查原生层。
