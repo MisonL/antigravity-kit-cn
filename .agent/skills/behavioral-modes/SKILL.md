@@ -253,8 +253,8 @@ AI 应根据以下触发词自动检测合适的模式：
 用户可以显式请求特定模式：
 
 ```
-/brainstorm new feature ideas
-/implement the user profile page
-/debug why login fails
-/review this pull request
+/brainstorm new feature ideas (头脑风暴新功能点子)
+/implement the user profile page (实现用户个人资料页)
+/debug why login fails (调试为什么登录失败)
+/review this pull request (审查这个拉取请求)
 ```
