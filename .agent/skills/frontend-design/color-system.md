@@ -1,13 +1,13 @@
-# Color System Reference
+# 色彩系统参考 (Color System Reference)
 
-> Color theory principles, selection process, and decision-making guidelines.
-> **No memorized hex codes - learn to THINK about color.**
+> 色彩理论原则、选色流程与决策指南。  
+> **不要死记十六进制色值，要学会“如何思考颜色”。**
 
 ---
 
-## 1. Color Theory Fundamentals
+## 1. 色彩理论基础 (Color Theory Fundamentals)
 
-### The Color Wheel
+### 色环 (The Color Wheel)
 
 ```
                     YELLOW
@@ -32,26 +32,26 @@
                     BLUE
 ```
 
-### Color Relationships
+### 色彩关系 (Color Relationships)
 
 | Scheme | How to Create | When to Use |
 |--------|---------------|-------------|
-| **Monochromatic** | Pick ONE hue, vary only lightness/saturation | Minimal, professional, cohesive |
-| **Analogous** | Pick 2-3 ADJACENT hues on wheel | Harmonious, calm, nature-inspired |
-| **Complementary** | Pick OPPOSITE hues on wheel | High contrast, vibrant, attention |
-| **Split-Complementary** | Base + 2 colors adjacent to complement | Dynamic but balanced |
-| **Triadic** | 3 hues EQUIDISTANT on wheel | Vibrant, playful, creative |
+| **Monochromatic（单色）** | 只选一个 hue，仅改变明度/饱和度 | 极简、专业、一致性强 |
+| **Analogous（邻近色）** | 在色环上选 2-3 个相邻 hue | 和谐、平静、自然感 |
+| **Complementary（互补色）** | 选色环上相对 hue | 高对比、鲜明、吸睛 |
+| **Split-Complementary（分裂互补）** | 主色 + 互补色两侧相邻色 | 动态但更平衡 |
+| **Triadic（三角色）** | 色环上等距 3 个 hue | 活泼、创意、表现力强 |
 
-### How to Choose a Scheme:
-1. **What's the project mood?** Calm → Analogous. Bold → Complementary.
-2. **How many colors needed?** Minimal → Monochromatic. Complex → Triadic.
-3. **Who's the audience?** Conservative → Monochromatic. Young → Triadic.
+### 如何选择配色关系：
+1. **项目氛围是什么？** 平静 → 邻近色；大胆 → 互补色。
+2. **需要多少颜色？** 简洁 → 单色；复杂 → 三角色。
+3. **受众是谁？** 保守 → 单色；年轻化 → 三角色。
 
 ---
 
-## 2. The 60-30-10 Rule
+## 2. 60-30-10 规则
 
-### Distribution Principle
+### 分布原则 (Distribution Principle)
 ```
 ┌─────────────────────────────────────────────────┐
 │                                                 │
@@ -69,7 +69,7 @@
 └────────────────────────────────────┴────────────┘
 ```
 
-### Implementation Pattern
+### 实现模式 (Implementation Pattern)
 ```css
 :root {
   /* 60% - Pick based on light/dark mode and mood */
@@ -86,49 +86,49 @@
 
 ---
 
-## 3. Color Psychology - Meaning & Selection
+## 3. 色彩心理学：含义与选色 (Color Psychology)
 
-### How to Choose Based on Context
+### 按场景选色 (How to Choose Based on Context)
 
 | If Project Is... | Consider These Hues | Why |
 |------------------|---------------------|-----|
-| **Finance, Tech, Healthcare** | Blues, Teals | Trust, stability, calm |
-| **Eco, Wellness, Nature** | Greens, Earth tones | Growth, health, organic |
-| **Food, Energy, Youth** | Orange, Yellow, Warm | Appetite, excitement, warmth |
-| **Luxury, Beauty, Creative** | Deep Teal, Gold, Black | Sophistication, premium |
-| **Urgency, Sales, Alerts** | Red, Orange | Action, attention, passion |
+| **Finance, Tech, Healthcare** | Blues, Teals | 信任、稳定、平静 |
+| **Eco, Wellness, Nature** | Greens, Earth tones | 生长、健康、自然 |
+| **Food, Energy, Youth** | Orange, Yellow, Warm | 食欲、兴奋、温暖 |
+| **Luxury, Beauty, Creative** | Deep Teal, Gold, Black | 高级感、质感、专业度 |
+| **Urgency, Sales, Alerts** | Red, Orange | 行动驱动、强提醒 |
 
-### Emotional Associations (For Decision Making)
+### 情绪联想（用于决策）(Emotional Associations)
 
 | Hue Family | Positive Associations | Cautions |
 |------------|----------------------|----------|
-| **Blue** | Trust, calm, professional | Can feel cold, corporate |
-| **Green** | Growth, nature, success | Can feel boring if overused |
-| **Red** | Passion, urgency, energy | High arousal, use sparingly |
-| **Orange** | Warmth, friendly, creative | Can feel cheap if saturated |
-| **Purple** | ⚠️ **BANNED** - AI overuses this! | Use Deep Teal/Maroon/Emerald instead |
-| **Yellow** | Optimism, attention, happy | Hard to read, use as accent |
-| **Black** | Elegance, power, modern | Can feel heavy |
-| **White** | Clean, minimal, open | Can feel sterile |
+| **Blue** | 信任、冷静、专业 | 可能偏冷、企业感过重 |
+| **Green** | 生长、自然、成功 | 过度使用会显平淡 |
+| **Red** | 激情、紧迫、能量 | 刺激性高，需节制 |
+| **Orange** | 温暖、友好、创意 | 饱和过高会显廉价 |
+| **Purple** | ⚠️ **BANNED** - AI 过度使用！ | 建议改用 Deep Teal/Maroon/Emerald |
+| **Yellow** | 乐观、注意力、活力 | 可读性弱，适合点缀 |
+| **Black** | 优雅、力量、现代 | 可能显沉重 |
+| **White** | 干净、极简、开阔 | 可能显冷淡 |
 
-### Selection Process:
-1. **What industry?** → Narrow to 2-3 hue families
-2. **What emotion?** → Pick primary hue
-3. **What contrast?** → Decide light vs dark mode
-4. **ASK USER** → Confirm before proceeding
+### 选色流程：
+1. **行业是什么？** → 先收敛到 2-3 个色相家族
+2. **情绪目标是什么？** → 选主色相
+3. **对比策略是什么？** → 决定 light / dark 模式
+4. **询问用户** → 确认后再落地
 
 ---
 
-## 4. Palette Generation Principles
+## 4. 调色盘生成原则 (Palette Generation Principles)
 
-### From a Single Color (HSL Method)
+### 从单色出发（HSL 方法）
 
-Instead of memorizing hex codes, learn to **manipulate HSL**:
+不要背 hex，学会 **操作 HSL**：
 
 ```
 HSL = Hue, Saturation, Lightness
 
-Hue (0-360): The color family
+Hue (0-360): 色相家族
   0/360 = Red
   60 = Yellow
   120 = Green
@@ -136,19 +136,19 @@ Hue (0-360): The color family
   240 = Blue
   300 = Purple
 
-Saturation (0-100%): Color intensity
-  Low = Muted, sophisticated
-  High = Vibrant, energetic
+Saturation (0-100%): 饱和度
+  Low = 低饱和、稳重
+  High = 高饱和、活跃
 
-Lightness (0-100%): Brightness
+Lightness (0-100%): 明度
   0% = Black
   50% = Pure color
   100% = White
 ```
 
-### Generating a Full Palette
+### 生成完整色阶 (Generating a Full Palette)
 
-Given ANY base color, create a scale:
+给任意基色，建立阶梯：
 
 ```
 Lightness Scale:
@@ -164,22 +164,22 @@ Lightness Scale:
   900 (darkest)  → L: 20%
 ```
 
-### Saturation Adjustments
+### 饱和度调整 (Saturation Adjustments)
 
 | Context | Saturation Level |
 |---------|-----------------|
-| **Professional/Corporate** | Lower (40-60%) |
-| **Playful/Youth** | Higher (70-90%) |
-| **Dark Mode** | Reduce by 10-20% |
-| **Accessibility** | Ensure contrast, may need adjustment |
+| **Professional/Corporate** | 较低（40-60%） |
+| **Playful/Youth** | 较高（70-90%） |
+| **Dark Mode** | 下调 10-20% |
+| **Accessibility** | 以对比度为准，必要时继续调整 |
 
 ---
 
-## 5. Context-Based Selection Guide
+## 5. 基于上下文的选色指南 (Context-Based Selection Guide)
 
-### Instead of Copying Palettes, Follow This Process:
+### 不要抄现成调色盘，按流程走：
 
-**Step 1: Identify the Context**
+**Step 1：识别场景**
 ```
 What type of project?
 ├── E-commerce → Need trust + urgency balance
@@ -190,7 +190,7 @@ What type of project?
 └── Other → ASK the user
 ```
 
-**Step 2: Select Primary Hue Family**
+**Step 2：选择主色相家族**
 ```
 Based on context, pick ONE:
 - Blue family (trust)
@@ -200,7 +200,7 @@ Based on context, pick ONE:
 - OR ask user preference
 ```
 
-**Step 3: Decide Light/Dark Mode**
+**Step 3：决定明暗模式**
 ```
 Consider:
 - User preference?
@@ -209,24 +209,24 @@ Consider:
 - Time of use? (evening app = dark option)
 ```
 
-**Step 4: Generate Palette Using Principles**
-- Use HSL manipulation
-- Follow 60-30-10 rule
-- Check contrast (WCAG)
-- Test with actual content
+**Step 4：按原则生成调色盘**
+- 使用 HSL 调整
+- 遵循 60-30-10
+- 做 WCAG 对比度校验
+- 用真实内容做视觉验证
 
 ---
 
-## 6. Dark Mode Principles
+## 6. 深色模式原则 (Dark Mode Principles)
 
-### Key Rules (No Fixed Codes)
+### 关键规则（非固定色值）
 
-1. **Never pure black** → Use very dark gray with slight hue
-2. **Never pure white text** → Use 87-92% lightness
-3. **Reduce saturation** → Vibrant colors strain eyes in dark mode
-4. **Elevation = brightness** → Higher elements slightly lighter
+1. **避免纯黑** → 用带轻微色相的深灰
+2. **避免纯白文本** → 建议明度 87-92%
+3. **降低饱和度** → 深色模式下高饱和更刺眼
+4. **海拔=亮度** → 层级越高，背景应略亮
 
-### Contrast in Dark Mode
+### 深色模式中的层级对比
 
 ```
 Background layers (darker → lighter as elevation increases):
@@ -236,76 +236,76 @@ Layer 2 (modals)  → Even lighter
 Layer 3 (popups)  → Lightest dark
 ```
 
-### Adapting Colors for Dark Mode
+### Light → Dark 颜色适配
 
 | Light Mode | Dark Mode Adjustment |
 |------------|---------------------|
-| High saturation accent | Reduce saturation 10-20% |
-| Pure white background | Dark gray with brand hue tint |
-| Black text | Light gray (not pure white) |
-| Colorful backgrounds | Desaturated, darker versions |
+| 高饱和强调色 | 饱和度下调 10-20% |
+| 纯白背景 | 改为带品牌色倾向的深灰 |
+| 黑色文本 | 改为浅灰（非纯白） |
+| 高彩背景 | 用降饱和、降明度版本 |
 
 ---
 
-## 7. Accessibility Guidelines
+## 7. 无障碍指南 (Accessibility Guidelines)
 
-### Contrast Requirements (WCAG)
+### 对比度要求（WCAG）
 
 | Level | Normal Text | Large Text |
 |-------|-------------|------------|
 | AA (minimum) | 4.5:1 | 3:1 |
 | AAA (enhanced) | 7:1 | 4.5:1 |
 
-### How to Check Contrast
+### 对比度检查流程
 
-1. **Convert colors to luminance**
-2. **Calculate ratio**: (lighter + 0.05) / (darker + 0.05)
-3. **Adjust until ratio meets requirement**
+1. **转为相对亮度**
+2. **计算比值**：`(lighter + 0.05) / (darker + 0.05)`
+3. **持续调整**到满足目标等级
 
-### Safe Patterns
+### 安全模式 (Safe Patterns)
 
 | Use Case | Guideline |
 |----------|-----------|
-| **Text on light bg** | Use lightness 35% or less |
-| **Text on dark bg** | Use lightness 85% or more |
-| **Primary on white** | Ensure dark enough variant |
-| **Buttons** | High contrast between bg and text |
+| **Text on light bg** | 文本明度建议 ≤ 35% |
+| **Text on dark bg** | 文本明度建议 ≥ 85% |
+| **Primary on white** | 主色需提供足够深的可读版本 |
+| **Buttons** | 按钮底色与文字必须高对比 |
 
 ---
 
-## 8. Color Selection Checklist
+## 8. 选色检查清单 (Color Selection Checklist)
 
-Before finalizing any color choice, verify:
+定稿前逐项确认：
 
-- [ ] **Asked user preference?** (if not specified)
-- [ ] **Matches project context?** (industry, audience)
-- [ ] **Follows 60-30-10?** (proper distribution)
-- [ ] **WCAG compliant?** (contrast checked)
-- [ ] **Works in both modes?** (if dark mode needed)
-- [ ] **NOT your default/favorite?** (variety check)
-- [ ] **Different from last project?** (avoid repetition)
+- [ ] **问过用户偏好吗？**（若需求未指定）
+- [ ] **匹配项目上下文吗？**（行业、受众）
+- [ ] **遵循 60-30-10 吗？**（分布合理）
+- [ ] **满足 WCAG 吗？**（已测对比度）
+- [ ] **明暗模式都可用吗？**（若项目需要 dark mode）
+- [ ] **不是你的默认最爱配色吗？**（避免惯性）
+- [ ] **和上个项目明显不同吗？**（避免重复）
 
 ---
 
-## 9. Anti-Patterns to Avoid
+## 9. 需要避免的反模式 (Anti-Patterns to Avoid)
 
 ### ❌ DON'T:
-- Copy the same hex codes every project
-- Default to purple/violet (AI tendency)
-- Default to dark mode + neon (AI tendency)
-- Use pure black (#000000) backgrounds
-- Use pure white (#FFFFFF) text on dark
-- Ignore user's industry context
-- Skip asking user preference
+- 每个项目都复用同一组 hex
+- 默认紫色/紫罗兰（AI 常见倾向）
+- 默认 dark mode + neon（AI 常见倾向）
+- 用纯黑（#000000）做背景
+- 在深色背景上用纯白（#FFFFFF）文本
+- 忽略行业语境
+- 跳过用户偏好确认
 
 ### ✅ DO:
-- Generate fresh palette per project
-- Ask user about color preferences
-- Consider industry and audience
-- Use HSL for flexible manipulation
-- Test contrast and accessibility
-- Offer light AND dark options
+- 每个项目生成新的调色体系
+- 主动确认用户色彩偏好
+- 按行业与受众决策
+- 用 HSL 进行可控调整
+- 做对比度与可访问性验证
+- 同时提供 light 与 dark 方案（按需求）
 
 ---
 
-> **Remember**: Colors are decisions, not defaults. Every project deserves thoughtful selection based on its unique context.
+> **牢记：** 颜色是“决策结果”，不是“默认配置”。每个项目都值得基于其独特语境进行认真选择。

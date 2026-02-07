@@ -35,27 +35,27 @@ skills: clean-code, mobile-design
 
 ### 通用文件（始终必读）(Universal / Always Read)
 
-| File | Content | Status |
-|------|---------|--------|
-| **[mobile-design-thinking.md](../skills/mobile-design/mobile-design-thinking.md)** | **⚠️ 反记忆化：先思考，不照抄** | **⬜ CRITICAL FIRST** |
-| **[SKILL.md](../skills/mobile-design/SKILL.md)** | **反模式、检查点、总览** | **⬜ CRITICAL** |
-| **[touch-psychology.md](../skills/mobile-design/touch-psychology.md)** | **Fitts' Law、手势、触觉反馈** | **⬜ CRITICAL** |
-| **[mobile-performance.md](../skills/mobile-design/mobile-performance.md)** | **RN/Flutter 优化、60fps** | **⬜ CRITICAL** |
-| **[mobile-backend.md](../skills/mobile-design/mobile-backend.md)** | **推送、离线同步、移动端 API** | **⬜ CRITICAL** |
-| **[mobile-testing.md](../skills/mobile-design/mobile-testing.md)** | **测试金字塔、E2E、平台测试** | **⬜ CRITICAL** |
-| **[mobile-debugging.md](../skills/mobile-design/mobile-debugging.md)** | **Native vs JS 调试、Flipper、Logcat** | **⬜ CRITICAL** |
-| [mobile-navigation.md](../skills/mobile-design/mobile-navigation.md) | Tab/Stack/Drawer、深链路 | ⬜ Read |
-| [decision-trees.md](../skills/mobile-design/decision-trees.md) | 框架、状态、存储选型 | ⬜ Read |
+| File                                                                               | Content                                | Status                |
+| ---------------------------------------------------------------------------------- | -------------------------------------- | --------------------- |
+| **[mobile-design-thinking.md](../skills/mobile-design/mobile-design-thinking.md)** | **⚠️ 反记忆化：先思考，不照抄**        | **⬜ CRITICAL FIRST** |
+| **[SKILL.md](../skills/mobile-design/SKILL.md)**                                   | **反模式、检查点、总览**               | **⬜ CRITICAL**       |
+| **[touch-psychology.md](../skills/mobile-design/touch-psychology.md)**             | **Fitts' Law、手势、触觉反馈**         | **⬜ CRITICAL**       |
+| **[mobile-performance.md](../skills/mobile-design/mobile-performance.md)**         | **RN/Flutter 优化、60fps**             | **⬜ CRITICAL**       |
+| **[mobile-backend.md](../skills/mobile-design/mobile-backend.md)**                 | **推送、离线同步、移动端 API**         | **⬜ CRITICAL**       |
+| **[mobile-testing.md](../skills/mobile-design/mobile-testing.md)**                 | **测试金字塔、E2E、平台测试**          | **⬜ CRITICAL**       |
+| **[mobile-debugging.md](../skills/mobile-design/mobile-debugging.md)**             | **Native vs JS 调试、Flipper、Logcat** | **⬜ CRITICAL**       |
+| [mobile-navigation.md](../skills/mobile-design/mobile-navigation.md)               | Tab/Stack/Drawer、深链路               | ⬜ Read               |
+| [decision-trees.md](../skills/mobile-design/decision-trees.md)                     | 框架、状态、存储选型                   | ⬜ Read               |
 
 > 🧠 **mobile-design-thinking.md 是最高优先级。** 它能防止套模板，强制上下文思考。
 
 ### 平台专项（按目标平台阅读）(Platform-Specific)
 
-| Platform | File | When to Read |
-|----------|------|--------------|
-| **iOS** | [platform-ios.md](../skills/mobile-design/platform-ios.md) | iPhone/iPad 项目 |
-| **Android** | [platform-android.md](../skills/mobile-design/platform-android.md) | Android 项目 |
-| **Both** | Both above | 跨平台（React Native/Flutter） |
+| Platform    | File                                                               | When to Read                   |
+| ----------- | ------------------------------------------------------------------ | ------------------------------ |
+| **iOS**     | [platform-ios.md](../skills/mobile-design/platform-ios.md)         | iPhone/iPad 项目               |
+| **Android** | [platform-android.md](../skills/mobile-design/platform-android.md) | Android 项目                   |
+| **Both**    | Both above                                                         | 跨平台（React Native/Flutter） |
 
 > 🔴 **iOS 项目？先读 platform-ios.md！**
 > 🔴 **Android 项目？先读 platform-android.md！**
@@ -69,26 +69,26 @@ skills: clean-code, mobile-design
 
 ### 以下信息未给出时，必须提问：
 
-| Aspect | Question | Why |
-|--------|----------|-----|
-| **Platform** | "iOS、Android，还是双端？" | 影响所有设计决策 |
-| **Framework** | "React Native、Flutter，还是原生？" | 决定实现模式与工具 |
-| **Navigation** | "Tab、Drawer，还是 Stack 导航？" | 核心 UX 决策 |
-| **State** | "状态管理用什么？（Zustand/Redux/Riverpod/BLoC）" | 架构基础 |
-| **Offline** | "是否需要离线可用？" | 决定数据策略 |
-| **Target devices** | "仅手机，还是支持平板？" | 影响布局复杂度 |
+| Aspect             | Question                                          | Why                |
+| ------------------ | ------------------------------------------------- | ------------------ |
+| **Platform**       | "iOS、Android，还是双端？"                        | 影响所有设计决策   |
+| **Framework**      | "React Native、Flutter，还是原生？"               | 决定实现模式与工具 |
+| **Navigation**     | "Tab、Drawer，还是 Stack 导航？"                  | 核心 UX 决策       |
+| **State**          | "状态管理用什么？（Zustand/Redux/Riverpod/BLoC）" | 架构基础           |
+| **Offline**        | "是否需要离线可用？"                              | 决定数据策略       |
+| **Target devices** | "仅手机，还是支持平板？"                          | 影响布局复杂度     |
 
 ### ⛔ 需要避免的默认倾向：
 
-| AI Default Tendency | Why It's Bad | Think Instead |
-|---------------------|--------------|---------------|
-| **长列表默认 ScrollView** | 内存爆炸 | 这是列表吗？→ FlatList |
-| **renderItem 内联写法** | 列表项全量重渲染 | 是否 memoize 了 renderItem？ |
-| **Token 放 AsyncStorage** | 不安全 | 是敏感数据吗？→ SecureStore |
-| **所有项目同一技术栈** | 不匹配上下文 | 当前项目真正需要什么？ |
-| **跳过平台差异检查** | 用户感知“不像原生” | iOS 就要 iOS 感，Android 就要 Android 感 |
-| **简单应用也上 Redux** | 过度设计 | Zustand 是否足够？ |
-| **忽略拇指区** | 单手难操作 | 主 CTA 放在哪里？ |
+| AI Default Tendency       | Why It's Bad       | Think Instead                            |
+| ------------------------- | ------------------ | ---------------------------------------- |
+| **长列表默认 ScrollView** | 内存爆炸           | 这是列表吗？→ FlatList                   |
+| **renderItem 内联写法**   | 列表项全量重渲染   | 是否 memoize 了 renderItem？             |
+| **Token 放 AsyncStorage** | 不安全             | 是敏感数据吗？→ SecureStore              |
+| **所有项目同一技术栈**    | 不匹配上下文       | 当前项目真正需要什么？                   |
+| **跳过平台差异检查**      | 用户感知“不像原生” | iOS 就要 iOS 感，Android 就要 Android 感 |
+| **简单应用也上 Redux**    | 过度设计           | Zustand 是否足够？                       |
+| **忽略拇指区**            | 单手难操作         | 主 CTA 放在哪里？                        |
 
 ---
 
@@ -96,34 +96,34 @@ skills: clean-code, mobile-design
 
 ### 性能类禁忌 (Performance Sins)
 
-| ❌ NEVER | ✅ ALWAYS |
-|----------|----------|
-| `ScrollView` for lists | `FlatList` / `FlashList` / `ListView.builder` |
-| Inline `renderItem` function | `useCallback` + `React.memo` |
-| Missing `keyExtractor` | 使用稳定唯一 ID |
-| `useNativeDriver: false` | `useNativeDriver: true` |
-| `console.log` in production | 发布前清理日志 |
-| `setState()` for everything | 精准状态管理，`const` 构造优先 |
+| ❌ NEVER                     | ✅ ALWAYS                                     |
+| ---------------------------- | --------------------------------------------- |
+| `ScrollView` for lists       | `FlatList` / `FlashList` / `ListView.builder` |
+| Inline `renderItem` function | `useCallback` + `React.memo`                  |
+| Missing `keyExtractor`       | 使用稳定唯一 ID                               |
+| `useNativeDriver: false`     | `useNativeDriver: true`                       |
+| `console.log` in production  | 发布前清理日志                                |
+| `setState()` for everything  | 精准状态管理，`const` 构造优先                |
 
 ### 触控/UX 禁忌 (Touch/UX Sins)
 
-| ❌ NEVER | ✅ ALWAYS |
-|----------|----------|
-| 点击区 < 44px | 最小 44pt（iOS）/ 48dp（Android） |
-| 间距 < 8px | 元素间距最少 8-12px |
-| 只有手势无按钮 | 提供可见按钮备选 |
-| 无加载态 | 始终提供加载反馈 |
-| 无错误态 | 错误态 + 重试入口 |
-| 无离线处理 | 优雅降级 + 缓存数据 |
+| ❌ NEVER       | ✅ ALWAYS                         |
+| -------------- | --------------------------------- |
+| 点击区 < 44px  | 最小 44pt（iOS）/ 48dp（Android） |
+| 间距 < 8px     | 元素间距最少 8-12px               |
+| 只有手势无按钮 | 提供可见按钮备选                  |
+| 无加载态       | 始终提供加载反馈                  |
+| 无错误态       | 错误态 + 重试入口                 |
+| 无离线处理     | 优雅降级 + 缓存数据               |
 
 ### 安全类禁忌 (Security Sins)
 
-| ❌ NEVER | ✅ ALWAYS |
-|----------|----------|
-| Token 存在 `AsyncStorage` | `SecureStore` / `Keychain` |
-| 硬编码 API keys | 环境变量管理 |
-| 跳过 SSL pinning | 生产启用证书绑定 |
-| 日志写敏感数据 | 禁止记录 token/password/PII |
+| ❌ NEVER                  | ✅ ALWAYS                   |
+| ------------------------- | --------------------------- |
+| Token 存在 `AsyncStorage` | `SecureStore` / `Keychain`  |
+| 硬编码 API keys           | 环境变量管理                |
+| 跳过 SSL pinning          | 生产启用证书绑定            |
+| 日志写敏感数据            | 禁止记录 token/password/PII |
 
 ---
 
@@ -149,6 +149,7 @@ Anti-Patterns I Will Avoid:
 ```
 
 **示例：**
+
 ```
 🧠 CHECKPOINT:
 
@@ -176,6 +177,7 @@ Anti-Patterns I Will Avoid:
 ### Phase 1：需求分析（始终第一步）
 
 编码前先明确：
+
 - **Platform**：iOS、Android，还是双端？
 - **Framework**：React Native、Flutter，还是原生？
 - **Offline**：哪些功能要离线可用？
@@ -186,6 +188,7 @@ Anti-Patterns I Will Avoid:
 ### Phase 2：架构设计
 
 应用 [decision-trees.md](../skills/mobile-design/decision-trees.md) 的决策框架：
+
 - 框架选择
 - 状态管理
 - 导航模式
@@ -194,6 +197,7 @@ Anti-Patterns I Will Avoid:
 ### Phase 3：执行实现
 
 按层推进：
+
 1. 导航结构
 2. 核心页面（列表必须 memoize）
 3. 数据层（API、存储）
@@ -202,6 +206,7 @@ Anti-Patterns I Will Avoid:
 ### Phase 4：验收验证
 
 结束前确认：
+
 - [ ] 性能：低端机可达 60fps？
 - [ ] 触控：所有目标 ≥ 44-48px？
 - [ ] 离线：有优雅降级？
@@ -262,6 +267,7 @@ ListView.builder(
 ## 质量控制闭环（强制）(Quality Control Loop)
 
 每次编辑文件后：
+
 1. **运行校验**：执行 Lint 检查
 2. **性能检查**：列表是否 memoized？动画是否走 native？
 3. **安全检查**：Token 是否避免明文存储？
@@ -291,11 +297,11 @@ AI 必须：
 
 **Android SDK 默认路径（按系统）：**
 
-| OS | Default SDK Path | Emulator Path |
-|----|------------------|---------------|
+| OS          | Default SDK Path             | Emulator Path           |
+| ----------- | ---------------------------- | ----------------------- |
 | **Windows** | `%LOCALAPPDATA%\Android\Sdk` | `emulator\emulator.exe` |
-| **macOS** | `~/Library/Android/sdk` | `emulator/emulator` |
-| **Linux** | `~/Android/Sdk` | `emulator/emulator` |
+| **macOS**   | `~/Library/Android/sdk`      | `emulator/emulator`     |
+| **Linux**   | `~/Android/Sdk`              | `emulator/emulator`     |
 
 **按平台命令：**
 
@@ -328,12 +334,12 @@ adb devices
 
 ### 按框架构建命令
 
-| Framework | Android Build | iOS Build |
-|-----------|---------------|-----------|
-| **React Native (Bare)** | `cd android && ./gradlew assembleDebug` | `cd ios && xcodebuild -workspace App.xcworkspace -scheme App` |
-| **Expo (Dev)** | `npx expo run:android` | `npx expo run:ios` |
-| **Expo (EAS)** | `eas build --platform android --profile preview` | `eas build --platform ios --profile preview` |
-| **Flutter** | `flutter build apk --debug` | `flutter build ios --debug` |
+| Framework               | Android Build                                    | iOS Build                                                     |
+| ----------------------- | ------------------------------------------------ | ------------------------------------------------------------- |
+| **React Native (Bare)** | `cd android && ./gradlew assembleDebug`          | `cd ios && xcodebuild -workspace App.xcworkspace -scheme App` |
+| **Expo (Dev)**          | `npx expo run:android`                           | `npx expo run:ios`                                            |
+| **Expo (EAS)**          | `eas build --platform android --profile preview` | `eas build --platform ios --profile preview`                  |
+| **Flutter**             | `flutter build apk --debug`                      | `flutter build ios --debug`                                   |
 
 ### 构建后必须检查
 
@@ -350,14 +356,14 @@ BUILD OUTPUT:
 
 ### 常见构建错误
 
-| Error Type | Cause | Fix |
-|------------|-------|-----|
-| **Gradle sync failed** | 依赖版本冲突 | 检查 `build.gradle`，统一版本 |
-| **Pod install failed** | iOS 依赖问题 | `cd ios && pod install --repo-update` |
-| **TypeScript errors** | 类型不匹配 | 修复类型定义 |
-| **Missing imports** | 自动导入失败 | 手动补全导入 |
-| **Android SDK version** | `minSdkVersion` 过低 | 在 `build.gradle` 中更新 |
-| **iOS deployment target** | 版本不一致 | 在 Xcode/Podfile 更新 |
+| Error Type                | Cause                | Fix                                   |
+| ------------------------- | -------------------- | ------------------------------------- |
+| **Gradle sync failed**    | 依赖版本冲突         | 检查 `build.gradle`，统一版本         |
+| **Pod install failed**    | iOS 依赖问题         | `cd ios && pod install --repo-update` |
+| **TypeScript errors**     | 类型不匹配           | 修复类型定义                          |
+| **Missing imports**       | 自动导入失败         | 手动补全导入                          |
+| **Android SDK version**   | `minSdkVersion` 过低 | 在 `build.gradle` 中更新              |
+| **iOS deployment target** | 版本不一致           | 在 Xcode/Podfile 更新                 |
 
 ### 强制构建检查清单
 
