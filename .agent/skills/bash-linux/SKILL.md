@@ -4,30 +4,30 @@ description: Bash/Linux 终端命令模式。关键命令、管道操作、错�
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# Bash Linux 模式 (Bash Linux Patterns)
+# Bash Linux Patterns
 
 > Linux/macOS 上 Bash 的基本使用模式。
 
 ---
 
-## 1. 运算符语法 (Operator Syntax)
+## 1. Operator Syntax
 
-### 链接命令
+### Chaining Commands
 
-| 运算符 | 含义               | 示例                         |
-| ------ | ------------------ | ---------------------------- | ------------------ | ----------- | --- | -------------------- |
-| `;`    | 按顺序运行         | `cmd1; cmd2`                 |
-| `&&`   | 前一个成功后再运行 | `npm install && npm run dev` |
-| `      |                    | `                            | 前一个失败后再运行 | `npm test   |     | echo "Tests failed"` |
-| `      | `                  | 管道输出                     | `ls                | grep ".js"` |
+| Operator | Meaning            | Example                      |
+| -------- | ------------------ | ---------------------------- | ------------------ | ----------- | --- | -------------------- |
+| `;`      | 按顺序运行         | `cmd1; cmd2`                 |
+| `&&`     | 前一个成功后再运行 | `npm install && npm run dev` |
+| `        |                    | `                            | 前一个失败后再运行 | `npm test   |     | echo "Tests failed"` |
+| `        | `                  | 管道输出                     | `ls                | grep ".js"` |
 
 ---
 
-## 2. 文件操作 (File Operations)
+## 2. File Operations
 
-### 核心命令
+### Essential Commands
 
-| 任务         | 命令                                 |
+| Task         | Command                              |
 | ------------ | ------------------------------------ |
 | 列出所有     | `ls -la`                             |
 | 查找文件     | `find . -name "*.js" -type f`        |
@@ -41,9 +41,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 3. 进程管理 (Process Management)
+## 3. Process Management
 
-| 任务          | 命令                          |
+| Task          | Command                       |
 | ------------- | ----------------------------- | ---------- |
 | 列出进程      | `ps aux`                      |
 | 按名称查找    | `ps aux                       | grep node` |
@@ -56,27 +56,27 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 4. 文本处理 (Text Processing)
+## 4. Text Processing
 
-### 核心工具
+### Core Tools
 
-| 工具   | 用途             | 示例                            |
-| ------ | ---------------- | ------------------------------- | -------- |
-| `grep` | 搜索             | `grep -rn "TODO" src/`          |
-| `sed`  | 替换             | `sed -i 's/old/new/g' file.txt` |
-| `awk`  | 提取列           | `awk '{print $1}' file.txt`     |
-| `cut`  | 切割字段         | `cut -d',' -f1 data.csv`        |
-| `sort` | 排序行           | `sort -u file.txt`              |
-| `uniq` | 去重/统计重复    | `sort file.txt                  | uniq -c` |
-| `wc`   | 统计 (字数/行数) | `wc -l file.txt`                |
+| Tool   | Purpose       | Example                         |
+| ------ | ------------- | ------------------------------- | -------- |
+| `grep` | 搜索          | `grep -rn "TODO" src/`          |
+| `sed`  | 替换          | `sed -i 's/old/new/g' file.txt` |
+| `awk`  | 提取列        | `awk '{print $1}' file.txt`     |
+| `cut`  | 切割字段      | `cut -d',' -f1 data.csv`        |
+| `sort` | 排序行        | `sort -u file.txt`              |
+| `uniq` | 去重/统计重复 | `sort file.txt                  | uniq -c` |
+| `wc`   | 统计 (行数)   | `wc -l file.txt`                |
 
 ---
 
-## 5. 环境变量 (Environment Variables)
+## 5. Environment Variables
 
-| 任务         | 命令                            |
+| Task         | Command                         |
 | ------------ | ------------------------------- |
-| 查看所有     | `env` 或 `printenv`             |
+| 查看所有     | `env` or `printenv`             |
 | 查看特定变量 | `echo $PATH`                    |
 | 设置临时变量 | `export VAR="value"`            |
 | 在脚本中设置 | `VAR="value" command`           |
@@ -84,19 +84,19 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 6. 网络 (Network)
+## 6. Network
 
-| 任务           | 命令                                                                        |
+| Task           | Command                                                                     |
 | -------------- | --------------------------------------------------------------------------- |
 | 下载文件       | `curl -O https://example.com/file`                                          |
 | API 请求       | `curl -X GET https://api.example.com`                                       |
 | POST JSON 数据 | `curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' URL` |
 | 检查端口       | `nc -zv localhost 3000`                                                     |
-| 网络信息       | `ifconfig` 或 `ip addr`                                                     |
+| 网络信息       | `ifconfig` or `ip addr`                                                     |
 
 ---
 
-## 7. 脚本模板 (Script Template)
+## 7. Script Template
 
 ```bash
 #!/bin/bash
@@ -126,9 +126,9 @@ main "$@"
 
 ---
 
-## 8. 通用模式 (Common Patterns)
+## 8. Common Patterns
 
-### 检查命令是否存在
+### Check if command exists
 
 ```bash
 if command -v node &> /dev/null; then
@@ -136,13 +136,13 @@ if command -v node &> /dev/null; then
 fi
 ```
 
-### 变量默认值
+### Default variable value
 
 ```bash
 NAME=${1:-"default_value"}
 ```
 
-### 逐行读取文件
+### Read file line by line
 
 ```bash
 while IFS= read -r line; do
@@ -150,7 +150,7 @@ while IFS= read -r line; do
 done < file.txt
 ```
 
-### 遍历文件
+### Loop over files
 
 ```bash
 for file in *.js; do
@@ -160,9 +160,9 @@ done
 
 ---
 
-## 9. 与 PowerShell 的差异
+## 9. Differences from PowerShell
 
-| 任务       | PowerShell               | Bash             |
+| Task       | PowerShell               | Bash             |
 | ---------- | ------------------------ | ---------------- |
 | 列出文件   | `Get-ChildItem`          | `ls -la`         |
 | 查找文件   | `Get-ChildItem -Recurse` | `find . -type f` |
@@ -173,9 +173,9 @@ done
 
 ---
 
-## 10. 错误处理 (Error Handling)
+## 10. Error Handling
 
-### 设置选项
+### Set options
 
 ```bash
 set -e          # 出错退出
@@ -184,7 +184,7 @@ set -o pipefail # 管道失败退出
 set -x          # 调试：打印命令
 ```
 
-### 清理陷阱 (Trap for cleanup)
+### Trap for cleanup
 
 ```bash
 cleanup() {
