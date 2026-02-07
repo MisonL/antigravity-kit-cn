@@ -4,65 +4,62 @@ description: Design thinking and decision-making for web UI. Use when designing 
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# 前端设计系统 (Frontend Design System)
+# 前端设计系统
 
-> **哲学 (Philosophy):** 每一个像素都有其目的。克制即是奢华。用户心理驱动决策。
-> **核心原则 (Core Principle):** THINK (思考)，不要死记硬背。ASK (询问)，不要假设。
+> **哲学：** 每一个像素都有其目的。克制即是奢华。用户心理驱动决策。
+> **核心原则：** THINK（思考），不要死记硬背。ASK（询问），不要假设。
 
 ---
 
-## 🎯 选择性阅读规则 (强制) - Selective Reading Rule (MANDATORY)
+## 🎯 选择性阅读规则（强制）
 
 **始终阅读“必须”的文件，“可选”的文件仅在需要时阅读：**
 
 | 文件                                         | 状态                   | 何时阅读                                                      |
 | -------------------------------------------- | ---------------------- | ------------------------------------------------------------- |
-| [ux-psychology.md](ux-psychology.md)         | 🔴 **REQUIRED (必须)** | 始终先读！                                                    |
-| [color-system.md](color-system.md)           | ⚪ Optional (可选)     | Color/palette (颜色/调色板) 决策时                            |
-| [typography-system.md](typography-system.md) | ⚪ Optional (可选)     | Font selection/pairing (字体选择/搭配) 时                     |
-| [visual-effects.md](visual-effects.md)       | ⚪ Optional (可选)     | Glassmorphism (玻璃拟态), shadows (阴影), gradients (渐变) 时 |
-| [animation-guide.md](animation-guide.md)     | ⚪ Optional (可选)     | Animation (动画) 需要时                                       |
-| [motion-graphics.md](motion-graphics.md)     | ⚪ Optional (可选)     | Lottie, GSAP, 3D                                              |
-| [decision-trees.md](decision-trees.md)       | ⚪ Optional (可选)     | Context templates (上下文模板) 时                             |
+| [ux-psychology.md](ux-psychology.md)         | 🔴 **必须** | 始终先读！                            |
+| [color-system.md](color-system.md)           | ⚪ 可选     | 颜色/调色板决策时                      |
+| [typography-system.md](typography-system.md) | ⚪ 可选     | 字体选择/搭配决策时                    |
+| [visual-effects.md](visual-effects.md)       | ⚪ 可选     | 玻璃拟态、阴影、渐变决策时             |
+| [animation-guide.md](animation-guide.md)     | ⚪ 可选     | 动画方案需要时                         |
+| [motion-graphics.md](motion-graphics.md)     | ⚪ 可选     | Lottie、GSAP、3D 动效需求时            |
+| [decision-trees.md](decision-trees.md)       | ⚪ 可选     | 需要上下文决策模板时                   |
 
-> 🔴 **ux-psychology.md = ALWAYS READ (始终阅读)。其他 = 仅在相关时阅读。**
+> 🔴 **`ux-psychology.md` 必须始终阅读；其他文件仅在相关场景阅读。**
 
 ---
 
-## 🔧 运行时脚本 (Runtime Scripts)
+## 🔧 运行时脚本
 
 **执行这些脚本进行审计 (不要阅读，直接运行)：**
 
 | 脚本                  | 用途                                                        | 用法                                        |
 | --------------------- | ----------------------------------------------------------- | ------------------------------------------- |
-| `scripts/ux_audit.py` | UX Psychology & Accessibility Audit (UX 心理学与无障碍审计) | `python scripts/ux_audit.py <project_path>` |
+| `scripts/ux_audit.py` | UX 心理学与无障碍审计 | `python scripts/ux_audit.py <project_path>` |
 
 ---
 
-## ⚠️ 关键：假设前先询问 (强制) - CRITICAL: ASK BEFORE ASSUMING (MANDATORY)
+## ⚠️ 关键：假设前先询问（强制）
 
-> **STOP! 如果用户的请求是开放式的，不要默认为你的喜好。**
+> **如果用户的请求是开放式的，不要按你的偏好默认决策。**
 
-### 当用户提示词模糊时，询问 (When User Prompt is Vague, ASK):
+### 当用户提示词模糊时，先询问：
 
-**未指定颜色？ (Color not specified?)** 问：
+**未指定颜色？** 问：
 
-> "What color palette do you prefer? (blue/green/orange/neutral/other?)"
-> "你更喜欢哪种调色板？(蓝色/绿色/橙色/中性色/其他？)"
+> "你更喜欢哪种调色板？（蓝色/绿色/橙色/中性色/其他）"
 
-**未指定风格？ (Style not specified?)** 问：
+**未指定风格？** 问：
 
-> "What style are you going for? (minimal/bold/retro/futuristic/organic?)"
-> "你想要什么风格？(极简/大胆/复古/未来主义/有机？)"
+> "你想要什么风格？（极简/大胆/复古/未来主义/有机）"
 
-**未指定布局？ (Layout not specified?)** 问：
+**未指定布局？** 问：
 
-> "Do you have a layout preference? (single column/grid/asymmetric/full-width?)"
-> "你有布局偏好吗？(单栏/网格/不对称/全宽？)"
+> "你有布局偏好吗？（单栏/网格/不对称/全宽）"
 
-### ⛔ 避免的默认倾向 (非避风港) - DEFAULT TENDENCIES TO AVOID (ANTI-SAFE HARBOR):
+### ⛔ 避免默认倾向（反避风港）
 
-| AI Default Tendency (AI 默认倾向)                 | Why It's Bad (为什么不好)  | Think Instead (试着思考)           |
+| AI 默认倾向                                        | 为什么不好                 | 替代思路                           |
 | ------------------------------------------------- | -------------------------- | ---------------------------------- |
 | **Bento Grids (便当网格) (Modern Cliché)**        | 每个 AI 设计都在用         | 为什么这个内容 **需要** 网格？     |
 | **Hero Split (Left/Right) (左右分割 Hero)**       | 可预测且无聊               | 巨大的排版或垂直叙事怎么样？       |
@@ -73,11 +70,11 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 | Dark background + neon glow (深色背景 + 霓虹发光) | 过度使用，"AI 风格"        | **品牌** 实际上需要什么？          |
 | **Rounded everything (全圆角)**                   | 通用/安全                  | 哪里可以使用锐利、粗野主义的边缘？ |
 
-> 🔴 **"你选择的每一个‘安全’结构都会让你离通用模板更近一步。承担风险 (TAKE RISKS)。"**
+> 🔴 **你选择的每一个“安全”结构都会让你更接近通用模板。请主动承担设计风险。**
 
 ---
 
-## 1. 约束分析 (始终优先) - Constraint Analysis (ALWAYS FIRST)
+## 1. 约束分析（始终优先）
 
 在任何设计工作之前，回答这些问题或询问用户：
 
@@ -89,7 +86,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 | **Tech (技术)**       | 什么技术栈？     | 影响能力                    |
 | **Audience (受众)**   | 到底是谁？       | 驱动所有视觉决策            |
 
-### 受众 → 设计方法 (Audience → Design Approach)
+### 受众 → 设计方法
 
 | 受众                       | 思考方向                   |
 | -------------------------- | -------------------------- |
@@ -102,9 +99,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 2. UX 心理学原则 (UX Psychology Principles)
+## 2. UX 心理学原则
 
-### 核心定律 (内化这些) - Core Laws (Internalize These)
+### 核心定律（内化这些）
 
 | 定律                               | 原则                   | 应用                         |
 | ---------------------------------- | ---------------------- | ---------------------------- |
@@ -114,15 +111,15 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 | **Von Restorff (冯·雷斯托夫效应)** | 不同 = 难忘            | 使 CTA 视觉独特              |
 | **Serial Position (系列位置效应)** | 最初/最后记得最清      | 关键信息在开始/结束          |
 
-### 情感设计层级 (Emotional Design Levels)
+### 情感设计层级
 
 ```
-VISCERAL (本能)    → First impression (第一印象): colors (颜色), imagery (意象), overall feel (整体感觉)
-BEHAVIORAL (行为)  → Using it (使用它): speed (速度), feedback (反馈), efficiency (效率)
-REFLECTIVE (反思)  → After (之后): "I like what this says about me" ("我喜欢这所表达的关于我的特质")
+本能层（Visceral）   → 第一印象：颜色、意象、整体感觉
+行为层（Behavioral） → 使用过程：速度、反馈、效率
+反思层（Reflective） → 使用之后：这是否表达了用户的自我认同
 ```
 
-### 建立信任 (Trust Building)
+### 建立信任
 
 - 敏感操作上的安全指示器
 - 相关处的社会证明 (Social proof)
@@ -132,30 +129,30 @@ REFLECTIVE (反思)  → After (之后): "I like what this says about me" ("我�
 
 ---
 
-## 3. 布局原则 (Layout Principles)
+## 3. 布局原则
 
-### 黄金比例 (Golden Ratio) (φ = 1.618)
+### 黄金比例（φ = 1.618）
 
 ```
 用于比例和谐:
-├── Content (内容) : Sidebar (侧边栏) = roughly 62% : 38%
-├── Each heading size (每个标题大小) = previous (上一个) × 1.618 (for dramatic scale/为了戏剧性比例)
-├── Spacing (间距) can follow: sm → md → lg (each × 1.618)
+├── 内容区 : 侧边栏 ≈ 62% : 38%
+├── 每级标题字号 = 上一级 × 1.618（用于拉开戏剧化层级）
+├── 间距可按 sm → md → lg 递进（每级约 × 1.618）
 ```
 
-### 8 点网格概念 (8-Point Grid Concept)
+### 8 点网格概念
 
 ```
-All spacing and sizing in multiples of 8 (所有间距和尺寸均为 8 的倍数):
-├── Tight (紧凑): 4px (half-step for micro/微小的半步)
-├── Small (小): 8px
-├── Medium (中): 16px
-├── Large (大): 24px, 32px
-├── XL (超大): 48px, 64px, 80px
-└── Adjust based on content density (根据内容密度调整)
+所有间距和尺寸均为 8 的倍数：
+├── 紧凑：4px（微调半步）
+├── 小：8px
+├── 中：16px
+├── 大：24px, 32px
+├── 超大：48px, 64px, 80px
+└── 根据内容密度调整
 ```
 
-### 关键尺寸原则 (Key Sizing Principles)
+### 关键尺寸原则
 
 | 元素                         | 考虑因素             |
 | ---------------------------- | -------------------- |
@@ -167,118 +164,118 @@ All spacing and sizing in multiples of 8 (所有间距和尺寸均为 8 的倍�
 
 ---
 
-## 4. 颜色原则 (Color Principles)
+## 4. 颜色原则
 
-### 60-30-10 规则 (60-30-10 Rule)
+### 60-30-10 规则
 
 ```
-60% → Primary/Background (主色/背景) (calm, neutral base/平静，中性基底)
-30% → Secondary (辅助色) (supporting areas/支撑区域)
-10% → Accent (强调色) (CTAs, highlights, attention/行动号召，高亮，注意)
+60% → 主色/背景（平静、中性基底）
+30% → 辅助色（支撑区域）
+10% → 强调色（CTA、高亮、注意力）
 ```
 
-### 颜色心理学 (用于决策) - Color Psychology (For Decision Making)
+### 颜色心理学（用于决策）
 
 | 如果你需要...                   | 考虑色相             | 避免         |
 | ------------------------------- | -------------------- | ------------ |
-| Trust, calm (信任，平静)        | 蓝色系               | 激进的红色   |
-| Growth, nature (增长，自然)     | 绿色系               | 工业灰色     |
-| Energy, urgency (能量，紧迫)    | 橙色，红色           | 被动的蓝色   |
-| Luxury, creativity (奢华，创意) | 深青色，金色，祖母绿 | 廉价感的亮色 |
-| Clean, minimal (干净，极简)     | 中性色               | 压倒性的颜色 |
+| 信任、平静（Trust, calm）       | 蓝色系               | 激进的红色   |
+| 成长、自然（Growth, nature）    | 绿色系               | 工业灰色     |
+| 能量、紧迫（Energy, urgency）   | 橙色、红色           | 被动的蓝色   |
+| 奢华、创意（Luxury, creativity） | 深青色、金色、祖母绿 | 廉价感的亮色 |
+| 干净、极简（Clean, minimal）    | 中性色               | 压倒性的颜色 |
 
-### 选择流程 (Selection Process)
+### 选择流程
 
-1. **What's the industry? (什么行业？)** (缩小选项)
-2. **What's the emotion? (什么情绪？)** (挑选主色)
-3. **Light or dark mode? (亮色还是暗色模式？)** (设定基础)
-4. **ASK USER (询问用户)** 如果未指定
+1. **行业是什么？**（先缩小选项）
+2. **要传达什么情绪？**（确定主色方向）
+3. **亮色还是暗色模式？**（设定基础风格）
+4. **未指定就先问用户。**
 
 有关详细颜色理论：[color-system.md](color-system.md)
 
 ---
 
-## 5. 排版原则 (Typography Principles)
+## 5. 排版原则
 
-### 比例选择 (Scale Selection)
+### 比例选择
 
 | 内容类型                 | 比例系数  | 感觉          |
 | ------------------------ | --------- | ------------- |
-| Dense UI (紧凑 UI)       | 1.125-1.2 | 紧凑，高效    |
-| General web (通用 Web)   | 1.25      | 平衡 (最常见) |
-| Editorial (编辑类)       | 1.333     | 易读，宽敞    |
-| Hero/display (Hero/展示) | 1.5-1.618 | 戏剧性冲击    |
+| 紧凑型 UI（Dense UI）      | 1.125-1.2 | 紧凑，高效    |
+| 通用 Web（General web）    | 1.25      | 平衡（最常见） |
+| 编辑类（Editorial）        | 1.333     | 易读，宽敞    |
+| 展示区（Hero/display）     | 1.5-1.618 | 戏剧性冲击    |
 
-### 配对概念 (Pairing Concept)
+### 配对概念
 
 ```
-Contrast + Harmony (对比 + 和谐):
-├── DIFFERENT enough for hierarchy (足够不同以区分层级)
-├── SIMILAR enough for cohesion (足够相似以保持内聚)
-└── Usually (通常): display + neutral (展示 + 中性), or serif + sans (衬线 + 无衬线)
+对比 + 和谐：
+├── 层级上要足够不同
+├── 风格上要足够一致
+└── 常见组合：展示字体 + 中性字体，或衬线 + 无衬线
 ```
 
-### 易读性规则 (Readability Rules)
+### 易读性规则
 
-- **Line length (行长)**: 45-75 字符最佳
-- **Line height (行高)**: 正文文本 1.4-1.6
-- **Contrast (对比度)**: 检查 WCAG 要求
-- **Size (字号)**: Web 正文 16px+
+- **行长**：45-75 字符最佳
+- **行高**：正文文本 1.4-1.6
+- **对比度**：检查 WCAG 要求
+- **字号**：Web 正文 16px+
 
 有关详细排版：[typography-system.md](typography-system.md)
 
 ---
 
-## 6. 视觉效果原则 (Visual Effects Principles)
+## 6. 视觉效果原则
 
-### 玻璃拟态 (Glassmorphism) (适当时)
-
-```
-Key properties (关键属性):
-├── Semi-transparent background (半透明背景)
-├── Backdrop blur (背景模糊)
-├── Subtle border for definition (用于定义的微妙边框)
-└── ⚠️ **WARNING:** Standard blue/white glassmorphism is a modern cliché. Use it radically or not at all (标准的蓝/白玻璃拟态是现代陈词滥调。要么激进地使用，要么不用)。
-```
-
-### 阴影层级 (Shadow Hierarchy)
+### 玻璃拟态（适当时）
 
 ```
-Elevation concept (抬升概念):
-├── Higher elements = larger shadows (更高元素 = 更大阴影)
-├── Y-offset > X-offset (light from above) (Y 偏移 > X 偏移 (光从上方来))
-├── Multiple layers = more realistic (多层 = 更真实)
-└── Dark mode (暗色模式): may need glow instead (可能需要发光代替)
+关键属性：
+├── 半透明背景
+├── 背景模糊
+├── 细微边框增强边界感
+└── ⚠️ **警告：** 标准蓝白玻璃拟态已是陈词滥调，要么激进使用，要么不要使用。
 ```
 
-### 渐变使用 (Gradient Usage)
+### 阴影层级
 
 ```
-Harmonious gradients (和谐的渐变):
-├── Adjacent colors on wheel (色轮上的相邻颜色) (analogous/类比)
-├── OR same hue, different lightness (或者相同色相，不同亮度)
-├── Avoid harsh complementary pairs (避免刺眼的互补对)
-├── 🚫 **NO Mesh/Aurora Gradients (禁止网格/极光渐变)** (floating blobs/漂浮的斑点)
-└── VARY from project to project radically (在不同项目中激进地变化)
+抬升概念：
+├── 元素越高，阴影越大
+├── Y 偏移应大于 X 偏移（模拟上方光源）
+├── 多层阴影更接近真实质感
+└── 暗色模式下可考虑以发光替代重阴影
+```
+
+### 渐变使用
+
+```
+和谐的渐变：
+├── 优先使用色轮相邻色（analogous）
+├── 或同色相的明暗变化
+├── 避免刺眼的互补色硬拼
+├── 🚫 禁止千篇一律的网格/极光渐变漂浮斑点
+└── 不同项目要做明显区分，不要复用同一套渐变模板
 ```
 
 有关完整效果指南：[visual-effects.md](visual-effects.md)
 
 ---
 
-## 7. 动画原则 (Animation Principles)
+## 7. 动画原则
 
-### 计时概念 (Timing Concept)
+### 计时概念
 
 ```
-Duration based on (持续时间基于):
-├── Distance (距离) (further = longer/更远 = 更长)
-├── Size (尺寸) (larger = slower/更大 = 更慢)
-├── Importance (重要性) (critical = clear/关键 = 清晰)
-└── Context (上下文) (urgent = fast/紧急 = 快, luxury = slow/奢华 = 慢)
+持续时间依据：
+├── 距离：越远越长
+├── 尺寸：越大越慢
+├── 重要性：越关键越要清晰可辨
+└── 上下文：紧急更快，奢华更慢
 ```
 
-### 缓动选择 (Easing Selection)
+### 缓动选择
 
 | 动作            | 缓动        | 为什么         |
 | --------------- | ----------- | -------------- |
@@ -287,7 +284,7 @@ Duration based on (持续时间基于):
 | Emphasis (强调) | Ease-in-out | 平滑，刻意     |
 | Playful (好玩)  | Bounce      | 有趣，充满活力 |
 
-### 性能 (Performance)
+### 性能
 
 - 仅动画化 transform 和 opacity
 - 尊重减弱动态 (reduced-motion) 偏好
@@ -297,9 +294,9 @@ Duration based on (持续时间基于):
 
 ---
 
-## 8. "Wow Factor" 检查清单 ("Wow Factor" Checklist)
+## 8. 质感检查清单（Wow Factor）
 
-### 高级感指标 (Premium Indicators)
+### 高级感指标
 
 - [ ] Generous whitespace (慷慨的留白) (luxury = breathing room/奢华 = 呼吸空间)
 - [ ] Subtle depth and dimension (微妙的深度和维度)
@@ -308,7 +305,7 @@ Duration based on (持续时间基于):
 - [ ] Cohesive visual rhythm (内聚的视觉韵律)
 - [ ] Custom elements (自定义元素) (not all defaults/不全是默认值)
 
-### 信任构建者 (Trust Builders)
+### 信任构建者
 
 - [ ] Security cues where appropriate (适当时的安全提示)
 - [ ] Social proof / testimonials (社会证明/推荐)
@@ -316,7 +313,7 @@ Duration based on (持续时间基于):
 - [ ] Professional imagery (专业的意象)
 - [ ] Consistent design language (一致的设计语言)
 
-### 情感触发器 (Emotional Triggers)
+### 情感触发器
 
 - [ ] Hero that evokes intended emotion (唤起预期情绪的 Hero)
 - [ ] Human elements (人文元素) (faces, stories/面孔，故事)
@@ -325,9 +322,9 @@ Duration based on (持续时间基于):
 
 ---
 
-## 9. 反模式 (Anti-Patterns) (不要做什么)
+## 9. 反模式（不要做什么）
 
-### ❌ 懒惰设计指标 (Lazy Design Indicators)
+### ❌ 懒惰设计指标
 
 - 不考虑就使用默认系统字体
 - 不匹配的库存图片
@@ -336,7 +333,7 @@ Duration based on (持续时间基于):
 - 没有层级的文字墙
 - 不可访问的对比度
 
-### ❌ AI 倾向模式 (避免！) - AI Tendency Patterns (AVOID!)
+### ❌ AI 倾向模式（避免）
 
 - **Same colors every project (每个项目都是相同的颜色)**
 - **Dark + neon as default (默认暗色 + 霓虹)**
@@ -346,7 +343,7 @@ Duration based on (持续时间基于):
 - **Same layout structure / Vercel clone (相同的布局结构 / Vercel 克隆)**
 - **Not asking user preferences (不询问用户偏好)**
 
-### ❌ 黑暗模式 (不道德) - Dark Patterns (Unethical)
+### ❌ 黑暗模式（不道德）
 
 - 隐藏成本
 - 虚假紧迫感
@@ -356,36 +353,36 @@ Duration based on (持续时间基于):
 
 ---
 
-## 10. 决策流程总结 (Decision Process Summary)
+## 10. 决策流程总结
 
 ```
-For EVERY design task (对于每个设计任务):
+每个设计任务都按以下流程执行：
 
-1. CONSTRAINTS (约束)
-   └── What's the timeline, brand, tech, audience? (时间线、品牌、技术、受众是什么？)
-   └── If unclear → ASK (如果不清楚 → 问)
+1. CONSTRAINTS（约束）
+   └── 时间线、品牌、技术、受众是什么？
+   └── 不清楚就先 ASK（询问）
 
-2. CONTENT (内容)
-   └── What content exists? (存在什么内容？)
-   └── What's the hierarchy? (层级是什么？)
+2. CONTENT（内容）
+   └── 已有内容是什么？
+   └── 信息层级是什么？
 
-3. STYLE DIRECTION (风格方向)
-   └── What's appropriate for context? (什么适合上下文？)
-   └── If unclear → ASK (don't default!) (如果不清楚 → 问 (不要用默认！))
+3. STYLE DIRECTION（风格方向）
+   └── 哪种风格符合当前上下文？
+   └── 不清楚就先 ASK（询问），不要默认套模板
 
-4. EXECUTION (执行)
-   └── Apply principles above (应用上述原则)
-   └── Check against anti-patterns (对照反模式检查)
+4. EXECUTION（执行）
+   └── 应用上面的原则
+   └── 对照反模式自检
 
-5. REVIEW (审查)
-   └── "Does this serve the user?" ("这服务于用户吗？")
-   └── "Is this different from my defaults?" ("这与我的默认设置不同吗？")
-   └── "Would I be proud of this?" ("我会为此感到自豪吗？")
+5. REVIEW（审查）
+   └── 这是否真的服务于用户？
+   └── 这是否明显区别于默认套路？
+   └── 这是否达到可交付质量？
 ```
 
 ---
 
-## 参考文件 (Reference Files)
+## 参考文件
 
 有关特定领域的更深入指导：
 
@@ -399,26 +396,26 @@ For EVERY design task (对于每个设计任务):
 
 ---
 
-## 相关 Skill (Related Skills)
+## 相关 Skill
 
 | Skill (技能)                                                   | 何时使用                                      |
 | -------------------------------------------------------------- | --------------------------------------------- |
 | **frontend-design** (this/本技能)                              | 编码前 - 学习设计原则 (颜色, 排版, UX 心理学) |
 | **[web-design-guidelines](../web-design-guidelines/SKILL.md)** | 编码后 - 审计无障碍性、性能和最佳实践         |
 
-## 设计后工作流 (Post-Design Workflow)
+## 设计后工作流
 
 实施设计后，运行审计：
 
 ```
-1. DESIGN (设计) → Read frontend-design principles (阅读前端设计原则) ← YOU ARE HERE (你在这里)
-2. CODE (编码)   → Implement the design (实施设计)
-3. AUDIT (审计)  → Run web-design-guidelines review (运行 web-design-guidelines 审查)
-4. FIX (修复)    → Address findings from audit (解决审计发现的问题)
+1. DESIGN（设计）→ 阅读 `frontend-design` 原则（当前在此阶段）
+2. CODE（编码）→ 实施设计
+3. AUDIT（审计）→ 运行 `web-design-guidelines` 审查
+4. FIX（修复）→ 解决审查发现的问题
 ```
 
-> **下一步 (Next Step):** 编码后，使用 `web-design-guidelines` 技能来审计你的实现，检查无障碍性、焦点状态、动画和性能问题。
+> **下一步：** 编码后，使用 `web-design-guidelines` 技能审计实现，重点检查无障碍、焦点状态、动画和性能问题。
 
 ---
 
-> **记住：** Design is THINKING, not copying (设计是思考，而不是复制)。每个项目都值得基于其独特背景和用户进行新的考虑。**Avoid the Modern SaaS Safe Harbor (避免现代 SaaS 避风港)!**
+> **记住：** 设计是思考，不是复制。每个项目都应基于其独特背景与用户重新判断，避免落入现代 SaaS 的“安全模板”。

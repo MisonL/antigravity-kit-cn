@@ -125,19 +125,19 @@ allowed-tools: Read, Glob, Grep, Bash
 ### 何时统一与分歧
 
 ```
-                    UNIFY (统一) (两者相同)                 DIVERGE (分歧) (平台特定)
-                    ───────────────────                     ──────────────────────────
-业务逻辑 (Business Logic) ✅ 总是 (Always)                    -
-数据层 (Data Layer)       ✅ 总是 (Always)                    -
-核心功能 (Core Features)  ✅ 总是 (Always)                    -
+                    统一（两端相同）                         分歧（平台特定）
+                    ─────────────────                       ───────────────────────
+业务逻辑 ✅ 始终统一                                          -
+数据层 ✅ 始终统一                                            -
+核心功能 ✅ 始终统一                                          -
 
-导航 (Navigation)         -                                 ✅ iOS: 边缘滑动 (edge swipe), Android: 返回按钮 (back button)
-手势 (Gestures)           -                                 ✅ 平台原生感觉 (Platform-native feel)
-图标 (Icons)              -                                 ✅ SF Symbols vs Material Icons
-日期选择器 (Date Pickers) -                                 ✅ 原生选择器感觉正确 (Native pickers feel right)
-模态/表单 (Modals/Sheets) -                                 ✅ iOS: bottom sheet vs Android: dialog
-排版 (Typography)         -                                 ✅ SF Pro vs Roboto (或自定义)
-错误对话框 (Error Dialogs)-                                 ✅ 警报的平台惯例 (Platform conventions for alerts)
+导航         -                                              ✅ iOS: 边缘滑动，Android: 返回按钮
+手势         -                                              ✅ 符合平台原生交互习惯
+图标         -                                              ✅ SF Symbols 与 Material Icons 区分使用
+日期选择器   -                                              ✅ 使用各平台原生选择器体验
+模态/表单    -                                              ✅ iOS 常用 bottom sheet，Android 常用 dialog
+排版         -                                              ✅ SF Pro 与 Roboto 可按平台分流
+错误对话框   -                                              ✅ 遵循平台警报与确认交互惯例
 ```
 
 ### 快速参考：平台默认值
@@ -162,9 +162,9 @@ allowed-tools: Read, Glob, Grep, Bash
 桌面端: 光标精确 (1px)
 移动端: 手指不精确 (~7mm 接触面积)
 
-→ 触控目标必须最小 44-48px (Touch targets MUST be 44-48px minimum)
-→ 重要动作在拇指区 (Important actions in THUMB ZONE) (屏幕底部)
-→ 破坏性动作远离易触达区域 (Destructive actions AWAY from easy reach)
+→ 触控目标最小 44-48px
+→ 重要动作放在拇指区（屏幕底部）
+→ 破坏性动作远离易触达区域
 ```
 
 ### 拇指区 (单手使用)
@@ -275,18 +275,18 @@ GPU 加速 (快):               CPU 绑定 (慢):
 > **在编写任何移动端代码之前，你必须完成此检查点：**
 
 ```
-🧠 检查点 (CHECKPOINT):
+🧠 检查点：
 
-平台 (Platform):   [ iOS / Android / 两者 ]
-框架 (Framework):  [ React Native / Flutter / SwiftUI / Kotlin ]
-已读文件 (Files Read): [ 列出你已阅读的技能文件 ]
+平台：   [ iOS / Android / 两者 ]
+框架：   [ React Native / Flutter / SwiftUI / Kotlin ]
+已读文件： [ 列出你已阅读的技能文件 ]
 
-我将应用的 3 个原则 (3 Principles I Will Apply):
+我将应用的 3 个原则：
 1. _______________
 2. _______________
 3. _______________
 
-我将避免的反模式 (Anti-Patterns I Will Avoid):
+我将避免的反模式：
 1. _______________
 2. _______________
 ```
@@ -294,7 +294,7 @@ GPU 加速 (快):               CPU 绑定 (慢):
 **示例:**
 
 ```
-🧠 检查点 (CHECKPOINT):
+🧠 检查点：
 
 平台:   iOS + Android (跨平台)
 框架:   React Native + Expo

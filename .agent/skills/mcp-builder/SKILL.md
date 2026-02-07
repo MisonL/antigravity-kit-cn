@@ -4,17 +4,17 @@ description: MCP (Model Context Protocol) server building principles. Tool desig
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# MCP 构建器 (MCP Builder)
+# MCP 构建器
 
 > 构建 MCP 服务器的原则。
 
-## 1. MCP 概述 (MCP Overview)
+## 1. MCP 概述
 
 ### 什么是 MCP？(What is MCP?)
 
 模型上下文协议 (Model Context Protocol) - 连接 AI 系统与外部工具和数据源的标准。
 
-### 核心概念 (Core Concepts)
+### 核心概念
 
 | 概念                 | 用途               |
 | -------------------- | ------------------ |
@@ -24,9 +24,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 2. 服务器架构 (Server Architecture)
+## 2. 服务器架构
 
-### 项目结构 (Project Structure)
+### 项目结构
 
 ```
 my-mcp-server/
@@ -36,7 +36,7 @@ my-mcp-server/
 └── tsconfig.json
 ```
 
-### 传输类型 (Transport Types)
+### 传输类型
 
 | 类型          | 用途                        |
 | ------------- | --------------------------- |
@@ -46,9 +46,9 @@ my-mcp-server/
 
 ---
 
-## 3. 工具设计原则 (Tool Design Principles)
+## 3. 工具设计原则
 
-### 良好的工具设计 (Good Tool Design)
+### 良好的工具设计
 
 | 原则           | 描述                                |
 | -------------- | ----------------------------------- |
@@ -57,7 +57,7 @@ my-mcp-server/
 | 经过验证的输入 | 带有类型和描述的 Schema (模式)      |
 | 结构化输出     | 可预测的响应格式                    |
 
-### 输入 Schema 设计 (Input Schema Design)
+### 输入 Schema 设计
 
 | 字段               | 必填？       |
 | ------------------ | ------------ |
@@ -68,9 +68,9 @@ my-mcp-server/
 
 ---
 
-## 4. 资源模式 (Resource Patterns)
+## 4. 资源模式
 
-### 资源类型 (Resource Types)
+### 资源类型
 
 | 类型            | 用途                  |
 | --------------- | --------------------- |
@@ -78,7 +78,7 @@ my-mcp-server/
 | Dynamic (动态)  | 请求时生成            |
 | Template (模板) | 带参数的 URI          |
 
-### URI 模式 (URI Patterns)
+### URI 模式
 
 | 模式                   | 示例                |
 | ---------------------- | ------------------- |
@@ -88,9 +88,9 @@ my-mcp-server/
 
 ---
 
-## 5. 错误处理 (Error Handling)
+## 5. 错误处理
 
-### 错误类型 (Error Types)
+### 错误类型
 
 | 情况       | 响应                        |
 | ---------- | --------------------------- |
@@ -98,7 +98,7 @@ my-mcp-server/
 | 未找到     | 清晰的 "not found (未找到)" |
 | 服务器错误 | 通用错误，记录详细信息      |
 
-### 最佳实践 (Best Practices)
+### 最佳实践
 
 - 返回结构化错误
 - 不要暴露内部细节
@@ -107,9 +107,9 @@ my-mcp-server/
 
 ---
 
-## 6. 多模态处理 (Multimodal Handling)
+## 6. 多模态处理
 
-### 支持的类型 (Supported Types)
+### 支持的类型
 
 | 类型          | 编码               |
 | ------------- | ------------------ |
@@ -119,15 +119,15 @@ my-mcp-server/
 
 ---
 
-## 7. 安全原则 (Security Principles)
+## 7. 安全原则
 
-### 输入验证 (Input Validation)
+### 输入验证
 
 - 验证所有工具输入
 - 对用户提供的数据进行脱敏
 - 限制资源访问
 
-### API 密钥 (API Keys)
+### API 密钥
 
 - 使用环境变量
 - 不要记录密钥
@@ -135,7 +135,7 @@ my-mcp-server/
 
 ---
 
-## 8. 配置 (Configuration)
+## 8. 配置
 
 ### Claude Desktop 配置
 
@@ -147,9 +147,9 @@ my-mcp-server/
 
 ---
 
-## 9. 测试 (Testing)
+## 9. 测试
 
-### 测试类别 (Test Categories)
+### 测试类别
 
 | 类型                   | 重点        |
 | ---------------------- | ----------- |
@@ -159,7 +159,7 @@ my-mcp-server/
 
 ---
 
-## 10. 最佳实践检查清单 (Best Practices Checklist)
+## 10. 最佳实践检查清单
 
 - [ ] 清晰、面向动作的工具名称
 - [ ] 完整的带有描述的输入 Schemas

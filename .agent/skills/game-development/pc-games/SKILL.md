@@ -4,14 +4,14 @@ description: pc-games skill module
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# PC 与主机游戏开发 (PC & Console Game Development)
+# PC 与主机游戏开发
 
 > PC 和主机平台开发原则与引擎选择。
 
 ---
 name: pc-games
 
-## 1. 引擎选择 (Engine Selection)
+## 1. 引擎选择
 
 ### 决策树
 
@@ -45,7 +45,7 @@ name: pc-games
 
 ---
 
-## 2. 平台特性 (Platform Features)
+## 2. 平台特性
 
 ### Steam 集成
 
@@ -77,7 +77,7 @@ name: pc-games
 - "cancel" → B (Xbox), Circle (PS), A (Nintendo)
 ```
 
-### 触觉反馈 (Haptic Feedback)
+### 触觉反馈
 
 | 强度 | 用途     |
 | ---- | -------- |

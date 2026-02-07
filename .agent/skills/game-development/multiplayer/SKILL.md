@@ -4,7 +4,7 @@ description: multiplayer skill module
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# 多人游戏开发 (Multiplayer Game Development)
+# 多人游戏开发
 
 > 网络架构和同步原则。
 
@@ -51,7 +51,7 @@ name: multiplayer
 | **Input Sync (输入同步)** | 玩家输入 | 动作游戏     |
 | **Hybrid (混合)**         | 两者     | 大多数游戏   |
 
-### 延迟补偿 (Lag Compensation)
+### 延迟补偿
 
 | 技术                            | 目的             |
 | ------------------------------- | ---------------- |
@@ -106,7 +106,7 @@ name: multiplayer
 
 ---
 
-## 5. 匹配 (Matchmaking)
+## 5. 匹配
 
 ### 考量因素
 

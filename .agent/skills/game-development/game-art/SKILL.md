@@ -4,7 +4,7 @@ description: game-art skill module
 allowed-tools: Read, Glob, Grep
 ---
 
-# 游戏美术原则 (Game Art Principles)
+# 游戏美术原则
 
 > 游戏的视觉设计思维 - 风格选择，资产管线和美术指导。
 

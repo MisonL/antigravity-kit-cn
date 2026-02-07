@@ -4,7 +4,7 @@ description: game-audio skill module
 allowed-tools: Read, Glob, Grep
 ---
 
-# 游戏音频原则 (Game Audio Principles)
+# 游戏音频原则
 
 > 沉浸式游戏体验的声音设计和音乐集成。
 

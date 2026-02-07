@@ -4,7 +4,7 @@ description: mobile-games skill module
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# 移动游戏开发 (Mobile Game Development)
+# 移动游戏开发
 
 > 平台限制和优化原则。
 
@@ -66,7 +66,7 @@ name: mobile-games
 
 ## 4. 应用商店要求
 
-### iOS (App Store)
+### iOS
 
 | 要求     | 备注             |
 | -------- | ---------------- |
@@ -74,7 +74,7 @@ name: mobile-games
 | 账户删除 | 如果存在账户创建 |
 | 截图     | 针对所有设备尺寸 |
 
-### Android (Google Play)
+### Android
 
 | 要求        | 备注       |
 | ----------- | ---------- |

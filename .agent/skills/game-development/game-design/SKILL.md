@@ -4,14 +4,14 @@ description: game-design skill module
 allowed-tools: Read, Glob, Grep
 ---
 
-# 游戏设计原则 (Game Design Principles)
+# 游戏设计原则
 
 > 游戏的设计思维 - 核心循环、文档、平衡性和玩家心理。
 
 ---
 name: game-design
 
-## 1. 核心循环设计 (Core Loop Design)
+## 1. 核心循环设计
 
 ### 30 秒测试
 
@@ -34,7 +34,7 @@ name: game-design
 
 ---
 
-## 2. 游戏设计文档 (GDD)
+## 2. 游戏设计文档
 
 ### 核心部分
 
@@ -78,7 +78,7 @@ name: game-design
 
 ## 4. 难度平衡
 
-### 心流状态 (Flow State)
+### 心流状态
 
 ```
 太难 → 沮丧 → 退出

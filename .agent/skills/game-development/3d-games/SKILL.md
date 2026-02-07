@@ -4,14 +4,14 @@ description: 3d-games skill module
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# 3D 游戏开发 (3D Game Development)
+# 3D 游戏开发
 
 > 3D 游戏系统原则。
 
 ---
 name: 3d-games
 
-## 1. 渲染管线 (Rendering Pipeline)
+## 1. 渲染管线
 
 ### 阶段
 
@@ -33,7 +33,7 @@ name: 3d-games
 
 ---
 
-## 2. 着色器原则 (Shader Principles)
+## 2. 着色器原则
 
 ### 着色器类型
 
@@ -110,7 +110,7 @@ name: 3d-games
 
 ---
 
-## 6. 多细节层次 (LOD)
+## 6. 多细节层次
 
 ### LOD 策略
 

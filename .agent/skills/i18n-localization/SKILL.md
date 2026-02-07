@@ -4,7 +4,7 @@ description: Internationalization and localization patterns. Detecting hardcoded
 allowed-tools: Read, Glob, Grep
 ---
 
-# 国际化与本地化 (i18n & Localization)
+# 国际化与本地化
 
 > 国际化 (i18n) 与本地化 (L10n) 最佳实践。
 
@@ -35,7 +35,7 @@ allowed-tools: Read, Glob, Grep
 
 ## 3. 实现模式
 
-### React (react-i18next)
+### React
 
 ```tsx
 import { useTranslation } from "react-i18next";
@@ -46,7 +46,7 @@ function Welcome() {
 }
 ```
 
-### Next.js (next-intl)
+### Next.js
 
 ```tsx
 import { useTranslations } from "next-intl";
@@ -57,7 +57,7 @@ export default function Page() {
 }
 ```
 
-### Python (gettext)
+### Python
 
 ```python
 from gettext import gettext as _

@@ -4,11 +4,11 @@ description: Automatic quality control, linting, and static analysis procedures.
 allowed-tools: Read, Glob, Grep, Bash
 ---
 
-# Lint 与验证技能 (Lint and Validate Skill)
+# Lint 与验证技能
 
 > **MANDATORY (强制):** 在**每次**代码更改后运行适当的验证工具。在代码无错误之前，不要结束任务。
 
-### 各生态系统流程 (Procedures by Ecosystem)
+### 各生态系统流程
 
 #### Node.js / TypeScript
 
@@ -22,14 +22,14 @@ allowed-tools: Read, Glob, Grep, Bash
 2. **Security (安全) (Bandit):** `bandit -r "path" -ll`
 3. **Types (类型) (MyPy):** `mypy "path"`
 
-## 质量闭环 (The Quality Loop)
+## 质量闭环
 
 1. **编写/编辑代码 (Write/Edit Code)**
 2. **运行审计 (Run Audit):** `npm run lint && npx tsc --noEmit`
 3. **分析报告 (Analyze Report):** 检查 "FINAL AUDIT REPORT" 部分。
 4. **修复并重复 (Fix & Repeat):** 不允许提交带有 "FINAL AUDIT" 失败的代码。
 
-## 错误处理 (Error Handling)
+## 错误处理
 
 - 如果 `lint` 失败：立即修复样式或语法问题。
 - 如果 `tsc` 失败：在继续之前更正类型不匹配。
@@ -41,7 +41,7 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 脚本 (Scripts)
+## 脚本
 
 | 脚本                       | 用途           | 命令                                             |
 | -------------------------- | -------------- | ------------------------------------------------ |

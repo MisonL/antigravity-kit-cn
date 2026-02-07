@@ -4,7 +4,7 @@ description: web-games skill module
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# Web 浏览器游戏开发 (Web Browser Game Development)
+# Web 浏览器游戏开发
 
 > 框架选择和浏览器特定原则。
 
@@ -30,7 +30,7 @@ name: web-games
     └── 自定义 → Raw Canvas/WebGL
 ```
 
-### 比较 (2025)
+### 比较
 
 | 框架             | 类型 | 最适合         |
 | ---------------- | ---- | -------------- |
@@ -43,7 +43,7 @@ name: web-games
 
 ## 2. WebGPU 采用
 
-### 浏览器支持 (2025)
+### 浏览器支持
 
 | 浏览器   | 支持          |
 | -------- | ------------- |

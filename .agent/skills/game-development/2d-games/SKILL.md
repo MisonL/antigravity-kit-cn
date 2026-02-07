@@ -4,14 +4,14 @@ description: 2d-games skill module
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# 2D 游戏开发 (2D Game Development)
+# 2D 游戏开发
 
 > 2D 游戏系统原则。
 
 ---
 name: 2d-games
 
-## 1. 精灵系统 (Sprite Systems)
+## 1. 精灵系统
 
 ### 精灵组织
 
@@ -31,7 +31,7 @@ name: 2d-games
 
 ---
 
-## 2. 瓦片地图设计 (Tilemap Design)
+## 2. 瓦片地图设计
 
 ### 瓦片考量
 
@@ -90,15 +90,15 @@ name: 2d-games
 
 ---
 
-## 5. 类型模式 (Genre Patterns)
+## 5. 类型模式
 
-### 平台游戏 (Platformer)
+### 平台游戏
 
 - 土狼时间 (Coyote time) (边缘后的宽容度)
 - 跳跃缓冲 (Jump buffering)
 - 可变跳跃高度
 
-### 俯视视角 (Top-down)
+### 俯视视角
 
 - 8方向或自由移动
 - 基于瞄准或自动瞄准
@@ -106,7 +106,7 @@ name: 2d-games
 
 ---
 
-## 6. 反模式 (Anti-Patterns)
+## 6. 反模式
 
 | ❌ 错误              | ✅ 正确            |
 | -------------------- | ------------------ |
