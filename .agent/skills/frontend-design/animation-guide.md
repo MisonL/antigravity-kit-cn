@@ -1,332 +1,331 @@
-# 动效设计指南参考 (Animation Guidelines Reference)
+# Animation Guidelines Reference
 
-> 动效原则与节奏心理学 —— 学会决策，而非盲目复制。
-> **没有必须死记硬背的固定时长 —— 请理解影响节奏的因素。**
-
----
-
-## 1. 时长原则 (Duration Principles)
-
-### 影响节奏的因素
-
-```
-决定动效速度的维度：
-├── 距离 (DISTANCE): 移动距离越远 = 所需时长越长
-├── 尺寸 (SIZE): 越大/越重的元素 = 动画越慢 (物理惯性感)
-├── 复杂度 (COMPLEXITY): 越复杂的内容 = 处理时间越长
-├── 重要性 (IMPORTANCE): 关键动作 = 需要更清晰的反响
-└── 背景 (CONTEXT): 紧急情况 = 快，奢华感 = 慢且优雅
-```
-
-### 不同目的的时长范围参考
-
-| 目的                        | 范围      | 原因                                 |
-| --------------------------- | --------- | ------------------------------------ |
-| 即时反馈                    | 50-100ms  | 低于人类主观感知的阈值               |
-| 微交互 (Micro-interactions) | 100-200ms | 快速但能被察觉                       |
-| 标准过渡 (Transitions)      | 200-300ms | 令人舒适的节奏                       |
-| 复杂复合动画                | 300-500ms | 留出视线追踪的时间                   |
-| 页面切换                    | 400-600ms | 平滑的转场衔接                       |
-| **Wow/高端效果**            | 800ms+    | 戏剧性的、基于有机弹簧的、分层展开的 |
-
-### 如何选择时长
-
-问问自己：
-
-1. 元素移动了多远？
-2. 用户察觉到这一变更的重要性有多高？
-3. 用户是在等待结果，还是这只是背景修饰？
+> Animation principles and timing psychology - learn to decide, not copy.
+> **No fixed durations to memorize - understand what affects timing.**
 
 ---
 
-## 2. 缓动原则 (Easing Principles)
+## 1. Duration Principles
 
-### 缓动函数的作用
+### What Affects Timing
 
 ```
-缓动 = 速度随时间变化的方式
-├── 线性 (Linear): 恒定速度 (机械感，冰冷)
-├── Ease-out: 开头快，结尾慢 (自然的进入感)
-├── Ease-in: 开头慢，结尾快 (自然的离开感)
-└── Ease-in-out: 两头慢 (平滑，从容)
+Factors that determine animation speed:
+├── DISTANCE: Further travel = longer duration
+├── SIZE: Larger elements = slower animations
+├── COMPLEXITY: Complex = slower to process
+├── IMPORTANCE: Critical actions = clear feedback
+└── CONTEXT: Urgent = fast, luxurious = slow
 ```
 
-### 适用场景
+### Duration Ranges by Purpose
 
-| 缓动方式           | 最佳适用       | 感受             |
-| ------------------ | -------------- | ---------------- |
-| **Ease-out**       | 元素进入视图   | 到达，安顿       |
-| **Ease-in**        | 元素离开视图   | 启程，退出       |
-| **Ease-in-out**    | 强调、循环动画 | 从容，丝滑       |
-| **Linear**         | 持续不断的运动 | 机械，恒定       |
-| **Bounce/Elastic** | 趣味性 UI      | 有趣，充满生命力 |
+| Purpose | Range | Why |
+|---------|-------|-----|
+| Instant feedback | 50-100ms | Below perception threshold |
+| Micro-interactions | 100-200ms | Quick but noticeable |
+| Standard transitions | 200-300ms | Comfortable pace |
+| Complex animations | 300-500ms | Time to follow |
+| Page transitions | 400-600ms | Smooth handoff |
+| **Wow/Premium Effects** | 800ms+ | Dramatic, organic spring-based, layered |
 
-### 核心模式
+### Choosing Duration
+
+Ask yourself:
+1. How far is the element moving?
+2. How important is it to notice this change?
+3. Is the user waiting, or is this background?
+
+---
+
+## 2. Easing Principles
+
+### What Easing Does
+
+```
+Easing = how speed changes over time
+├── Linear: constant speed (mechanical, robotic)
+├── Ease-out: fast start, slow end (natural entry)
+├── Ease-in: slow start, fast end (natural exit)
+└── Ease-in-out: slow both ends (smooth, deliberate)
+```
+
+### When to Use Each
+
+| Easing | Best For | Feels Like |
+|--------|----------|------------|
+| **Ease-out** | Elements entering | Arriving, settling |
+| **Ease-in** | Elements leaving | Departing, exiting |
+| **Ease-in-out** | Emphasis, loops | Deliberate, smooth |
+| **Linear** | Continuous motion | Mechanical, constant |
+| **Bounce/Elastic** | Playful UI | Fun, energetic |
+
+### The Pattern
 
 ```css
-/* 进入视觉范围 = ease-out (减速) */
+/* Entering view = ease-out (decelerate) */
 .enter {
-    animation-timing-function: ease-out;
+  animation-timing-function: ease-out;
 }
 
-/* 离开视觉范围 = ease-in (加速) */
+/* Leaving view = ease-in (accelerate) */
 .exit {
-    animation-timing-function: ease-in;
+  animation-timing-function: ease-in;
 }
 
-/* 持续性动作 = ease-in-out */
+/* Continuous = ease-in-out */
 .continuous {
-    animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
 }
 ```
 
 ---
 
-## 3. 微交互原则 (Micro-Interaction Principles)
+## 3. Micro-Interaction Principles
 
-### 什么是优秀的微交互
-
-```
-微交互的目的：
-├── 反馈 (FEEDBACK): 确认操作已发生
-├── 引导 (GUIDANCE): 展示后续操作的可能性
-├── 状态 (STATUS): 指示当前所处的状态
-└── 愉悦感 (DELIGHT): 制造令人惊喜的小惊喜
-```
-
-### 按钮状态示例 (Button States)
+### What Makes Good Micro-Interactions
 
 ```
-悬停 (Hover) → 轻微视觉变化 (抬起, 变色, 缩放)
-按下 (Active) → 陷下去的质感 (缩小比例, 阴影收缩)
-焦点 (Focus) → 清晰的指示 (轮廓线, 光圈)
-加载中 (Loading) → 进度指示 (旋转, 骨架屏)
-成功 (Success) → 结果确认 (打勾, 变绿)
+Purpose of micro-interactions:
+├── FEEDBACK: Confirm the action happened
+├── GUIDANCE: Show what's possible
+├── STATUS: Indicate current state
+└── DELIGHT: Small moments of joy
 ```
 
-### 原则
+### Button States
 
-1. **响应必须及时** (控制在 100ms 感知阈值内)。
-2. **动效必须匹配动作** (按下 = `scale(0.95)`, 悬停 = `translateY(-4px) + 发光`)。
-3. **要有质感但不突兀** (大师级工艺感)。
-4. **保持一致性** (相同的动作应有相同的反馈)。
+```
+Hover → slight visual change (lift, color, scale)
+Active → pressed feeling (scale down, shadow change)
+Focus → clear indicator (outline, ring)
+Loading → progress indicator (spinner, skeleton)
+Success → confirmation (check, color)
+```
+
+### Principles
+
+1. **Respond immediately** (under 100ms perception)
+2. **Match the action** (press = `scale(0.95)`, hover = `translateY(-4px) + glow`)
+3. **Be bold but smooth** (Usta işi hissettir)
+4. **Be consistent** (same actions = same feedback)
 
 ---
 
-## 4. 加载状态原则 (Loading States Principles)
+## 4. Loading States Principles
 
-### 案场景分类
+### Types by Context
 
-| 情况           | 处理方式                  |
-| -------------- | ------------------------- |
-| 极快加载 (<1s) | 无需任何指示符            |
-| 中速 (1-3s)    | 旋转图标或简单的循环动画  |
-| 较长 (3s+)     | 进度条或骨架屏 (Skeleton) |
-| 时长未知       | 非定量的循环指示器        |
+| Situation | Approach |
+|-----------|----------|
+| Quick load (<1s) | No indicator needed |
+| Medium (1-3s) | Spinner or simple animation |
+| Long (3s+) | Progress bar or skeleton |
+| Unknown duration | Indeterminate indicator |
 
-### 骨架屏 (Skeleton Screens)
-
-```
-目的：降低用户感知的等待时间
-├── 立即展示布局轮廓
-├── 带有细腻的动效 (闪烁 shimmer, 脉动 pulse)
-├── 在加载完成后平滑替换为真实内容
-└── 感受上比单纯的 Loading 圈更快
-```
-
-### 进度指示器
+### Skeleton Screens
 
 ```
-何时显示进度：
-├── 用户主动发起的关键操作
-├── 文件上传/下载
-├── 多步骤流程
-└── 耗时较长的后台处理
-
-何时无需显示：
-├── 瞬间完成的操作
-├── 静默运行的后台任务
-├── 初始页面的首屏加载 (骨架屏更佳)
+Purpose: Reduce perceived wait time
+├── Show layout shape immediately
+├── Animate subtly (shimmer, pulse)
+├── Replace with content when ready
+└── Feels faster than spinner
 ```
 
----
-
-## 5. 页面转场原则 (Page Transitions Principles)
-
-### 转场策略
+### Progress Indicators
 
 ```
-简单法则：快速退出，从容进入
-├── 消失的内容快速淡出
-├── 进入的内容带动画切入
-└── 避免“所有东西都在同时乱动”的混乱感
-```
+When to show progress:
+├── User-initiated action
+├── File uploads/downloads
+├── Multi-step processes
+└── Long operations
 
-### 常用模式
-
-| 模式                          | 何时使用                                  |
-| ----------------------------- | ----------------------------------------- |
-| **淡入淡出 (Fade)**           | 万金油，适配所有场景                      |
-| **滑动 (Slide)**              | 顺序导航 (上一步/下一步)                  |
-| **缩放 (Scale)**              | 模态框/弹窗的开启与关闭                   |
-| **共享元素 (Shared element)** | 保持视觉连续性 (如点击列表图放大为详情图) |
-
-### 方向一致性
-
-```
-导航方向 = 动效方向
-├── 向前进 → 从右侧滑入
-├── 向后退 → 从左侧滑入
-├── 向深层探索 → 从中心放大
-├── 返回上层 → 缩小返回
+When NOT needed:
+├── Very quick operations
+├── Background tasks
+└── Initial page loads (skeleton better)
 ```
 
 ---
 
-## 6. 滚动动画原则 (Scroll Animation Principles)
+## 5. Page Transitions Principles
 
-### 渐进式披露 (Progressive Reveal)
+### Transition Strategy
 
 ```
-内容随用户滚动而显现：
-├── 降低初始认知的压迫感
-├── 奖励用户的探索行为
-├── 绝对不能感到迟钝或拖沓
-└── 必须提供禁用选项 (无障碍考虑)
+Simple rule: exit fast, enter slower
+├── Outgoing content fades quickly
+├── Incoming content animates in
+└── Avoids "everything moving at once"
 ```
 
-### 触发点选择
+### Common Patterns
 
-| 何时触发              | 效果         |
-| --------------------- | ------------ |
-| 刚进入视口 (Viewport) | 标准显现     |
-| 位于视口中央          | 视觉强调     |
-| 部分可见时            | 提前预热显现 |
-| 完全可见后            | 延迟触发     |
+| Pattern | When to Use |
+|---------|-------------|
+| **Fade** | Safe default, works everywhere |
+| **Slide** | Sequential navigation (prev/next) |
+| **Scale** | Opening/closing modals |
+| **Shared element** | Maintaining visual continuity |
 
-### 动画属性组合
+### Direction Matching
 
-- 透明度递增 (opacity)
-- 向上平滑位移 (transform)
-- 比例缩放 (scale)
-- 以上多种方式的细腻组合
-
-### 性能要点
-
-- 使用 `Intersection Observer` API。
-- 仅对 `transform` 和 `opacity` 进行动画。
-- 在移动设备上根据需要降低复杂度。
+```
+Navigation direction = animation direction
+├── Forward → slide from right
+├── Backward → slide from left
+├── Deeper → scale up from center
+├── Back up → scale down
+```
 
 ---
 
-## 7. 悬停效果原则 (Hover Effects Principles)
+## 6. Scroll Animation Principles
 
-### 效果与动作的匹配
+### Progressive Reveal
 
-| 元素           | 效果              | 传达的意图     |
-| -------------- | ----------------- | -------------- |
-| **可点击卡片** | 抬起 + 阴影深邃化 | “我是可交互的” |
-| **按钮**       | 颜色/亮度变化     | “快来点我”     |
-| **图像**       | 轻微缩放          | “看个细节”     |
-| **链接**       | 下划线/颜色变化   | “导航去这里”   |
+```
+Content appears as user scrolls:
+├── Reduces initial cognitive load
+├── Rewards exploration
+├── Must not feel sluggish
+└── Option to disable (accessibility)
+```
 
-### 原则
+### Trigger Points
 
-1. **信号告知** - Hover 必须明确告诉用户此处可点击。
-2. **克制** - 过犹不及，微妙的变化往往最高级。
-3. **匹配重要性** - 越大的视觉变化应代表越重要的动作。
-4. **考虑触屏** - 记住移动端没有 Hover 状态，效果不能作为功能依赖。
+| When to Trigger | Effect |
+|-----------------|--------|
+| Just entering viewport | Standard reveal |
+| Centered in viewport | For emphasis |
+| Partially visible | Earlier reveal |
+| Fully visible | Late trigger |
+
+### Animation Properties
+
+- Fade in (opacity)
+- Slide up (transform)
+- Scale (transform)
+- Combination of above
+
+### Performance
+
+- Use Intersection Observer
+- Animate only transform/opacity
+- Reduce on mobile if needed
 
 ---
 
-## 8. 反馈动效原则 (Feedback Animation Principles)
+## 7. Hover Effects Principles
 
-### 成功状态
+### Matching Effect to Action
 
-```
-恰如其分的庆祝：
-├── 小动作 → 微妙的颜色变更/对勾显现
-├── 大动作 → 更有冲击力的展开动效
-├── 流程完成 → 极具成就感的收官动效
-└── 始终匹配品牌性格
-```
+| Element | Effect | Intent |
+|---------|--------|--------|
+| **Clickable card** | Lift + shadow | "This is interactive" |
+| **Button** | Color/brightness change | "Press me" |
+| **Image** | Zoom/scale | "View closer" |
+| **Link** | Underline/color | "Navigate here" |
 
-### 错误状态
+### Principles
 
-```
-引起注意但不引发焦虑：
-├── 语义化的红色颜色变更
-├── 左右轻微摇晃 (Shake) (极短促！)
-├── 自动聚焦到报错字段
-└── 清晰的提示信息
-```
-
-### 节奏偏好
-
-- 成功：稍长一点点 (让用户享受达成的一刻)。
-- 错误：极快 (不要阻碍用户修正错误)。
-- 加载：在完成前持续且节奏稳定。
+1. **Signal interactivity** - hover shows it's clickable
+2. **Don't overdo it** - subtle changes work
+3. **Match importance** - bigger change = more important
+4. **Touch alternatives** - hover doesn't work on mobile
 
 ---
 
-## 9. 性能原则 (Performance Principles)
+## 8. Feedback Animation Principles
 
-### 哪些属性是“廉价”的 (性能好)
+### Success States
 
 ```
-GPU 加速类 (快)：
+Celebrate appropriately:
+├── Minor action → subtle check/color
+├── Major action → more pronounced animation
+├── Completion → satisfying animation
+└── Match brand personality
+```
+
+### Error States
+
+```
+Draw attention without panic:
+├── Color change (semantic red)
+├── Shake animation (brief!)
+├── Focus on error field
+└── Clear messaging
+```
+
+### Timing
+
+- Success: slightly longer (enjoy the moment)
+- Error: quick (don't delay action)
+- Loading: continuous until complete
+
+---
+
+## 9. Performance Principles
+
+### What's Cheap to Animate
+
+```
+GPU-accelerated (FAST):
 ├── transform: translate, scale, rotate
-└── opacity: 0 到 1 之间
+└── opacity: 0 to 1
 
-CPU 密集型 (慢，会导致重排)：
+CPU-intensive (SLOW):
 ├── width, height
-├── top, left, right, bottom (位移)
+├── top, left, right, bottom
 ├── margin, padding
-├── border-radius 变更
-└── box-shadow 的复杂变更
+├── border-radius changes
+└── box-shadow changes
 ```
 
-### 优化策略
+### Optimization Strategies
 
-1. 只要有可能，就仅限通过 **transform/opacity** 实现动画。
-2. **避免触发布局重排 (Layout triggers)** (即那些涉及尺寸/位置变化的属性)。
-3. 谨慎使用 `will-change` (给浏览器的性能暗示)。
-4. 在低端设备上进行测试，而不仅仅是你的开发机。
+1. **Animate transform/opacity** whenever possible
+2. **Avoid layout triggers** (size/position changes)
+3. **Use will-change sparingly** (hints to browser)
+4. **Test on low-end devices** (not just dev machine)
 
-### 尊重用户偏好
+### Respecting User Preferences
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-    /* 严格遵守这一偏好 */
-    /* 仅保留绝对必要的关键动画 */
-    /* 去除或弱化装饰性的动态 */
+  /* Honor this preference */
+  /* Essential animations only */
+  /* Reduce or remove decorative motion */
 }
 ```
 
 ---
 
-## 10. 动效决策检查清单
+## 10. Animation Decision Checklist
 
-在添加动画前，请确认：
+Before adding animation:
 
-- [ ] **有目的吗？** (反馈/引导/愉悦)
-- [ ] **时长合适吗？** (不太快/太慢)
-- [ ] **选对缓动方式了吗？** (进入/退出/强调)
-- [ ] **性能优异吗？** (仅限 transform/opacity)
-- [ ] **测试了“减弱动态模式”吗？** (无障碍)
-- [ ] **与其他动画的节奏感一致吗？**
-- [ ] **这不是你的默认设置吧？** (多样性检查)
-- [ ] **不清楚风格时询问过用户了吗？**
+- [ ] **Is there a purpose?** (feedback/guidance/delight)
+- [ ] **Is timing appropriate?** (not too fast/slow)
+- [ ] **Did you pick correct easing?** (enter/exit/emphasis)
+- [ ] **Is it performant?** (transform/opacity only)
+- [ ] **Tested reduced motion?** (accessibility)
+- [ ] **Consistent with other animations?** (same timing feel)
+- [ ] **Not your default settings?** (variety check)
+- [ ] **Asked user about style if unclear?**
 
-### 反模式 (应避免的做法)
+### Anti-Patterns
 
-- ❌ 每个项目都用一模一样的时长数值。
-- ❌ 为了动效而动效。
-- ❌ 忽略减弱动态模式的偏好。
-- ❌ 动画化昂贵的布局属性 (如 width/height)。
-- ❌ 同一时间太多东西在动。
-- ❌ 过大的延迟导致用户感到沮丧。
+- ❌ Same timing values every project
+- ❌ Animation for animation's sake
+- ❌ Ignoring reduced-motion preference
+- ❌ Animating expensive properties
+- ❌ Too many things animating at once
+- ❌ Delays that frustrate users
 
 ---
 
-> **记住**: 动效即沟通。每一个运动都应该有其存在的意义，并服务于最终的用户体验。
+> **Remember**: Animation is communication. Every motion should have meaning and serve the user experience.

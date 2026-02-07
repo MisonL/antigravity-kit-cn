@@ -35,7 +35,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 脚本                  | 用途                    | 执行命令                                |
 | --------------------- | ----------------------- | --------------------------------------- |
-| `scripts/ux_audit.py` | UX 心理学与无障碍性审计 | `python scripts/ux_audit.py <项目路径>` |
+| `scripts/ux_audit.py` | UX 心理学与无障碍性审计 | `python scripts/ux_audit.py <project_path>` |
 
 ---
 
@@ -422,8 +422,3 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/frontend-design/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/frontend-design/SKILL.md`。
-- **注意**：文档层不改技能流程；仅补充目录映射事实。

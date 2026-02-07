@@ -152,12 +152,7 @@ locales/
 
 | 脚本                      | 用途                         | 执行命令                                    |
 | ------------------------- | ---------------------------- | ------------------------------------------- |
-| `scripts/i18n_checker.py` | 检测硬编码字符串及缺失的翻译 | `python scripts/i18n_checker.py <项目路径>` |
+| `scripts/i18n_checker.py` | 检测硬编码字符串及缺失的翻译 | `python scripts/i18n_checker.py <project_path>` |
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/i18n-localization/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/i18n-localization/SKILL.md`。
-- **注意**：文档层不改技能流程；仅补充目录映射事实。

@@ -1,301 +1,356 @@
----
-description: 移动端测试策略、单元测试、E2E 测试与设备场
----
+# Mobile Testing Patterns
 
-# 移动端测试参考 (Mobile Testing Reference)
-
-> 移动端测试策略、单元测试、E2E 测试与设备场。
-> **移动端发布成本高 (审核慢)，Bug 修复难 (用户不更新)。测试是生命线。**
+> **Mobile testing is NOT web testing. Different constraints, different strategies.**
+> This file teaches WHEN to use each testing approach and WHY.
+> **Code examples are minimal - focus on decision-making.**
 
 ---
 
-## 1. 移动端测试矩阵
+## 🧠 MOBILE TESTING MINDSET
 
-| 工具                                    | 适用于             | 速度     | 可靠性   | 备注                 |
-| :-------------------------------------- | :----------------- | :------- | :------- | :------------------- |
-| **Jest**                                | 单元逻辑, Reducers | ⚡⚡⚡⚡ | ⚡⚡⚡⚡ | 必须有，基础         |
-| **RNTL** (React Native Testing Library) | 组件交互           | ⚡⚡⚡   | ⚡⚡⚡   | 测试组件行为         |
-| **flutter_test**                        | Flutter            | ⚡⚡⚡   | ⚡⚡⚡   | Widget 测试          |
-| **Detox**                               | RN                 | ⚡⚡     | ⚡⚡⚡   | E2E, 关键流程        |
-| **Maestro**                             | Both               | ⚡⚡     | ⚡⚡     | E2E, 跨平台，易用    |
-| **Appium**                              | Both               | ⚡       | ⚡       | 遗留技术，最后的手段 |
+```
+Mobile testing differs from web:
+├── Real devices matter (emulators hide bugs)
+├── Platform differences (iOS vs Android behavior)
+├── Network conditions vary wildly
+├── Battery/performance under test
+├── App lifecycle (background, killed, restored)
+├── Permissions and system dialogs
+└── Touch interactions vs clicks
+```
 
 ---
 
-## 2. 移动端测试金字塔
+## 🚫 AI MOBILE TESTING ANTI-PATTERNS
+
+| ❌ AI Default | Why It's Wrong | ✅ Mobile-Correct |
+|---------------|----------------|-------------------|
+| Jest-only testing | Misses native layer | Jest + E2E on device |
+| Enzyme patterns | Deprecated, web-focused | React Native Testing Library |
+| Browser-based E2E (Cypress) | Can't test native features | Detox / Maestro |
+| Mock everything | Misses integration bugs | Real device testing |
+| Ignore platform tests | iOS/Android differ | Platform-specific cases |
+| Skip performance tests | Mobile perf is critical | Profile on low-end device |
+| Test only happy path | Mobile has more edge cases | Offline, permissions, interrupts |
+| 100% unit test coverage | False security | Pyramid balance |
+| Copy web testing patterns | Different environment | Mobile-specific tools |
+
+---
+
+## 1. Testing Tool Selection
+
+### Decision Tree
+
+```
+WHAT ARE YOU TESTING?
+        │
+        ├── Pure functions, utilities, helpers
+        │   └── Jest (unit tests)
+        │       └── No special mobile setup needed
+        │
+        ├── Individual components (isolated)
+        │   ├── React Native → React Native Testing Library
+        │   └── Flutter → flutter_test (widget tests)
+        │
+        ├── Components with hooks, context, navigation
+        │   ├── React Native → RNTL + mocked providers
+        │   └── Flutter → integration_test package
+        │
+        ├── Full user flows (login, checkout, etc.)
+        │   ├── Detox (React Native, fast, reliable)
+        │   ├── Maestro (Cross-platform, YAML-based)
+        │   └── Appium (Legacy, slow, last resort)
+        │
+        └── Performance, memory, battery
+            ├── Flashlight (RN performance)
+            ├── Flutter DevTools
+            └── Real device profiling (Xcode/Android Studio)
+```
+
+### Tool Comparison
+
+| Tool | Platform | Speed | Reliability | Use When |
+|------|----------|-------|-------------|----------|
+| **Jest** | RN | ⚡⚡⚡ | ⚡⚡⚡ | Unit tests, logic |
+| **RNTL** | RN | ⚡⚡⚡ | ⚡⚡ | Component tests |
+| **flutter_test** | Flutter | ⚡⚡⚡ | ⚡⚡⚡ | Widget tests |
+| **Detox** | RN | ⚡⚡ | ⚡⚡⚡ | E2E, critical flows |
+| **Maestro** | Both | ⚡⚡ | ⚡⚡ | E2E, cross-platform |
+| **Appium** | Both | ⚡ | ⚡ | Legacy, last resort |
+
+---
+
+## 2. Testing Pyramid for Mobile
 
 ```
                     ┌───────────────┐
-                    │     E2E 测试   │  10%
-                    │   (真机/模拟器) │  慢，昂贵，但至关重要
+                    │    E2E Tests  │  10%
+                    │  (Real device) │  Slow, expensive, essential
                     ├───────────────┤
-                    │    集成测试    │  20%
-                    │      (组件+)   │  组件 + 上下文
+                    │  Integration  │  20%
+                    │    Tests      │  Component + context
                     ├───────────────┤
-                    │    组件测试    │  30%
-                    │   (隔离 UI)   │  RNTL / Widget Tests
+                    │  Component    │  30%
+                    │    Tests      │  Isolated UI
                     ├───────────────┤
-                    │    单元测试    │  40%
-                    │     (Jest)    │  纯逻辑，最快
+                    │   Unit Tests  │  40%
+                    │    (Jest)     │  Pure logic
                     └───────────────┘
 ```
 
-### 为什么是这个比例？
+### Why This Distribution?
 
-| 层级         | 为什么                                                                     |
-| :----------- | :------------------------------------------------------------------------- |
-| **E2E 10%**  | 虽然慢且有时不稳定 (Flaky)，但能捕获集成和原生层面的 Bug。与后端真实交互。 |
-| **集成 20%** | 测试用户流程，无需启动完整 App。                                           |
-| **组件 30%** | 快速反馈 UI 交互，状态变化。                                               |
-| **单元 40%** | 最快，最稳定，覆盖核心业务逻辑。                                           |
+| Level | Why This % |
+|-------|------------|
+| **E2E 10%** | Slow, flaky, but catches integration bugs |
+| **Integration 20%** | Tests real user flows without full app |
+| **Component 30%** | Fast feedback on UI changes |
+| **Unit 40%** | Fastest, most stable, logic coverage |
 
-> 🔴 **如果你有 90% 的单元测试和 0% 的 E2E 测试，你在测试错误的东西。移动端的大部分 Bug 出在集成点。**
-
----
-
-## 3. 各层级测什么
-
-### 单元测试 (Jest)
-
-```
-✅ 测试:
-├── 工具函数 (formatDate, calculatePrice)
-├── 状态 Reducers (Redux/Zustand logic)
-├── API 响应转换器
-├── 验证逻辑
-└── 业务规则
-
-❌ 不测试:
-├── 组件渲染 (用组件测试)
-├── 导航 (用集成测试)
-├── 原生模块 (Mock 掉它们)
-└── 第三方库的内部实现
-```
-
-### 组件测试 (RNTL / flutter_test)
-
-```
-✅ 测试:
-├── 组件能正确渲染
-├── 用户交互 (点击, 输入, 滑动)
-├── 加载/错误/空状态
-├── 可访问性标签存在 (Accessibility Labels)
-└── Props 变化时的行为
-
-❌ 不测试:
-├── 内部实现细节
-├── 滥用快照 (Snapshot) (只对关键且稳定的组件用)
-├── 样式细节 (脆弱)
-└── 第三方组件内部
-```
-
-### 集成测试
-
-```
-✅ 测试:
-├── 表单提交流程
-├── 屏幕间导航
-├── 跨屏幕的状态持久化
-├── API 集成 (使用 Mock Server)
-└── Context/Provider 交互
-
-❌ 不测试:
-├── 每种可能的逻辑路径 (用单元测试)
-├── 真实的第三方服务 (Mock 掉)
-└── 后端逻辑 (那是后端的责任)
-```
-
-### E2E 测试 (Detox / Maestro)
-
-```
-✅ 测试:
-├── 关键用户旅程 (登录, 购买, 注册)
-├── 离线 → 在线 转换
-├── 深度链接 (Deep Link) 处理
-├── 推送通知点击跳转
-├── 权限申请流程
-└── 支付流程 (沙盒)
-
-❌ 不测试:
-├── 每一个边缘情况 (太慢)
-├── 视觉回归 (使用截图对比工具)
-├── 非核心功能
-└── 仅后端的逻辑
-```
+> 🔴 **If you have 90% unit tests and 0% E2E, you're testing the wrong things.**
 
 ---
 
-## 4. 平台特定测试
+## 3. What to Test at Each Level
 
-### iOS 与 Android 有何不同？
-
-| 领域           | iOS 行为           | Android 行为       | 需要双端测试?    |
-| :------------- | :----------------- | :----------------- | :--------------- |
-| **返回导航**   | 边缘滑动           | 系统返回键         | ✅ 是            |
-| **权限**       | 询问一次，去设置   | 每次询问，需要理由 | ✅ 是            |
-| **键盘**       | 外观不同，处理不同 | 行为不同           | ✅ 是            |
-| **日期选择器** | 滚轮/模态          | Material 对话框    | ⚠️ 如果自定义 UI |
-| **推送格式**   | APNs payload       | FCM payload        | ✅ 是            |
-| **深度链接**   | Universal Links    | App Links          | ✅ 是            |
-| **手势**       | 某些独特手势       | Material 手势      | ⚠️ 如果自定义    |
-
-### 平台测试策略
+### Unit Tests (Jest)
 
 ```
-对于每个平台:
-├── 运行单元测试 (双端逻辑通常相同)
-├── 运行组件测试 (双端通常相同)
-├── 运行 E2E 测试 (必须在双端运行)
-│   ├── iOS: 真机或模拟器
-│   └── Android: 中端真机 (不要只测旗舰机)
-└── 分别测试平台特性 (权限、推送、支付)
+✅ TEST:
+├── Utility functions (formatDate, calculatePrice)
+├── State reducers (Redux, Zustand stores)
+├── API response transformers
+├── Validation logic
+└── Business rules
+
+❌ DON'T TEST:
+├── Component rendering (use component tests)
+├── Navigation (use integration tests)
+├── Native modules (mock them)
+└── Third-party libraries
+```
+
+### Component Tests (RNTL / flutter_test)
+
+```
+✅ TEST:
+├── Component renders correctly
+├── User interactions (tap, type, swipe)
+├── Loading/error/empty states
+├── Accessibility labels exist
+└── Props change behavior
+
+❌ DON'T TEST:
+├── Internal implementation details
+├── Snapshot everything (only key components)
+├── Styling specifics (brittle)
+└── Third-party component internals
+```
+
+### Integration Tests
+
+```
+✅ TEST:
+├── Form submission flows
+├── Navigation between screens
+├── State persistence across screens
+├── API integration (with mocked server)
+└── Context/provider interactions
+
+❌ DON'T TEST:
+├── Every possible path (use unit tests)
+├── Third-party services (mock them)
+└── Backend logic (backend tests)
+```
+
+### E2E Tests
+
+```
+✅ TEST:
+├── Critical user journeys (login, purchase, signup)
+├── Offline → online transitions
+├── Deep link handling
+├── Push notification navigation
+├── Permission flows
+└── Payment flows
+
+❌ DON'T TEST:
+├── Every edge case (too slow)
+├── Visual regression (use snapshot tests)
+├── Non-critical features
+└── Backend-only logic
 ```
 
 ---
 
-## 5. 离线与网络测试
+## 4. Platform-Specific Testing
 
-### 需要测试的离线场景
+### What Differs Between iOS and Android?
 
-| 场景                   | 验证内容                     |
-| :--------------------- | :--------------------------- |
-| **离线启动 App**       | 显示缓存数据或友好的离线提示 |
-| **操作中途断网**       | 操作进入队列，数据不丢失     |
-| **恢复在线**           | 队列同步，无重复提交         |
-| **慢速网络 (2G)**      | 加载状态正常，超时处理正常   |
-| **不稳定网络 (Flaky)** | 重试逻辑，错误恢复           |
+| Area | iOS Behavior | Android Behavior | Test Both? |
+|------|--------------|------------------|------------|
+| **Back navigation** | Edge swipe | System back button | ✅ YES |
+| **Permissions** | Ask once, settings | Ask each time, rationale | ✅ YES |
+| **Keyboard** | Different appearance | Different behavior | ✅ YES |
+| **Date picker** | Wheel/modal | Material dialog | ⚠️ If custom UI |
+| **Push format** | APNs payload | FCM payload | ✅ YES |
+| **Deep links** | Universal Links | App Links | ✅ YES |
+| **Gestures** | Some unique | Material gestures | ⚠️ If custom |
 
-### 如何模拟网络条件
-
-```
-方法:
-├── 单元测试: Mock NetInfo 状态，测试逻辑
-├── 集成测试: Mock API 响应 (延迟/失败)，测试 UI
-├── E2E (Detox): 使用 device.setURLBlacklist()
-├── E2E (Maestro): 使用网络控制命令
-└── 手动: 使用 Charles Proxy / Network Link Conditioner (iOS 设置)
-```
-
----
-
-## 6. 性能测试
-
-### 测量什么
-
-| 指标         | 目标         | 如何测量                       |
-| :----------- | :----------- | :----------------------------- |
-| **App 启动** | < 2 秒       | Profiler, Flashlight           |
-| **屏幕切换** | < 300ms      | React DevTools                 |
-| **列表滚动** | 60 FPS       | Profiler, 直观感受             |
-| **内存**     | 稳定，无泄漏 | Instruments / Android Profiler |
-| **包体积**   | 最小化       | Metro bundler analysis         |
-
-### 何时进行性能测试
+### Platform Testing Strategy
 
 ```
-性能测试时机:
-├── 发布前 (必须)
-├── 添加重型功能后
-├── 升级依赖后
-├── 用户反馈卡顿时
-└── 在 CI 上 (可选，自动化基准测试)
-
-在哪测:
-├── 真机 (必须)
-├── 低端设备 (Galaxy A 系列, 旧 iPhone)
-├── ❌ 绝对不要只在模拟器上测 (它在性能上撒谎)
-└── 使用类生产数据 (不是 3 条数据，是 300 条)
+FOR EACH PLATFORM:
+├── Run unit tests (same on both)
+├── Run component tests (same on both)
+├── Run E2E on REAL DEVICE
+│   ├── iOS: iPhone (not just simulator)
+│   └── Android: Mid-range device (not flagship)
+└── Test platform-specific features separately
 ```
 
 ---
 
-## 7. 可访问性测试 (Accessibility)
+## 5. Offline & Network Testing
 
-### 验证什么
+### Offline Scenarios to Test
 
-| 元素           | 检查                            |
-| :------------- | :------------------------------ |
-| **交互元素**   | 有 `accessibilityLabel`         |
-| **图片**       | 有 `alt` 文本或标记为装饰性     |
-| **表单**       | 标签与输入框关联                |
-| **按钮**       | Role = button                   |
-| **触摸目标**   | ≥ 44x44 (iOS) / 48x48 (Android) |
-| **颜色对比度** | WCAG AA 标准                    |
+| Scenario | What to Verify |
+|----------|----------------|
+| Start app offline | Shows cached data or offline message |
+| Go offline mid-action | Action queued, not lost |
+| Come back online | Queue synced, no duplicates |
+| Slow network (2G) | Loading states, timeouts work |
+| Flaky network | Retry logic, error recovery |
 
-### 如何测试
+### How to Test Network Conditions
 
 ```
-自动化:
+APPROACH:
+├── Unit tests: Mock NetInfo, test logic
+├── Integration: Mock API responses, test UI
+├── E2E (Detox): Use device.setURLBlacklist()
+├── E2E (Maestro): Use network conditions
+└── Manual: Use Charles Proxy / Network Link Conditioner
+```
+
+---
+
+## 6. Performance Testing
+
+### What to Measure
+
+| Metric | Target | How to Measure |
+|--------|--------|----------------|
+| **App startup** | < 2 seconds | Profiler, Flashlight |
+| **Screen transition** | < 300ms | React DevTools |
+| **List scroll** | 60 FPS | Profiler, feel |
+| **Memory** | Stable, no leaks | Instruments / Android Profiler |
+| **Bundle size** | Minimize | Metro bundler analysis |
+
+### When to Performance Test
+
+```
+PERFORMANCE TEST:
+├── Before release (required)
+├── After adding heavy features
+├── After upgrading dependencies
+├── When users report slowness
+└── On CI (optional, automated benchmarks)
+
+WHERE TO TEST:
+├── Real device (REQUIRED)
+├── Low-end device (Galaxy A series, old iPhone)
+├── NOT on emulator (lies about performance)
+└── With production-like data (not 3 items)
+```
+
+---
+
+## 7. Accessibility Testing
+
+### What to Verify
+
+| Element | Check |
+|---------|-------|
+| Interactive elements | Have accessibilityLabel |
+| Images | Have alt text or decorative flag |
+| Forms | Labels linked to inputs |
+| Buttons | Role = button |
+| Touch targets | ≥ 44x44 (iOS) / 48x48 (Android) |
+| Color contrast | WCAG AA minimum |
+
+### How to Test
+
+```
+AUTOMATED:
 ├── React Native: jest-axe
-├── Flutter: Tests 中的 Accessibility checker
-└── Lint 规则 (eslint-plugin-react-native-a11y)
+├── Flutter: Accessibility checker in tests
+└── Lint rules for missing labels
 
-手动 (必须):
-├── 开启 VoiceOver (iOS) / TalkBack (Android)
-├── 闭眼 (或遮住屏幕) 导航整个 App
-├── 测试大号字体 (系统设置)
-└── 测试“减少动态”设置
+MANUAL:
+├── Enable VoiceOver (iOS) / TalkBack (Android)
+├── Navigate entire app with screen reader
+├── Test with increased text size
+└── Test with reduced motion
 ```
 
 ---
 
-## 8. CI/CD 集成
+## 8. CI/CD Integration
 
-### 哪里跑什么
+### What to Run Where
 
-| 阶段                  | 测试类型    | 设备                      |
-| :-------------------- | :---------- | :------------------------ |
-| **PR (Pull Request)** | 单元 + 组件 | 无 (运行在 Node/JVM) - 快 |
-| **Merge to main**     | + 集成测试  | 模拟器/仿真器             |
-| **Pre-release**       | + E2E 测试  | 真机 (Device Farm)        |
-| **Nightly (每晚)**    | 全套件      | Device Farm               |
+| Stage | Tests | Devices |
+|-------|-------|---------|
+| **PR** | Unit + Component | None (fast) |
+| **Merge to main** | + Integration | Simulator/Emulator |
+| **Pre-release** | + E2E | Real devices (farm) |
+| **Nightly** | Full suite | Device farm |
 
-### 设备场 (Device Farm) 选项
+### Device Farm Options
 
-| 服务                  | 优点                    | 缺点               |
-| :-------------------- | :---------------------- | :----------------- |
-| **Firebase Test Lab** | 免费层级, Google 亲儿子 | Android 优先       |
-| **AWS Device Farm**   | 以此类推，选择多        | 贵                 |
-| **BrowserStack**      | 体验好                  | 贵                 |
-| **本地真机**          | 免费, 可靠              | 维护麻烦，种类有限 |
-
----
-
-## 📝 移动端测试检查清单
-
-### 提 PR 前
-
-- [ ] 新逻辑有单元测试
-- [ ] 新 UI 有组件测试
-- [ ] 测试中无 `console.log`
-- [ ] CI 上的测试通过
-
-### 发布前
-
-- [ ] 在真实 iOS 设备上跑通 E2E
-- [ ] 在真实 Android 设备上跑通 E2E
-- [ ] 在低端设备上测试过性能
-- [ ] 验证过离线场景
-- [ ] 性能达标 (启动, 滚动)
-- [ ] 可访问性验证过 (VoiceOver/TalkBack)
-
-### 有意识地跳过 (What to Skip)
-
-- [ ] 100% 覆盖率 (追求有意义的覆盖，而非数字)
-- [ ] 每一个视觉排列组合 (节省快照测试)
-- [ ] 第三方库的内部
-- [ ] 纯后端逻辑 (那是后端的测试)
+| Service | Pros | Cons |
+|---------|------|------|
+| **Firebase Test Lab** | Free tier, Google devices | Android focus |
+| **AWS Device Farm** | Wide selection | Expensive |
+| **BrowserStack** | Good UX | Expensive |
+| **Local devices** | Free, reliable | Limited variety |
 
 ---
 
-## 🎯 测试前要问的问题
+## 📝 MOBILE TESTING CHECKLIST
 
-在写测试之前，回答：
+### Before PR
+- [ ] Unit tests for new logic
+- [ ] Component tests for new UI
+- [ ] No console.logs in tests
+- [ ] Tests pass on CI
 
-1.  **什么坏了最要命？** → 写 E2E 测试测它。
-2.  **什么对用户最关键？** → 写 E2E 测试测它。
-3.  **什么是复杂的逻辑？** → 写单元测试测它。
-4.  **什么是平台特定的？** → 双端都要测。
-5.  **离线时会发生什么？** → 测试该场景。
+### Before Release
+- [ ] E2E on real iOS device
+- [ ] E2E on real Android device
+- [ ] Tested on low-end device
+- [ ] Offline scenarios verified
+- [ ] Performance acceptable
+- [ ] Accessibility verified
 
-> **记住:** 好的移动端测试是关于测试**正确**的东西，而不是**所有**东西。一个不稳定的 E2E 测试比没有测试更糟糕。一个能捕获 Bug 的失败单元测试比 100 个通过的琐碎测试更有价值。
+### What to Skip (Consciously)
+- [ ] 100% coverage (aim for meaningful coverage)
+- [ ] Every visual permutation (use snapshots sparingly)
+- [ ] Third-party library internals
+- [ ] Backend logic (separate tests)
+
+---
+
+## 🎯 Testing Questions to Ask
+
+Before writing tests, answer:
+
+1. **What could break?** → Test that
+2. **What's critical for users?** → E2E test that
+3. **What's complex logic?** → Unit test that
+4. **What's platform-specific?** → Test on both platforms
+5. **What happens offline?** → Test that scenario
+
+> **Remember:** Good mobile testing is about testing the RIGHT things, not EVERYTHING. A flaky E2E test is worse than no test. A failing unit test that catches a bug is worth 100 passing trivial tests.

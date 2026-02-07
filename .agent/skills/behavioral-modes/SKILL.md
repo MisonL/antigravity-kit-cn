@@ -263,8 +263,3 @@ AI 应根据以下词汇自动检测合适的模式：
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/behavioral-modes/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/behavioral-modes/SKILL.md`。
-- **注意**：文档层不改技能流程；仅补充目录映射事实。

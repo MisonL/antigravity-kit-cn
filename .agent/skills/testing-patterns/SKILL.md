@@ -1,157 +1,178 @@
 ---
 name: testing-patterns
-description: 测试模式、Mocking 策略与测试金字塔
+description: Testing patterns and principles. Unit, integration, mocking strategies.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# 测试模式 (Testing Patterns)
+# Testing Patterns
 
-> 打造可靠测试套件的核心准则。
+> Principles for reliable test suites.
 
 ---
 
-## 1. 测试金字塔 (Testing Pyramid)
+## 1. Testing Pyramid
 
 ```
-        /\          端到端测试 (E2E) (少量)
-       /  \         核心业务流验证
+        /\          E2E (Few)
+       /  \         Critical flows
       /----\
-     /      \       集成测试 (Integration) (适量)
-    /--------\      API 接口、数据库查询
+     /      \       Integration (Some)
+    /--------\      API, DB queries
    /          \
-  /------------\    单元测试 (Unit) (大量)
-                    函数、类逻辑验证
+  /------------\    Unit (Many)
+                    Functions, classes
 ```
 
 ---
 
-## 2. AAA 模式 (Arrange-Act-Assert)
+## 2. AAA Pattern
 
-| 步骤               | 目的                 |
-| ------------------ | -------------------- |
-| **准备 (Arrange)** | 初始化测试数据与环境 |
-| **执行 (Act)**     | 执行被测代码逻辑     |
-| **断言 (Assert)**  | 验证结果是否符合预期 |
-
----
-
-## 3. 测试类型选择
-
-### 选型矩阵
-
-| 类型                 | 最佳适用场景               | 运行速度     |
-| -------------------- | -------------------------- | ------------ |
-| **单元测试 (Unit)**  | 纯函数、算法逻辑           | 极快 (<50ms) |
-| **集成测试 (Int)**   | API 接口、数据库、外部服务 | 中等         |
-| **端到端测试 (E2E)** | 关键用户主路径、全流程     | 较慢         |
+| Step | Purpose |
+|------|---------|
+| **Arrange** | Set up test data |
+| **Act** | Execute code under test |
+| **Assert** | Verify outcome |
 
 ---
 
-## 4. 单元测试准则 (Unit Test Principles)
+## 3. Test Type Selection
 
-### 优质单元测试的特征
+### When to Use Each
 
-- **快速**：单个测试响应应低于 100ms。
-- **隔离**：严禁依赖外部真实系统 (如网络、数据库)。
-- **可重复**：在任何环境、任何时间运行结果必须一致。
-- **自动校验**：无需人工干预即可判断成功或失败。
-
-### 测试重点 vs 忽略点
-
-| 应测试       | 建议忽略             |
-| ------------ | -------------------- |
-| 核心业务逻辑 | 框架底层代码         |
-| 各种边界情况 | 第三方开源库内部逻辑 |
-| 异常处理流程 | 简单的 Getter/Setter |
+| Type | Best For | Speed |
+|------|----------|-------|
+| **Unit** | Pure functions, logic | Fast (<50ms) |
+| **Integration** | API, DB, services | Medium |
+| **E2E** | Critical user flows | Slow |
 
 ---
 
-## 5. 集成测试准则 (Integration Test)
+## 4. Unit Test Principles
 
-### 核心关注点
+### Good Unit Tests
 
-- **API 端点**：检查请求/响应的结构与状态码。
-- **数据库**：验证查询逻辑、事务处理。
-- **外部服务**：验证服务契约 (Contracts) 是否对齐。
+| Principle | Meaning |
+|-----------|---------|
+| Fast | < 100ms each |
+| Isolated | No external deps |
+| Repeatable | Same result always |
+| Self-checking | No manual verification |
+| Timely | Written with code |
 
-### 生命周期管理 (Setup/Teardown)
+### What to Unit Test
 
-- **Before All**：连接资源 (如启动内存数据库)。
-- **Before Each**：重置状态，保证测试隔离。
-- **After Each**：清理产生的脏数据。
-- **After All**：断开连接，释放资源。
-
----
-
-## 6. Mocking 准则 (模拟对象)
-
-### 何时使用 Mock
-
-| 推荐 Mock                   | 严禁 Mock              |
-| --------------------------- | ---------------------- |
-| 外部 API 接口               | 正处于测试中的核心代码 |
-| 数据库 (仅限单元测试)       | 简单的纯逻辑依赖       |
-| 非确定性因子 (时间、随机数) | 纯函数                 |
-| 网络请求                    | 内存级别的数据存储     |
-
-### Mock 类型速查
-
-| 类型            | 核心用途           |
-| --------------- | ------------------ |
-| **桩 (Stub)**   | 返回预设的固定值   |
-| **间谍 (Spy)**  | 记录并追踪调用情况 |
-| **模拟 (Mock)** | 设定复杂的行为预期 |
-| **伪造 (Fake)** | 简化版的实际实现   |
+| Test | Don't Test |
+|------|------------|
+| Business logic | Framework code |
+| Edge cases | Third-party libs |
+| Error handling | Simple getters |
 
 ---
 
-## 7. 测试组织规范
+## 5. Integration Test Principles
 
-### 命名模式
+### What to Test
 
-- **Should**：描述行为，如 "should return error when..."
-- **Given-When-Then**：清晰的场景化描述。
+| Area | Focus |
+|------|-------|
+| API endpoints | Request/response |
+| Database | Queries, transactions |
+| External services | Contracts |
 
----
+### Setup/Teardown
 
-## 8. 测试数据管理 (Test Data)
-
-### 数据生成策略
-
-- **工厂模式 (Factories)**：动态生成符合模式的测试数据。
-- **固定装置 (Fixtures)**：使用预定义的静态数据集。
-
-### 基本原则
-
-- 使用接近真实业务的测试数据。
-- 仅对核心属性进行随机化。
-- 保持每个测试的数据量最小化。
+| Phase | Action |
+|-------|--------|
+| Before All | Connect resources |
+| Before Each | Reset state |
+| After Each | Clean up |
+| After All | Disconnect |
 
 ---
 
-## 9. 最佳实践 (Best Practices)
+## 6. Mocking Principles
 
-- **每个测试仅一个主要断言**：错误定位更精准。
-- **测试用例独立运行**：严禁存在顺序依赖。
-- **保持测试运行迅速**：提高开发反馈循环效率。
-- **编写描述性名称**：测试代码本身即是文档。
+### When to Mock
+
+| Mock | Don't Mock |
+|------|------------|
+| External APIs | The code under test |
+| Database (unit) | Simple dependencies |
+| Time/random | Pure functions |
+| Network | In-memory stores |
+
+### Mock Types
+
+| Type | Use |
+|------|-----|
+| Stub | Return fixed values |
+| Spy | Track calls |
+| Mock | Set expectations |
+| Fake | Simplified implementation |
 
 ---
 
-## 10. 应避免的反模式 (Anti-Patterns)
+## 7. Test Organization
 
-| ❌ 禁止 (Don't)            | ✅ 推荐 (Do)              |
-| -------------------------- | ------------------------- |
-| 测试内部实现细节           | 测试对外的行为表现        |
-| 重复编写冗长的测试数据     | 使用工厂 (Factories) 抽离 |
-| 配置过于复杂的初始化环境   | 简化或拆解测试用例        |
-| 忽视偶发失败的测试 (Flaky) | 彻底排查根本原因          |
-| 忽略资源清理               | 严格在重载中重置状态      |
+### Naming
+
+| Pattern | Example |
+|---------|---------|
+| Should behavior | "should return error when..." |
+| When condition | "when user not found..." |
+| Given-when-then | "given X, when Y, then Z" |
+
+### Grouping
+
+| Level | Use |
+|-------|-----|
+| describe | Group related tests |
+| it/test | Individual case |
+| beforeEach | Common setup |
 
 ---
 
-## Skills 兼容说明 (最小补充)
+## 8. Test Data
 
-- **机制基线**：沿用上游 `.agent/skills/testing-patterns/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/testing-patterns/SKILL.md`。
-- **注意**：文档层不应替代测试执行引擎；仅在此定义通用测试范式。
+### Strategies
+
+| Approach | Use |
+|----------|-----|
+| Factories | Generate test data |
+| Fixtures | Predefined datasets |
+| Builders | Fluent object creation |
+
+### Principles
+
+- Use realistic data
+- Randomize non-essential values (faker)
+- Share common fixtures
+- Keep data minimal
+
+---
+
+## 9. Best Practices
+
+| Practice | Why |
+|----------|-----|
+| One assert per test | Clear failure reason |
+| Independent tests | No order dependency |
+| Fast tests | Run frequently |
+| Descriptive names | Self-documenting |
+| Clean up | Avoid side effects |
+
+---
+
+## 10. Anti-Patterns
+
+| ❌ Don't | ✅ Do |
+|----------|-------|
+| Test implementation | Test behavior |
+| Duplicate test code | Use factories |
+| Complex test setup | Simplify or split |
+| Ignore flaky tests | Fix root cause |
+| Skip cleanup | Reset state |
+
+---
+
+> **Remember:** Tests are documentation. If someone can't understand what the code does from the tests, rewrite them.

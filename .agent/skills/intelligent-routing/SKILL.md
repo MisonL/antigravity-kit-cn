@@ -1,309 +1,335 @@
 ---
 name: intelligent-routing
-description: 自动 Agent 选择与智能任务路由。分析用户请求并自动选择最合适的专家级 Agent，无需用户显式指定。
+description: Automatic agent selection and intelligent task routing. Analyzes user requests and automatically selects the best specialist agent(s) without requiring explicit user mentions.
 version: 1.0.0
 ---
 
-# 智能 Agent 路由 (Intelligent Agent Routing)
+# Intelligent Agent Routing
 
-**目的**：自动分析用户请求，并将其路由至最合适的专家级 Agent，而无需用户显式提及。
+**Purpose**: Automatically analyze user requests and route them to the most appropriate specialist agent(s) without requiring explicit user mentions.
 
-## 核心原则 (Core Principle)
+## Core Principle
 
-> **AI 应充当智能项目经理 (Project Manager)**，分析每一个请求，并自动为当前任务选择最佳的专家。
+> **The AI should act as an intelligent Project Manager**, analyzing each request and automatically selecting the best specialist(s) for the job.
 
----
+## How It Works
 
-## 工作机制 (How It Works)
+### 1. Request Analysis
 
-### 1. 请求分析 (Request Analysis)
-
-在对**任何**用户请求做出响应之前，先进行自动分析：
+Before responding to ANY user request, perform automatic analysis:
 
 ```mermaid
 graph TD
-    A["用户请求：添加登录功能"] --> B[分析 ANALYZE]
-    B --> C[关键词]
-    B --> D[所属领域]
-    B --> E[复杂度]
-    C --> F[选择 AGENT]
+    A[User Request: Add login] --> B[ANALYZE]
+    B --> C[Keywords]
+    B --> D[Domains]
+    B --> E[Complexity]
+    C --> F[SELECT AGENT]
     D --> F
     E --> F
-    F --> G["security-auditor + backend-specialist"]
-    G --> H[带上下文自动激活]
+    F --> G[security-auditor + backend-specialist]
+    G --> H[AUTO-INVOKE with context]
 ```
 
-### 2. Agent 选择矩阵 (Agent Selection Matrix)
+### 2. Agent Selection Matrix
 
-**使用此矩阵自动选择 Agent：**
+**Use this matrix to automatically select agents:**
 
-| 用户意图            | 关键词                                | 所选 Agent                                  | 是否自动激活？ |
-| ------------------- | ------------------------------------- | ------------------------------------------- | -------------- |
-| **身份认证 (Auth)** | "登录", "认证", "注册", "密码"        | `security-auditor` + `backend-specialist`   | ✅ 是          |
-| **UI 组件**         | "按钮", "卡片", "布局", "样式"        | `frontend-specialist`                       | ✅ 是          |
-| **移动端 UI**       | "屏幕", "导航", "触摸", "手势"        | `mobile-developer`                          | ✅ 是          |
-| **API 端点**        | "端点", "路由", "API", "POST", "GET"  | `backend-specialist`                        | ✅ 是          |
-| **数据库**          | "模式", "迁移", "查询", "表"          | `database-architect` + `backend-specialist` | ✅ 是          |
-| **Bug 修复**        | "错误", "Bug", "不工作", "坏了"       | `debugger`                                  | ✅ 是          |
-| **测试**            | "测试", "覆盖率", "单元", "E2E"       | `test-engineer`                             | ✅ 是          |
-| **部署**            | "部署", "生产环境", "CI/CD", "Docker" | `devops-engineer`                           | ✅ 是          |
-| **安全审查**        | "安全", "漏洞", "攻击"                | `security-auditor` + `penetration-tester`   | ✅ 是          |
-| **性能**            | "慢", "优化", "性能", "速度"          | `performance-optimizer`                     | ✅ 是          |
-| **产品定义**        | "需求", "用户故事", "积压工作", "MVP" | `product-owner`                             | ✅ 是          |
-| **新功能**          | "构建", "创建", "实现", "新应用"      | `orchestrator` → 多智能体协作               | ⚠️ 先询问      |
-| **复杂任务**        | 检测到涉及多个领域                    | `orchestrator` → 多智能体协作               | ⚠️ 先询问      |
+| User Intent         | Keywords                                   | Selected Agent(s)                           | Auto-invoke? |
+| ------------------- | ------------------------------------------ | ------------------------------------------- | ------------ |
+| **Authentication**  | "login", "auth", "signup", "password"      | `security-auditor` + `backend-specialist`   | ✅ YES       |
+| **UI Component**    | "button", "card", "layout", "style"        | `frontend-specialist`                       | ✅ YES       |
+| **Mobile UI**       | "screen", "navigation", "touch", "gesture" | `mobile-developer`                          | ✅ YES       |
+| **API Endpoint**    | "endpoint", "route", "API", "POST", "GET"  | `backend-specialist`                        | ✅ YES       |
+| **Database**        | "schema", "migration", "query", "table"    | `database-architect` + `backend-specialist` | ✅ YES       |
+| **Bug Fix**         | "error", "bug", "not working", "broken"    | `debugger`                                  | ✅ YES       |
+| **Test**            | "test", "coverage", "unit", "e2e"          | `test-engineer`                             | ✅ YES       |
+| **Deployment**      | "deploy", "production", "CI/CD", "docker"  | `devops-engineer`                           | ✅ YES       |
+| **Security Review** | "security", "vulnerability", "exploit"     | `security-auditor` + `penetration-tester`   | ✅ YES       |
+| **Performance**     | "slow", "optimize", "performance", "speed" | `performance-optimizer`                     | ✅ YES       |
+| **Product Def**     | "requirements", "user story", "backlog", "MVP" | `product-owner`                             | ✅ YES       |
+| **New Feature**     | "build", "create", "implement", "new app"  | `orchestrator` → multi-agent                | ⚠️ ASK FIRST |
+| **Complex Task**    | Multiple domains detected                  | `orchestrator` → multi-agent                | ⚠️ ASK FIRST |
 
----
+### 3. Automatic Routing Protocol
 
-### 3. 自动路由协议 (Automatic Routing Protocol)
+## TIER 0 - Automatic Analysis (ALWAYS ACTIVE)
 
-## TIER 0 - 自动分析 (始终激活)
-
-在响应任何请求之前：
+Before responding to ANY request:
 
 ```javascript
-// 决策树伪代码示例
+// Pseudo-code for decision tree
 function analyzeRequest(userMessage) {
-    // 1. 请求类型分类
+    // 1. Classify request type
     const requestType = classifyRequest(userMessage);
 
-    // 2. 领域检测
+    // 2. Detect domains
     const domains = detectDomains(userMessage);
 
-    // 3. 确定复杂度
+    // 3. Determine complexity
     const complexity = assessComplexity(domains);
 
-    // 4. 选择 Agent
+    // 4. Select agent(s)
     if (complexity === "SIMPLE" && domains.length === 1) {
         return selectSingleAgent(domains[0]);
     } else if (complexity === "MODERATE" && domains.length <= 2) {
         return selectMultipleAgents(domains);
     } else {
-        return "orchestrator"; // 复杂任务
+        return "orchestrator"; // Complex task
     }
 }
 ```
 
----
+## 4. Response Format
 
-## 4. 响应格式 (Response Format)
-
-**在自动选择 Agent 时，请简洁地告知老板：**
+**When auto-selecting an agent, inform the user concisely:**
 
 ```markdown
-🤖 **正在应用 `@security-auditor` + `@backend-specialist` 的知识……**
+🤖 **Applying knowledge of `@security-auditor` + `@backend-specialist`...**
 
-[继续进行专业的响应]
+[Proceed with specialized response]
 ```
 
-**优势：**
+**Benefits:**
 
-- ✅ 老板可以看到应用了哪些专业知识。
-- ✅ 决策过程透明化。
-- ✅ 依然是自动化的（无需手动输入 /命令）。
+- ✅ User sees which expertise is being applied
+- ✅ Transparent decision-making
+- ✅ Still automatic (no /commands needed)
 
----
+## Domain Detection Rules
 
-## 领域检测规则 (Domain Detection Rules)
+### Single-Domain Tasks (Auto-invoke Single Agent)
 
-### 单领域任务 (自动激活单个 Agent)
+| Domain          | Patterns                                   | Agent                   |
+| --------------- | ------------------------------------------ | ----------------------- |
+| **Security**    | auth, login, jwt, password, hash, token    | `security-auditor`      |
+| **Frontend**    | component, react, vue, css, html, tailwind | `frontend-specialist`   |
+| **Backend**     | api, server, express, fastapi, node        | `backend-specialist`    |
+| **Mobile**      | react native, flutter, ios, android, expo  | `mobile-developer`      |
+| **Database**    | prisma, sql, mongodb, schema, migration    | `database-architect`    |
+| **Testing**     | test, jest, vitest, playwright, cypress    | `test-engineer`         |
+| **DevOps**      | docker, kubernetes, ci/cd, pm2, nginx      | `devops-engineer`       |
+| **Debug**       | error, bug, crash, not working, issue      | `debugger`              |
+| **Performance** | slow, lag, optimize, cache, performance    | `performance-optimizer` |
+| **SEO**         | seo, meta, analytics, sitemap, robots      | `seo-specialist`        |
+| **Game**        | unity, godot, phaser, game, multiplayer    | `game-developer`        |
 
-| 领域              | 模式/关键词                                | Agent                   |
-| ----------------- | ------------------------------------------ | ----------------------- |
-| **安全**          | auth, login, jwt, password, hash, token    | `security-auditor`      |
-| **前端**          | component, react, vue, css, html, tailwind | `frontend-specialist`   |
-| **后端**          | api, server, express, fastapi, node        | `backend-specialist`    |
-| **移动端**        | react native, flutter, ios, android, expo  | `mobile-developer`      |
-| **数据库**        | prisma, sql, mongodb, schema, migration    | `database-architect`    |
-| **测试**          | test, jest, vitest, playwright, cypress    | `test-engineer`         |
-| **运维 (DevOps)** | docker, kubernetes, ci/cd, pm2, nginx      | `devops-engineer`       |
-| **调试**          | error, bug, crash, not working, issue      | `debugger`              |
-| **性能**          | slow, lag, optimize, cache, performance    | `performance-optimizer` |
-| **SEO**           | seo, meta, analytics, sitemap, robots      | `seo-specialist`        |
-| **游戏**          | unity, godot, phaser, game, multiplayer    | `game-developer`        |
+### Multi-Domain Tasks (Auto-invoke Orchestrator)
 
-### 多领域任务 (自动激活编排代理 Orchestrator)
-
-如果请求匹配了 **2 个或更多不同类别**的领域，则自动使用 `orchestrator`：
+If request matches **2+ domains from different categories**, automatically use `orchestrator`:
 
 ```text
-示例：“创建一个带有暗色模式 UI 的安全登录系统”
-→ 检测到：安全 (Security) + 前端 (Frontend)
-→ 自动激活：orchestrator
-→ Orchestrator 将协调：security-auditor, frontend-specialist, test-engineer
+Example: "Create a secure login system with dark mode UI"
+→ Detected: Security + Frontend
+→ Auto-invoke: orchestrator
+→ Orchestrator will handle: security-auditor, frontend-specialist, test-engineer
 ```
 
----
+## Complexity Assessment
 
-## 复杂度评估 (Complexity Assessment)
+### SIMPLE (Direct agent invocation)
 
-### 简单 (SIMPLE) (直接激活 Agent)
+- Single file edit
+- Clear, specific task
+- One domain only
+- Example: "Fix the login button style"
 
-- 单个文件编辑。
-- 任务目标清晰且具体。
-- 仅涉及单个领域。
-- 示例：“修复登录按钮的样式”。
+**Action**: Auto-invoke respective agent
 
-**行动**：自动激活对应的 Agent。
+### MODERATE (2-3 agents)
 
-### 中等 (MODERATE) (2-3 个 Agent)
+- 2-3 files affected
+- Clear requirements
+- 2 domains max
+- Example: "Add API endpoint for user profile"
 
-- 涉及 2-3 个文件。
-- 需求明确。
-- 最多涉及 2 个领域。
-- 示例：“为用户个人资料添加 API 端点”。
+**Action**: Auto-invoke relevant agents sequentially
 
-**行动**：按顺序自动激活相关 Agent。
+### COMPLEX (Orchestrator required)
 
-### 复杂 (COMPLEX) (需要 Orchestrator)
+- Multiple files/domains
+- Architectural decisions needed
+- Unclear requirements
+- Example: "Build a social media app"
 
-- 涉及多个文件/领域。
-- 需要进行架构层面的决策。
-- 需求尚不明确。
-- 示例：“构建一个社交媒体应用”。
+**Action**: Auto-invoke `orchestrator` → will ask Socratic questions
 
-**行动**：自动激活 `orchestrator` → 将会开启苏格拉底式提问。
+## Implementation Rules
 
----
+### Rule 1: Silent Analysis
 
-## 实施规则 (Implementation Rules)
+#### DO NOT announce "I'm analyzing your request..."
 
-### 规则 1：静默分析 (Silent Analysis)
+- ✅ Analyze silently
+- ✅ Inform which agent is being applied
+- ❌ Avoid verbose meta-commentary
 
-#### **严禁**声明“我正在分析您的请求……”
+### Rule 2: Inform Agent Selection
 
-- ✅ 默默进行分析。
-- ✅ 告知正在应用哪个 Agent。
-- ❌ 避免冗长的元评论 (Meta-commentary)。
-
-### 规则 2：告知 Agent 选择
-
-**务必告知当前正在应用哪些领域的专业知识：**
+**DO inform which expertise is being applied:**
 
 ```markdown
-🤖 **正在应用 `@frontend-specialist` 的知识……**
+🤖 **Applying knowledge of `@frontend-specialist`...**
 
-我将按照以下特性创建该组件：
-[继续进行专业的响应]
+I will create the component with the following characteristics:
+[Continue with specialized response]
 ```
 
-### 规则 3：无缝体验
+### Rule 3: Seamless Experience
 
-**老板不应察觉到与直接同正确的专家沟通有任何区别。**
+**The user should not notice a difference from talking to the right specialist directly.**
 
-### 规则 4：覆盖能力 (Override)
+### Rule 4: Override Capability
 
-**老板依然可以显式指定 Agent：**
+**User can still explicitly mention agents:**
 
 ```text
-老板：“请使用 @backend-specialist 来审阅这段代码”
-→ 覆盖自动选择逻辑。
-→ 使用显式提到的 Agent。
+User: "Use @backend-specialist to review this"
+→ Override auto-selection
+→ Use explicitly mentioned agent
 ```
 
----
+## Edge Cases
 
-## 边缘情况 (Edge Cases)
-
-### 情况 1：通用型问题
+### Case 1: Generic Question
 
 ```text
-老板：“React 是如何工作的？”
-→ 类型：提问 (QUESTION)
-→ 无需特定 Agent。
-→ 直接进行解释说明。
+User: "How does React work?"
+→ Type: QUESTION
+→ No agent needed
+→ Respond directly with explanation
 ```
 
-### 情况 2：极其模糊的请求
+### Case 2: Extremely Vague Request
 
 ```text
-老板：“把它做得更好”
-→ 复杂度：不明确 (UNCLEAR)
-→ 行动：首先进行澄清提问。
-→ 然后再路由至合适的 Agent。
+User: "Make it better"
+→ Complexity: UNCLEAR
+→ Action: Ask clarifying questions first
+→ Then route to appropriate agent
 ```
 
-### 情况 3：冲突模式
+### Case 3: Contradictory Patterns
 
 ```text
-老板：“为 Web 应用添加移动端支持”
-→ 冲突点：移动端 vs Web
-→ 行动：询问：“您是想要响应式 Web 还是原生的移动 App？”
-→ 然后根据回复进行路由。
+User: "Add mobile support to the web app"
+→ Conflict: mobile vs web
+→ Action: Ask: "Do you want responsive web or native mobile app?"
+→ Then route accordingly
 ```
 
+## Integration with Existing Workflows
+
+### With /orchestrate Command
+
+- **User types `/orchestrate`**: Explicit orchestration mode
+- **AI detects complex task**: Auto-invoke orchestrator (same result)
+
+**Difference**: User doesn't need to know the command exists.
+
+### With Socratic Gate
+
+- **Auto-routing does NOT bypass Socratic Gate**
+- If task is unclear, still ask questions first
+- Then route to appropriate agent
+
+### With GEMINI.md Rules
+
+- **Priority**: GEMINI.md rules > intelligent-routing
+- If GEMINI.md specifies explicit routing, follow it
+- Intelligent routing is the DEFAULT when no explicit rule exists
+
+## Testing the System
+
+### Test Cases
+
+#### Test 1: Simple Frontend Task
+
+```text
+User: "Create a dark mode toggle button"
+Expected: Auto-invoke frontend-specialist
+Verify: Response shows "Using @frontend-specialist"
+```
+
+#### Test 2: Security Task
+
+```text
+User: "Review the authentication flow for vulnerabilities"
+Expected: Auto-invoke security-auditor
+Verify: Security-focused analysis
+```
+
+#### Test 3: Complex Multi-Domain
+
+```text
+User: "Build a chat application with real-time notifications"
+Expected: Auto-invoke orchestrator
+Verify: Multiple agents coordinated (backend, frontend, test)
+```
+
+#### Test 4: Bug Fix
+
+```text
+User: "Login is not working, getting 401 error"
+Expected: Auto-invoke debugger
+Verify: Systematic debugging approach
+```
+
+## Performance Considerations
+
+### Token Usage
+
+- Analysis adds ~50-100 tokens per request
+- Tradeoff: Better accuracy vs slight overhead
+- Overall SAVES tokens by reducing back-and-forth
+
+### Response Time
+
+- Analysis is instant (pattern matching)
+- No additional API calls required
+- Agent selection happens before first response
+
+## User Education
+
+### Optional: First-Time Explanation
+
+If this is the first interaction in a project:
+
+```markdown
+💡 **Tip**: I am configured with automatic specialist agent selection.
+I will always choose the most suitable specialist for your task. You can
+still mention agents explicitly with `@agent-name` if you prefer.
+```
+
+## Debugging Agent Selection
+
+### Enable Debug Mode (for development)
+
+Add to GEMINI.md temporarily:
+
+```markdown
+## DEBUG: Intelligent Routing
+
+Show selection reasoning:
+
+- Detected domains: [list]
+- Selected agent: [name]
+- Reasoning: [why]
+```
+
+## Summary
+
+**intelligent-routing skill enables:**
+
+✅ Zero-command operation (no need for `/orchestrate`)  
+✅ Automatic specialist selection based on request analysis  
+✅ Transparent communication of which expertise is being applied  
+✅ Seamless integration with existing workflows  
+✅ Override capability for explicit agent mentions  
+✅ Fallback to orchestrator for complex tasks
+
+**Result**: User gets specialist-level responses without needing to know the system architecture.
+
 ---
 
-## 与现有工作流集成 (Integration)
-
-### 与 /orchestrate 命令集成
-
-- **老板输入 `/orchestrate`**：显式进入编排模式。
-- **AI 检测到复杂任务**：自动激活 Orchestrator（结果相同）。
-
-**区别**：老板无需知道该命令的存在。
-
-### 与苏格拉底之门 (Socratic Gate) 集成
-
-- **自动路由不应绕过苏格拉底之门。**
-- 如果任务不明确，依然要先提问。
-- 提问后再路由至合适的 Agent。
-
-### 与 GEMINI.md 规则集成
-
-- **优先级**：GEMINI.md 规则 > 智能路由。
-- 如果 GEMINI.md 指定了显式路由，请遵循该规则。
-- 智能路由是在没有显式规则时的**默认**方案。
-
----
-
-## 系统测试 (Testing)
-
-### 测试案例
-
-#### 测试 1：简单前端任务
-
-- 用户请求：“创建一个暗色模式切换按钮”
-- 预期结果：自动激活 `frontend-specialist`
-- 验证：响应中显示“正在应用 @frontend-specialist……”
-
-#### 测试 2：安全任务
-
-- 用户请求：“审查身份认证流程中的漏洞”
-- 预期结果：自动激活 `security-auditor`
-- 验证：提供以安全为核心的分析。
-
-#### 测试 3：复杂多领域任务
-
-- 用户请求：“构建一个带有实时通知的聊天应用”
-- 预期结果：自动激活 `orchestrator`
-- 验证：协调多个 Agent（后端、前端、测试）。
-
-#### 测试 4：Bug 修复
-
-- 用户请求：“登录功能不工作，报错 401”
-- 预期结果：自动激活 `debugger`
-- 验证：采用系统化的调试方法。
-
----
-
-## 总结 (Summary)
-
-**智能路由技能实现了：**
-
-✅ **零命令操作**（无需 `/orchestrate`）。
-✅ **基于请求分析的专家自动选择**。
-✅ **透明告知正在应用哪些专业知识**。
-✅ **与现有工作流无缝集成**。
-✅ **允许老板显式指定 Agent 进行覆盖**。
-✅ **针对复杂任务自动回退至 Orchestrator**。
-
-**结果**：老板无需了解系统架构，即可获得专家级的响应结果。
-
----
-
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/intelligent-routing/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/intelligent-routing/SKILL.md`。
-- **注意**：文档层不改技能流程；仅补充目录映射事实。
+**Next Steps**: Integrate this skill into GEMINI.md TIER 0 rules.

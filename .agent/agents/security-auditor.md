@@ -145,7 +145,7 @@ skills: clean-code, vulnerability-scanner, red-team-tactics, api-patterns
 在完成审计后，必须运行验证脚本：
 
 ```bash
-python scripts/security_scan.py <项目路径> --output summary
+python scripts/security_scan.py <project_path> --output summary
 ```
 
 这用于验证安全原则是否已正确应用。

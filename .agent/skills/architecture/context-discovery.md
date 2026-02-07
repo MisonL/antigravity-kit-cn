@@ -1,56 +1,43 @@
-# 上下文探测 (Context Discovery)
+# Context Discovery
 
-> 在建议任何架构之前，先收集上下文信息。
+> Before suggesting any architecture, gather context.
 
-## 问题层级 (优先询问用户)
+## Question Hierarchy (Ask User FIRST)
 
-1. **规模 (Scale)**
-    - 预期有多少用户？ (10, 1K, 100K, 1M+)
-    - 数据量级？ (MB, GB, TB)
-    - 交易/请求速率？ (每秒/每分钟)
+1. **Scale**
+   - How many users? (10, 1K, 100K, 1M+)
+   - Data volume? (MB, GB, TB)
+   - Transaction rate? (per second/minute)
 
-2. **团队 (Team)**
-    - 是独立开发者还是团队？
-    - 团队规模及专业领域？
-    - 分布式办公还是集中办公？
+2. **Team**
+   - Solo developer or team?
+   - Team size and expertise?
+   - Distributed or co-located?
 
-3. **时间线 (Timeline)**
-    - 是 MVP/原型还是长期产品？
-    - 上市时间压力如何？
+3. **Timeline**
+   - MVP/Prototype or long-term product?
+   - Time to market pressure?
 
-4. **领域 (Domain)**
-    - 是 CRUD 密集型还是业务逻辑复杂型？
-    - 是否有实时性需求？
-    - 是否有合规/监管要求？
+4. **Domain**
+   - CRUD-heavy or business logic complex?
+   - Real-time requirements?
+   - Compliance/regulations?
 
-5. **约束 (Constraints)**
-    - 预算限制？
-    - 需要集成的遗留系统？
-    - 技术栈偏好？
+5. **Constraints**
+   - Budget limitations?
+   - Legacy systems to integrate?
+   - Technology stack preferences?
 
-## 项目分类矩阵
+## Project Classification Matrix
 
 ```
-                    MVP (原型)        SaaS (产品)      Enterprise (企业级)
+                    MVP              SaaS           Enterprise
 ┌─────────────────────────────────────────────────────────────┐
-│ 规模         │ <1K           │ 1K-100K      │ 100K+        │
-│ 团队         │ 个人          │ 2-10人       │ 10人以上     │
-│ 时间线       │ 快速 (几周)   │ 中等 (几个月) │ 长期 (几年)   │
-│ 架构         │ 简单/单体     │ 模块化       │ 分布式       │
-│ 模式         │ 最简          │ 有选择性     │ 全面         │
-│ 示例         │ Next.js API   │ NestJS       │ 微服务       │
+│ Scale        │ <1K           │ 1K-100K      │ 100K+        │
+│ Team         │ Solo          │ 2-10         │ 10+          │
+│ Timeline     │ Fast (weeks)  │ Medium (months)│ Long (years)│
+│ Architecture │ Simple        │ Modular      │ Distributed  │
+│ Patterns     │ Minimal       │ Selective    │ Comprehensive│
+│ Example      │ Next.js API   │ NestJS       │ Microservices│
 └─────────────────────────────────────────────────────────────┘
 ```
-
-## 限界上下文关系 (Bounded Context Relations)
-
-- **合作关系 (Partnership)**: 两个团队紧密合作，一起失败或成功。
-- **共享内核 (Shared Kernel)**: 共享一部分代码或数据库 (慎用)。
-- **客户/供应商 (Customer/Supplier)**: 上游决定下游。
-- **防腐层 (Anticorruption Layer)**: 下游通过适配器隔离上游的变化 (推荐)。
-- **各行其道 (Separate Ways)**: 无关联。
-
-## 关键产出
-
-- **上下文映射图 (Context Map)**: 展示系统高层结构的图示。
-- **统一语言 (Ubiquitous Language)**: 每个上下文内部的核心术语词汇表。

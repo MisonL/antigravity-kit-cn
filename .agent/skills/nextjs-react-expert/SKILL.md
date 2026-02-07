@@ -1,191 +1,286 @@
 ---
 name: react-best-practices
-description: 来自 Vercel 工程团队的 React 和 Next.js 性能优化指南。在构建 React 组件、优化性能、消除瀑布流、减小包体积、进行代码审计或实施服务端/客户端优化时使用。
+description: React and Next.js performance optimization from Vercel Engineering. Use when building React components, optimizing performance, eliminating waterfalls, reducing bundle size, reviewing code for performance issues, or implementing server/client-side optimizations.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# Next.js & React 性能专家 (Next.js & React Performance Expert)
+# Next.js & React Performance Expert
 
-> **源自 Vercel 工程团队** - 按影响力排列的 57 条性能优化准则。
-> **核心哲学：** 优先消除瀑布流 (Waterfalls)，其次优化包体积 (Bundles)，最后进行微观调优。
-
----
-
-## 🎯 选择性阅读准则 (必读)
-
-**仅阅读与当前任务相关的章节！** 请查阅下方的目录地图并加载所需内容。
-
-> 🔴 **进行性能审计时：请从“关键 (CRITICAL)”章节 (1-2) 开始，随后推进至高/中优先级。**
+> **From Vercel Engineering** - 57 optimization rules prioritized by impact
+> **Philosophy:** Eliminate waterfalls first, optimize bundles second, then micro-optimize.
 
 ---
 
-## 📑 内容地图 (Content Map)
+## 🎯 Selective Reading Rule (MANDATORY)
 
-| 文件                                    | 影响力                    | 规则数 | 阅读时机                                           |
-| --------------------------------------- | ------------------------- | ------ | -------------------------------------------------- |
-| `1-async-eliminating-waterfalls.md`     | 🔴 **关键 (CRITICAL)**    | 5 条   | 页面加载慢、API 顺序调用、数据请求瀑布流           |
-| `2-bundle-bundle-size-optimization.md`  | 🔴 **关键 (CRITICAL)**    | 5 条   | 包体积过大、TTI (可交互时间) 慢、首屏加载问题      |
-| `3-server-server-side-performance.md`   | 🟠 **高 (HIGH)**          | 7 条   | SSR 缓慢、API 路由优化、服务端瀑布流               |
-| `4-client-client-side-data-fetching.md` | 🟡 **中高 (MEDIUM-HIGH)** | 4 条   | 客户端数据管理、SWR 模式、数据去重                 |
-| `5-rerender-re-render-optimization.md`  | 🟡 **中 (MEDIUM)**        | 12 条  | 过度重新渲染、React 性能分析、记忆化 (Memoization) |
-| `6-rendering-rendering-performance.md`  | 🟡 **中 (MEDIUM)**        | 9 条   | 渲染瓶颈、虚拟化、图像优化                         |
-| `7-js-javascript-performance.md`        | ⚪ **低中 (LOW-MEDIUM)**  | 12 条  | 微观优化、缓存、循环性能                           |
-| `8-advanced-advanced-patterns.md`       | 🔵 **不确定 (VARIABLE)**  | 3 条   | 进阶 React 模式、useLatest、单次初始化             |
+**Read ONLY sections relevant to your task!** Check the content map below and load what you need.
 
-**总计：涵盖 8 个类别的 57 条准则**
+> 🔴 **For performance reviews: Start with CRITICAL sections (1-2), then move to HIGH/MEDIUM.**
 
 ---
 
-## 🚀 决策决策树 (Quick Decision Tree)
+## 📑 Content Map
 
-**您正面临哪类性能问题？**
+| File                                    | Impact             | Rules    | When to Read                                                    |
+| --------------------------------------- | ------------------ | -------- | --------------------------------------------------------------- |
+| `1-async-eliminating-waterfalls.md`     | 🔴 **CRITICAL**    | 5 rules  | Slow page loads, sequential API calls, data fetching waterfalls |
+| `2-bundle-bundle-size-optimization.md`  | 🔴 **CRITICAL**    | 5 rules  | Large bundle size, slow Time to Interactive, First Load issues  |
+| `3-server-server-side-performance.md`   | 🟠 **HIGH**        | 7 rules  | Slow SSR, API route optimization, server-side waterfalls        |
+| `4-client-client-side-data-fetching.md` | 🟡 **MEDIUM-HIGH** | 4 rules  | Client data management, SWR patterns, deduplication             |
+| `5-rerender-re-render-optimization.md`  | 🟡 **MEDIUM**      | 12 rules | Excessive re-renders, React performance, memoization            |
+| `6-rendering-rendering-performance.md`  | 🟡 **MEDIUM**      | 9 rules  | Rendering bottlenecks, virtualization, image optimization       |
+| `7-js-javascript-performance.md`        | ⚪ **LOW-MEDIUM**  | 12 rules | Micro-optimizations, caching, loop performance                  |
+| `8-advanced-advanced-patterns.md`       | 🔵 **VARIABLE**    | 3 rules  | Advanced React patterns, useLatest, init-once                   |
+
+**Total: 57 rules across 8 categories**
+
+---
+
+## 🚀 Quick Decision Tree
+
+**What's your performance issue?**
 
 ```
-🐌 页面加载缓慢 / TTI (可交互时间) 过长
-  → 查阅第 1 节：消除瀑布流 (Eliminating Waterfalls)
-  → 查阅第 2 节：包体积优化 (Bundle Size Optimization)
+🐌 Slow page loads / Long Time to Interactive
+  → Read Section 1: Eliminating Waterfalls
+  → Read Section 2: Bundle Size Optimization
 
-📦 打包体积过大 (> 200KB)
-  → 查阅第 2 节：包体积优化 (Bundle Size Optimization)
-  → 检查点：动态导入 (Dynamic imports)、桶文件导入 (Barrel imports)、摇树优化 (Tree-shaking)
+📦 Large bundle size (> 200KB)
+  → Read Section 2: Bundle Size Optimization
+  → Check: Dynamic imports, barrel imports, tree-shaking
 
-🖥️ 服务端渲染 (SSR) 缓慢
-  → 查阅第 3 节：服务端性能优化 (Server-Side Performance)
-  → 检查点：并行数据请求、流式传输 (Streaming)
+🖥️ Slow Server-Side Rendering
+  → Read Section 3: Server-Side Performance
+  → Check: Parallel data fetching, streaming
 
-🔄 过多的重新渲染 / UI 响应卡顿
-  → 查阅第 5 节：重新渲染优化 (Re-render Optimization)
-  → 检查点：React.memo, useMemo, useCallback
+🔄 Too many re-renders / UI lag
+  → Read Section 5: Re-render Optimization
+  → Check: React.memo, useMemo, useCallback
 
-🎨 渲染性能瓶颈
-  → 查阅第 6 节：渲染性能优化 (Rendering Performance)
-  → 检查点：列表虚拟化、布局抖动 (Layout thrashing)
+🎨 Rendering performance issues
+  → Read Section 6: Rendering Performance
+  → Check: Virtualization, layout thrashing
 
-🌐 客户端数据请求问题
-  → 查阅第 4 节：客户端数据获取 (Client-Side Data Fetching)
-  → 检查点：SWR 去重、localStorage 缓存
+🌐 Client-side data fetching problems
+  → Read Section 4: Client-Side Data Fetching
+  → Check: SWR deduplication, localStorage
 
-✨ 需要进阶模式
-  → 查阅第 8 节：进阶模式 (Advanced Patterns)
-```
-
----
-
-## 📊 影响力优先级指南
-
-**执行全面优化时的推荐顺序：**
-
-```
-1️⃣ 关键 (CRITICAL) (收益最大 - 优先执行):
-   ├─ 第 1 节：消除瀑布流
-   │  └─ 每个瀑布流都会增加完整的网络延迟 (100-500ms+)
-   └─ 第 2 节：包体积优化
-      └─ 直接影响 TTI (可交互时间) 和 LCP (最大内容渲染)
-
-2️⃣ 高 (HIGH) (影响显著 - 其次执行):
-   └─ 第 3 节：服务端性能优化
-      └─ 消除服务端瀑布流，提升响应速度
-
-3️⃣ 中 (MEDIUM) (收益适中 - 第三步执行):
-   ├─ 第 4 节：客户端数据获取
-   ├─ 第 5 节：重新渲染优化
-   └─ 第 6 节：渲染性能优化
-
-4️⃣ 低 (LOW) (细节抛光 - 最后执行):
-   ├─ 第 7 节：JavaScript 性能调优
-   └─ 第 8 节：进阶模式
+✨ Need advanced patterns
+  → Read Section 8: Advanced Patterns
 ```
 
 ---
 
-## ✅ 性能复查检查清单 (Must Fix before Production)
+## 📊 Impact Priority Guide
 
-### 关键 (Critical) - 必须修复：
+**Use this order when doing comprehensive optimization:**
 
-- [ ] 消除顺序数据请求（消除所有瀑布流）。
-- [ ] 主包体积控制在 200KB 以内。
-- [ ] 应用代码中严禁使用桶文件 (Barrel) 导入。
-- [ ] 为大型组件使用动态导入 (Dynamic imports)。
-- [ ] 尽可能实现并行数据请求。
+```
+1️⃣ CRITICAL (Biggest Gains - Do First):
+   ├─ Section 1: Eliminating Waterfalls
+   │  └─ Each waterfall adds full network latency (100-500ms+)
+   └─ Section 2: Bundle Size Optimization
+      └─ Affects Time to Interactive and Largest Contentful Paint
 
-### 高优先级：
+2️⃣ HIGH (Significant Impact - Do Second):
+   └─ Section 3: Server-Side Performance
+      └─ Eliminates server-side waterfalls, faster response times
 
-- [ ] 在合适场景优先使用服务端组件 (Server Components)。
-- [ ] API 路由经过优化（严禁 N+1 查询）。
-- [ ] 为数据请求设置 Suspense 边界。
-- [ ] 尽可能利用静态生成 (Static generation)。
+3️⃣ MEDIUM (Moderate Gains - Do Third):
+   ├─ Section 4: Client-Side Data Fetching
+   ├─ Section 5: Re-render Optimization
+   └─ Section 6: Rendering Performance
 
----
-
-## ❌ 应避免的反模式 (Anti-Patterns)
-
-### 严禁行为 (DON'T):
-
-- ❌ 对相互独立的异步操作使用顺序 `await`。
-- ❌ 仅为了一个函数而导入整个库。
-- ❌ 在应用代码中使用桶文件导出 (`index.ts` 重新导出)。
-- ❌ 忽略大型组件或库的动态导入。
-- ❌ 在 `useEffect` 中进行未去重的数据请求。
-- ❌ 忘记对昂贵的计算任务进行记忆化 (Memoize)。
-- ❌ 在服务端组件可胜任时过度使用客户端组件。
-
-### 推荐做法 (DO):
-
-- ✅ 使用 `Promise.all()` 实现并行请求。
-- ✅ 使用动态导入：`const Comp = dynamic(() => import('./Heavy'))`。
-- ✅ 采用直接导入：`import { specific } from 'library/specific'`。
-- ✅ 利用 Suspense 边界提升交互体验。
-- ✅ 充分发挥 React Server Components (RSC) 的优势。
-- ✅ 在开始优化前先进行性能测量。
-- ✅ 使用 Next.js 原生优化组件 (next/image, next/font)。
+4️⃣ LOW (Polish - Do Last):
+   ├─ Section 7: JavaScript Performance
+   └─ Section 8: Advanced Patterns
+```
 
 ---
 
-## 🔍 验证脚本 (Validation Script)
+## 🔗 Related Skills
 
-| 脚本                                   | 用途           | 执行命令                                                 |
-| -------------------------------------- | -------------- | -------------------------------------------------------- |
-| `scripts/react_performance_checker.py` | 自动化性能审计 | `python scripts/react_performance_checker.py <项目路径>` |
-
----
-
-## 📖 章节核心详情 (Section Details)
-
-### 第 1 节：消除瀑布流 (关键)
-
-**核心：** 每个瀑布流增加 100-500ms+ 延迟。关注：并行获取、Promise.all()、Suspense 边界、预加载。
-
-### 第 2 节：包体积优化 (关键)
-
-**核心：** 直接影响 TTI 和 LCP。关注：动态导入、摇树优化、规避桶文件导入。
-
-### 第 3 节：服务端性能优化 (高)
-
-**核心：** 提升服务端响应速度与 SEO。关注：并行服务端获取、流式传输、API 路由优化。
-
-### 第 4 节：客户端数据获取 (中高)
-
-**核心：** 减少冗余请求，提升 UX。关注：SWR 去重、localStorage 缓存、事件监听器管理。
-
-### 第 5 节：重新渲染优化 (中)
-
-**核心：** 界面流畅度提升。关注：React.memo, useMemo, useCallback, 组件结构优化。
+| Need                    | Skill                             |
+| ----------------------- | --------------------------------- |
+| API design patterns     | `@[skills/api-patterns]`          |
+| Database optimization   | `@[skills/database-design]`       |
+| Testing strategies      | `@[skills/testing-patterns]`      |
+| UI/UX design principles | `@[skills/frontend-design]`       |
+| TypeScript patterns     | `@[skills/typescript-expert]`     |
+| Deployment & DevOps     | `@[skills/deployment-procedures]` |
 
 ---
 
-## 🎓 最佳实践总结
+## ✅ Performance Review Checklist
 
-**黄金法则：**
+Before shipping to production:
 
-1. **先测量，后行动** —— 使用 React DevTools Profiler, Chrome DevTools。
-2. **抓大放小** —— 瀑布流 → 包体积 → 服务端 → 微观调优。
-3. **避免过度优化** —— 聚焦于真实的性能瓶颈。
-4. **利用平台原生特性** —— 充分挖掘 Next.js 内置的优化能力。
+**Critical (Must Fix):**
+
+- [ ] No sequential data fetching (waterfalls eliminated)
+- [ ] Bundle size < 200KB for main bundle
+- [ ] No barrel imports in app code
+- [ ] Dynamic imports used for large components
+- [ ] Parallel data fetching where possible
+
+**High Priority:**
+
+- [ ] Server components used where appropriate
+- [ ] API routes optimized (no N+1 queries)
+- [ ] Suspense boundaries for data fetching
+- [ ] Static generation used where possible
+
+**Medium Priority:**
+
+- [ ] Expensive computations memoized
+- [ ] List rendering virtualized (if > 100 items)
+- [ ] Images optimized with next/image
+- [ ] No unnecessary re-renders
+
+**Low Priority (Polish):**
+
+- [ ] Hot path loops optimized
+- [ ] RegExp patterns hoisted
+- [ ] Property access cached in loops
 
 ---
 
-## Skills 兼容说明 (最小补充)
+## ❌ Anti-Patterns (Common Mistakes)
 
-- **机制基线**：沿用上游 `.agent/skills/nextjs-react-expert/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/nextjs-react-expert/SKILL.md`。
-- **注意**：文档层不应替代 React 开发流水线；仅在此定义 Vercel 性能准则。
+**DON'T:**
+
+- ❌ Use sequential `await` for independent operations
+- ❌ Import entire libraries when you need one function
+- ❌ Use barrel exports (`index.ts` re-exports) in app code
+- ❌ Skip dynamic imports for large components/libraries
+- ❌ Fetch data in useEffect without deduplication
+- ❌ Forget to memoize expensive computations
+- ❌ Use client components when server components work
+
+**DO:**
+
+- ✅ Fetch data in parallel with `Promise.all()`
+- ✅ Use dynamic imports: `const Comp = dynamic(() => import('./Heavy'))`
+- ✅ Import directly: `import { specific } from 'library/specific'`
+- ✅ Use Suspense boundaries for better UX
+- ✅ Leverage React Server Components
+- ✅ Measure performance before optimizing
+- ✅ Use Next.js built-in optimizations (next/image, next/font)
+
+---
+
+## 🎯 How to Use This Skill
+
+### For New Features:
+
+1. Check **Section 1 & 2** while building (prevent waterfalls, keep bundle small)
+2. Use server components by default (Section 3)
+3. Apply memoization for expensive operations (Section 5)
+
+### For Performance Reviews:
+
+1. Start with **Section 1** (waterfalls = biggest impact)
+2. Then **Section 2** (bundle size)
+3. Then **Section 3** (server-side)
+4. Finally other sections as needed
+
+### For Debugging Slow Performance:
+
+1. Identify the symptom (slow load, lag, etc.)
+2. Use Quick Decision Tree above
+3. Read relevant section
+4. Apply fixes in priority order
+
+---
+
+## 📚 Learning Path
+
+**Beginner (Focus on Critical):**
+→ Section 1: Eliminating Waterfalls
+→ Section 2: Bundle Size Optimization
+
+**Intermediate (Add High Priority):**
+→ Section 3: Server-Side Performance
+→ Section 5: Re-render Optimization
+
+**Advanced (Full Optimization):**
+→ All sections + Section 8: Advanced Patterns
+
+---
+
+## 🔍 Validation Script
+
+| Script                                 | Purpose                     | Command                                                      |
+| -------------------------------------- | --------------------------- | ------------------------------------------------------------ |
+| `scripts/react_performance_checker.py` | Automated performance audit | `python scripts/react_performance_checker.py <project_path>` |
+
+---
+
+## 📖 Section Details
+
+### Section 1: Eliminating Waterfalls (CRITICAL)
+
+**Impact:** Each waterfall adds 100-500ms+ latency
+**Key Concepts:** Parallel fetching, Promise.all(), Suspense boundaries, preloading
+
+### Section 2: Bundle Size Optimization (CRITICAL)
+
+**Impact:** Directly affects Time to Interactive, Largest Contentful Paint
+**Key Concepts:** Dynamic imports, tree-shaking, barrel import avoidance
+
+### Section 3: Server-Side Performance (HIGH)
+
+**Impact:** Faster server responses, better SEO
+**Key Concepts:** Parallel server fetching, streaming, API route optimization
+
+### Section 4: Client-Side Data Fetching (MEDIUM-HIGH)
+
+**Impact:** Reduces redundant requests, better UX
+**Key Concepts:** SWR deduplication, localStorage caching, event listeners
+
+### Section 5: Re-render Optimization (MEDIUM)
+
+**Impact:** Smoother UI, less wasted computation
+**Key Concepts:** React.memo, useMemo, useCallback, component structure
+
+### Section 6: Rendering Performance (MEDIUM)
+
+**Impact:** Better rendering efficiency
+**Key Concepts:** Virtualization, image optimization, layout thrashing
+
+### Section 7: JavaScript Performance (LOW-MEDIUM)
+
+**Impact:** Incremental improvements in hot paths
+**Key Concepts:** Loop optimization, caching, RegExp hoisting
+
+### Section 8: Advanced Patterns (VARIABLE)
+
+**Impact:** Specific use cases
+**Key Concepts:** useLatest hook, init-once patterns, event handler refs
+
+---
+
+## 🎓 Best Practices Summary
+
+**Golden Rules:**
+
+1. **Measure first** - Use React DevTools Profiler, Chrome DevTools
+2. **Biggest impact first** - Waterfalls → Bundle → Server → Micro
+3. **Don't over-optimize** - Focus on real bottlenecks
+4. **Use platform features** - Next.js has optimizations built-in
+5. **Think about users** - Real-world conditions matter
+
+**Performance Mindset:**
+
+- Every `await` in sequence = potential waterfall
+- Every `import` = potential bundle bloat
+- Every re-render = wasted computation (if unnecessary)
+- Server components = less JavaScript to ship
+- Measure, don't guess
+
+---
+
+**Source:** Vercel Engineering
+**Date:** January 2026
+**Version:** 1.0.0
+**Total Rules:** 57 across 8 categories

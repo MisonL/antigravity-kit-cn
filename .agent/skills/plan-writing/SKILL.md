@@ -1,170 +1,152 @@
 ---
 name: plan-writing
-description: 结构化任务规划 (Structured task planning)，包含清晰的任务拆解、依赖关系和验收标准。适用于实现功能、重构或任何多步工作。
+description: Structured task planning with clear breakdowns, dependencies, and verification criteria. Use when implementing features, refactoring, or any multi-step work.
 allowed-tools: Read, Glob, Grep
 ---
 
-# 计划编写 (Plan Writing)
+# Plan Writing
 
-> 来源：obra/superpowers
+> Source: obra/superpowers
 
----
+## Overview
+This skill provides a framework for breaking down work into clear, actionable tasks with verification criteria.
 
-## 概览 (Overview)
+## Task Breakdown Principles
 
-本技能提供了一个将工作分解为清晰、可执行的任务并带有验证标准的框架。
+### 1. Small, Focused Tasks
+- Each task should take 2-5 minutes
+- One clear outcome per task
+- Independently verifiable
 
----
+### 2. Clear Verification
+- How do you know it's done?
+- What can you check/test?
+- What's the expected output?
 
-## 任务拆解原则 (Task Breakdown Principles)
+### 3. Logical Ordering
+- Dependencies identified
+- Parallel work where possible
+- Critical path highlighted
+- **Phase X: Verification is always LAST**
 
-### 1. 小型化、专注的任务
+### 4. Dynamic Naming in Project Root
+- Plan files are saved as `{task-slug}.md` in the PROJECT ROOT
+- Name derived from task (e.g., "add auth" → `auth-feature.md`)
+- **NEVER** inside `.claude/`, `docs/`, or temp folders
 
-- 每个任务应控制在 2-5 分钟内完成。
-- 每个任务有一个明确的结果。
-- 可独立进行验证。
+## Planning Principles (NOT Templates!)
 
-### 2. 清晰的验证方式
+> 🔴 **NO fixed templates. Each plan is UNIQUE to the task.**
 
-- 您如何知道它已完成？
-- 您可以检查/测试什么？
-- 预期的输出是什么？
+### Principle 1: Keep It SHORT
 
-### 3. 逻辑顺序
+| ❌ Wrong | ✅ Right |
+|----------|----------|
+| 50 tasks with sub-sub-tasks | 5-10 clear tasks max |
+| Every micro-step listed | Only actionable items |
+| Verbose descriptions | One-line per task |
 
-- 识别并明确依赖关系。
-- 在可能的情况下并行开展工作。
-- 突出关键路径。
-- **阶段 X：验证永远置于最后。**
-
-### 4. 项目根目录下的动态命名
-
-- 计划文件以 `{task-slug}.md` 格式保存在**项目根目录**。
-- 名称根据任务派生（例如：“add auth” → `auth-feature.md`）。
-- **严禁**存放在 `.claude/`、`docs/` 或临时文件夹中。
-
----
-
-## 规划原则 (非模板！) (Planning Principles)
-
-> 🔴 **不设固定模板。每个计划对当前任务而言都是唯一的。**
-
-### 原则 1：保持简洁 (Keep It SHORT)
-
-| ❌ 错误做法                    | ✅ 正确做法                |
-| ------------------------------ | -------------------------- |
-| 包含 50 个任务且层层嵌套子任务 | 最多包含 5-10 个清晰的任务 |
-| 列出每一个微小的操作步骤       | 仅列出可执行的关键项       |
-| 冗长的描述文字                 | 每个任务仅用单行描述       |
-
-> **准则：** 如果计划超过 1 页，则说明太长了。请务必简化。
+> **Rule:** If plan is longer than 1 page, it's too long. Simplify.
 
 ---
 
-### 原则 2：具体化，而非通用化 (Be SPECIFIC)
+### Principle 2: Be SPECIFIC, Not Generic
 
-| ❌ 错误做法    | ✅ 正确做法                                       |
-| -------------- | ------------------------------------------------- |
-| “搭建项目”     | 运行 `npx create-next-app`                        |
-| “添加身份认证” | 安装 next-auth，创建 `/api/auth/[...nextauth].ts` |
-| “编写 UI 样式” | 为 `Header.tsx` 添加 Tailwind 类名                |
+| ❌ Wrong | ✅ Right |
+|----------|----------|
+| "Set up project" | "Run `npx create-next-app`" |
+| "Add authentication" | "Install next-auth, create `/api/auth/[...nextauth].ts`" |
+| "Style the UI" | "Add Tailwind classes to `Header.tsx`" |
 
-> **准则：** 每个任务都应有一个清晰、可验证的结果。
-
----
-
-### 原则 3：根据项目类型动态调整内容
-
-**针对新项目 (NEW PROJECT)：**
-
-- 使用什么技术栈？（预先决定）
-- MVP 是什么？（最小核心功能）
-- 文件结构如何规划？
-
-**针对功能新增 (FEATURE ADDITION)：**
-
-- 受影响的文件有哪些？
-- 需要哪些依赖项？
-- 如何验证其功能正常？
-
-**针对 Bug 修复 (BUG FIX)：**
-
-- 根本原因 (Root cause) 是什么？
-- 哪些文件/行号需要修改？
-- 如何测试修复效果？
+> **Rule:** Each task should have a clear, verifiable outcome.
 
 ---
 
-### 原则 4：脚本应与项目关联
+### Principle 3: Dynamic Content Based on Project Type
 
-> 🔴 **严禁复制粘贴脚本命令。请根据项目类型进行选择。**
+**For NEW PROJECT:**
+- What tech stack? (decide first)
+- What's the MVP? (minimal features)
+- What's the file structure?
 
-| 项目类型     | 相关脚本                                  |
-| ------------ | ----------------------------------------- |
-| 前端 / React | `ux_audit.py`, `accessibility_checker.py` |
-| 后端 / API   | `api_validator.py`, `security_scan.py`    |
-| 移动端       | `mobile_audit.py`                         |
-| 数据库       | `schema_validator.py`                     |
-| 全栈项目     | 根据涉及的模块混合使用上述脚本            |
+**For FEATURE ADDITION:**
+- Which files are affected?
+- What dependencies needed?
+- How to verify it works?
 
-**错误做法：** 在每个计划中都列出所有脚本。
-**正确做法：** 仅列出与**本次**任务相关的脚本。
-
----
-
-### 原则 5：验证过程应简单明了
-
-| ❌ 错误做法        | ✅ 正确做法                                   |
-| ------------------ | --------------------------------------------- |
-| “验证组件工作正常” | 运行 `npm run dev`，点击按钮，看到 Toast 提示 |
-| “测试 API”         | 执行 `curl localhost:3000/api/users` 返回 200 |
-| “检查样式”         | 打开浏览器，确认暗色模式切换正常              |
+**For BUG FIX:**
+- What's the root cause?
+- What file/line to change?
+- How to test the fix?
 
 ---
 
-## 计划结构 (灵活变通，非固定！) (Plan Structure)
+### Principle 4: Scripts Are Project-Specific
+
+> 🔴 **DO NOT copy-paste script commands. Choose based on project type.**
+
+| Project Type | Relevant Scripts |
+|--------------|------------------|
+| Frontend/React | `ux_audit.py`, `accessibility_checker.py` |
+| Backend/API | `api_validator.py`, `security_scan.py` |
+| Mobile | `mobile_audit.py` |
+| Database | `schema_validator.py` |
+| Full-stack | Mix of above based on what you touched |
+
+**Wrong:** Adding all scripts to every plan
+**Right:** Only scripts relevant to THIS task
+
+---
+
+### Principle 5: Verification is Simple
+
+| ❌ Wrong | ✅ Right |
+|----------|----------|
+| "Verify the component works correctly" | "Run `npm run dev`, click button, see toast" |
+| "Test the API" | "curl localhost:3000/api/users returns 200" |
+| "Check styles" | "Open browser, verify dark mode toggle works" |
+
+---
+
+## Plan Structure (Flexible, Not Fixed!)
 
 ```
-# [任务名称]
+# [Task Name]
 
-## 目标 (Goal)
-用一句话描述：我们要构建/修复什么？
+## Goal
+One sentence: What are we building/fixing?
 
-## 任务清单 (Tasks)
-- [ ] 任务 1：[具体动作] → 验证：[如何检查]
-- [ ] 任务 2：[具体动作] → 验证：[如何检查]
-- [ ] 任务 3：[具体动作] → 验证：[如何检查]
+## Tasks
+- [ ] Task 1: [Specific action] → Verify: [How to check]
+- [ ] Task 2: [Specific action] → Verify: [How to check]
+- [ ] Task 3: [Specific action] → Verify: [How to check]
 
-## 完成标志 (Done When)
-- [ ] [主要成功标准]
+## Done When
+- [ ] [Main success criteria]
 ```
 
-> **仅此而已。** 除非确实需要，否则无需划分阶段或子章节。
-> 保持极简。仅在必要时增加复杂度。
+> **That's it.** No phases, no sub-sections unless truly needed.
+> Keep it minimal. Add complexity only when required.
+
+## Notes
+[Any important considerations]
+```
 
 ---
 
-## 最佳实践速查 (Best Practices)
+## Best Practices (Quick Reference)
 
-1. **以目标开始** —— 我们要做什么？
-2. **最多 10 个任务** —— 如果超过，请拆分为多个计划。
-3. **每个任务均可验证** —— 具有清晰的“完成”标准。
-4. **项目相关性** —— 严禁复制粘贴模板。
-5. **动态更新** —— 完成时及时标记 `[x]`。
-
----
-
-## 何时使用 (When to Use)
-
-- 从零开始的新项目。
-- 新增功能。
-- 修复复杂的 Bug。
-- 重构多个文件。
+1. **Start with goal** - What are we building/fixing?
+2. **Max 10 tasks** - If more, break into multiple plans
+3. **Each task verifiable** - Clear "done" criteria
+4. **Project-specific** - No copy-paste templates
+5. **Update as you go** - Mark `[x]` when complete
 
 ---
 
-## Skills 兼容说明 (最小补充)
+## When to Use
 
-- **机制基线**：沿用上游 `.agent/skills/plan-writing/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/plan-writing/SKILL.md`。
-- **注意**：文档层不改技能流程；仅在此定义结构化规划标准。
+- New project from scratch
+- Adding a feature
+- Fixing a bug (if complex)
+- Refactoring multiple files

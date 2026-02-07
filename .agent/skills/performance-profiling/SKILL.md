@@ -146,8 +146,3 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/performance-profiling/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/performance-profiling/SKILL.md`。
-- **注意**：文档层不应替代性能分析策略；仅在此定义测量与优化的标准动作。

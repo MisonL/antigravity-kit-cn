@@ -1,78 +1,458 @@
-# 移动端导航参考指南 (Mobile Navigation Reference)
+# Mobile Navigation Reference
 
-> 导航模式、深度链接 (Deep linking)、返回处理以及标签/堆栈/抽屉决策。
-> **导航是应用的骨架 —— 导航一旦出错，应用的一切都会显得凌乱。**
-
----
-
-## 1. 导航选择决策树 (Navigation Selection Tree)
-
-- **3-5 个顶级路由 (等重)** → ✅ 标签栏 (Tab Bar)。
-- **深层分级内容 (钻取)** → ✅ 堆栈导航 (Stack Navigation)。
-- **目标超过 5 个** → ✅ 侧边抽屉 (Drawer Navigation)。
-- **单向线性流程** → ✅ 纯堆栈 (Stack only - Wizard模式)。
+> Navigation patterns, deep linking, back handling, and tab/stack/drawer decisions.
+> **Navigation is the skeleton of your app—get it wrong and everything feels broken.**
 
 ---
 
-## 2. 标签栏导航 (Tab Bar)
+## 1. Navigation Selection Decision Tree
 
-### 规则与状态保存
-
-- **每一项拥有独立堆栈**: 切换标签时不应重置该标签内的导航进度。
-- **图标与标签**: 始终显示文字标签以确保无障碍性。
-
----
-
-## 3. 堆栈导航 (Stack Navigation)
-
-- **Push**: 推入新屏幕。
-- **Pop**: 返回上一级。
-- **返回处理 (Back Handling)**: iOS 期望边缘滑动返回，Android 兼容系统返回键。**严禁劫持返回键导致意外行为。**
-
----
-
-## 4. 模态导航 (Modal Navigation)
-
-- **Push vs Modal**: Push 用于层级深入（顺叙），Modal 用于独立任务（插叙，如“创建新内容”、“设置”）。
-- **Sheet (弹窗卡片)**: 适合快速、轻量的交互任务。
-
----
-
-## 5. 深度链接 (Deep Linking)
-
-### Day One 原则
-
-**从第一天就开始规划深度链接**。后期重构深度链接会导致严重的导航状态混乱。
-
-- **全堆栈构建**: 深度链接进入 `myapp://product/123` 时，应自动在底部构建 `Home` 为根，按返回键应能回到首页。
-- **身份验证感知**: 进入需要登录的链接时，先保存目标，登录后再自动跳转。
+```
+WHAT TYPE OF APP?
+        │
+        ├── 3-5 top-level sections (equal importance)
+        │   └── ✅ Tab Bar / Bottom Navigation
+        │       Examples: Social, E-commerce, Utility
+        │
+        ├── Deep hierarchical content (drill down)
+        │   └── ✅ Stack Navigation
+        │       Examples: Settings, Email folders
+        │
+        ├── Many destinations (>5 top-level)
+        │   └── ✅ Drawer Navigation
+        │       Examples: Gmail, complex enterprise
+        │
+        ├── Single linear flow
+        │   └── ✅ Stack only (wizard/onboarding)
+        │       Examples: Checkout, Setup flow
+        │
+        └── Tablet/Foldable
+            └── ✅ Navigation Rail + List-Detail
+                Examples: Mail, Notes on iPad
+```
 
 ---
 
-## 6. 导航状态持久化 (Navigation Persistence)
+## 2. Tab Bar Navigation
 
-- **应持久化**: 当前选中的标签、列表的滚动位置、表单草稿。
-- **不应持久化**: 临时对话框状态、过时的数据。
+### When to Use
+
+```
+✅ USE Tab Bar when:
+├── 3-5 top-level destinations
+├── Destinations are of equal importance
+├── User frequently switches between them
+├── Each tab has independent navigation stack
+└── App is used in short sessions
+
+❌ AVOID Tab Bar when:
+├── More than 5 destinations
+├── Destinations have clear hierarchy
+├── Tabs would be used very unequally
+└── Content flows in a sequence
+```
+
+### Tab Bar Best Practices
+
+```
+iOS Tab Bar:
+├── Height: 49pt (83pt with home indicator)
+├── Max items: 5
+├── Icons: SF Symbols, 25×25pt
+├── Labels: Always show (accessibility)
+├── Active indicator: Tint color
+
+Android Bottom Navigation:
+├── Height: 80dp
+├── Max items: 5 (3-5 ideal)
+├── Icons: Material Symbols, 24dp
+├── Labels: Always show
+├── Active indicator: Pill shape + filled icon
+```
+
+### Tab State Preservation
+
+```
+RULE: Each tab maintains its own navigation stack.
+
+User journey:
+1. Home tab → Drill into item → Add to cart
+2. Switch to Profile tab
+3. Switch back to Home tab
+→ Should return to "Add to cart" screen, NOT home root
+
+Implementation:
+├── React Navigation: Each tab has own navigator
+├── Flutter: IndexedStack for state preservation
+└── Never reset tab stack on switch
+```
 
 ---
 
-## 7. 导航反模式 (Navigation Anti-patterns)
+## 3. Stack Navigation
 
-- ❌ **返回路径不一致**: 用户点返回却退出了应用。
-- ❌ **隐藏主要功能**: 关键功能藏在抽屉里，无法被发现。
-- ❌ **标签栏重置**: 切换标签导致已输入的信息丢失。
-- ❌ **无深度链接**: 无法从推送通知精准跳转至内容。
+### Core Concepts
+
+```
+Stack metaphor: Cards stacked on top of each other
+
+Push: Add screen on top
+Pop: Remove top screen (back)
+Replace: Swap current screen
+Reset: Clear stack, set new root
+
+Visual: New screen slides in from right (LTR)
+Back: Screen slides out to right
+```
+
+### Stack Navigation Patterns
+
+| Pattern | Use Case | Implementation |
+|---------|----------|----------------|
+| **Simple Stack** | Linear flow | Push each step |
+| **Nested Stack** | Sections with sub-navigation | Stack inside tab |
+| **Modal Stack** | Focused tasks | Present modally |
+| **Auth Stack** | Login vs Main | Conditional root |
+
+### Back Button Handling
+
+```
+iOS:
+├── Edge swipe from left (system)
+├── Back button in nav bar (optional)
+├── Interactive pop gesture
+└── Never override swipe back without good reason
+
+Android:
+├── System back button/gesture
+├── Up button in toolbar (optional, for drill-down)
+├── Predictive back animation (Android 14+)
+└── Must handle back correctly (Activity/Fragment)
+
+Cross-Platform Rule:
+├── Back ALWAYS navigates up the stack
+├── Never hijack back for other purposes
+├── Confirm before discarding unsaved data
+└── Deep links should allow full back traversal
+```
 
 ---
 
-## 8. 导航检查清单 (Navigation Checklist)
+## 4. Drawer Navigation
 
-- [ ] 应用类型与导航模式是否匹配？
-- [ ] 是否规划并测试了深度链接 URL Schema？
-- [ ] 每一个屏幕都有清晰的返回路径吗？
-- [ ] 切换标签是否能保持页面状态？
-- [ ] iOS 边缘滑动返回是否生效？
+### When to Use
+
+```
+✅ USE Drawer when:
+├── More than 5 top-level destinations
+├── Less frequently accessed destinations
+├── Complex app with many features
+├── Need for branding/user info in nav
+└── Tablet/large screen with persistent drawer
+
+❌ AVOID Drawer when:
+├── 5 or fewer destinations (use tabs)
+├── All destinations equally important
+├── Mobile-first simple app
+└── Discoverability is critical (drawer is hidden)
+```
+
+### Drawer Patterns
+
+```
+Modal Drawer:
+├── Opens over content (scrim behind)
+├── Swipe to open from edge
+├── Hamburger icon ( ☰ ) triggers
+└── Most common on mobile
+
+Permanent Drawer:
+├── Always visible (large screens)
+├── Content shifts over
+├── Good for productivity apps
+└── Tablets, desktops
+
+Navigation Rail (Android):
+├── Narrow vertical strip
+├── Icons + optional labels
+├── For tablets in portrait
+└── 80dp width
+```
 
 ---
 
-> **记住：** 好的导航是隐形的。用户不应该思考“如何到达某处” —— 他们只需到达即可。如果你注意到了导航，那它一定有问题。
+## 5. Modal Navigation
+
+### Modal vs Push
+
+```
+PUSH (Stack):                    MODAL:
+├── Horizontal slide             ├── Vertical slide up (sheet)
+├── Part of hierarchy            ├── Separate task
+├── Back returns                 ├── Dismiss (X) returns
+├── Same navigation context      ├── Own navigation context
+└── "Drill in"                   └── "Focus on task"
+
+USE MODAL for:
+├── Creating new content
+├── Settings/preferences
+├── Completing a transaction
+├── Self-contained workflows
+├── Quick actions
+```
+
+### Modal Types
+
+| Type | iOS | Android | Use Case |
+|------|-----|---------|----------|
+| **Sheet** | `.sheet` | Bottom Sheet | Quick tasks |
+| **Full Screen** | `.fullScreenCover` | Full Activity | Complex forms |
+| **Alert** | Alert | Dialog | Confirmations |
+| **Action Sheet** | Action Sheet | Menu/Bottom Sheet | Choose from options |
+
+### Modal Dismissal
+
+```
+Users expect to dismiss modals by:
+├── Tapping X / Close button
+├── Swiping down (sheet)
+├── Tapping scrim (non-critical)
+├── System back (Android)
+├── Hardware back (old Android)
+
+RULE: Only block dismissal for unsaved data.
+```
+
+---
+
+## 6. Deep Linking
+
+### Why Deep Links from Day One
+
+```
+Deep links enable:
+├── Push notification navigation
+├── Sharing content
+├── Marketing campaigns
+├── Spotlight/Search integration
+├── Widget navigation
+├── External app integration
+
+Building later is HARD:
+├── Requires navigation refactor
+├── Screen dependencies unclear
+├── Parameter passing complex
+└── Always plan deep links at start
+```
+
+### URL Structure
+
+```
+Scheme://host/path?params
+
+Examples:
+├── myapp://product/123
+├── https://myapp.com/product/123 (Universal/App Link)
+├── myapp://checkout?promo=SAVE20
+├── myapp://tab/profile/settings
+
+Hierarchy should match navigation:
+├── myapp://home
+├── myapp://home/product/123
+├── myapp://home/product/123/reviews
+└── URL path = navigation path
+```
+
+### Deep Link Navigation Rules
+
+```
+1. FULL STACK CONSTRUCTION
+   Deep link to myapp://product/123 should:
+   ├── Put Home at root of stack
+   ├── Push Product screen on top
+   └── Back button returns to Home
+
+2. AUTHENTICATION AWARENESS
+   If deep link requires auth:
+   ├── Save intended destination
+   ├── Redirect to login
+   ├── After login, navigate to destination
+
+3. INVALID LINKS
+   If deep link target doesn't exist:
+   ├── Navigate to fallback (home)
+   ├── Show error message
+   └── Never crash or blank screen
+
+4. STATEFUL NAVIGATION
+   Deep link during active session:
+   ├── Don't blow away current stack
+   ├── Push on top OR
+   ├── Ask user if should navigate away
+```
+
+---
+
+## 7. Navigation State Persistence
+
+### What to Persist
+
+```
+SHOULD persist:
+├── Current tab selection
+├── Scroll position in lists
+├── Form draft data
+├── Recent navigation stack
+└── User preferences
+
+SHOULD NOT persist:
+├── Modal states (dialogs)
+├── Temporary UI states
+├── Stale data (refresh on return)
+├── Authentication state (use secure storage)
+```
+
+### Implementation
+
+```javascript
+// React Navigation - State Persistence
+const [isReady, setIsReady] = useState(false);
+const [initialState, setInitialState] = useState();
+
+useEffect(() => {
+  const loadState = async () => {
+    const savedState = await AsyncStorage.getItem('NAV_STATE');
+    if (savedState) setInitialState(JSON.parse(savedState));
+    setIsReady(true);
+  };
+  loadState();
+}, []);
+
+const handleStateChange = (state) => {
+  AsyncStorage.setItem('NAV_STATE', JSON.stringify(state));
+};
+
+<NavigationContainer
+  initialState={initialState}
+  onStateChange={handleStateChange}
+>
+```
+
+---
+
+## 8. Transition Animations
+
+### Platform Defaults
+
+```
+iOS Transitions:
+├── Push: Slide from right
+├── Modal: Slide from bottom (sheet) or fade
+├── Tab switch: Cross-fade
+├── Interactive: Swipe to go back
+
+Android Transitions:
+├── Push: Fade + slide from right
+├── Modal: Slide from bottom
+├── Tab switch: Cross-fade or none
+├── Shared element: Hero animations
+```
+
+### Custom Transitions
+
+```
+When to custom:
+├── Brand identity requires it
+├── Shared element connections
+├── Special reveal effects
+└── Keep it subtle, <300ms
+
+When to use default:
+├── Most of the time
+├── Standard drill-down
+├── Platform consistency
+└── Performance critical paths
+```
+
+### Shared Element Transitions
+
+```
+Connect elements between screens:
+
+Screen A: Product card with image
+            ↓ (tap)
+Screen B: Product detail with same image (expanded)
+
+Image animates from card position to detail position.
+
+Implementation:
+├── React Navigation: shared element library
+├── Flutter: Hero widget
+├── SwiftUI: matchedGeometryEffect
+└── Compose: Shared element transitions
+```
+
+---
+
+## 9. Navigation Anti-Patterns
+
+### ❌ Navigation Sins
+
+| Anti-Pattern | Problem | Solution |
+|--------------|---------|----------|
+| **Inconsistent back** | User confused, can't predict | Always pop stack |
+| **Hidden navigation** | Features undiscoverable | Visible tabs/drawer trigger |
+| **Deep nesting** | User gets lost | Max 3-4 levels, breadcrumbs |
+| **Breaking swipe back** | iOS users frustrated | Never override gesture |
+| **No deep links** | Can't share, bad notifications | Plan from start |
+| **Tab stack reset** | Work lost on switch | Preserve tab states |
+| **Modal for primary flow** | Can't back track | Use stack navigation |
+
+### ❌ AI Navigation Mistakes
+
+```
+AI tends to:
+├── Use modals for everything (wrong)
+├── Forget tab state preservation (wrong)
+├── Skip deep linking (wrong)
+├── Override platform back behavior (wrong)
+├── Reset stack on tab switch (wrong)
+└── Ignore predictive back (Android 14+)
+
+RULE: Use platform navigation patterns.
+Don't reinvent navigation.
+```
+
+---
+
+## 10. Navigation Checklist
+
+### Before Navigation Architecture
+
+- [ ] App type determined (tabs/drawer/stack)
+- [ ] Number of top-level destinations counted
+- [ ] Deep link URL scheme planned
+- [ ] Auth flow integrated with navigation
+- [ ] Tablet/large screen considered
+
+### Before Every Screen
+
+- [ ] Can user navigate back? (not dead end)
+- [ ] Deep link to this screen planned
+- [ ] State preserved on navigate away/back
+- [ ] Transition appropriate for relationship
+- [ ] Auth required? Handled?
+
+### Before Release
+
+- [ ] All deep links tested
+- [ ] Back button works everywhere
+- [ ] Tab states preserved correctly
+- [ ] Edge swipe back works (iOS)
+- [ ] Predictive back works (Android 14+)
+- [ ] Universal/App links configured
+- [ ] Push notification deep links work
+
+---
+
+> **Remember:** Navigation is invisible when done right. Users shouldn't think about HOW to get somewhere—they just get there. If they notice navigation, something is wrong.

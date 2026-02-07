@@ -1,145 +1,433 @@
-# 移动端排版参考指南 (Mobile Typography Reference)
+# Mobile Typography Reference
 
-> 探讨字体比例 (Type scale)、系统字体、动态类型 (Dynamic Type)、无障碍性 (Accessibility) 以及深色模式排版。
-> **排版失败是导致移动端应用不可读的首要原因。**
+> Type scale, system fonts, Dynamic Type, accessibility, and dark mode typography.
+> **Typography failures are the #1 cause of unreadable mobile apps.**
 
 ---
 
-## 1. 移动端排版基础 (Mobile Typography Fundamentals)
+## 1. Mobile Typography Fundamentals
 
-### 为什么移动端排版与众不同
+### Why Mobile Type is Different
 
 ```
-桌面端 (DESKTOP):                    移动端 (MOBILE):
-├── 20-30" 视距                     ├── 12-15" 视距
-├── 大视口                           ├── 视口窄小
-├── 悬停查看详情                     ├── 点击/滚动查看详情
-└── 长时间阅读习惯                   └── 快速扫描习惯
+DESKTOP:                        MOBILE:
+├── 20-30" viewing distance     ├── 12-15" viewing distance
+├── Large viewport              ├── Small viewport, narrow
+├── Hover for details           ├── Tap/scroll for details
+├── Controlled lighting         ├── Variable (outdoor, etc.)
+├── Fixed font size             ├── User-controlled sizing
+└── Long reading sessions       └── Quick scanning
 ```
 
-### 移动端排版规则
+### Mobile Type Rules
 
-| 规则              | 桌面端     | 移动端           |
-| ----------------- | ---------- | ---------------- |
-| **最小正文字号**  | 14px       | 16px (14pt/14sp) |
-| **最大行宽**      | 75 字符    | 40-60 字符       |
-| **行高**          | 1.4-1.5    | 1.4-1.6 (更宽松) |
-| **对比度 (WCAG)** | AA (4.5:1) | 建议 AAA (7:1)   |
-
----
-
-## 2. 系统字体 (System Fonts)
-
-### iOS: SF Pro 系列
-
-- **SF Pro Display**: 大字号 (≥ 20pt)。
-- **SF Pro Text**: 正文 (< 20pt)。
-- **特点**: 自动调整字间距 (Tracking)，支持动态字号缩放。
-
-### Android: Roboto 系列
-
-- **Roboto**: 默认无衬线。
-- **Roboto Serif**: 衬线选项。
-- **特点**: 针对屏幕优化，适应各种尺寸。
+| Rule | Desktop | Mobile |
+|------|---------|--------|
+| **Minimum body size** | 14px | 16px (14pt/14sp) |
+| **Maximum line length** | 75 characters | 40-60 characters |
+| **Line height** | 1.4-1.5 | 1.4-1.6 (more generous) |
+| **Font weight** | Varies | Regular dominant, bold sparingly |
+| **Contrast** | AA (4.5:1) | AA minimum, AAA preferred |
 
 ---
 
-## 3. 字号比例 (Type Scale)
+## 2. System Fonts
 
-### iOS 字号比例 (内置)
+### iOS: SF Pro Family
 
-| 样式        | 字号 | 字重     | 行高 |
-| ----------- | ---- | -------- | ---- |
-| Large Title | 34pt | Bold     | 41pt |
-| Title 1     | 28pt | Bold     | 34pt |
-| Headline    | 17pt | Semibold | 22pt |
-| Body        | 17pt | Regular  | 22pt |
-| Caption 1   | 12pt | Regular  | 16pt |
+```
+San Francisco (SF) Family:
+├── SF Pro Display: Large text (≥ 20pt)
+├── SF Pro Text: Body text (< 20pt)
+├── SF Pro Rounded: Friendly contexts
+├── SF Mono: Monospace
+└── SF Compact: Apple Watch, compact UI
 
-### Android 字号比例 (Material 3)
+Features:
+├── Optical sizing (auto-adjusts)
+├── Dynamic tracking (spacing)
+├── Tabular/proportional figures
+├── Excellent legibility
+```
 
-| 角色           | 字号 | 字重 | 行高 |
-| -------------- | ---- | ---- | ---- |
-| Display Large  | 57sp | 400  | 64sp |
-| Headline Large | 32sp | 400  | 40sp |
-| Title Large    | 22sp | 400  | 28sp |
-| Body Large     | 16sp | 400  | 24sp |
-| Label Large    | 14sp | 500  | 20sp |
+### Android: Roboto Family
+
+```
+Roboto Family:
+├── Roboto: Default sans-serif
+├── Roboto Flex: Variable font
+├── Roboto Serif: Serif option
+├── Roboto Mono: Monospace
+├── Roboto Condensed: Narrow spaces
+
+Features:
+├── Optimized for screens
+├── Wide language support
+├── Multiple weights
+├── Good at small sizes
+```
+
+### When to Use System Fonts
+
+```
+✅ USE system fonts when:
+├── Brand doesn't mandate custom font
+├── Reading efficiency is priority
+├── App feels native/integrated important
+├── Performance is critical
+├── Wide language support needed
+
+❌ AVOID system fonts when:
+├── Brand identity requires custom
+├── Design differentiation needed
+├── Editorial/magazine style
+└── (But still support accessibility)
+```
+
+### Custom Font Considerations
+
+```
+If using custom fonts:
+├── Include all weights needed
+├── Subset for file size
+├── Test at all Dynamic Type sizes
+├── Provide fallback to system
+├── Test rendering quality
+└── Check language support
+```
 
 ---
 
-## 4. 动态类型与文本缩放 (Dynamic Type / Text Scaling)
+## 3. Type Scale
 
-### iOS 动态类型 (强制)
+### iOS Type Scale (Built-in)
+
+| Style | Size | Weight | Line Height |
+|-------|------|--------|-------------|
+| Large Title | 34pt | Bold | 41pt |
+| Title 1 | 28pt | Bold | 34pt |
+| Title 2 | 22pt | Bold | 28pt |
+| Title 3 | 20pt | Semibold | 25pt |
+| Headline | 17pt | Semibold | 22pt |
+| Body | 17pt | Regular | 22pt |
+| Callout | 16pt | Regular | 21pt |
+| Subhead | 15pt | Regular | 20pt |
+| Footnote | 13pt | Regular | 18pt |
+| Caption 1 | 12pt | Regular | 16pt |
+| Caption 2 | 11pt | Regular | 13pt |
+
+### Android Type Scale (Material 3)
+
+| Role | Size | Weight | Line Height |
+|------|------|--------|-------------|
+| Display Large | 57sp | 400 | 64sp |
+| Display Medium | 45sp | 400 | 52sp |
+| Display Small | 36sp | 400 | 44sp |
+| Headline Large | 32sp | 400 | 40sp |
+| Headline Medium | 28sp | 400 | 36sp |
+| Headline Small | 24sp | 400 | 32sp |
+| Title Large | 22sp | 400 | 28sp |
+| Title Medium | 16sp | 500 | 24sp |
+| Title Small | 14sp | 500 | 20sp |
+| Body Large | 16sp | 400 | 24sp |
+| Body Medium | 14sp | 400 | 20sp |
+| Body Small | 12sp | 400 | 16sp |
+| Label Large | 14sp | 500 | 20sp |
+| Label Medium | 12sp | 500 | 16sp |
+| Label Small | 11sp | 500 | 16sp |
+
+### Creating Custom Scale
+
+```
+If creating custom scale, use modular ratio:
+
+Recommended ratios:
+├── 1.125 (Major second): Dense UI
+├── 1.200 (Minor third): Compact
+├── 1.250 (Major third): Balanced (common)
+├── 1.333 (Perfect fourth): Spacious
+└── 1.500 (Perfect fifth): Dramatic
+
+Example with 1.25 ratio, 16px base:
+├── xs: 10px (16 ÷ 1.25 ÷ 1.25)
+├── sm: 13px (16 ÷ 1.25)
+├── base: 16px
+├── lg: 20px (16 × 1.25)
+├── xl: 25px (16 × 1.25 × 1.25)
+├── 2xl: 31px
+├── 3xl: 39px
+└── 4xl: 49px
+```
+
+---
+
+## 4. Dynamic Type / Text Scaling
+
+### iOS Dynamic Type (MANDATORY)
 
 ```swift
-// ✅ 正确：支持动态类型
-Text("Hello").font(.body) // 随系统设置缩放
+// ❌ WRONG: Fixed size (doesn't scale)
+Text("Hello")
+    .font(.system(size: 17))
+
+// ✅ CORRECT: Dynamic Type
+Text("Hello")
+    .font(.body) // Scales with user setting
+
+// Custom font with scaling
+Text("Hello")
+    .font(.custom("MyFont", size: 17, relativeTo: .body))
 ```
 
-### Android 文本缩放 (强制)
+### Android Text Scaling (MANDATORY)
 
-**务必使用 `sp` 而非 `dp` 作为单位：**
+```
+ALWAYS use sp for text:
+├── sp = Scale-independent pixels
+├── Scales with user font preference
+├── dp does NOT scale (don't use for text)
 
-- **sp (Scale-independent pixels)**: 随用户偏好缩放。
-- 用户可缩放至 200%，务必在此极端下测试。
+User can scale from 85% to 200%:
+├── Default (100%): 14sp = 14dp
+├── Largest (200%): 14sp = 28dp
 
----
+Test at 200%!
+```
 
-## 5. 排版无障碍性 (Typography Accessibility)
+### Scaling Challenges
 
-### 最小字号建议
+```
+Problems at large text sizes:
+├── Text overflows containers
+├── Buttons become too tall
+├── Icons look small relative to text
+├── Layouts break
 
-| 元素           | 最小值     | 推荐值     |
-| -------------- | ---------- | ---------- |
-| 正文           | 14px/pt/sp | 16px/pt/sp |
-| 说明 (Caption) | 11px/pt/sp | 12px/pt/sp |
-| **禁止更小**   | 11px       | -          |
-
-### 对比度要求 (WCAG)
-
-- **普通文本**: 最小 4.5:1 (AA), 建议 7:1 (AAA)。
-- **大号文本**: 最小 3:1 (AA), 建议 4.5:1 (AAA)。
-
----
-
-## 6. 深色模式排版 (Dark Mode Typography)
-
-### 颜色调整
-
-- **规则**: 在深色背景上严禁使用纯白 (#FFFFFF)，这会导致严重的视觉疲劳。
-- **偏移白色**: 使用 (#E0E0E0 到 #F0F0F0) 减轻眼睛压力。
-
-### 深色模式下的视觉字重
-
-- 在深色模式下，由于光晕效应，文本看起来会比浅色模式更细。
-- **对策**: 考虑增加字间距 (Letter-spacing)，或者将正文由 Regular 提升为 Medium。
+Solutions:
+├── Use flexible containers (not fixed height)
+├── Allow text wrapping
+├── Scale icons with text
+├── Test at extremes during development
+├── Use scrollable containers for long text
+```
 
 ---
 
-## 7. 排版反模式 (Typography Anti-Patterns)
+## 5. Typography Accessibility
 
-- ❌ **固定字号**: 忽略无障碍设置。
-- ❌ **低对比度**: 在阳光下不可读。
-- ❌ **超长行宽**: 导致阅读疲劳。
-- ❌ **AI 常见错误**: 使用固定 `px` 而非 `pt/sp`；不测试 200% 缩放下的布局。
+### Minimum Sizes
+
+| Element | Minimum | Recommended |
+|---------|---------|-------------|
+| Body text | 14px/pt/sp | 16px/pt/sp |
+| Secondary text | 12px/pt/sp | 13-14px/pt/sp |
+| Captions | 11px/pt/sp | 12px/pt/sp |
+| Buttons | 14px/pt/sp | 14-16px/pt/sp |
+| **Nothing smaller** | 11px | - |
+
+### Contrast Requirements (WCAG)
+
+```
+Normal text (< 18pt or < 14pt bold):
+├── AA: 4.5:1 ratio minimum
+├── AAA: 7:1 ratio recommended
+
+Large text (≥ 18pt or ≥ 14pt bold):
+├── AA: 3:1 ratio minimum
+├── AAA: 4.5:1 ratio recommended
+
+Logos/decorative: No requirement
+```
+
+### Line Height for Accessibility
+
+```
+WCAG Success Criterion 1.4.12:
+
+Line height (line spacing): ≥ 1.5×
+Paragraph spacing: ≥ 2× font size
+Letter spacing: ≥ 0.12× font size
+Word spacing: ≥ 0.16× font size
+
+Mobile recommendation:
+├── Body: 1.4-1.6 line height
+├── Headings: 1.2-1.3 line height
+├── Never below 1.2
+```
 
 ---
 
-## 8. 字体加载与性能 (Font Loading)
+## 6. Dark Mode Typography
 
-- **字体瘦身**: 仅包含所需字符集 (Subset)。
-- **回退机制**: 加载自定义字体前优先显示系统字体 (`font-display: swap`)。
+### Color Adjustments
+
+```
+Light Mode:               Dark Mode:
+├── Black text (#000)     ├── White/light gray (#E0E0E0)
+├── High contrast         ├── Slightly reduced contrast
+├── Full saturation       ├── Desaturated colors
+└── Dark = emphasis       └── Light = emphasis
+
+RULE: Don't use pure white (#FFF) on dark.
+Use off-white (#E0E0E0 to #F0F0F0) to reduce eye strain.
+```
+
+### Dark Mode Hierarchy
+
+| Level | Light Mode | Dark Mode |
+|-------|------------|-----------|
+| Primary text | #000000 | #E8E8E8 |
+| Secondary text | #666666 | #A0A0A0 |
+| Tertiary text | #999999 | #707070 |
+| Disabled text | #CCCCCC | #505050 |
+
+### Weight in Dark Mode
+
+```
+Dark mode text appears thinner due to halation
+(light bleeding into dark background)
+
+Consider:
+├── Using medium weight for body (instead of regular)
+├── Increasing letter-spacing slightly
+├── Testing on actual OLED displays
+└── Using slightly bolder weight than light mode
+```
 
 ---
 
-## 9. 排版检查清单 (Typography Checklist)
+## 7. Typography Anti-Patterns
 
-- [ ] 正文字号是否 ≥ 16px/pt/sp？
-- [ ] 行高是否 ≥ 1.4？
-- [ ] 是否在 iOS 动态类型/Android 200% 下进行了测试？
-- [ ] 暗色模式对比度是否达标？
+### ❌ Common Mistakes
+
+| Mistake | Problem | Fix |
+|---------|---------|-----|
+| **Fixed font sizes** | Ignores accessibility | Use dynamic sizing |
+| **Too small text** | Unreadable | Min 14pt/sp |
+| **Low contrast** | Invisible in sunlight | Min 4.5:1 |
+| **Long lines** | Hard to track | Max 60 chars |
+| **Tight line height** | Cramped, hard to read | Min 1.4× |
+| **Too many sizes** | Visual chaos | Max 5-7 sizes |
+| **All caps body** | Hard to read | Headlines only |
+| **Light gray on white** | Impossible in bright light | Higher contrast |
+
+### ❌ AI Typography Mistakes
+
+```
+AI tends to:
+├── Use fixed px values instead of pt/sp
+├── Skip Dynamic Type support
+├── Use too small text (12-14px body)
+├── Ignore line height settings
+├── Use low contrast "aesthetic" grays
+├── Apply same scale to mobile as desktop
+└── Skip testing at large text sizes
+
+RULE: Typography must SCALE.
+Test at smallest and largest settings.
+```
 
 ---
 
-> **记住：** 如果用户无法阅读你的文字，你的应用就是损坏的。排版不是装饰，它是主要的交互界面。
+## 8. Font Loading & Performance
+
+### Font File Optimization
+
+```
+Font file sizes matter on mobile:
+├── Full font: 100-300KB per weight
+├── Subset (Latin): 15-40KB per weight
+├── Variable font: 100-200KB (all weights)
+
+Recommendations:
+├── Subset to needed characters
+├── Use WOFF2 format
+├── Max 2-3 font files
+├── Consider variable fonts
+├── Cache fonts appropriately
+```
+
+### Loading Strategy
+
+```
+1. SYSTEM FONT FALLBACK
+   Show system font → swap when custom loads
+   
+2. FONT DISPLAY SWAP
+   font-display: swap (CSS)
+   
+3. PRELOAD CRITICAL FONTS
+   Preload fonts needed above the fold
+   
+4. DON'T BLOCK RENDER
+   Don't wait for fonts to show content
+```
+
+---
+
+## 9. Typography Checklist
+
+### Before Any Text Design
+
+- [ ] Body text ≥ 16px/pt/sp?
+- [ ] Line height ≥ 1.4?
+- [ ] Line length ≤ 60 chars?
+- [ ] Type scale defined (max 5-7 sizes)?
+- [ ] Using pt (iOS) or sp (Android)?
+
+### Before Release
+
+- [ ] Dynamic Type tested (iOS)?
+- [ ] Font scaling tested at 200% (Android)?
+- [ ] Dark mode contrast checked?
+- [ ] Sunlight readability tested?
+- [ ] All text has proper hierarchy?
+- [ ] Custom fonts have fallbacks?
+- [ ] Long text scrolls properly?
+
+---
+
+## 10. Quick Reference
+
+### Typography Tokens
+
+```
+// iOS
+.largeTitle  // 34pt, Bold
+.title       // 28pt, Bold
+.title2      // 22pt, Bold
+.title3      // 20pt, Semibold
+.headline    // 17pt, Semibold
+.body        // 17pt, Regular
+.subheadline // 15pt, Regular
+.footnote    // 13pt, Regular
+.caption     // 12pt, Regular
+
+// Android (Material 3)
+displayLarge   // 57sp
+headlineLarge  // 32sp
+titleLarge     // 22sp
+bodyLarge      // 16sp
+labelLarge     // 14sp
+```
+
+### Minimum Sizes
+
+```
+Body:       14-16pt/sp (16 preferred)
+Secondary:  12-13pt/sp
+Caption:    11-12pt/sp
+Nothing:    < 11pt/sp
+```
+
+### Line Height
+
+```
+Headings:  1.1-1.3
+Body:      1.4-1.6
+Long text: 1.5-1.75
+```
+
+---
+
+> **Remember:** If users can't read your text, your app is broken. Typography isn't decoration—it's the primary interface. Test on real devices, in real conditions, with accessibility settings enabled.

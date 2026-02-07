@@ -53,8 +53,3 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/database-design/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/database-design/SKILL.md`。
-- **注意**：文档层不改技能流程；仅补充目录映射事实。

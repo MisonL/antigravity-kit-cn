@@ -1,146 +1,161 @@
 ---
 name: server-management
-description: 服务器管理原则与决策。进程管理、监控策略及扩缩容决策。教导思考而非指令。
+description: Server management principles and decision-making. Process management, monitoring strategy, and scaling decisions. Teaches thinking, not commands.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# 服务器管理 (Server Management)
+# Server Management
 
-> 针对生产环境运营的服务器管理原则。
-> **学习如何思考 (THINK)，而非死记硬背命令。**
-
----
-
-## 1. 进程管理原则 (Process Management)
-
-### 工具选择建议
-
-| 场景                | 推荐工具                       |
-| ------------------- | ------------------------------ |
-| **Node.js 应用**    | PM2 (支持集群模式、平滑重载)   |
-| **通用 Linux 应用** | systemd (Linux 原生支持)       |
-| **容器化应用**      | Docker / Podman                |
-| **容器编排**        | Kubernetes (K8s), Docker Swarm |
-
-### 进程管理核心目标
-
-| 目标           | 核心定义                           |
-| -------------- | ---------------------------------- |
-| **故障自愈**   | 崩溃后自动重启 (Restart on crash)  |
-| **零停机重载** | 无感知重载，不中断服务             |
-| **集群模式**   | 充分榨干所有 CPU 核心 (Clustering) |
-| **持久化运行** | 保证在服务器重启后依然存活         |
+> Server management principles for production operations.
+> **Learn to THINK, not memorize commands.**
 
 ---
 
-## 2. 监控原则 (Monitoring Principles)
+## 1. Process Management Principles
 
-### 监控维度 (指标项)
+### Tool Selection
 
-| 类别         | 关键指标                        |
-| ------------ | ------------------------------- |
-| **可用性**   | 正常运行时间 (Uptime)、健康检查 |
-| **性能表现** | 响应时间 (RTT)、吞吐量          |
-| **错误情况** | 错误率、错误分布类型            |
-| **资源水位** | CPU、内存、磁盘 IO、带宽        |
+| Scenario | Tool |
+|----------|------|
+| **Node.js app** | PM2 (clustering, reload) |
+| **Any app** | systemd (Linux native) |
+| **Containers** | Docker/Podman |
+| **Orchestration** | Kubernetes, Docker Swarm |
 
-### 告警级别策略 (Alert Severity)
+### Process Management Goals
 
-| 级别                | 响应动作         |
-| ------------------- | ---------------- |
-| **紧急 (Critical)** | 立即介入处理     |
-| **警告 (Warning)**  | 近期内进行排查   |
-| **提示 (Info)**     | 每日进行例行复查 |
-
----
-
-## 3. 日志管理原则 (Log Management)
-
-### 日志策略分类
-
-| 日志类型     | 核心用途                |
-| ------------ | ----------------------- |
-| **应用日志** | 用于调试 (Debug) 与审计 |
-| **访问日志** | 用于流量分析与用户画像  |
-| **错误日志** | 用于即时故障检测        |
-
-### 日志准则
-
-1. **日志轮转 (Rotation)**：防止磁盘被日志撑爆。
-2. **结构化日志**：优先采用 JSON 格式以方便程序解析。
-3. **分级明确**：严守 error/warn/info/debug 等级划分。
-4. **隐私脱敏**：严禁在日志中记录敏感数据。
+| Goal | What It Means |
+|------|---------------|
+| **Restart on crash** | Auto-recovery |
+| **Zero-downtime reload** | No service interruption |
+| **Clustering** | Use all CPU cores |
+| **Persistence** | Survive server reboot |
 
 ---
 
-## 4. 扩缩容决策 (Scaling Decisions)
+## 2. Monitoring Principles
 
-### 选择扩容方案的时机
+### What to Monitor
 
-| 症状表现     | 推荐方案                                   |
-| ------------ | ------------------------------------------ |
-| CPU 持续高位 | 增加实例数量 (水平扩容 Horizontal)         |
-| 内存持续高位 | 增加 RAM 或修复内存泄漏                    |
-| 响应缓慢     | 先进行性能分析 (Profiling)，解决不了再扩容 |
-| 突发流量峰值 | 启用自动弹性伸缩 (Auto-scaling)            |
+| Category | Key Metrics |
+|----------|-------------|
+| **Availability** | Uptime, health checks |
+| **Performance** | Response time, throughput |
+| **Errors** | Error rate, types |
+| **Resources** | CPU, memory, disk |
 
----
+### Alert Severity Strategy
 
-## 5. 健康检查原则 (Health Check)
+| Level | Response |
+|-------|----------|
+| **Critical** | Immediate action |
+| **Warning** | Investigate soon |
+| **Info** | Review daily |
 
-### 何为“健康”？
+### Monitoring Tool Selection
 
-| 检查项           | 技术含义             |
-| ---------------- | -------------------- |
-| **HTTP 200**     | 服务能够正常响应请求 |
-| **数据库连通**   | 数据层可正常访问     |
-| **依赖项正常**   | 外部下游服务可达     |
-| **资源水位正常** | CPU/内存未耗尽       |
-
----
-
-## 6. 安全原则 (Security)
-
-| 领域         | 核心准则                             |
-| ------------ | ------------------------------------ |
-| **访问控制** | 仅使用 SSH 密钥，严禁密码登录        |
-| **防火墙**   | 仅开放必要的端口 (白名单制)          |
-| **安全更新** | 定期修补安全补丁                     |
-| **密钥管理** | 仅使用环境变量，严禁明文存放在文件内 |
-| **审计追溯** | 记录所有的访问与配置变更日志         |
+| Need | Options |
+|------|---------|
+| Simple/Free | PM2 metrics, htop |
+| Full observability | Grafana, Datadog |
+| Error tracking | Sentry |
+| Uptime | UptimeRobot, Pingdom |
 
 ---
 
-## 7. 故障排查优先级 (Troubleshooting)
+## 3. Log Management Principles
 
-当系统出现异常时，按此顺序排查：
+### Log Strategy
 
-1. **检查进程状态**：程序是否还在运行？
-2. **查阅日志**：是否有明确的报错消息？
-3. **检查资源水位**：磁盘、内存、CPU 是否爆了？
-4. **检查网络**：端口是否监听？DNS 是否正常？
-5. **检查下游依赖**：数据库、第三方 API 是否正常？
+| Log Type | Purpose |
+|----------|---------|
+| **Application logs** | Debug, audit |
+| **Access logs** | Traffic analysis |
+| **Error logs** | Issue detection |
 
----
+### Log Principles
 
-## 8. 应避免的反模式 (Anti-Patterns)
-
-| ❌ 禁止 (Don't)        | ✅ 推荐 (Do)                 |
-| ---------------------- | ---------------------------- |
-| 使用 root 用户运行程序 | 使用非特权用户运行           |
-| 忽视日志清理           | 配置日志轮转 (Rotation) 策略 |
-| 缺失初期监控           | 从第一天起就接入监控系统     |
-| 纯手动重启操作         | 配置自动化重启方案           |
-| 缺失备份机制           | 建立定期的自动化备份计划     |
+1. **Rotate logs** to prevent disk fill
+2. **Structured logging** (JSON) for parsing
+3. **Appropriate levels** (error/warn/info/debug)
+4. **No sensitive data** in logs
 
 ---
 
-> **谨记：** 一个管理良好的服务器应该是“无聊且安静”的。这才是运维的终极目标。
+## 4. Scaling Decisions
+
+### When to Scale
+
+| Symptom | Solution |
+|---------|----------|
+| High CPU | Add instances (horizontal) |
+| High memory | Increase RAM or fix leak |
+| Slow response | Profile first, then scale |
+| Traffic spikes | Auto-scaling |
+
+### Scaling Strategy
+
+| Type | When to Use |
+|------|-------------|
+| **Vertical** | Quick fix, single instance |
+| **Horizontal** | Sustainable, distributed |
+| **Auto** | Variable traffic |
 
 ---
 
-## Skills 兼容说明 (最小补充)
+## 5. Health Check Principles
 
-- **机制基线**：沿用上游 `.agent/skills/server-management/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/server-management/SKILL.md`。
-- **注意**：文档层不应替代 Ops 自动化体系；仅在此定义运维决策逻辑。
+### What Constitutes Healthy
+
+| Check | Meaning |
+|-------|---------|
+| **HTTP 200** | Service responding |
+| **Database connected** | Data accessible |
+| **Dependencies OK** | External services reachable |
+| **Resources OK** | CPU/memory not exhausted |
+
+### Health Check Implementation
+
+- Simple: Just return 200
+- Deep: Check all dependencies
+- Choose based on load balancer needs
+
+---
+
+## 6. Security Principles
+
+| Area | Principle |
+|------|-----------|
+| **Access** | SSH keys only, no passwords |
+| **Firewall** | Only needed ports open |
+| **Updates** | Regular security patches |
+| **Secrets** | Environment vars, not files |
+| **Audit** | Log access and changes |
+
+---
+
+## 7. Troubleshooting Priority
+
+When something's wrong:
+
+1. **Check if running** (process status)
+2. **Check logs** (error messages)
+3. **Check resources** (disk, memory, CPU)
+4. **Check network** (ports, DNS)
+5. **Check dependencies** (database, APIs)
+
+---
+
+## 8. Anti-Patterns
+
+| ❌ Don't | ✅ Do |
+|----------|-------|
+| Run as root | Use non-root user |
+| Ignore logs | Set up log rotation |
+| Skip monitoring | Monitor from day one |
+| Manual restarts | Auto-restart config |
+| No backups | Regular backup schedule |
+
+---
+
+> **Remember:** A well-managed server is boring. That's the goal.

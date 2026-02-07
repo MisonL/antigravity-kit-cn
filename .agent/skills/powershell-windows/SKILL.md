@@ -165,8 +165,3 @@ catch {
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/powershell-windows/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/powershell-windows/SKILL.md`。
-- **注意**：文档层不应替代 PowerShell 逻辑；仅在此定义跨平台下的 Windows 终端准则。

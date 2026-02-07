@@ -214,8 +214,3 @@ MIT
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/documentation-templates/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/documentation-templates/SKILL.md`。
-- **注意**：文档层不应替代实际文档；仅在此定义结构规范。

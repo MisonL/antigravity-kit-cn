@@ -1,315 +1,333 @@
 ---
 name: nodejs-best-practices
-description: Node.js 开发原则与决策。框架选择、异步模式、安全与架构。教导思考而非复制。
+description: Node.js development principles and decision-making. Framework selection, async patterns, security, and architecture. Teaches thinking, not copying.
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# Node.js 最佳实践 (Node.js Best Practices)
+# Node.js Best Practices
 
-> 2025 年 Node.js 开发的原则与决策准则。
-> **学习如何思考 (THINK)，而非死记硬背。**
-
----
-
-## ⚠️ 如何使用此技能 (How to Use)
-
-本技能旨在传授**决策原则**，而非固定的、用于复制的代码。
-
-- 在需求不明确时，主动请教老板 (ASK)。
-- 根据**上下文 (CONTEXT)** 选择合适的框架或模式。
-- 不要每次都默认使用相同的解决方案。
+> Principles and decision-making for Node.js development in 2025.
+> **Learn to THINK, not memorize code patterns.**
 
 ---
 
-## 1. 框架选择 (2025) (Framework Selection)
+## ⚠️ How to Use This Skill
 
-### 决策树
+This skill teaches **decision-making principles**, not fixed code to copy.
 
-```
-您想要构建什么？
-│
-├── 边缘计算 / Serverless (Cloudflare, Vercel)
-│   └── Hono (零依赖、冷启动极快)
-│
-├── 高性能 API
-│   └── Fastify (比 Express 高出 2-3 倍性能)
-│
-├── 企业级 / 追求团队熟悉度
-│   └── NestJS (结构化、依赖注入、装饰器模式)
-│
-├── 遗留系统 / 追求极尽稳定的生态
-│   └── Express (最为成熟、中间件最为丰富)
-│
-└── 包含前端的全栈应用
-    └── Next.js API Routes 或 tRPC
-```
-
-### 对比原则
-
-| 维度           | Hono             | Fastify    | Express        |
-| -------------- | ---------------- | ---------- | -------------- |
-| **最佳用途**   | 边缘、Serverless | 高性能场景 | 遗留项目、学习 |
-| **冷启动**     | 极快             | 快         | 中等           |
-| **生态系统**   | 快速增长中       | 优秀       | 规模最大       |
-| **TypeScript** | 原生支持         | 极佳       | 良好           |
-| **学习曲线**   | 低               | 中         | 低             |
-
-### 务必询问老板的问题：
-
-1. 目标部署环境是什么？
-2. 冷启动时间是否属于关键指标？
-3. 团队是否有现成的使用经验？
-4. 是否有需要维护的遗留代码？
+- ASK user for preferences when unclear
+- Choose framework/pattern based on CONTEXT
+- Don't default to same solution every time
 
 ---
 
-## 2. 运行时考量 (Runtime Considerations)
+## 1. Framework Selection (2025)
 
-### 原生 TypeScript 支持
+### Decision Tree
 
 ```
-Node.js 22+: 使用 --experimental-strip-types
-├── 直接运行 .ts 文件
-├── 简单项目无需构建步骤
-└── 适用场景：脚本编写、小型 API
+What are you building?
+│
+├── Edge/Serverless (Cloudflare, Vercel)
+│   └── Hono (zero-dependency, ultra-fast cold starts)
+│
+├── High Performance API
+│   └── Fastify (2-3x faster than Express)
+│
+├── Enterprise/Team familiarity
+│   └── NestJS (structured, DI, decorators)
+│
+├── Legacy/Stable/Maximum ecosystem
+│   └── Express (mature, most middleware)
+│
+└── Full-stack with frontend
+    └── Next.js API Routes or tRPC
 ```
 
-### 模块系统决策 (Module System)
+### Comparison Principles
+
+| Factor | Hono | Fastify | Express |
+|--------|------|---------|---------|
+| **Best for** | Edge, serverless | Performance | Legacy, learning |
+| **Cold start** | Fastest | Fast | Moderate |
+| **Ecosystem** | Growing | Good | Largest |
+| **TypeScript** | Native | Excellent | Good |
+| **Learning curve** | Low | Medium | Low |
+
+### Selection Questions to Ask:
+1. What's the deployment target?
+2. Is cold start time critical?
+3. Does team have existing experience?
+4. Is there legacy code to maintain?
+
+---
+
+## 2. Runtime Considerations (2025)
+
+### Native TypeScript
+
+```
+Node.js 22+: --experimental-strip-types
+├── Run .ts files directly
+├── No build step needed for simple projects
+└── Consider for: scripts, simple APIs
+```
+
+### Module System Decision
 
 ```
 ESM (import/export)
-├── 现代标准
-├── 更好的 Tree-shaking 效果
-├── 异步模块加载
-└── 适用场景：新项目
-```
+├── Modern standard
+├── Better tree-shaking
+├── Async module loading
+└── Use for: new projects
 
-```
 CommonJS (require)
-├── 遗留系统兼容性
-├── 依然有大量 npm 包支持
-└── 适用场景：现有代码库、特定边缘情况
+├── Legacy compatibility
+├── More npm packages support
+└── Use for: existing codebases, some edge cases
 ```
 
-### 运行时选择
+### Runtime Selection
 
-| 运行时      | 最佳用途                           |
-| ----------- | ---------------------------------- |
-| **Node.js** | 通用目的，生态规模最大             |
-| **Bun**     | 追求极致性能，自带打包器 (Bundler) |
-| **Deno**    | 安全优先，内置 TypeScript 支持     |
+| Runtime | Best For |
+|---------|----------|
+| **Node.js** | General purpose, largest ecosystem |
+| **Bun** | Performance, built-in bundler |
+| **Deno** | Security-first, built-in TypeScript |
 
 ---
 
-## 3. 架构原则 (Architecture Principles)
+## 3. Architecture Principles
 
-### 分层结构概念 (Layered Structure)
+### Layered Structure Concept
 
 ```
-请求流 (Request Flow):
+Request Flow:
 │
-├── 控制器/路由层 (Controller/Route)
-│   ├── 处理 HTTP 细则
-│   ├── 在边界进行输入验证
-│   └── 调用服务层
+├── Controller/Route Layer
+│   ├── Handles HTTP specifics
+│   ├── Input validation at boundary
+│   └── Calls service layer
 │
-├── 服务层 (Service Layer)
-│   ├── 核心业务逻辑
-│   ├── 与框架无关 (Framework-agnostic)
-│   └── 调用仓储层
+├── Service Layer
+│   ├── Business logic
+│   ├── Framework-agnostic
+│   └── Calls repository layer
 │
-└── 仓储层 (Repository Layer)
-    ├── 仅负责数据访问
-    ├── 数据库查询
-    └── ORM 交互
+└── Repository Layer
+    ├── Data access only
+    ├── Database queries
+    └── ORM interactions
 ```
 
-### 分层的核心意义：
+### Why This Matters:
+- **Testability**: Mock layers independently
+- **Flexibility**: Swap database without touching business logic
+- **Clarity**: Each layer has single responsibility
 
-- **可测试性 (Testability)**：各层可独立进行 Mock 测试。
-- **灵活性**：更换数据库而无需触及业务逻辑。
-- **清晰性**：每层仅承担单一职责。
-
-### 何时可以简化：
-
-- 小型脚本 → 单个文件即可。
-- 原型开发 → 结构要求可适当放宽。
-- **始终询问**：“以后这个规模会变大吗？”
+### When to Simplify:
+- Small scripts → Single file OK
+- Prototypes → Less structure acceptable
+- Always ask: "Will this grow?"
 
 ---
 
-## 4. 错误处理原则 (Error Handling)
+## 4. Error Handling Principles
 
-### 集中式错误处理
-
-```
-模式：
-├── 创建自定义错误类 (Custom error classes)
-├── 在任何层级均可抛出 (Throw)
-├── 在顶层捕获 (中间件 Middleware)
-└── 响应统一格式的内容
-```
-
-### 错误响应哲学
+### Centralized Error Handling
 
 ```
-客户端获得：
-├── 合适的 HTTP 状态码
-├── 用于程序处理的错误代码 (Error code)
-├── 用户友好的消息提示
-└── 🚫 严禁泄露内部实现细节 (安全风险！)
-
-日志系统记录：
-├── 完整的堆栈跟踪 (Stack trace)
-├── 请求上下文 (Context)
-├── 用户 ID（如适用）
-└── 时间戳
+Pattern:
+├── Create custom error classes
+├── Throw from any layer
+├── Catch at top level (middleware)
+└── Format consistent response
 ```
 
-### 状态码选择参考
+### Error Response Philosophy
 
-| 场景           | 状态码 | 适用时机                     |
-| -------------- | ------ | ---------------------------- |
-| 输入有误       | 400    | 客户端发送了无效数据         |
-| 未经过身份认证 | 401    | 缺失或无效的凭据             |
-| 无操作权限     | 403    | 身份有效，但不允许执行此操作 |
-| 未找到资源     | 404    | 资源不存在                   |
-| 录入冲突       | 409    | 数据重复或状态不一致         |
-| 验证失败       | 422    | 模式合法但业务规则校验失败   |
-| 服务器故障     | 500    | 我们的过错，请记录所有日志   |
+```
+Client gets:
+├── Appropriate HTTP status
+├── Error code for programmatic handling
+├── User-friendly message
+└── NO internal details (security!)
+
+Logs get:
+├── Full stack trace
+├── Request context
+├── User ID (if applicable)
+└── Timestamp
+```
+
+### Status Code Selection
+
+| Situation | Status | When |
+|-----------|--------|------|
+| Bad input | 400 | Client sent invalid data |
+| No auth | 401 | Missing or invalid credentials |
+| No permission | 403 | Valid auth, but not allowed |
+| Not found | 404 | Resource doesn't exist |
+| Conflict | 409 | Duplicate or state conflict |
+| Validation | 422 | Schema valid but business rules fail |
+| Server error | 500 | Our fault, log everything |
 
 ---
 
-## 5. 异步模式准则 (Async Patterns)
+## 5. Async Patterns Principles
 
-### 不同模式的使用时机
+### When to Use Each
 
-| 模式                 | 适用场景                   |
-| -------------------- | -------------------------- |
-| `async/await`        | 顺序执行的异步操作         |
-| `Promise.all`        | 并行执行的独立操作         |
-| `Promise.allSettled` | 并行执行，允许部分操作失败 |
-| `Promise.race`       | 超时处理或“首位胜出”模式   |
+| Pattern | Use When |
+|---------|----------|
+| `async/await` | Sequential async operations |
+| `Promise.all` | Parallel independent operations |
+| `Promise.allSettled` | Parallel where some can fail |
+| `Promise.race` | Timeout or first response wins |
 
-### 事件循环 (Event Loop) 感知
-
-```
-I/O 密集型 (异步有助于提升性能):
-├── 数据库查询
-├── HTTP 请求
-├── 文件系统操作
-└── 网络通信
-
-CPU 密集型 (异步**无法**提供直接帮助):
-├── 加密/哈希运算
-├── 图像处理
-├── 复杂的科学计算
-└── → 应使用 Worker threads 或将其卸载至离线处理
-```
-
----
-
-## 6. 验证原则 (Validation Principles)
-
-### 在边界进行验证
+### Event Loop Awareness
 
 ```
-重点验证位置：
-├── API 入口点 (Request Body/Params)
-├── 执行数据库操作之前
-├── 外部数据 (第三方 API 响应、文件上传)
-└── 环境变量 (系统启动时)
+I/O-bound (async helps):
+├── Database queries
+├── HTTP requests
+├── File system
+└── Network operations
+
+CPU-bound (async doesn't help):
+├── Crypto operations
+├── Image processing
+├── Complex calculations
+└── → Use worker threads or offload
 ```
 
-### 验证库选择
+### Avoiding Event Loop Blocking
 
-| 库          | 最佳用途                            |
-| ----------- | ----------------------------------- |
-| **Zod**     | TypeScript 优先，提供强大的类型推导 |
-| **Valibot** | 追求极小的包体积 (Tree-shakeable)   |
-| **ArkType** | 性能至上场景                        |
-| **Yup**     | 与 React 表单库配套使用             |
+- Never use sync methods in production (fs.readFileSync, etc.)
+- Offload CPU-intensive work
+- Use streaming for large data
 
 ---
 
-## 7. 安全原则 (Security Principles)
+## 6. Validation Principles
 
-### 安全检查清单
+### Validate at Boundaries
 
-- [ ] **输入验证**：所有输入均经过校验。
-- [ ] **参数化查询**：禁止对 SQL 使用字符串拼接。
-- [ ] **密码哈希**：使用 bcrypt 或 argon2。
-- [ ] **JWT 验证**：始终验证签名与过期时间。
-- [ ] **速率限制 (Rate limiting)**：防止暴力破解与滥用。
-- [ ] **安全头**：使用 Helmet.js 或类似方案。
-- [ ] **HTTPS**：生产环境全面开启。
-- [ ] **CORS**：正确配置，严禁盲目放通。
-- [ ] **密钥管理**：仅通过环境变量管理密钥。
-- [ ] **依赖审计**：定期进行审计。
+```
+Where to validate:
+├── API entry point (request body/params)
+├── Before database operations
+├── External data (API responses, file uploads)
+└── Environment variables (startup)
+```
 
----
+### Validation Library Selection
 
-## 8. 测试原则 (Testing Principles)
+| Library | Best For |
+|---------|----------|
+| **Zod** | TypeScript first, inference |
+| **Valibot** | Smaller bundle (tree-shakeable) |
+| **ArkType** | Performance critical |
+| **Yup** | Existing React Form usage |
 
-### 测试策略选择
+### Validation Philosophy
 
-| 类型                       | 目的          | 工具              |
-| -------------------------- | ------------- | ----------------- |
-| **单元测试 (Unit)**        | 验证业务逻辑  | node:test, Vitest |
-| **集成测试 (Integration)** | 验证 API 端点 | Supertest         |
-| **端到端测试 (E2E)**       | 验证完整流程  | Playwright        |
-
-### 测试优先级
-
-1. **关键链路**：登录、支付、核心业务。
-2. **边缘情况**：空输入、边界值。
-3. **错误处理**：发生故障时系统的表现。
-4. **无需测试**：框架代码、简单的 Getter。
+- Fail fast: Validate early
+- Be specific: Clear error messages
+- Don't trust: Even "internal" data
 
 ---
 
-## 9. 应避免的反模式 (Anti-Patterns)
+## 7. Security Principles
 
-### ❌ 禁止：
+### Security Checklist (Not Code)
 
-- 在追求极速的边缘项目中使用 Express（优先考虑 Hono）。
-- 在生产环节使用同步方法（如 `fs.readFileSync`）。
-- 将业务逻辑直接写在 Controller 中。
-- 跳过输入验证。
-- 在代码中硬编码任何密钥。
-- 盲目信任外部数据而不做校验。
-- 使用 CPU 密集型任务阻塞事件循环。
+- [ ] **Input validation**: All inputs validated
+- [ ] **Parameterized queries**: No string concatenation for SQL
+- [ ] **Password hashing**: bcrypt or argon2
+- [ ] **JWT verification**: Always verify signature and expiry
+- [ ] **Rate limiting**: Protect from abuse
+- [ ] **Security headers**: Helmet.js or equivalent
+- [ ] **HTTPS**: Everywhere in production
+- [ ] **CORS**: Properly configured
+- [ ] **Secrets**: Environment variables only
+- [ ] **Dependencies**: Regularly audited
 
-### ✅ 推荐：
+### Security Mindset
 
-- 根据具体场景选择最合适的框架。
-- 涉及不明确的需求时主动询问老板。
-- 为复杂项目采用分层架构。
-- 严格验证所有输入。
-- 仅通过环境变量管理密钥。
-- 在开始优化前先进行性能瓶颈分析。
-
----
-
-## 10. 决策检查清单 (Decision Checklist)
-
-在开始实现之前：
-
-- [ ] **是否向老板咨询过偏好的技术栈？**
-- [ ] **是否针对此上下文选择了最佳框架？**
-- [ ] **是否考虑了部署目标平台？**
-- [ ] **是否规划了全局错误处理策略？**
-- [ ] **是否识别了所有需要验证的边界点？**
-- [ ] **是否全面考虑了安全合规要求？**
+```
+Trust nothing:
+├── Query params → validate
+├── Request body → validate
+├── Headers → verify
+├── Cookies → validate
+├── File uploads → scan
+└── External APIs → validate response
+```
 
 ---
 
-> **谨记**：Node.js 最佳实践的核心在于决策，而非生搬硬套模式。每一个项目都值得根据其独有的需求进行重新审视。
+## 8. Testing Principles
+
+### Test Strategy Selection
+
+| Type | Purpose | Tools |
+|------|---------|-------|
+| **Unit** | Business logic | node:test, Vitest |
+| **Integration** | API endpoints | Supertest |
+| **E2E** | Full flows | Playwright |
+
+### What to Test (Priorities)
+
+1. **Critical paths**: Auth, payments, core business
+2. **Edge cases**: Empty inputs, boundaries
+3. **Error handling**: What happens when things fail?
+4. **Not worth testing**: Framework code, trivial getters
+
+### Built-in Test Runner (Node.js 22+)
+
+```
+node --test src/**/*.test.ts
+├── No external dependency
+├── Good coverage reporting
+└── Watch mode available
+```
 
 ---
 
-## Skills 兼容说明 (最小补充)
+## 10. Anti-Patterns to Avoid
 
-- **机制基线**：沿用上游 `.agent/skills/nodejs-best-practices/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/nodejs-best-practices/SKILL.md`。
-- **注意**：文档层不应替代 Node 架构规范；仅在此定义决策逻辑。
+### ❌ DON'T:
+- Use Express for new edge projects (use Hono)
+- Use sync methods in production code
+- Put business logic in controllers
+- Skip input validation
+- Hardcode secrets
+- Trust external data without validation
+- Block event loop with CPU work
+
+### ✅ DO:
+- Choose framework based on context
+- Ask user for preferences when unclear
+- Use layered architecture for growing projects
+- Validate all inputs
+- Use environment variables for secrets
+- Profile before optimizing
+
+---
+
+## 11. Decision Checklist
+
+Before implementing:
+
+- [ ] **Asked user about stack preference?**
+- [ ] **Chosen framework for THIS context?** (not just default)
+- [ ] **Considered deployment target?**
+- [ ] **Planned error handling strategy?**
+- [ ] **Identified validation points?**
+- [ ] **Considered security requirements?**
+
+---
+
+> **Remember**: Node.js best practices are about decision-making, not memorizing patterns. Every project deserves fresh consideration based on its requirements.

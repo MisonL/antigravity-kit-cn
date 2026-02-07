@@ -142,8 +142,3 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/tdd-workflow/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/tdd-workflow/SKILL.md`。
-- **注意**：文档层不应替代单元测试框架；仅在此定义 TDD 方法论。

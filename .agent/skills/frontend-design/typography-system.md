@@ -1,95 +1,345 @@
-# 排版系统参考指南 (Typography System Reference)
+# Typography System Reference
 
-> 排版原则与决策逻辑 —— 学习思考，而非死记硬背。
-> **没有固定的字体名称或字号 —— 理解系统。**
-
----
-
-## 1. 模块化比例原则 (Modular Scale Principles)
-
-### 什么是模块化比例？
-
-模块化比例是字号之间的一种数学关系：
-
-1. 选取一个**基准 (Base)** 字号（通常是正文字号）。
-2. 选取一个**比例 (Ratio)**（倍数）。
-3. 使用公式生成所有字号：`base × ratio^n`。
-
-### 常用比例及其适用场景
-
-| 比例           | 数值  | 感觉       | 最佳用途          |
-| -------------- | ----- | ---------- | ----------------- |
-| Minor Second   | 1.067 | 极微妙     | 高密度 UI、小屏幕 |
-| Major Second   | 1.125 | 微妙       | 紧凑型界面        |
-| Minor Third    | 1.2   | 舒适       | 移动端应用、卡片  |
-| Major Third    | 1.25  | 平衡       | 通用 Web (最常用) |
-| Perfect Fourth | 1.333 | 显著       | 社论、博客        |
-| Golden Ratio   | 1.618 | 最大冲击力 | Hero 区域、展示类 |
+> Typography principles and decision-making - learn to think, not memorize.
+> **No fixed font names or sizes - understand the system.**
 
 ---
 
-## 2. 字体配对原则 (Font Pairing Principles)
+## 1. Modular Scale Principles
 
-### 对比与和谐 (Contrast + Harmony)
+### What is a Modular Scale?
 
-好的配对需要：
-
-- **足够的差异**: 以创建清晰的层次。
-- **足够的相似**: 以保持风格一致。
-- **典型组合**: 衬线标题 + 无衬线正文，或展示字体 + 中性字体。
-
----
-
-## 3. 行高原则 (Line Height Principles)
-
-### 关联性
-
-行高取决于：
-
-- **字号**: 字号越大，所需行高比例越小。
-- **行宽**: 行越宽，所需行高越大以便视线换行。
-- **内容类型**: 标题 (1.1-1.3) 需紧凑，正文 (1.4-1.6) 需舒适。
-
----
-
-## 4. 行宽原则 (Line Length Principles)
-
-### 最佳阅读宽度
-
-- **黄金区间**: 每行 45-75 个字符。
-- **实现方式**: `max-width: 65ch;` (ch 是字符 "0" 的宽度)。
-
----
-
-## 5. 流式排版原则 (Fluid Typography)
-
-### 使用 clamp()
-
-```css
-/* 语法: clamp(最小值, 流式计算值, 最大值) */
-font-size: clamp(1rem, 2vw + 1rem, 3rem);
+```
+A mathematical relationship between font sizes:
+├── Pick a BASE size (usually body text)
+├── Pick a RATIO (multiplier)
+└── Generate all sizes using: base × ratio^n
 ```
 
-这消除了断点跳变带来的割裂感，实现丝滑縮放。
+### Common Ratios and When to Use
+
+| Ratio | Value | Feeling | Best For |
+|-------|-------|---------|----------|
+| Minor Second | 1.067 | Very subtle | Dense UI, small screens |
+| Major Second | 1.125 | Subtle | Compact interfaces |
+| Minor Third | 1.2 | Comfortable | Mobile apps, cards |
+| Major Third | 1.25 | Balanced | General web (most common) |
+| Perfect Fourth | 1.333 | Noticeable | Editorial, blogs |
+| Perfect Fifth | 1.5 | Dramatic | Headlines, marketing |
+| Golden Ratio | 1.618 | Maximum impact | Hero sections, display |
+
+### Generate Your Scale
+
+```
+Given: base = YOUR_BASE_SIZE, ratio = YOUR_RATIO
+
+Scale:
+├── xs:  base ÷ ratio²
+├── sm:  base ÷ ratio
+├── base: YOUR_BASE_SIZE
+├── lg:  base × ratio
+├── xl:  base × ratio²
+├── 2xl: base × ratio³
+├── 3xl: base × ratio⁴
+└── ... continue as needed
+```
+
+### Choosing Base Size
+
+| Context | Base Size Range | Why |
+|---------|-----------------|-----|
+| Mobile-first | 16-18px | Readability on small screens |
+| Desktop app | 14-16px | Information density |
+| Editorial | 18-21px | Long-form reading comfort |
+| Accessibility focus | 18px+ | Easier to read |
 
 ---
 
-## 6. 排版层次结构 (Hierarchy)
+## 2. Font Pairing Principles
 
-- **Size (字号)**: 最直观。
-- **Weight (字重)**: 粗体更吸睛。跳过至少两个字重等级 (如 400 + 700) 以增强对比。
-- **Color (颜色)**: 使用对比度控制视觉优先级。
+### What Makes Fonts Work Together
+
+```
+Contrast + Harmony:
+├── Different ENOUGH to create hierarchy
+├── Similar ENOUGH to feel cohesive
+└── Usually: serif + sans, or display + neutral
+```
+
+### Pairing Strategies
+
+| Strategy | How | Result |
+|----------|-----|--------|
+| **Contrast** | Serif heading + Sans body | Classic, editorial feel |
+| **Same Family** | One variable font, different weights | Cohesive, modern |
+| **Same Designer** | Fonts by same foundry | Often harmonious proportions |
+| **Era Match** | Fonts from same time period | Historical consistency |
+
+### What to Look For
+
+```
+When pairing, compare:
+├── x-height (height of lowercase letters)
+├── Letter width (narrow vs wide)
+├── Stroke contrast (thin/thick variation)
+└── Overall mood (formal vs casual)
+```
+
+### Safe Pairing Patterns
+
+| Heading Style | Body Style | Mood |
+|---------------|------------|------|
+| Geometric sans | Humanist sans | Modern, friendly |
+| Display serif | Clean sans | Editorial, sophisticated |
+| Neutral sans | Same sans | Minimal, tech |
+| Bold geometric | Light geometric | Contemporary |
+
+### Avoid
+
+- ❌ Two decorative fonts together
+- ❌ Similar fonts that conflict
+- ❌ More than 2-3 font families
+- ❌ Fonts with very different x-heights
 
 ---
 
-## 7. 排版检查清单 (Typography Checklist)
+## 3. Line Height Principles
 
-- [ ] 是否向老板询问了字体偏好？
-- [ ] 是否选择了合适的比例因子？
-- [ ] 字体族是否限制在 2-3 个以内？
-- [ ] 行宽是否控制在 45-75ch？
-- [ ] 所有的字号是否支持响应式缩放？
+### The Relationship
+
+```
+Line height depends on:
+├── Font size (larger text = less line height needed)
+├── Line length (longer lines = more line height)
+├── Font design (some fonts need more space)
+└── Content type (headings vs body)
+```
+
+### Guidelines by Context
+
+| Content Type | Line Height Range | Why |
+|--------------|-------------------|-----|
+| **Headings** | 1.1 - 1.3 | Short lines, want compact |
+| **Body text** | 1.4 - 1.6 | Comfortable reading |
+| **Long-form** | 1.6 - 1.8 | Maximum readability |
+| **UI elements** | 1.2 - 1.4 | Space efficiency |
+
+### Adjustment Factors
+
+- **Longer line length** → Increase line height
+- **Larger font size** → Decrease line height ratio
+- **All caps** → May need more line height
+- **Tight tracking** → May need more line height
 
 ---
 
-> **记住：** 排版是为了交流的清晰。基于内容需求和受众进行选择，而非个人喜好。
+## 4. Line Length Principles
+
+### Optimal Reading Width
+
+```
+The sweet spot: 45-75 characters per line
+├── < 45: Too choppy, breaks flow
+├── 45-75: Comfortable reading
+├── > 75: Eye tracking strain
+```
+
+### How to Measure
+
+```css
+/* Character-based (recommended) */
+max-width: 65ch; /* ch = width of "0" character */
+
+/* This adapts to font size automatically */
+```
+
+### Context Adjustments
+
+| Context | Character Range |
+|---------|-----------------|
+| Desktop article | 60-75 characters |
+| Mobile | 35-50 characters |
+| Sidebar text | 30-45 characters |
+| Wide monitors | Still cap at ~75ch |
+
+---
+
+## 5. Responsive Typography Principles
+
+### The Problem
+
+```
+Fixed sizes don't scale well:
+├── Desktop size too big on mobile
+├── Mobile size too small on desktop
+└── Breakpoint jumps feel jarring
+```
+
+### Fluid Typography (clamp)
+
+```css
+/* Syntax: clamp(MIN, PREFERRED, MAX) */
+font-size: clamp(
+  MINIMUM_SIZE,
+  FLUID_CALCULATION,
+  MAXIMUM_SIZE
+);
+
+/* FLUID_CALCULATION typically: 
+   base + viewport-relative-unit */
+```
+
+### Scaling Strategy
+
+| Element | Scaling Behavior |
+|---------|-----------------|
+| Body text | Slight scaling (1rem → 1.125rem) |
+| Subheadings | Moderate scaling |
+| Headings | More dramatic scaling |
+| Display text | Most dramatic scaling |
+
+---
+
+## 6. Weight and Emphasis Principles
+
+### Semantic Weight Usage
+
+| Weight Range | Name | Use For |
+|--------------|------|---------|
+| 300-400 | Light/Normal | Body text, paragraphs |
+| 500 | Medium | Subtle emphasis |
+| 600 | Semibold | Subheadings, labels |
+| 700 | Bold | Headings, strong emphasis |
+| 800-900 | Heavy/Black | Display, hero text |
+
+### Creating Contrast
+
+```
+Good contrast = skip at least 2 weight levels
+├── 400 body + 700 heading = good
+├── 400 body + 500 emphasis = subtle
+├── 600 heading + 700 subheading = too similar
+```
+
+### Avoid
+
+- ❌ Too many weights (max 3-4 per page)
+- ❌ Adjacent weights for hierarchy (400/500)
+- ❌ Heavy weights for long text
+
+---
+
+## 7. Letter Spacing (Tracking)
+
+### Principles
+
+```
+Large text (headings): tighter tracking
+├── Letters are big, gaps feel larger
+└── Slight negative tracking looks better
+
+Small text (body): normal or slightly wider
+├── Improves readability at small sizes
+└── Never negative for body text
+
+ALL CAPS: always wider tracking
+├── Uppercase lacks ascenders/descenders
+└── Needs more space to feel right
+```
+
+### Adjustment Guidelines
+
+| Context | Tracking Adjustment |
+|---------|---------------------|
+| Display/Hero | -2% to -4% |
+| Headings | -1% to -2% |
+| Body text | 0% (normal) |
+| Small text | +1% to +2% |
+| ALL CAPS | +5% to +10% |
+
+---
+
+## 8. Hierarchy Principles
+
+### Visual Hierarchy Through Type
+
+```
+Ways to create hierarchy:
+├── SIZE (most obvious)
+├── WEIGHT (bold stands out)
+├── COLOR (contrast levels)
+├── SPACING (margins separate sections)
+└── POSITION (top = important)
+```
+
+### Typical Hierarchy
+
+| Level | Characteristics |
+|-------|-----------------|
+| Primary (H1) | Largest, boldest, most distinct |
+| Secondary (H2) | Noticeably smaller but still bold |
+| Tertiary (H3) | Medium size, may use weight only |
+| Body | Standard size and weight |
+| Caption/Meta | Smaller, often lighter color |
+
+### Testing Hierarchy
+
+Ask: "Can I tell what's most important at a glance?"
+
+If squinting at the page, the hierarchy should still be clear.
+
+---
+
+## 9. Readability Psychology
+
+### F-Pattern Reading
+
+```
+Users scan in F-pattern:
+├── Across the top (first line)
+├── Down the left side
+├── Across again (subheading)
+└── Continue down left
+```
+
+**Implication**: Key info on left and in headings
+
+### Chunking for Comprehension
+
+- Short paragraphs (3-4 lines max)
+- Clear subheadings
+- Bullet points for lists
+- White space between sections
+
+### Cognitive Ease
+
+- Familiar fonts = easier reading
+- High contrast = less strain
+- Consistent patterns = predictable
+
+---
+
+## 10. Typography Selection Checklist
+
+Before finalizing typography:
+
+- [ ] **Asked user for font preferences?**
+- [ ] **Considered brand/context?**
+- [ ] **Selected appropriate scale ratio?**
+- [ ] **Limited to 2-3 font families?**
+- [ ] **Tested readability at all sizes?**
+- [ ] **Checked line length (45-75ch)?**
+- [ ] **Verified contrast for accessibility?**
+- [ ] **Different from your last project?**
+
+### Anti-Patterns
+
+- ❌ Same fonts every project
+- ❌ Too many font families
+- ❌ Ignoring readability for style
+- ❌ Fixed sizes without responsiveness
+- ❌ Decorative fonts for body text
+
+---
+
+> **Remember**: Typography is about communication clarity. Choose based on content needs and audience, not personal preference.

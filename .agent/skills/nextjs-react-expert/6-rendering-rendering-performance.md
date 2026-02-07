@@ -1,141 +1,172 @@
-# 6. 渲染性能 (Rendering Performance)
+# 6. Rendering Performance
 
-> **影响:** 中 (MEDIUM)
-> **重点:** 优化渲染过程可减少浏览器需要做的工作。
-
----
-
-## 概览
-
-本节包含 **9 条规则**，专注于渲染性能。
+> **Impact:** MEDIUM
+> **Focus:** Optimizing the rendering process reduces the work the browser needs to do.
 
 ---
 
-## 规则 6.1: 动画化 SVG 包装器而不是 SVG 元素
+## Overview
 
-**影响:** 低 (LOW)
-**标签:** rendering, svg, css, animation, performance
+This section contains **9 rules** focused on rendering performance.
 
-## 动画化 SVG 包装器而不是 SVG 元素
+---
 
-许多浏览器没有针对 SVG 元素的 CSS3 动画硬件加速。将 SVG 包裹在 `<div>` 中并动画化包装器。
+## Rule 6.1: Animate SVG Wrapper Instead of SVG Element
 
-**错误示范 (直接动画化 SVG - 无硬件加速):**
+**Impact:** LOW  
+**Tags:** rendering, svg, css, animation, performance  
+
+## Animate SVG Wrapper Instead of SVG Element
+
+Many browsers don't have hardware acceleration for CSS3 animations on SVG elements. Wrap SVG in a `<div>` and animate the wrapper instead.
+
+**Incorrect (animating SVG directly - no hardware acceleration):**
 
 ```tsx
 function LoadingSpinner() {
-    return (
-        <svg
-            className="animate-spin"
-            //...
-        >
-            <circle cx="12" cy="12" r="10" stroke="currentColor" />
-        </svg>
-    );
+  return (
+    <svg 
+      className="animate-spin"
+      width="24" 
+      height="24" 
+      viewBox="0 0 24 24"
+    >
+      <circle cx="12" cy="12" r="10" stroke="currentColor" />
+    </svg>
+  )
 }
 ```
 
-**正确示范 (动画化包装 div - 硬件加速):**
+**Correct (animating wrapper div - hardware accelerated):**
 
 ```tsx
 function LoadingSpinner() {
-    return (
-        <div className="animate-spin">
-            <svg
-            //...
-            >
-                <circle cx="12" cy="12" r="10" stroke="currentColor" />
-            </svg>
-        </div>
-    );
+  return (
+    <div className="animate-spin">
+      <svg 
+        width="24" 
+        height="24" 
+        viewBox="0 0 24 24"
+      >
+        <circle cx="12" cy="12" r="10" stroke="currentColor" />
+      </svg>
+    </div>
+  )
 }
 ```
 
-这就适用于所有 CSS 变换和过渡 (`transform`, `opacity`, `translate`, `scale`, `rotate`)。包装 div 允许浏览器使用 GPU 加速以获得更流畅的动画。
+This applies to all CSS transforms and transitions (`transform`, `opacity`, `translate`, `scale`, `rotate`). The wrapper div allows browsers to use GPU acceleration for smoother animations.
 
 ---
 
-## 规则 6.2: 对长列表使用 CSS content-visibility
+## Rule 6.2: CSS content-visibility for Long Lists
 
-**影响:** 高 (HIGH)
-**标签:** rendering, css, content-visibility, long-lists
+**Impact:** HIGH  
+**Tags:** rendering, css, content-visibility, long-lists  
 
-## 对长列表使用 CSS content-visibility
+## CSS content-visibility for Long Lists
 
-应用 `content-visibility: auto` 以推迟屏幕外渲染。
+Apply `content-visibility: auto` to defer off-screen rendering.
 
 **CSS:**
 
 ```css
 .message-item {
-    content-visibility: auto;
-    contain-intrinsic-size: 0 80px;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 80px;
 }
 ```
 
-对于 1000 条消息，浏览器会跳过 ~990 个屏幕外项目的布局/绘制 (初始渲染快 10 倍)。
+**Example:**
+
+```tsx
+function MessageList({ messages }: { messages: Message[] }) {
+  return (
+    <div className="overflow-y-auto h-screen">
+      {messages.map(msg => (
+        <div key={msg.id} className="message-item">
+          <Avatar user={msg.author} />
+          <div>{msg.content}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+For 1000 messages, browser skips layout/paint for ~990 off-screen items (10× faster initial render).
 
 ---
 
-## 规则 6.3: 提升静态 JSX 元素 (Hoist Static JSX Elements)
+## Rule 6.3: Hoist Static JSX Elements
 
-**影响:** 低 (LOW)
-**标签:** rendering, jsx, static, optimization
+**Impact:** LOW  
+**Tags:** rendering, jsx, static, optimization  
 
-## 提升静态 JSX 元素
+## Hoist Static JSX Elements
 
-将静态 JSX 提取到组件外部以避免重新创建。
+Extract static JSX outside components to avoid re-creation.
 
-**错误示范 (每次渲染都重建元素):**
+**Incorrect (recreates element every render):**
 
 ```tsx
 function LoadingSkeleton() {
-    return <div className="animate-pulse h-20 bg-gray-200" />;
+  return <div className="animate-pulse h-20 bg-gray-200" />
 }
 
 function Container() {
-    return <div>{loading && <LoadingSkeleton />}</div>;
+  return (
+    <div>
+      {loading && <LoadingSkeleton />}
+    </div>
+  )
 }
 ```
 
-**正确示范 (复用相同元素):**
+**Correct (reuses same element):**
 
 ```tsx
-const loadingSkeleton = <div className="animate-pulse h-20 bg-gray-200" />;
+const loadingSkeleton = (
+  <div className="animate-pulse h-20 bg-gray-200" />
+)
 
 function Container() {
-    return <div>{loading && loadingSkeleton}</div>;
+  return (
+    <div>
+      {loading && loadingSkeleton}
+    </div>
+  )
 }
 ```
 
-这对于大型且静态的 SVG 节点特别有用，因为每次渲染都重建它们可能很昂贵。
+This is especially helpful for large and static SVG nodes, which can be expensive to recreate on every render.
 
-**注意:** 如果你的项目启用了 [React Compiler](https://react.dev/learn/react-compiler)，则不需要手动提升。
+**Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, the compiler automatically hoists static JSX elements and optimizes component re-renders, making manual hoisting unnecessary.
 
 ---
 
-## 规则 6.4: 优化 SVG 精度
+## Rule 6.4: Optimize SVG Precision
 
-**影响:** 低 (LOW)
-**标签:** rendering, svg, optimization, svgo
+**Impact:** LOW  
+**Tags:** rendering, svg, optimization, svgo  
 
-## 优化 SVG 精度
+## Optimize SVG Precision
 
-降低 SVG 坐标精度以减小文件大小。最佳精度取决于 viewBox 大小，但通常应考虑降低精度。
+Reduce SVG coordinate precision to decrease file size. The optimal precision depends on the viewBox size, but in general reducing precision should be considered.
 
-**错误示范 (过高精度):**
+**Incorrect (excessive precision):**
 
 ```svg
 <path d="M 10.293847 20.847362 L 30.938472 40.192837" />
 ```
 
-**正确示范 (1 位小数):**
+**Correct (1 decimal place):**
 
 ```svg
 <path d="M 10.3 20.8 L 30.9 40.2" />
 ```
 
-**使用 SVGO 自动化:**
+**Automate with SVGO:**
 
 ```bash
 npx svgo --precision=1 --multipass icon.svg
@@ -143,54 +174,68 @@ npx svgo --precision=1 --multipass icon.svg
 
 ---
 
-## 规则 6.5: 防止水合不匹配且无闪烁
+## Rule 6.5: Prevent Hydration Mismatch Without Flickering
 
-**影响:** 中 (MEDIUM)
-**标签:** rendering, ssr, hydration, localStorage, flicker
+**Impact:** MEDIUM  
+**Tags:** rendering, ssr, hydration, localStorage, flicker  
 
-## 防止水合不匹配且无闪烁
+## Prevent Hydration Mismatch Without Flickering
 
-当渲染依赖于客户端存储 (localStorage, cookies) 的内容时，通过注入同步脚本在 React 水合之前更新 DOM，以避免 SSR 破坏和水合后闪烁。
+When rendering content that depends on client-side storage (localStorage, cookies), avoid both SSR breakage and post-hydration flickering by injecting a synchronous script that updates the DOM before React hydrates.
 
-**错误示范 (破坏 SSR):**
+**Incorrect (breaks SSR):**
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
-    // localStorage 在服务器上不可用 - 抛出错误
-    const theme = localStorage.getItem("theme") || "light";
-
-    return <div className={theme}>{children}</div>;
+  // localStorage is not available on server - throws error
+  const theme = localStorage.getItem('theme') || 'light'
+  
+  return (
+    <div className={theme}>
+      {children}
+    </div>
+  )
 }
 ```
 
-**错误示范 (视觉闪烁):**
+Server-side rendering will fail because `localStorage` is undefined.
+
+**Incorrect (visual flickering):**
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
-    const [theme, setTheme] = useState("light");
-
-    useEffect(() => {
-        // 水合后运行 - 导致可见闪烁
-        const stored = localStorage.getItem("theme");
-        if (stored) {
-            setTheme(stored);
-        }
-    }, []);
-
-    return <div className={theme}>{children}</div>;
+  const [theme, setTheme] = useState('light')
+  
+  useEffect(() => {
+    // Runs after hydration - causes visible flash
+    const stored = localStorage.getItem('theme')
+    if (stored) {
+      setTheme(stored)
+    }
+  }, [])
+  
+  return (
+    <div className={theme}>
+      {children}
+    </div>
+  )
 }
 ```
 
-**正确示范 (无闪烁，无水合不匹配):**
+Component first renders with default value (`light`), then updates after hydration, causing a visible flash of incorrect content.
+
+**Correct (no flicker, no hydration mismatch):**
 
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
-    return (
-        <>
-            <div id="theme-wrapper">{children}</div>
-            <script
-                dangerouslySetInnerHTML={{
-                    __html: `
+  return (
+    <>
+      <div id="theme-wrapper">
+        {children}
+      </div>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
             (function() {
               try {
                 var theme = localStorage.getItem('theme') || 'light';
@@ -199,144 +244,189 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
               } catch (e) {}
             })();
           `,
-                }}
-            />
-        </>
-    );
+        }}
+      />
+    </>
+  )
 }
 ```
 
-内联脚本在显示元素之前同步执行，确保 DOM 已经具有正确的值。
+The inline script executes synchronously before showing the element, ensuring the DOM already has the correct value. No flickering, no hydration mismatch.
+
+This pattern is especially useful for theme toggles, user preferences, authentication states, and any client-only data that should render immediately without flashing default values.
 
 ---
 
-## 规则 6.6: 抑制预期的水合不匹配
+## Rule 6.6: Suppress Expected Hydration Mismatches
 
-**影响:** 中低 (LOW-MEDIUM)
-**标签:** rendering, hydration, ssr, nextjs
+**Impact:** LOW-MEDIUM  
+**Tags:** rendering, hydration, ssr, nextjs  
 
-## 抑制预期的水合不匹配
+## Suppress Expected Hydration Mismatches
 
-在 SSR 框架 (如 Next.js) 中，某些值在服务器与客户端上故意不同 (随机 ID、日期、本地化/时区格式)。对于这些**预期的**不匹配，将动态文本包裹在具有 `suppressHydrationWarning` 的元素中，以防止噪音警告。不要用这个来隐藏真正的 Bug。不要滥用它。
+In SSR frameworks (e.g., Next.js), some values are intentionally different on server vs client (random IDs, dates, locale/timezone formatting). For these *expected* mismatches, wrap the dynamic text in an element with `suppressHydrationWarning` to prevent noisy warnings. Do not use this to hide real bugs. Don’t overuse it.
 
-**错误示范 (已知不匹配警告):**
+**Incorrect (known mismatch warnings):**
 
 ```tsx
 function Timestamp() {
-    return <span>{new Date().toLocaleString()}</span>;
+  return <span>{new Date().toLocaleString()}</span>
 }
 ```
 
-**正确示范 (仅抑制预期不匹配):**
+**Correct (suppress expected mismatch only):**
 
 ```tsx
 function Timestamp() {
-    return <span suppressHydrationWarning>{new Date().toLocaleString()}</span>;
+  return (
+    <span suppressHydrationWarning>
+      {new Date().toLocaleString()}
+    </span>
+  )
 }
 ```
 
 ---
 
-## 规则 6.7: 使用 Activity 组件进行显示/隐藏
+## Rule 6.7: Use Activity Component for Show/Hide
 
-**影响:** 中 (MEDIUM)
-**标签:** rendering, activity, visibility, state-preservation
+**Impact:** MEDIUM  
+**Tags:** rendering, activity, visibility, state-preservation  
 
-## 使用 Activity 组件进行显示/隐藏
+## Use Activity Component for Show/Hide
 
-使用 React 的 `<Activity>` 来保留昂贵组件的状态/DOM，这些组件频繁切换可见性。
+Use React's `<Activity>` to preserve state/DOM for expensive components that frequently toggle visibility.
 
-**用法:**
+**Usage:**
 
 ```tsx
-import { Activity } from "react";
+import { Activity } from 'react'
 
 function Dropdown({ isOpen }: Props) {
-    return (
-        <Activity mode={isOpen ? "visible" : "hidden"}>
-            <ExpensiveMenu />
-        </Activity>
-    );
+  return (
+    <Activity mode={isOpen ? 'visible' : 'hidden'}>
+      <ExpensiveMenu />
+    </Activity>
+  )
 }
 ```
 
-避免昂贵的重渲染和状态丢失。
+Avoids expensive re-renders and state loss.
 
 ---
 
-## 规则 6.8: 使用显式条件渲染
+## Rule 6.8: Use Explicit Conditional Rendering
 
-**影响:** 低 (LOW)
-**标签:** rendering, conditional, jsx, falsy-values
+**Impact:** LOW  
+**Tags:** rendering, conditional, jsx, falsy-values  
 
-## 使用显式条件渲染
+## Use Explicit Conditional Rendering
 
-当条件可能为 `0`、`NaN` 或其他会渲染的假值时，使用显式三元运算符 (`? :`) 而不是 `&&` 进行条件渲染。
+Use explicit ternary operators (`? :`) instead of `&&` for conditional rendering when the condition can be `0`, `NaN`, or other falsy values that render.
 
-**错误示范 (当 count 为 0 时渲染 "0"):**
+**Incorrect (renders "0" when count is 0):**
 
 ```tsx
 function Badge({ count }: { count: number }) {
-    return <div>{count && <span className="badge">{count}</span>}</div>;
+  return (
+    <div>
+      {count && <span className="badge">{count}</span>}
+    </div>
+  )
 }
-// 当 count = 0 时渲染: <div>0</div>
+
+// When count = 0, renders: <div>0</div>
+// When count = 5, renders: <div><span class="badge">5</span></div>
 ```
 
-**正确示范 (当 count 为 0 时不渲染):**
+**Correct (renders nothing when count is 0):**
 
 ```tsx
 function Badge({ count }: { count: number }) {
-    return (
-        <div>{count > 0 ? <span className="badge">{count}</span> : null}</div>
-    );
+  return (
+    <div>
+      {count > 0 ? <span className="badge">{count}</span> : null}
+    </div>
+  )
 }
-// 当 count = 0 时渲染: <div></div>
+
+// When count = 0, renders: <div></div>
+// When count = 5, renders: <div><span class="badge">5</span></div>
 ```
 
 ---
 
-## 规则 6.9: 使用 useTransition 代替手动 Loading 状态
+## Rule 6.9: Use useTransition Over Manual Loading States
 
-**影响:** 低 (LOW)
-**标签:** rendering, transitions, useTransition, loading, state
+**Impact:** LOW  
+**Tags:** rendering, transitions, useTransition, loading, state  
 
-## 使用 useTransition 代替手动 Loading 状态
+## Use useTransition Over Manual Loading States
 
-使用 `useTransition` 代替手动 `useState` 来管理加载状态。这提供了内置的 `isPending` 状态并自动管理过渡。
+Use `useTransition` instead of manual `useState` for loading states. This provides built-in `isPending` state and automatically manages transitions.
 
-**正确示范 (使用内置 pending 状态的 useTransition):**
+**Incorrect (manual loading state):**
 
 ```tsx
-import { useTransition, useState } from "react";
+function SearchResults() {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSearch = async (value: string) => {
+    setIsLoading(true)
+    setQuery(value)
+    const data = await fetchResults(value)
+    setResults(data)
+    setIsLoading(false)
+  }
+
+  return (
+    <>
+      <input onChange={(e) => handleSearch(e.target.value)} />
+      {isLoading && <Spinner />}
+      <ResultsList results={results} />
+    </>
+  )
+}
+```
+
+**Correct (useTransition with built-in pending state):**
+
+```tsx
+import { useTransition, useState } from 'react'
 
 function SearchResults() {
-    const [query, setQuery] = useState("");
-    const [results, setResults] = useState([]);
-    const [isPending, startTransition] = useTransition();
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState([])
+  const [isPending, startTransition] = useTransition()
 
-    const handleSearch = (value: string) => {
-        setQuery(value); // 立即更新输入
+  const handleSearch = (value: string) => {
+    setQuery(value) // Update input immediately
+    
+    startTransition(async () => {
+      // Fetch and update results
+      const data = await fetchResults(value)
+      setResults(data)
+    })
+  }
 
-        startTransition(async () => {
-            // 获取并更新结果
-            const data = await fetchResults(value);
-            setResults(data);
-        });
-    };
-
-    return (
-        <>
-            <input onChange={(e) => handleSearch(e.target.value)} />
-            {isPending && <Spinner />}
-            <ResultsList results={results} />
-        </>
-    );
+  return (
+    <>
+      <input onChange={(e) => handleSearch(e.target.value)} />
+      {isPending && <Spinner />}
+      <ResultsList results={results} />
+    </>
+  )
 }
 ```
 
-**益处:**
+**Benefits:**
 
-- **自动 pending 状态**: 无需手动管理 `setIsLoading(true/false)`
-- **错误恢复**: 即使转换抛出异常，Pending 状态也能正确重置
-- **更好的响应性**: 在更新期间保持 UI 响应
-- **中断处理**: 新的转换会自动取消挂起的转换
+- **Automatic pending state**: No need to manually manage `setIsLoading(true/false)`
+- **Error resilience**: Pending state correctly resets even if the transition throws
+- **Better responsiveness**: Keeps the UI responsive during updates
+- **Interrupt handling**: New transitions automatically cancel pending ones
+
+Reference: [useTransition](https://react.dev/reference/react/useTransition)
+

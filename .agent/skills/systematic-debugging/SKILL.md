@@ -134,8 +134,3 @@ pm2 logs app-name --err --lines 100
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/systematic-debugging/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/systematic-debugging/SKILL.md`。
-- **注意**：文档层不应替代 Debugging 工作流；仅在此定义科学调试的方法论。

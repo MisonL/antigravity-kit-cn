@@ -1,114 +1,103 @@
 ---
-description: 调试命令。激活 DEBUG 模式以进行系统化的故障调查。
+description: Debugging command. Activates DEBUG mode for systematic problem investigation.
 ---
 
-# /debug - 系统化调查问题 (Systematic Problem Investigation)
+# /debug - Systematic Problem Investigation
 
 $ARGUMENTS
 
 ---
 
-## 目的 (Purpose)
+## Purpose
 
-此命令激活 DEBUG 模式，用于对问题、错误或非预期行为进行系统化的调查。
-
----
-
-## 行为 (Behavior)
-
-当你触发 `/debug` 时：
-
-1. **收集信息**
-    - 错误信息 (Error message)
-    - 复现步骤
-    - 预期行为与实际行为的差异
-    - 最近的代码变更
-
-2. **形成假设 (Form Hypotheses)**
-    - 列出所有可能的触发原因
-    - 按可能性进行排序
-
-3. **进行系统化调查**
-    - 逐一验证每个假设
-    - 检查日志、数据流
-    - 使用排除法进行定位
-
-4. **修复与预防**
-    - 实施修复方案
-    - 解释根因 (Root cause)
-    - 增加预防措施
+This command activates DEBUG mode for systematic investigation of issues, errors, or unexpected behavior.
 
 ---
 
-## 输出格式 (Output Format)
+## Behavior
 
-````markdown
-## 🔍 调试 (Debug)：[问题摘要]
+When `/debug` is triggered:
 
-### 1. 症状 (Symptom)
+1. **Gather information**
+   - Error message
+   - Reproduction steps
+   - Expected vs actual behavior
+   - Recent changes
 
-[正在发生什么的简要描述]
+2. **Form hypotheses**
+   - List possible causes
+   - Order by likelihood
 
-### 2. 已收集的信息
+3. **Investigate systematically**
+   - Test each hypothesis
+   - Check logs, data flow
+   - Use elimination method
 
-- 错误信息：`[error message]`
-- 相关文件：`[filepath]`
-- 所在行号：[line number]
+4. **Fix and prevent**
+   - Apply fix
+   - Explain root cause
+   - Add prevention measures
 
-### 3. 假设 (Hypotheses)
+---
 
-1. ❓ [最可能的原因]
-2. ❓ [第二种可能性]
-3. ❓ [可能性较低的原因]
+## Output Format
 
-### 4. 调查过程 (Investigation)
+```markdown
+## 🔍 Debug: [Issue]
 
-**验证假设 1：**
-[我检查了什么] → [结果]
+### 1. Symptom
+[What's happening]
 
-**验证假设 2：**
-[我检查了什么] → [结果]
+### 2. Information Gathered
+- Error: `[error message]`
+- File: `[filepath]`
+- Line: [line number]
 
-### 5. 根因 (Root Cause)
+### 3. Hypotheses
+1. ❓ [Most likely cause]
+2. ❓ [Second possibility]
+3. ❓ [Less likely cause]
 
-🎯 **[关于为什么会发生此问题的结论性解释]**
+### 4. Investigation
 
-### 6. 修复方案 (Fix)
+**Testing hypothesis 1:**
+[What I checked] → [Result]
 
-```[语言]
-// 修复前 (Before)
-[有问题的代码]
+**Testing hypothesis 2:**
+[What I checked] → [Result]
 
-// 修复后 (After)
-[修复后的代码]
+### 5. Root Cause
+🎯 **[Explanation of why this happened]**
+
+### 6. Fix
+```[language]
+// Before
+[broken code]
+
+// After
+[fixed code]
 ```
-````
 
-### 7. 预防措施 (Prevention)
-
-🛡️ [未来如何避免此类问题再次发生]
-
+### 7. Prevention
+🛡️ [How to prevent this in the future]
 ```
 
 ---
 
-## 示例 (Examples)
+## Examples
 
 ```
-
-/debug 登录功能失效
-/debug API 响应 500 错误
-/debug 表单无法提交
-/debug 数据未能成功保存
-
+/debug login not working
+/debug API returns 500
+/debug form doesn't submit
+/debug data not saving
 ```
 
 ---
 
-## 核心原则 (Key Principles)
+## Key Principles
 
-- **先提问再假设** —— 获取完整的错误上下文。
-- **验证假设** —— 不要盲目猜测。
-- **解释原因** —— 不仅要修复代码，还要说明“为什么”。
-- **防止复发** —— 增加测试用例或验证逻辑。
-```
+- **Ask before assuming** - get full error context
+- **Test hypotheses** - don't guess randomly
+- **Explain why** - not just what to fix
+- **Prevent recurrence** - add tests, validation

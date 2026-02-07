@@ -193,8 +193,3 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/parallel-agents/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/parallel-agents/SKILL.md`。
-- **注意**：文档层不应替代编排逻辑；仅在此定义多 Agent 协作范式。

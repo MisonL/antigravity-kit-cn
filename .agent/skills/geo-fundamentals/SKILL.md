@@ -152,12 +152,7 @@ AI 引擎如何选择要引用的内容：
 
 | 脚本                     | 用途                          | 执行命令                                   |
 | ------------------------ | ----------------------------- | ------------------------------------------ |
-| `scripts/geo_checker.py` | GEO 审计 (检查 AI 引用就绪度) | `python scripts/geo_checker.py <项目路径>` |
+| `scripts/geo_checker.py` | GEO 审计 (检查 AI 引用就绪度) | `python scripts/geo_checker.py <project_path>` |
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/geo-fundamentals/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/geo-fundamentals/SKILL.md`。
-- **注意**：文档层不应替代 SEO 策略；仅在此定义针对生成式引擎的优化原则。

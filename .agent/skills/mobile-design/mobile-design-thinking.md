@@ -1,361 +1,357 @@
----
-description: 移动端优先设计思维、反默认模式与AI对策
----
+# Mobile Design Thinking
 
-# 移动端设计思维 (Mobile Design Thinking)
-
-> **此文件旨在防止 AI 使用死记硬背的模式，并强制进行真正的思考。**
-> 这是防止移动开发中标准 AI 训练默认值的机制。
-> **相当于前端的布局分解方法，但针对移动端。**
+> **This file prevents AI from using memorized patterns and forces genuine thinking.**
+> Mechanisms to prevent standard AI training defaults in mobile development.
+> **The mobile equivalent of frontend's layout decomposition approach.**
 
 ---
 
-## 🧠 深度移动思维协议 (Deep Mobile Thinking Protocol)
+## 🧠 DEEP MOBILE THINKING PROTOCOL
 
-### 每个移动项目前的强制流程
+### This Process is Mandatory Before Every Mobile Project
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    深度移动思维 (DEEP MOBILE THINKING)           │
+│                    DEEP MOBILE THINKING                         │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  1️⃣ 上下文扫描 (CONTEXT SCAN)                                   │
-│     └── 我对此项目的假设是什么？                                │
-│         └── 质疑这些假设                                        │
+│  1️⃣ CONTEXT SCAN                                               │
+│     └── What are my assumptions for this project?               │
+│         └── QUESTION these assumptions                          │
 │                                                                 │
-│  2️⃣ 反默认分析 (ANTI-DEFAULT ANALYSIS)                          │
-│     └── 我是否在应用死记硬背的模式？                            │
-│         └── 这个模式真的适合 *这个* 项目吗？                    │
+│  2️⃣ ANTI-DEFAULT ANALYSIS                                      │
+│     └── Am I applying a memorized pattern?                      │
+│         └── Is this pattern REALLY the best for THIS project?   │
 │                                                                 │
-│  3️⃣ 平台分解 (PLATFORM DECOMPOSITION)                           │
-│     └── 我是否分别考虑了 iOS 和 Android？                       │
-│         └── 平台特定的模式是什么？                              │
+│  3️⃣ PLATFORM DECOMPOSITION                                     │
+│     └── Did I think about iOS and Android separately?           │
+│         └── What are the platform-specific patterns?            │
 │                                                                 │
-│  4️⃣ 触摸交互分解 (TOUCH INTERACTION BREAKDOWN)                  │
-│     └── 我是否单独分析了每个交互？                              │
-│         └── 是否应用了菲茨定律、拇指热区？                      │
+│  4️⃣ TOUCH INTERACTION BREAKDOWN                                │
+│     └── Did I analyze each interaction individually?            │
+│         └── Did I apply Fitts' Law, Thumb Zone?                 │
 │                                                                 │
-│  5️⃣ 性能影响分析 (PERFORMANCE IMPACT ANALYSIS)                  │
-│     └── 我是否考虑了每个组件的性能影响？                        │
-│         └── 默认解决方案是否高性能？                            │
+│  5️⃣ PERFORMANCE IMPACT ANALYSIS                                │
+│     └── Did I consider performance impact of each component?    │
+│         └── Is the default solution performant?                 │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚫 AI 移动端默认值 (禁止列表)
+## 🚫 AI MOBILE DEFAULTS (FORBIDDEN LIST)
 
-### 自动使用这些模式是**禁止**的！
+### Using These Patterns Automatically is FORBIDDEN!
 
-以下是 AI 从训练数据中学到的"默认"模式。
-在使用其中任何一个之前，**质疑它们并考虑替代方案！**
+The following patterns are "defaults" that AIs learned from training data.
+Before using any of these, **QUESTION them and CONSIDER ALTERNATIVES!**
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                 🚫 AI 移动端避风港                              │
-│           (默认模式 - 在质疑之前绝不使用)                       │
+│                 🚫 AI MOBILE SAFE HARBOR                        │
+│           (Default Patterns - Never Use Without Questioning)    │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  导航默认值:                                                    │
-│  ├── 每个项目都用 Tab bar (抽屉导航会不会更好？)                │
-│  ├── 固定的 5 个标签 (3 个够吗？超过 6 个用抽屉？)              │
-│  ├── 左侧是"主页" (用户行为数据怎么说？)                        │
-│  └── 汉堡菜单 (它现在过时了吗？)                                │
+│  NAVIGATION DEFAULTS:                                           │
+│  ├── Tab bar for every project (Would drawer be better?)        │
+│  ├── Fixed 5 tabs (Are 3 enough? For 6+, drawer?)               │
+│  ├── "Home" tab on left (What does user behavior say?)          │
+│  └── Hamburger menu (Is it outdated now?)                       │
 │                                                                 │
-│  状态管理默认值:                                                │
-│  ├── 到处都用 Redux (Zustand/Jotai 是否足够？)                  │
-│  ├── 一切都用全局状态 (本地状态不够吗？)                        │
-│  ├── Context Provider 地狱 (原子化状态是否更好？)               │
-│  └── 每个 Flutter 项目都用 BLoC (Riverpod 是否更现代？)         │
+│  STATE MANAGEMENT DEFAULTS:                                     │
+│  ├── Redux everywhere (Is Zustand/Jotai sufficient?)            │
+│  ├── Global state for everything (Isn't local state enough?)   │
+│  ├── Context Provider hell (Is atom-based better?)              │
+│  └── BLoC for every Flutter project (Is Riverpod more modern?)  │
 │                                                                 │
-│  列表实现默认值:                                                │
-│  ├── 默认用 FlatList (FlashList 性能是否更好？)                 │
-│  ├── windowSize=21 (真的需要吗？)                               │
-│  ├── removeClippedSubviews (总是需要？)                         │
-│  ├── ListView.builder (ListView.separated 是否更好？)           │
+│  LIST IMPLEMENTATION DEFAULTS:                                  │
+│  ├── FlatList as default (Is FlashList more performant?)        │
+│  ├── windowSize=21 (Is it really needed?)                       │
+│  ├── removeClippedSubviews (Always?)                            │
+│  └── ListView.builder (Is ListView.separated better?)           │
 │                                                                 │
-│  UI 模式默认值:                                                 │
-│  ├── FAB 在右下角 (左下角是否更易于访问？)                      │
-│  ├── 每个列表都下拉刷新 (真的到处都需要吗？)                    │
-│  ├── 左滑删除 (右滑是否更好？)                                  │
-│  ├── 每个模态都用 Bottom sheet (全屏是否更好？)                 │
+│  UI PATTERN DEFAULTS:                                           │
+│  ├── FAB bottom-right (Is bottom-left more accessible?)         │
+│  ├── Pull-to-refresh on every list (Is it needed everywhere?)   │
+│  ├── Swipe-to-delete from left (Is right better?)               │
+│  └── Bottom sheet for every modal (Is full screen better?)      │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔍 组件分解 (强制性)
+## 🔍 COMPONENT DECOMPOSITION (MANDATORY)
 
-### 每个屏幕的分解分析
+### Decomposition Analysis for Every Screen
 
-在设计任何屏幕之前，执行此分析：
+Before designing any screen, perform this analysis:
 
 ```
-屏幕: [屏幕名称]
-├── 主要操作: [主要动作是什么？]
-│   └── 它在拇指热区吗？ [是/否 → 为什么？]
+SCREEN: [Screen Name]
+├── PRIMARY ACTION: [What is the main action?]
+│   └── Is it in thumb zone? [Yes/No → Why?]
 │
-├── 触摸目标: [所有可点击元素]
-│   ├── [元素 1]: [尺寸]pt → 足够吗？
-│   ├── [元素 2]: [尺寸]pt → 足够吗？
-│   └── 间距: [间隙]pt → 误触风险？
+├── TOUCH TARGETS: [All tappable elements]
+│   ├── [Element 1]: [Size]pt → Sufficient?
+│   ├── [Element 2]: [Size]pt → Sufficient?
+│   └── Spacing: [Gap]pt → Accidental tap risk?
 │
-├── 可滚动内容:
-│   ├── 是列表吗？ → FlatList/FlashList [为什么选这个？]
-│   ├── 项目数量: ~[N] → 性能考量？
-│   └── 固定高度？ → 需要 getItemLayout 吗？
+├── SCROLLABLE CONTENT:
+│   ├── Is it a list? → FlatList/FlashList [Why this choice?]
+│   ├── Item count: ~[N] → Performance consideration?
+│   └── Fixed height? → Is getItemLayout needed?
 │
-├── 状态需求:
-│   ├── 本地状态足够吗？
-│   ├── 需要提升状态吗？
-│   └── 需要全局状态吗？ [为什么？]
+├── STATE REQUIREMENTS:
+│   ├── Is local state sufficient?
+│   ├── Do I need to lift state?
+│   └── Is global required? [Why?]
 │
-├── 平台差异:
-│   ├── iOS: [需要什么不同？]
-│   └── Android: [需要什么不同？]
+├── PLATFORM DIFFERENCES:
+│   ├── iOS: [Anything different needed?]
+│   └── Android: [Anything different needed?]
 │
-├── 离线考量:
-│   ├── 此屏幕应在离线时工作吗？
-│   └── 缓存策略: [是/否/哪种？]
+├── OFFLINE CONSIDERATION:
+│   ├── Should this screen work offline?
+│   └── Cache strategy: [Yes/No/Which one?]
 │
-└── 性能影响:
-    ├── 有重型组件吗？
-    ├── 需要 Memoization 吗？
-    └── 动画性能？
+└── PERFORMANCE IMPACT:
+    ├── Any heavy components?
+    ├── Is memoization needed?
+    └── Animation performance?
 ```
 
 ---
 
-## 🎯 模式质疑矩阵
+## 🎯 PATTERN QUESTIONING MATRIX
 
-对每个默认模式提出这些问题：
+Ask these questions for every default pattern:
 
-### 导航模式质疑
+### Navigation Pattern Questioning
 
-| 假设             | 问题               | 替代方案                     |
-| :--------------- | :----------------- | :--------------------------- |
-| "我要用 Tab bar" | 有多少目的地？     | 3 个 → 极简 Tabs，6+ → 抽屉  |
-| "5 个标签"       | 它们同等重要吗？   | "更多"标签？抽屉混合？       |
-| "底部导航"       | iPad/平板支持？    | 侧边导航栏 (Navigation rail) |
-| "栈导航"         | 考虑了深度链接吗？ | URL 结构 = 导航结构          |
+| Assumption | Question | Alternative |
+|------------|----------|-------------|
+| "I'll use tab bar" | How many destinations? | 3 → minimal tabs, 6+ → drawer |
+| "5 tabs" | Are all equally important? | "More" tab? Drawer hybrid? |
+| "Bottom nav" | iPad/tablet support? | Navigation rail alternative |
+| "Stack navigation" | Did I consider deep links? | URL structure = navigation structure |
 
-### 状态模式质疑
+### State Pattern Questioning
 
-| 假设               | 问题                   | 替代方案                        |
-| :----------------- | :--------------------- | :------------------------------ |
-| "我要用 Redux"     | App 有多复杂？         | 简单: Zustand, 服务器: TanStack |
-| "全局状态"         | 这状态真的是全局的吗？ | 本地提升, Context selector      |
-| "Context Provider" | 重渲染会是个问题吗？   | Zustand, Jotai (原子化)         |
-| "BLoC 模式"        | 样板代码值得吗？       | Riverpod (代码更少)             |
+| Assumption | Question | Alternative |
+|------------|----------|-------------|
+| "I'll use Redux" | How complex is the app? | Simple: Zustand, Server: TanStack |
+| "Global state" | Is this state really global? | Local lift, Context selector |
+| "Context Provider" | Will re-render be an issue? | Zustand, Jotai (atom-based) |
+| "BLoC pattern" | Is the boilerplate worth it? | Riverpod (less code) |
 
-### 列表模式质疑
+### List Pattern Questioning
 
-| 假设              | 问题                     | 替代方案                 |
-| :---------------- | :----------------------- | :----------------------- |
-| "FlatList"        | 性能关键吗？             | FlashList (更快)         |
-| "标准 renderItem" | 被缓存 (memoized) 了吗？ | useCallback + React.memo |
-| "Index key"       | 数据顺序会变吗？         | 使用 item.id             |
-| "ListView"        | 有分隔线吗？             | ListView.separated       |
+| Assumption | Question | Alternative |
+|------------|----------|-------------|
+| "FlatList" | Is performance critical? | FlashList (faster) |
+| "Standard renderItem" | Is it memoized? | useCallback + React.memo |
+| "Index key" | Does data order change? | Use item.id |
+| "ListView" | Are there separators? | ListView.separated |
 
-### UI 模式质疑
+### UI Pattern Questioning
 
-| 假设                | 问题                 | 替代方案           |
-| :------------------ | :------------------- | :----------------- |
-| "FAB 右下角"        | 用户惯用手？         | 辅助功能设置       |
-| "下拉刷新"          | 这个列表需要刷新吗？ | 仅在必要时         |
-| "模态 Bottom sheet" | 内容量多少？         | 全屏模态可能更好   |
-| "滑动操作"          | 可发现性？           | 可见的按钮替代方案 |
+| Assumption | Question | Alternative |
+|------------|----------|-------------|
+| "FAB bottom-right" | User handedness? | Accessibility settings |
+| "Pull-to-refresh" | Does this list need refresh? | Only when necessary |
+| "Modal bottom sheet" | How much content? | Full screen modal might be better |
+| "Swipe actions" | Discoverability? | Visible button alternative |
 
 ---
 
-## 🧪 反背诵测试 (Anti-Memorization Test)
+## 🧪 ANTI-MEMORIZATION TEST
 
-### 每个解决方案前问自己
+### Ask Yourself Before Every Solution
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    反背诵检查清单 (ANTI-MEMORIZATION)           │
+│                    ANTI-MEMORIZATION CHECKLIST                  │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  □ 我选这个方案是"因为我总是这样做"吗？                         │
-│    → 如果是: 停止。考虑替代方案。                               │
+│  □ Did I pick this solution "because I always do it this way"?  │
+│    → If YES: STOP. Consider alternatives.                       │
 │                                                                 │
-│  □ 这是我在训练数据中经常看到的模式吗？                         │
-│    → 如果是: 它真的适合 *这个* 项目吗？                         │
+│  □ Is this a pattern I've seen frequently in training data?     │
+│    → If YES: Is it REALLY suitable for THIS project?            │
 │                                                                 │
-│  □ 我是否未加思索地自动写下了这个方案？                         │
-│    → 如果是: 后退一步，做分解。                                 │
+│  □ Did I write this solution automatically without thinking?    │
+│    → If YES: Step back, do decomposition.                       │
 │                                                                 │
-│  □ 我考虑过替代方法吗？                                         │
-│    → 如果否: 想出至少 2 个替代方案，然后决定。                  │
+│  □ Did I consider an alternative approach?                      │
+│    → If NO: Think of at least 2 alternatives, then decide.      │
 │                                                                 │
-│  □ 我是否从平台特定的角度思考了？                               │
-│    → 如果否: 分别分析 iOS 和 Android。                          │
+│  □ Did I think platform-specifically?                           │
+│    → If NO: Analyze iOS and Android separately.                 │
 │                                                                 │
-│  □ 我是否考虑了这个方案的性能影响？                             │
-│    → 如果否: 内存、CPU、电池影响是什么？                        │
+│  □ Did I consider performance impact of this solution?          │
+│    → If NO: What is the memory, CPU, battery impact?            │
 │                                                                 │
-│  □ 这个方案适合 *这个* 项目的上下文吗？                         │
-│    → 如果否: 根据上下文定制。                                   │
+│  □ Is this solution suitable for THIS project's CONTEXT?        │
+│    → If NO: Customize based on context.                         │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📊 基于上下文的决策协议
+## 📊 CONTEXT-BASED DECISION PROTOCOL
 
-### 根据项目类型进行不同思考
-
-```
-确定项目类型:
-        │
-        ├── 电商应用 (E-Commerce)
-        │   ├── 导航: Tab (首页, 搜索, 购物车, 账户)
-        │   ├── 列表: 商品网格 (高度缓存, 图片优化)
-        │   ├── 性能: 图片缓存至关重要
-        │   ├── 离线: 购物车持久化, 商品缓存
-        │   └── 特殊: 结账流程, 支付安全
-        │
-        ├── 社交/内容应用
-        │   ├── 导航: Tab (信息流, 搜索, 发布, 通知, 个人)
-        │   ├── 列表: 无限滚动, 复杂项
-        │   ├── 性能: 信息流渲染至关重要
-        │   ├── 离线: 信息流缓存, 草稿箱
-        │   └── 特殊: 实时更新, 媒体处理
-        │
-        ├── 生产力/SaaS 应用
-        │   ├── 导航: 抽屉 或 自适应 (手机 Tab, 平板 Rail)
-        │   ├── 列表: 数据表格, 表单
-        │   ├── 性能: 数据同步
-        │   ├── 离线: 全功能离线编辑
-        │   └── 特殊: 冲突解决, 后台同步
-        │
-        ├── 工具类应用
-        │   ├── 导航: 极简 (可能仅 Stack)
-        │   ├── 列表: 可能很少
-        │   ├── 性能: 快速启动
-        │   ├── 离线: 核心功能离线
-        │   └── 特殊: 小组件, 快捷方式
-        │
-        └── 媒体/流媒体应用
-            ├── 导航: Tab (首页, 搜索, 库, 个人)
-            ├── 列表: 横向轮播, 纵向 Feeds
-            ├── 性能: 预加载, 缓冲
-            ├── 离线: 下载管理
-            └── 特殊: 后台播放, 投屏
-```
-
----
-
-## 🔄 交互分解
-
-### 分析每个手势
-
-在添加任何手势之前：
+### Think Differently Based on Project Type
 
 ```
-手势: [手势类型]
-├── 可发现性:
-│   └── 用户将如何发现此手势？
-│       ├── 有视觉提示吗？
-│       ├── 会在引导页展示吗？
-│       └── 有按钮替代方案吗？ (强制性)
-│
-├── 平台惯例:
-│   ├── 这个手势在 iOS 上意味着什么？
-│   ├── 这个手势在 Android 上意味着什么？
-│   └── 我是否偏离了平台惯例？
-│
-├── 可访问性:
-│   ├── 运动障碍用户能执行此手势吗？
-│   ├── 有 VoiceOver/TalkBack 替代方案吗？
-│   └── 它支持切换控制 (Switch Control) 吗？
-│
-├── 冲突检查:
-│   ├── 它与系统手势冲突吗？
-│   │   ├── iOS: 边缘右滑返回
-│   │   ├── Android: 返回手势
-│   │   └── Home 指示器上滑
-│   └── 它与其他 App 手势一致吗？
-│
-└── 反馈:
-    ├── 定义了触觉反馈吗？
-    ├── 视觉反馈足够吗？
-    └── 需要音频反馈吗？
+DETERMINE PROJECT TYPE:
+        │
+        ├── E-Commerce App
+        │   ├── Navigation: Tab (Home, Search, Cart, Account)
+        │   ├── Lists: Product grids (memoized, image optimized)
+        │   ├── Performance: Image caching CRITICAL
+        │   ├── Offline: Cart persistence, product cache
+        │   └── Special: Checkout flow, payment security
+        │
+        ├── Social/Content App
+        │   ├── Navigation: Tab (Feed, Search, Create, Notify, Profile)
+        │   ├── Lists: Infinite scroll, complex items
+        │   ├── Performance: Feed rendering CRITICAL
+        │   ├── Offline: Feed cache, draft posts
+        │   └── Special: Real-time updates, media handling
+        │
+        ├── Productivity/SaaS App
+        │   ├── Navigation: Drawer or adaptive (mobile tab, tablet rail)
+        │   ├── Lists: Data tables, forms
+        │   ├── Performance: Data sync
+        │   ├── Offline: Full offline editing
+        │   └── Special: Conflict resolution, background sync
+        │
+        ├── Utility App
+        │   ├── Navigation: Minimal (stack-only possible)
+        │   ├── Lists: Probably minimal
+        │   ├── Performance: Fast startup
+        │   ├── Offline: Core feature offline
+        │   └── Special: Widget, shortcuts
+        │
+        └── Media/Streaming App
+            ├── Navigation: Tab (Home, Search, Library, Profile)
+            ├── Lists: Horizontal carousels, vertical feeds
+            ├── Performance: Preloading, buffering
+            ├── Offline: Download management
+            └── Special: Background playback, casting
 ```
 
 ---
 
-## 🎭 精神重于清单 (移动版)
+## 🔄 INTERACTION BREAKDOWN
 
-### 通过清单是不够的！
+### Analysis for Every Gesture
 
-| ❌ 自我欺骗                          | ✅ 诚实评估                                   |
-| :----------------------------------- | :-------------------------------------------- |
-| "触摸目标是 44px" (但在边缘，够不着) | "用户能单手够到它吗？"                        |
-| "我用了 FlatList" (但没缓存)         | "滚动顺滑吗？"                                |
-| "平台特定导航" (但只有图标不同)      | "iOS 感觉像 iOS，Android 感觉像 Android 吗？" |
-| "有离线支持" (但错误信息是通用的)    | "用户离线时实际上能做什么？"                  |
-| "有加载状态" (但只是个转圈)          | "用户知道要等多久吗？"                        |
+Before adding any gesture:
 
-> 🔴 **通过清单不是目标。创造卓越的移动 UX 才是目标。**
+```
+GESTURE: [Gesture Type]
+├── DISCOVERABILITY:
+│   └── How will users discover this gesture?
+│       ├── Is there a visual hint?
+│       ├── Will it be shown in onboarding?
+│       └── Is there a button alternative? (MANDATORY)
+│
+├── PLATFORM CONVENTION:
+│   ├── What does this gesture mean on iOS?
+│   ├── What does this gesture mean on Android?
+│   └── Am I deviating from platform convention?
+│
+├── ACCESSIBILITY:
+│   ├── Can motor-impaired users perform this gesture?
+│   ├── Is there a VoiceOver/TalkBack alternative?
+│   └── Does it work with switch control?
+│
+├── CONFLICT CHECK:
+│   ├── Does it conflict with system gestures?
+│   │   ├── iOS: Edge swipe back
+│   │   ├── Android: Back gesture
+│   │   └── Home indicator swipe
+│   └── Is it consistent with other app gestures?
+│
+└── FEEDBACK:
+    ├── Is haptic feedback defined?
+    ├── Is visual feedback sufficient?
+    └── Is audio feedback needed?
+```
 
 ---
 
-## 📝 移动设计承诺书
+## 🎭 SPIRIT OVER CHECKLIST (Mobile Edition)
 
-### 每个移动项目开始时填写
+### Passing the Checklist is Not Enough!
+
+| ❌ Self-Deception | ✅ Honest Assessment |
+|-------------------|----------------------|
+| "Touch target is 44px" (but on edge, unreachable) | "Can user reach it one-handed?" |
+| "I used FlatList" (but didn't memoize) | "Is scroll smooth?" |
+| "Platform-specific nav" (but only icons differ) | "Does iOS feel like iOS, Android like Android?" |
+| "Offline support exists" (but error message is generic) | "What can user actually do offline?" |
+| "Loading state exists" (but just a spinner) | "Does user know how long to wait?" |
+
+> 🔴 **Passing the checklist is NOT the goal. Creating great mobile UX IS the goal.**
+
+---
+
+## 📝 MOBILE DESIGN COMMITMENT
+
+### Fill This at the Start of Every Mobile Project
 
 ```
-📱 移动设计承诺书
+📱 MOBILE DESIGN COMMITMENT
 
-项目: _______________
-平台: iOS / Android / Both
+Project: _______________
+Platform: iOS / Android / Both
 
-1. 我在本项目中 **不会** 使用的默认模式:
+1. Default pattern I will NOT use in this project:
+   └── _______________
+   
+2. Context-specific focus for this project:
    └── _______________
 
-2. 本项目的特定上下文焦点:
-   └── _______________
-
-3. 我将实现的平台特定差异:
+3. Platform-specific differences I will implement:
    └── iOS: _______________
    └── Android: _______________
 
-4. 我将特别优化性能的区域:
+4. Area I will specifically optimize for performance:
    └── _______________
 
-5. 本项目的独特挑战:
+5. Unique challenge of this project:
    └── _______________
 
-🧠 如果我填不出这份承诺书 → 我对项目理解不够。
-   → 回去，更好地理解上下文，询问用户。
+🧠 If I can't fill this commitment → I don't understand the project well enough.
+   → Go back, understand context better, ask the user.
 ```
 
 ---
 
-## 🚨 强制：每次移动开发前
+## 🚨 MANDATORY: Before Every Mobile Work
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    预研验证 (PRE-WORK VALIDATION)               │
+│                    PRE-WORK VALIDATION                          │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  □ 我完成了组件分解吗？                                         │
-│  □ 我填写了模式质疑矩阵吗？                                     │
-│  □ 我通过了反背诵测试吗？                                       │
-│  □ 我做出了基于上下文的决策吗？                                 │
-│  □ 我分析了交互分解吗？                                         │
-│  □ 我填写了移动设计承诺书吗？                                   │
+│  □ Did I complete Component Decomposition?                      │
+│  □ Did I fill the Pattern Questioning Matrix?                   │
+│  □ Did I pass the Anti-Memorization Test?                       │
+│  □ Did I make context-based decisions?                          │
+│  □ Did I analyze Interaction Breakdown?                         │
+│  □ Did I fill the Mobile Design Commitment?                     │
 │                                                                 │
-│  ⚠️ 未完成这些之前不要写代码！                                  │
+│  ⚠️ Do not write code without completing these!                 │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-> **记住:** 如果你选择一个解决方案是"因为一直都是这样做的"，那么你是在**没有思考**的情况下选择的。每个项目都是独特的。每个上下文都是不同的。每个用户行为都是特定的。**先思考，再编码。**
+> **Remember:** If you chose a solution "because that's how it's always done," you chose WITHOUT THINKING. Every project is unique. Every context is different. Every user behavior is specific. **THINK, then code.**

@@ -200,8 +200,3 @@ trap cleanup EXIT
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/bash-linux/SKILL.md`。
-- **Codex 适配**：由于 Codex 运行在受限沙箱环境，部分命令（如 `kill -9`）可能触发 `prefix_rule()` 审批拦截。
-- **注意**：文档层不应改写 Bash 语法；仅在此提醒 Codex 审批行为。

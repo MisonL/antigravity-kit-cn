@@ -238,8 +238,3 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/deployment-procedures/SKILL.md`。
-- **Codex 适配**：由于 Codex 环境可能涉及多环境（Local/Dev/Prod）切换，请在部署前确认当前的 `CONTEXT_ID`。
-- **注意**：文档层不应替代自动化部署脚本；仅在此定义决策逻辑。
