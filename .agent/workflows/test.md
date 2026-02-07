@@ -2,143 +2,146 @@
 description: 测试生成与测试执行命令。用于创建并运行代码测试。
 ---
 
-# /test - 测试生成与执行
+# /test - 测试生成与执行 (Test Generation and Execution)
 
 $ARGUMENTS
 
 ---
 
-## 目的
+## 目的 (Purpose)
 
-此命令用于生成测试、运行已有测试或检查测试覆盖率。
-
----
-
-## 子命令
-
-```
-/test                - 运行全部测试
-/test [file/feature] - 为指定目标生成测试
-/test coverage       - 显示覆盖率报告
-/test watch          - 以 watch 模式运行测试
-```
+此命令用于生成测试用例、运行现有测试或检查测试覆盖率 (Coverage)。
 
 ---
 
-## 行为
+## 子命令 (Sub-commands)
+
+```
+/test                - 运行所有测试
+/test [文件/功能]    - 为特定目标生成测试用例
+/test coverage       - 显示测试覆盖率报告
+/test watch          - 以观察模式 (Watch mode) 运行测试
+```
+
+---
+
+## 行为 (Behavior)
 
 ### 生成测试
 
-当要求测试某个文件或功能时：
+当要求对某个文件或功能进行测试时：
 
 1. **分析代码**
-   - 识别函数与方法
-   - 找到边界情况
-   - 识别需要 mock 的依赖
+    - 识别函数与方法。
+    - 寻找边界情况 (Edge cases)。
+    - 检测需要模拟 (Mock) 的外部依赖。
 
 2. **生成测试用例**
-   - Happy path 测试
-   - 错误场景测试
-   - 边界场景测试
-   - 集成测试（如有必要）
+    - 正常路径 (Happy path) 测试。
+    - 错误处理情况。
+    - 边界情况。
+    - 集成测试（如有必要）。
 
-3. **编写测试**
-   - 使用项目已有测试框架（Jest、Vitest 等）
-   - 遵循现有测试模式
-   - Mock 外部依赖
+3. **编写测试代码**
+    - 使用项目指定的测试框架 (Jest, Vitest 等)。
+    - 遵循现有的测试模式。
+    - 模拟 (Mock) 外部依赖项。
 
 ---
 
-## 输出格式
+## 输出格式 (Output Format)
 
-### 测试生成场景
+### 测试生成示例
 
 ```markdown
-## 🧪 Tests: [Target]
+## 🧪 测试生成：[目标对象]
 
-### Test Plan
-| Test Case | Type | Coverage |
-|-----------|------|----------|
-| Should create user | Unit | Happy path |
-| Should reject invalid email | Unit | Validation |
-| Should handle db error | Unit | Error case |
+### 测试计划
 
-### Generated Tests
+| 测试用例             | 类型     | 覆盖点                |
+| -------------------- | -------- | --------------------- |
+| 应能成功创建用户     | 单元测试 | 正常路径 (Happy path) |
+| 应拒绝无效的邮箱地址 | 单元测试 | 校验逻辑              |
+| 应能处理数据库错误   | 单元测试 | 错误处理              |
+
+### 已生成的测试代码
 
 `tests/[file].test.ts`
 
-[Code block with tests]
+[包含测试代码的代码块]
 
 ---
 
-Run with: `npm test`
+运行命令：`npm test`
 ```
 
-### 测试执行场景
+### 测试执行示例
 
 ```
-🧪 Running tests...
+🧪 正在运行测试……
 
-✅ auth.test.ts (5 passed)
-✅ user.test.ts (8 passed)
-❌ order.test.ts (2 passed, 1 failed)
+✅ auth.test.ts (5 项通过)
+✅ user.test.ts (8 项通过)
+❌ order.test.ts (2 项通过, 1 项失败)
 
-Failed:
-  ✗ should calculate total with discount
-    Expected: 90
-    Received: 100
+失败详情：
+  ✗ 应该正确计算带折扣的总额
+    预期值 (Expected): 90
+    实际值 (Received): 100
 
-Total: 15 tests (14 passed, 1 failed)
+统计：共 15 项测试 (14 项通过, 1 项失败)
 ```
 
 ---
 
-## 示例
+## 使用示例 (Examples)
 
 ```
 /test src/services/auth.service.ts
-/test user registration flow
+/test 用户注册流程
 /test coverage
-/test fix failed tests
+/test 修复失败的测试项
 ```
 
 ---
 
-## 测试模式
+## 测试模式 (Test Patterns)
 
-### 单元测试结构
+### 单元测试结构示例
 
 ```typescript
-describe('AuthService', () => {
-  describe('login', () => {
-    it('should return token for valid credentials', async () => {
-      // Arrange
-      const credentials = { email: 'test@test.com', password: 'pass123' };
-      
-      // Act
-      const result = await authService.login(credentials);
-      
-      // Assert
-      expect(result.token).toBeDefined();
-    });
+describe("AuthService", () => {
+    describe("login", () => {
+        it("应为有效的凭据返回 Token", async () => {
+            // 准备 (Arrange)
+            const credentials = { email: "test@test.com", password: "pass123" };
 
-    it('should throw for invalid password', async () => {
-      // Arrange
-      const credentials = { email: 'test@test.com', password: 'wrong' };
-      
-      // Act & Assert
-      await expect(authService.login(credentials)).rejects.toThrow('Invalid credentials');
+            // 执行 (Act)
+            const result = await authService.login(credentials);
+
+            // 断言 (Assert)
+            expect(result.token).toBeDefined();
+        });
+
+        it("密码错误时应抛出异常", async () => {
+            // 准备 (Arrange)
+            const credentials = { email: "test@test.com", password: "wrong" };
+
+            // 执行与断言 (Act & Assert)
+            await expect(authService.login(credentials)).rejects.toThrow(
+                "Invalid credentials",
+            );
+        });
     });
-  });
 });
 ```
 
 ---
 
-## 关键原则
+## 核心原则 (Key Principles)
 
-- **测试行为，不测实现细节**
-- **每个测试尽量单一断言**（在可行时）
-- **测试名称应有描述性**
-- **采用 Arrange-Act-Assert 模式**
-- **Mock 外部依赖**
+- **针对行为而非实现进行测试**。
+- **每个测试仅包含一个断言**（在可行的情况下）。
+- **使用描述性的测试名称**。
+- **遵循 Arrange-Act-Assert (准备-执行-断言) 模式**。
+- **模拟 (Mock) 所有外部依赖项**。
