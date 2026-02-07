@@ -4,58 +4,58 @@ description: 服务器管理原则与决策方法。涵盖进程管理、监控�
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# 服务器管理 (Server Management)
+# 服务器管理
 
 > 面向生产运维的服务器管理原则。  
 > **学习如何思考，不是背命令。**
 
 ---
 
-## 1. 进程管理原则 (Process Management Principles)
+## 1. 进程管理原则
 
-### 工具选型 (Tool Selection)
+### 工具选型
 
-| Scenario | Tool |
-|----------|------|
+| 场景 | 工具 |
+|------|------|
 | **Node.js 应用** | PM2（集群 clustering、重载 reload） |
 | **任意应用** | systemd（Linux 原生） |
-| **Containers** | Docker/Podman |
-| **Orchestration** | Kubernetes, Docker Swarm |
+| **容器** | Docker/Podman |
+| **编排** | Kubernetes, Docker Swarm |
 
-### 进程管理目标 (Process Management Goals)
+### 进程管理目标
 
-| Goal | What It Means |
-|------|---------------|
-| **崩溃后重启 (Restart on crash)** | 自动恢复 (Auto-recovery) |
-| **零停机重载 (Zero-downtime reload)** | 服务不中断 |
-| **集群 (Clustering)** | 用满 CPU 多核 |
-| **持久化 (Persistence)** | 服务器重启后仍可恢复 |
+| 目标 | 含义 |
+|------|------|
+| **崩溃后重启（Restart on crash）** | 自动恢复（Auto-recovery） |
+| **零停机重载（Zero-downtime reload）** | 服务不中断 |
+| **集群（Clustering）** | 用满 CPU 多核 |
+| **持久化（Persistence）** | 服务器重启后仍可恢复 |
 
 ---
 
-## 2. 监控原则 (Monitoring Principles)
+## 2. 监控原则
 
-### 监控什么 (What to Monitor)
+### 监控什么
 
-| Category | Key Metrics |
-|----------|-------------|
-| **可用性 (Availability)** | 在线率 (Uptime)、健康检查 |
-| **性能 (Performance)** | 响应时间、吞吐量 |
-| **错误 (Errors)** | 错误率、错误类型 |
-| **资源 (Resources)** | CPU、内存、磁盘 |
+| 类别 | 关键指标 |
+|------|----------|
+| **可用性（Availability）** | 在线率（Uptime）、健康检查 |
+| **性能（Performance）** | 响应时间、吞吐量 |
+| **错误（Errors）** | 错误率、错误类型 |
+| **资源（Resources）** | CPU、内存、磁盘 |
 
-### 告警分级策略 (Alert Severity Strategy)
+### 告警分级策略
 
-| Level | Response |
-|-------|----------|
-| **Critical** | 立即处理 |
-| **Warning** | 尽快排查 |
-| **Info** | 每日审查 |
+| 级别 | 响应 |
+|------|------|
+| **Critical（严重）** | 立即处理 |
+| **Warning（警告）** | 尽快排查 |
+| **Info（信息）** | 每日审查 |
 
-### 监控工具选择 (Monitoring Tool Selection)
+### 监控工具选择
 
-| Need | Options |
-|------|---------|
+| 需求 | 可选工具 |
+|------|----------|
 | 简单/免费 | PM2 metrics, htop |
 | 全链路可观测 | Grafana, Datadog |
 | 错误追踪 | Sentry |
@@ -63,78 +63,78 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 3. 日志管理原则 (Log Management Principles)
+## 3. 日志管理原则
 
-### 日志策略 (Log Strategy)
+### 日志策略
 
-| Log Type | Purpose |
-|----------|---------|
-| **应用日志 (Application logs)** | 调试、审计 |
-| **访问日志 (Access logs)** | 流量分析 |
-| **错误日志 (Error logs)** | 问题发现 |
+| 日志类型 | 用途 |
+|----------|------|
+| **应用日志（Application logs）** | 调试、审计 |
+| **访问日志（Access logs）** | 流量分析 |
+| **错误日志（Error logs）** | 问题发现 |
 
-### 日志原则 (Log Principles)
+### 日志原则
 
-1. 进行 **日志轮转 (Rotate logs)**，避免磁盘打满
-2. 使用 **结构化日志 (Structured logging)**（如 JSON）便于解析
+1. 进行 **日志轮转（Rotate logs）**，避免磁盘打满
+2. 使用 **结构化日志（Structured logging）**（如 JSON）便于解析
 3. 合理划分日志级别（error/warn/info/debug）
 4. 日志中不得出现敏感数据
 
 ---
 
-## 4. 扩缩容决策 (Scaling Decisions)
+## 4. 扩缩容决策
 
-### 何时扩缩容 (When to Scale)
+### 何时扩缩容
 
-| Symptom | Solution |
-|---------|----------|
+| 症状 | 应对 |
+|------|------|
 | CPU 持续高负载 | 增加实例（水平扩展 horizontal） |
 | 内存持续高占用 | 增加 RAM 或修复内存泄漏 |
-| 响应变慢 | 先做性能分析 (Profile) 再扩容 |
-| 流量突增 | 自动扩缩容 (Auto-scaling) |
+| 响应变慢 | 先做性能分析（Profile）再扩容 |
+| 流量突增 | 自动扩缩容（Auto-scaling） |
 
-### 扩缩容策略 (Scaling Strategy)
+### 扩缩容策略
 
-| Type | When to Use |
-|------|-------------|
-| **垂直扩展 (Vertical)** | 快速止血、单实例场景 |
-| **水平扩展 (Horizontal)** | 长期可持续、分布式场景 |
-| **自动扩缩容 (Auto)** | 流量波动明显 |
+| 类型 | 适用场景 |
+|------|----------|
+| **垂直扩展（Vertical）** | 快速止血、单实例场景 |
+| **水平扩展（Horizontal）** | 长期可持续、分布式场景 |
+| **自动扩缩容（Auto）** | 流量波动明显 |
 
 ---
 
-## 5. 健康检查原则 (Health Check Principles)
+## 5. 健康检查原则
 
-### 健康状态判定 (What Constitutes Healthy)
+### 健康状态判定
 
-| Check | Meaning |
-|-------|---------|
+| 检查项 | 含义 |
+|--------|------|
 | **HTTP 200** | 服务可响应 |
 | **数据库已连接** | 数据可访问 |
 | **依赖可用** | 外部服务可达 |
 | **资源正常** | CPU/内存未耗尽 |
 
-### 健康检查实现方式 (Health Check Implementation)
+### 健康检查实现方式
 
 - 简单模式：仅返回 200
 - 深度模式：检查所有关键依赖
-- 按负载均衡器 (Load Balancer) 的接入需求选择
+- 按负载均衡器（Load Balancer）的接入需求选择
 
 ---
 
-## 6. 安全原则 (Security Principles)
+## 6. 安全原则
 
-| Area | Principle |
-|------|-----------|
-| **访问控制 (Access)** | 仅用 SSH key，禁用口令登录 |
-| **防火墙 (Firewall)** | 只开放必要端口 |
-| **更新 (Updates)** | 定期打安全补丁 |
-| **密钥管理 (Secrets)** | 放环境变量，不落地文件 |
-| **审计 (Audit)** | 记录访问与变更 |
+| 领域 | 原则 |
+|------|------|
+| **访问控制（Access）** | 仅用 SSH key，禁用口令登录 |
+| **防火墙（Firewall）** | 只开放必要端口 |
+| **更新（Updates）** | 定期打安全补丁 |
+| **密钥管理（Secrets）** | 放环境变量，不落地文件 |
+| **审计（Audit）** | 记录访问与变更 |
 
 ---
 
-## 7. 故障排查优先级 (Troubleshooting Priority)
+## 7. 故障排查优先级
 
 当系统异常时按顺序排查：
 
@@ -146,10 +146,10 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 8. 反模式 (Anti-Patterns)
+## 8. 反模式
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
+| ❌ 不要这样做 | ✅ 推荐做法 |
+|--------------|-----------|
 | 以 root 身份直接运行服务 | 使用非 root 账号运行 |
 | 忽略日志管理 | 配置日志轮转 |
 | 不做监控 | 从第一天就接入监控 |
