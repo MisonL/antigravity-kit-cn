@@ -6,7 +6,7 @@ allowed-tools: Read, Glob, Grep, Bash
 
 # Lint and Validate Skill
 
-> **MANDATORY:** Run appropriate validation tools after EVERY code change. Do not finish a task until the code is error-free.
+> **MANDATORY:** 在每次代码修改后，务必运行相应的校验工具。在代码通过所有校验之前，不要宣布任务完成。
 
 ### Procedures by Ecosystem
 
@@ -37,7 +37,7 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-**Strict Rule:** No code should be committed or reported as "done" without passing these checks.
+**Strict Rule:** 任何代码在通过这些检查之前，都不应被提交或报告为“完成”。
 
 ---
 
