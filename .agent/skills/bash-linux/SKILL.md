@@ -169,7 +169,7 @@ done
 | 环境变量   | `$env:VAR`               | `$VAR`                |
 | 字符串拼接 | `"$a$b"`                 | `"$a$b"` (相同)       |
 | 空值检查   | `if ($x)`                | `if [ -n "$x" ]`      |
-| 管道       | 基于对象 (Object-based)  | 基于文本 (Text-based) |
+| 管道       | Object-based (基于对象)  | Text-based (基于文本) |
 
 ---
 
