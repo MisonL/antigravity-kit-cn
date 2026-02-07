@@ -1,19 +1,19 @@
 ---
 name: web-design-guidelines
-description: 审阅 Web 界面指南 (WIG) 规范。当用户要求“审阅我的 UI”、“检查无障碍性”、“审计设计”、“审阅 UX”或“根据最佳实践检查我的网站”时，请使用此技能。
+description: 审阅 Web 界面指南（WIG）规范。当用户要求“审阅我的 UI”、“检查无障碍性”、“审计设计”、“审阅 UX”或“根据最佳实践检查我的网站”时，请使用此技能。
 metadata:
     author: vercel
     version: "1.0.0"
     argument-hint: <file-or-pattern>
 ---
 
-# Web 界面指南 (Web Interface Guidelines - WIG)
+# Web 界面指南（WIG）
 
 审阅文件是否符合 Web 界面指南。
 
 ---
 
-## 运行机制 (How It Works)
+## 运行机制
 
 1. 从下方的来源 URL 获取最新的指南规则。
 2. 读取指定的文件（或根据匹配路径检索）。
@@ -22,7 +22,7 @@ metadata:
 
 ---
 
-## 指南来源 (Guidelines Source)
+## 指南来源
 
 在进行每次审阅前，请获取最新的指南内容：
 
@@ -34,7 +34,7 @@ https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/comm
 
 ---
 
-## 使用方法 (Usage)
+## 使用方法
 
 当用户提供文件或路径参数时：
 
@@ -51,18 +51,18 @@ https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/comm
 
 | 技能                                               | 适用场景                                           |
 | -------------------------------------------------- | -------------------------------------------------- |
-| **[frontend-design](../frontend-design/SKILL.md)** | **开发前** —— 学习设计原则 (色彩、排版、UX 心理学) |
+| **[frontend-design](../frontend-design/SKILL.md)** | **开发前** —— 学习设计原则（色彩、排版、UX 心理学） |
 | **web-design-guidelines** (当前)                   | **开发后** —— 对无障碍性、性能及最佳实践进行审计   |
 
 ---
 
-## 设计工作流 (Design Workflow)
+## 设计工作流
 
 ```
-1. 设计 (DESIGN) → 阅读 frontend-design 原则
-2. 编码 (CODE)   → 实现设计
-3. 审计 (AUDIT)  → 运行 web-design-guidelines 审阅 ← 当前阶段
-4. 修复 (FIX)    → 根据审计结论进行针对性修复
+1. 设计（DESIGN） → 阅读 frontend-design 原则
+2. 编码（CODE）   → 实现设计
+3. 审计（AUDIT）  → 运行 web-design-guidelines 审阅 ← 当前阶段
+4. 修复（FIX）    → 根据审计结论进行针对性修复
 ```
 
 ---
