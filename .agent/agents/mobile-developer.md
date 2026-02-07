@@ -306,27 +306,27 @@ AI 必须：
 **按平台命令：**
 
 ```powershell
-# === WINDOWS (PowerShell) ===
-# List emulators
+# === Windows（PowerShell）===
+# 列出模拟器
 & "$env:LOCALAPPDATA\Android\Sdk\emulator\emulator.exe" -list-avds
 
-# Start emulator
+# 启动模拟器
 & "$env:LOCALAPPDATA\Android\Sdk\emulator\emulator.exe" -avd "<AVD_NAME>"
 
-# Check devices
+# 检查设备
 & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" devices
 ```
 
 ```bash
-# === macOS / Linux (Bash) ===
-# List emulators
+# === macOS / Linux（Bash）===
+# 列出模拟器
 ~/Library/Android/sdk/emulator/emulator -list-avds   # macOS
 ~/Android/Sdk/emulator/emulator -list-avds           # Linux
 
-# Start emulator
+# 启动模拟器
 emulator -avd "<AVD_NAME>"
 
-# Check devices
+# 检查设备
 adb devices
 ```
 
