@@ -4,13 +4,13 @@ description: 性能分析原则。测量、分析与优化技术。
 allowed-tools: Read, Glob, Grep, Bash
 ---
 
-# 性能分析 (Performance Profiling)
+# 性能分析
 
 > 测量、分析、优化 —— 必须严格遵循此顺序。
 
 ---
 
-## 🔧 运行脚本 (Runtime Scripts)
+## 🔧 运行脚本
 
 **执行以下脚本进行自动化性能分析：**
 
@@ -20,123 +20,125 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 1. 核心 Web 指标 (Core Web Vitals)
+## 1. 核心 Web 指标
 
-### 目标值 (Targets)
+核心 Web 指标（Core Web Vitals）用于衡量加载与交互质量。
 
-| 指标    | 优 (Good) | 劣 (Poor) | 衡量维度   |
+### 目标值
+
+| 指标    | 优（Good） | 劣（Poor） | 衡量维度   |
 | ------- | --------- | --------- | ---------- |
 | **LCP** | < 2.5s    | > 4.0s    | 加载体验   |
 | **INP** | < 200ms   | > 500ms   | 交互响应   |
 | **CLS** | < 0.1     | > 0.25    | 视觉稳定性 |
 
-### 何时进行测量 (When to Measure)
+### 何时进行测量
 
 | 阶段                   | 工具选择                                |
 | ---------------------- | --------------------------------------- |
-| 开发环境 (Development) | 本地 Lighthouse                         |
-| CI/CD 流程             | Lighthouse CI                           |
-| 生产环境 (Production)  | RUM (真实用户监控 Real User Monitoring) |
+| 开发环境（Development） | 本地 Lighthouse                          |
+| CI/CD 流程              | Lighthouse CI                            |
+| 生产环境（Production）   | RUM（真实用户监控，Real User Monitoring） |
 
 ---
 
-## 2. 性能分析工作流 (Profiling Workflow)
+## 2. 性能分析工作流
 
 ### 四步走流程
 
 ```
-1. 建立基准 (BASELINE) → 测量当前状态
-2. 识别瓶颈 (IDENTIFY) → 找出性能卡点
-3. 实施修复 (FIX)      → 进行针对性改动
-4. 验证改进 (VALIDATE) → 确认性能提升
+1. 建立基准（Baseline）→ 测量当前状态
+2. 识别瓶颈（Identify）→ 找出性能卡点
+3. 实施修复（Fix）     → 进行针对性改动
+4. 验证改进（Validate）→ 确认性能提升
 ```
 
 ### 分析工具选择建议
 
 | 待解决问题             | 推荐工具                  |
 | ---------------------- | ------------------------- |
-| 页面加载速度           | Lighthouse                |
-| 打包体积 (Bundle size) | Bundle analyzer           |
-| 运行时性能             | DevTools Performance 面板 |
-| 内存占用               | DevTools Memory 面板      |
-| 网络请求               | DevTools Network 面板     |
+| 页面加载速度              | Lighthouse                          |
+| 打包体积（Bundle size）   | Bundle analyzer（包分析器）         |
+| 运行时性能                | DevTools（开发者工具）Performance 面板 |
+| 内存占用                  | DevTools（开发者工具）Memory 面板      |
+| 网络请求                  | DevTools（开发者工具）Network 面板     |
 
 ---
 
-## 3. 打包产物分析 (Bundle Analysis)
+## 3. 打包产物分析
 
 ### 观察重点
 
 | 潜在问题             | 识别指标                     |
 | -------------------- | ---------------------------- |
 | 巨大的外部依赖       | 位于打包产物顶部             |
-| 冗余/重复代码        | 存在于多个 Chunk 中          |
-| 未使用的代码         | 低覆盖率 (Coverage)          |
-| 缺失分包 (Splitting) | 产物呈现为一个巨大的单体文件 |
+| 冗余/重复代码        | 存在于多个 Chunk（代码块）中 |
+| 未使用的代码         | 低覆盖率（Coverage）          |
+| 缺失分包（Splitting） | 产物呈现为一个巨大的单体文件 |
 
 ### 优化手段
 
-| 发现的问题           | 对应动作 (Actions)                       |
+| 发现的问题           | 对应动作                                 |
 | -------------------- | ---------------------------------------- |
-| 库文件过大           | 仅导入特定模块 (Import specific modules) |
-| 依赖项重复           | 去重 (Dedupe)、更新版本                  |
-| 主包代码包含路由逻辑 | 实施代码分割 (Code split)                |
-| 存在未引用的导出     | 启用 Tree shake (摇树优化)               |
+| 库文件过大           | 按需导入（Import specific modules）      |
+| 依赖项重复           | 去重（Dedupe）、更新版本                 |
+| 主包代码包含路由逻辑 | 实施代码分割（Code split）               |
+| 存在未引用的导出     | 启用 Tree shake（摇树优化）              |
 
 ---
 
-## 4. 运行时分析 (Runtime Profiling)
+## 4. 运行时分析
 
 ### Performance 面板分析
 
 | 模式                       | 含义                             |
 | -------------------------- | -------------------------------- |
-| 长任务 (Long tasks > 50ms) | 会导致 UI 阻塞                   |
-| 密集的小任务               | 可能存在批处理 (Batching) 的机会 |
-| 布局/绘制 (Layout/paint)   | 渲染层的瓶颈                     |
-| 脚本执行 (Script)          | JavaScript 执行开销过高          |
+| 长任务（Long tasks > 50ms） | 会导致 UI 阻塞                    |
+| 密集的小任务               | 可能存在批处理（Batching）的机会 |
+| 布局/绘制（Layout/paint）  | 渲染层的瓶颈                      |
+| 脚本执行（Script）         | JavaScript 执行开销过高           |
 
 ### Memory 面板分析
 
 | 模式                            | 含义             |
 | ------------------------------- | ---------------- |
-| 堆内存持续增长 (Growing heap)   | 可能存在内存泄漏 |
-| 被持有的对象过多 (Retained)     | 检查引用关系     |
-| 脱离文档树的 DOM (Detached DOM) | 未被正确清理     |
+| 堆内存持续增长（Growing heap）   | 可能存在内存泄漏 |
+| 被持有的对象过多（Retained）     | 检查引用关系     |
+| 脱离文档树的 DOM（Detached DOM） | 未被正确清理     |
 
 ---
 
-## 5. 常见性能瓶颈 (Common Bottlenecks)
+## 5. 常见性能瓶颈
 
 ### 按症状分类
 
 | 症状表现            | 可能的原因                              |
 | ------------------- | --------------------------------------- |
-| 首次加载缓慢        | JS 体积过大、渲染阻塞 (Render blocking) |
-| 交互卡顿            | 事件处理器 (Event handlers) 逻辑过重    |
-| 滚动时的掉帧 (Jank) | 布局抖动 (Layout thrashing)             |
+| 首次加载缓慢        | JS 体积过大、渲染阻塞（Render blocking） |
+| 交互卡顿            | 事件处理器（Event handlers）逻辑过重    |
+| 滚动时的掉帧（Jank） | 布局抖动（Layout thrashing）             |
 | 内存持续上升        | 内存泄漏、未释放的引用                  |
 
 ---
 
-## 6. 优先实施的“速赢”方案 (Quick Win Priorities)
+## 6. 优先实施的“速赢”方案
 
-| 优先级 | 动作 (Action)              | 预期影响 (Impact) |
+| 优先级 | 动作                        | 预期影响 |
 | ------ | -------------------------- | ----------------- |
-| 1      | 开启资源压缩 (Gzip/Brotli) | **高**            |
-| 2      | 图片懒加载 (Lazy load)     | **高**            |
+| 1      | 开启资源压缩（Gzip/Brotli） | **高**            |
+| 2      | 图片懒加载（Lazy load）     | **高**            |
 | 3      | 路由层级的代码分割         | **高**            |
 | 4      | 配置静态资源缓存           | 中                |
 | 5      | 图片压缩与格式优化         | 中                |
 
 ---
 
-## 7. 应避免的反模式 (Anti-Patterns)
+## 7. 应避免的反模式
 
-| ❌ 禁止 (Don't)                 | ✅ 推荐 (Do)                     |
+| ❌ 禁止（Don't）                 | ✅ 推荐（Do）                     |
 | ------------------------------- | -------------------------------- |
-| 凭空猜测性能问题                | 优先进行性能分析 (Profile first) |
-| 进行微比例优化 (Micro-optimize) | 优先修复最大的性能卡点           |
+| 凭空猜测性能问题                | 优先进行性能分析（Profile first） |
+| 进行微比例优化（Micro-optimize） | 优先修复最大的性能卡点           |
 | 过早优化                        | 在真正需要的时候再优化           |
 | 忽视真实用户的体验              | 参考 RUM 数据                    |
 
@@ -145,4 +147,3 @@ allowed-tools: Read, Glob, Grep, Bash
 > **谨记：** 最快的代码是那些根本不需要运行的代码。在着手优化之前，先考虑是否可以移除。
 
 ---
-
