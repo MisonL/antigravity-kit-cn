@@ -6,25 +6,25 @@ allowed-tools: Read, Glob, Grep
 
 # 架构决策框架 (Architecture Decision Framework)
 
-> "需求驱动架构。权衡引导决策。ADR 捕捉理由。"
+> "需求驱动架构。权衡告知决策。ADR (架构决策记录) 记录理由。"
 
 ## 🎯 选择性阅读规则
 
 **仅阅读与请求相关的目标文件！** 请先检查内容地图，找到你需要的内容。
 
-| 文件                    | 描述                  | 何时阅读       |
-| ----------------------- | --------------------- | -------------- |
-| `context-discovery.md`  | 提问清单, 项目分类    | 开始架构设计时 |
-| `trade-off-analysis.md` | ADR 模板, 权衡框架    | 记录决策时     |
-| `pattern-selection.md`  | 决策树, 反模式        | 选择模式时     |
-| `examples.md`           | MVP, SaaS, 企业级示例 | 参考实现时     |
-| `patterns-reference.md` | 模式快速查询          | 模式对比时     |
+| 文件                    | 描述                                                 | 何时阅读       |
+| ----------------------- | ---------------------------------------------------- | -------------- |
+| `context-discovery.md`  | Questions (问题), project classification (项目分类)  | 开始架构设计时 |
+| `trade-off-analysis.md` | ADR templates (模板), trade-off framework (权衡框架) | 记录决策时     |
+| `pattern-selection.md`  | Decision trees (决策树), anti-patterns (反模式)      | 选择模式时     |
+| `examples.md`           | MVP, SaaS, Enterprise examples (企业示例)            | 参考实现时     |
+| `patterns-reference.md` | Quick lookup (快速查找)                              | 模式比较时     |
 
 ---
 
-## 🔗 相关技能 (Related Skills)
+## 🔗 相关 Skill (Related Skills)
 
-| 技能                              | 用途               |
+| Skill (技能)                      | 用于               |
 | --------------------------------- | ------------------ |
 | `@[skills/database-design]`       | 数据库 Schema 设计 |
 | `@[skills/api-patterns]`          | API 设计模式       |
@@ -34,12 +34,12 @@ allowed-tools: Read, Glob, Grep
 
 ## 核心原则 (Core Principle)
 
-**"简单是终极的复杂。" (Simplicity is the ultimate sophistication.)**
+**"简单是终极的复杂。"**
 
 - 从简单开始
-- 仅在被证明必要时才增加复杂性
-- 你总是可以在以后添加模式
-- 移除复杂性远比增加它要困难得多
+- 仅在被证明必要时增加复杂性
+- 你以后总是可以添加模式
+- 移除复杂性比添加复杂性难得多
 
 ---
 
@@ -49,7 +49,7 @@ allowed-tools: Read, Glob, Grep
 
 - [ ] 需求已清晰理解
 - [ ] 约束已识别
-- [ ] 每个决策都进行了权衡分析
-- [ ] 已考虑更简单的替代方案
+- [ ] 每个决策都有权衡分析
+- [ ] 考虑了更简单的替代方案
 - [ ] 为重大决策编写了 ADR (架构决策记录)
-- [ ] 团队专长与所选模式相匹配
+- [ ] 团队专业知识与所选模式匹配
