@@ -1,117 +1,117 @@
 ---
 name: code-review-checklist
-description: 涵盖代码质量、安全性和最佳实践的代码审查指南。
+description: Code review guidelines covering code quality, security, and best practices.
 allowed-tools: Read, Glob, Grep
 ---
 
-# 代码审查检查清单 (Code Review Checklist)
+# Code Review Checklist
 
-## 快速审查清单
+## Quick Review Checklist
 
-### 正确性 (Correctness)
+### Correctness
 
-- [ ] 代码是否实现了预期功能
-- [ ] 边缘情况是否已处理
-- [ ] 错误处理机制是否到位
-- [ ] 是否存在明显的 Bug
+- [ ] Code does what it's supposed to do
+- [ ] Edge cases handled
+- [ ] Error handling in place
+- [ ] No obvious bugs
 
-### 安全性 (Security)
+### Security
 
-- [ ] 输入是否经过校验和清洗 (Sanitized)
-- [ ] 是否存在 SQL/NoSQL 注入风险
-- [ ] 是否存在 XSS 或 CSRF 漏洞
-- [ ] 是否存在硬编码的密钥或敏感凭据 (Secrets)
-- [ ] **AI 相关:** 是否防御了 Prompt 注入 (如果适用)
-- [ ] **AI 相关:** 输出在进入关键执行点前是否经过清洗
+- [ ] Input validated and sanitized
+- [ ] No SQL/NoSQL injection vulnerabilities
+- [ ] No XSS or CSRF vulnerabilities
+- [ ] No hardcoded secrets or sensitive credentials
+- [ ] **AI-Specific:** Protection against Prompt Injection (if applicable)
+- [ ] **AI-Specific:** Outputs are sanitized before being used in critical sinks
 
-### 性能 (Performance)
+### Performance
 
-- [ ] 是否存在 N+1 查询问题
-- [ ] 是否存在不必要的循环
-- [ ] 缓存策略是否合适
-- [ ] 是否考虑了对包体积 (Bundle size) 的影响
+- [ ] No N+1 queries
+- [ ] No unnecessary loops
+- [ ] Appropriate caching
+- [ ] Bundle size impact considered
 
-### 代码质量 (Code Quality)
+### Code Quality
 
-- [ ] 命名是否清晰直观
-- [ ] DRY 原则 - 是否存在重复代码
-- [ ] 是否遵循了 SOLID 原则
-- [ ] 抽象层级是否合适
+- [ ] Clear naming
+- [ ] DRY - no duplicate code
+- [ ] SOLID principles followed
+- [ ] Appropriate abstraction level
 
-### 测试 (Testing)
+### Testing
 
-- [ ] 新代码是否有对应的单元测试
-- [ ] 边缘情况是否经过测试
-- [ ] 测试代码是否易读、易维护
+- [ ] Unit tests for new code
+- [ ] Edge cases tested
+- [ ] Tests readable and maintainable
 
-### 文档 (Documentation)
+### Documentation
 
-- [ ] 复杂逻辑是否有注释说明
-- [ ] 公开 API 是否有文档记录
-- [ ] README 是否根据需要进行了更新
+- [ ] Complex logic commented
+- [ ] Public APIs documented
+- [ ] README updated if needed
 
-## AI & LLM 审查模式 (2025)
+## AI & LLM Review Patterns (2025)
 
-### 逻辑与幻觉
+### Logic & Hallucinations
 
-- [ ] **思维链 (Chain of Thought):** 逻辑路径是否可验证？
-- [ ] **边缘情况:** AI 是否考虑了空状态、超时和部分失败？
-- [ ] **外部状态:** 代码对文件系统或网络的假设是否安全？
+- [ ] **Chain of Thought:** 逻辑路径是否可验证？
+- [ ] **Edge Cases:** AI 是否考虑了空状态、超时和部分失败？
+- [ ] **External State:** 代码对文件系统或网络的假设是否安全？
 
-### Prompt 工程审查
+### Prompt Engineering Review
 
 ```markdown
-// ❌ 代码中 prompt 模糊
+// ❌ Vague prompt in code
 const response = await ai.generate(userInput);
 
-// ✅ 结构化且安全的 prompt
+// ✅ Structured & Safe prompt
 const response = await ai.generate({
-system: "你是一个专业的解析器...",
+system: "You are a specialized parser...",
 input: sanitize(userInput),
 schema: ResponseSchema
 });
 ```
 
-## 需指出并标记的反模式 (Anti-Patterns)
+## Anti-Patterns to Flag
 
 ```typescript
-// ❌ 魔法数字
+// ❌ Magic numbers
 if (status === 3) { ... }
 
-// ✅ 具名常量
+// ✅ Named constants
 if (status === Status.ACTIVE) { ... }
 
-// ❌ 深层嵌套
+// ❌ Deep nesting
 if (a) { if (b) { if (c) { ... } } }
 
-// ✅ 提前返回 (Early returns)
+// ✅ Early returns
 if (!a) return;
 if (!b) return;
 if (!c) return;
-// 执行主要逻辑
+// do work
 
-// ❌ 巨型函数 (100+ 行)
-// ✅ 短小、专注的函数
+// ❌ Long functions (100+ lines)
+// ✅ Small, focused functions
 
-// ❌ 使用 any 类型
+// ❌ any type
 const data: any = ...
 
-// ✅ 正确的类型定义
+// ✅ Proper types
 const data: UserData = ...
 ```
 
-## 审查评论指南 (Review Comments Guide)
+## Review Comments Guide
 
 ```
-// 阻碍性问题使用 🔴
-🔴 BLOCKING: 此处存在 SQL 注入漏洞
+// Blocking issues use 🔴
+🔴 BLOCKING: SQL injection vulnerability here
 
-// 重要建议使用 🟡
-🟡 SUGGESTION: 为了性能考虑，建议此处使用 useMemo
+// Important suggestions use 🟡
+🟡 SUGGESTION: Consider using useMemo for performance
 
-// 次要细节 (Nits) 使用 🟢
-🟢 NIT: 对于不可变的变量，优先使用 const 而非 let
+// Minor nits use 🟢
+🟢 NIT: Prefer const over let for immutable variable
 
-// 疑问使用 ❓
-❓ QUESTION: 如果此处 user 为 null 会发生什么？
+// Questions use ❓
+❓ QUESTION: What happens if user is null here?
 ```
