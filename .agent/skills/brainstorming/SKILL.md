@@ -1,164 +1,164 @@
 ---
 name: brainstorming
-description: 苏格拉底式提问协议 + 用户沟通。对于复杂请求、新功能或不明确的需求是 MANDATORY (强制) 的。包含进度报告和错误处理。
+description: Socratic questioning protocol + user communication. MANDATORY for complex requests, new features, or unclear requirements. Includes progress reporting and error handling.
 allowed-tools: Read, Glob, Grep
 ---
 
-# Brainstorming & Communication Protocol
+# 头脑风暴与沟通协议 (Brainstorming & Communication Protocol)
 
-> **MANDATORY:** 针对复杂/模糊的请求、新功能、更新请求，必须使用此协议。
-
----
-
-## 🛑 SOCRATIC GATE (ENFORCEMENT)
-
-### When to Trigger
-
-| Pattern                                | Action                  |
-| -------------------------------------- | ----------------------- |
-| "Build/Create/Make [thing]" 但缺乏细节 | 🛑 提出 3 个问题        |
-| 复杂功能或架构                         | 🛑 实现前先澄清         |
-| 更新/变更请求                          | 🛑 确认影响范围         |
-| 需求模糊                               | 🛑 询问目的、用户、约束 |
-
-### 🚫 MANDATORY: 3 Questions Before Implementation
-
-1. **STOP** - 禁止直接开始写代码。
-2. **ASK** - 至少提出 3 个问题：
-    - 🎯 Purpose: 您要解决什么问题？
-    - 👥 Users: 谁会使用这个功能？
-    - 📦 Scope: 哪些是必须有的 (Must-have)，哪些是可选的 (Nice-to-have)？
-3. **WAIT** - 在获得回复前不要继续。
+> **MANDATORY:** 用于复杂/模糊的请求、新功能、更新。
 
 ---
 
-## 🧠 Dynamic Question Generation
+## 🛑 苏格拉底之门 (SOCRATIC GATE) - 强制执行
 
-**⛔ NEVER use static templates.** 请阅读 `dynamic-questioning.md` 了解核心原则。
+### 何时触发
 
-### Core Principles
+| 模式                                 | 行动                    |
+| ------------------------------------ | ----------------------- |
+| "Build/Create/Make [thing]" 且无细节 | 🛑 问 3 个问题          |
+| 复杂功能或架构                       | 🛑 实施前澄清           |
+| 更新/变更请求                        | 🛑 确认范围             |
+| 模糊的需求                           | 🛑 询问目的、用户、约束 |
 
-| Principle                          | Meaning                                             |
-| ---------------------------------- | --------------------------------------------------- |
-| **Questions Reveal Consequences**  | 每个提问都应关联到一个架构决策。                    |
-| **Context Before Content**         | 首先理解 greenfield/feature/refactor/debug 上下文。 |
-| **Minimum Viable Questions**       | 每个问题必须能够消除某些实现路径的不确定性。        |
-| **Generate Data, Not Assumptions** | 不要猜测——通过权衡对比来提问。                      |
+### 🚫 强制要求：实施前的 3 个问题
 
-### Question Generation Process
+1. **停止 (STOP)** - 不要开始编码
+2. **提问 (ASK)** - 至少 3 个问题：
+    - 🎯 目的 (Purpose): 你要解决什么问题？
+    - 👥 用户 (Users): 谁会使用这个？
+    - 📦 范围 (Scope): 必须有 vs 锦上添花？
+3. **等待 (WAIT)** - 在继续之前获得回复
+
+---
+
+## 🧠 动态问题生成 (Dynamic Question Generation)
+
+**⛔ 严禁使用静态模板。** 阅读 `dynamic-questioning.md` 了解原则。
+
+### 核心原则
+
+| 原则                   | 含义                              |
+| ---------------------- | --------------------------------- |
+| **问题揭示后果**       | 每个问题都关联一个架构决策        |
+| **上下文优于内容**     | 先理解是从零开始/新功能/重构/调试 |
+| **最小可行问题**       | 每个问题必须能够排除某些实施路径  |
+| **生成数据，而非假设** | 不要猜测——用权衡来提问            |
+
+### 问题生成流程
 
 ```
-1. Parse request → Extract domain, features, scale indicators
-2. Identify decision points → Blocking vs. deferable
-3. Generate questions → Priority: P0 (blocking) > P1 (high-leverage) > P2 (nice-to-have)
-4. Format with trade-offs → 是什么、为什么、候选项、默认值
+1. 解析请求 → 提取领域、功能、规模指标
+2. 识别决策点 → 阻碍性 vs 可推迟
+3. 生成问题 → 优先级：P0 (阻碍性) > P1 (高杠杆) > P2 (锦上添花)
+4. 格式化权衡 → 是什么、为什么、选项、默认值
 ```
 
-### Question Format (MANDATORY)
+### 问题格式 (强制)
 
 ```markdown
 ### [优先级] **[决策点]**
 
-**问题:** [清晰的提问]
+**问题 (Question):** [清晰的问题]
 
-**为什么这很重要:**
+**为什么这很重要 (Why This Matters):**
 
-- [架构层面的后果]
+- [架构后果]
 - [影响: 成本/复杂度/时间线/规模]
 
-**候选项:**
-| 选项 | 优点 | 缺点 | 最适用场景 |
+**选项 (Options):**
+| 选项 | 优点 | 缺点 | 适用场景 |
 |--------|------|------|----------|
 | A | [+] | [-] | [用例] |
 
-**如果不指定:** [默认方案 + 理由]
+**如果未指定 (If Not Specified):** [默认值 + 理由]
 ```
 
-**关于特定领域的详细模板和算法**，请参阅：`dynamic-questioning.md`
+**有关详细的特定领域问题库和算法**，请参阅：`dynamic-questioning.md`
 
 ---
 
-## Progress Reporting (PRINCIPLE-BASED)
+## 进度报告 (基于原则)
 
-**原则:** 透明度建立信任。状态必须可见且具有可解释性。
+**原则 (PRINCIPLE):** 透明建立信任。状态必须可见且可操作。
 
-### Status Board Format
+### 状态看板格式
 
-| Agent        | Status     | Current Task | Progress    |
-| ------------ | ---------- | ------------ | ----------- |
-| [Agent Name] | ✅🔄⏳❌⚠️ | [任务描述]   | [% 或 数量] |
+| Agent        | 状态       | 当前任务   | 进度       |
+| ------------ | ---------- | ---------- | ---------- |
+| [Agent 名称] | ✅🔄⏳❌⚠️ | [任务描述] | [% 或计数] |
 
-### Status Icons
+### 状态图标
 
-| Icon | Meaning   | Usage              |
-| ---- | --------- | ------------------ |
-| ✅   | Completed | 任务执行成功       |
-| 🔄   | Running   | 正在执行中         |
-| ⏳   | Waiting   | 被阻塞，等待依赖项 |
-| ❌   | Error     | 失败，需要干预     |
-| ⚠️   | Warning   | 潜在问题，但不阻塞 |
+| 图标 | 含义   | 用法             |
+| ---- | ------ | ---------------- |
+| ✅   | 已完成 | 任务成功完成     |
+| 🔄   | 运行中 | 当前正在执行     |
+| ⏳   | 等待中 | 被阻塞，等待依赖 |
+| ❌   | 错误   | 失败，需要注意   |
+| ⚠️   | 警告   | 潜在问题，不阻塞 |
 
 ---
 
-## Error Handling (PRINCIPLE-BASED)
+## 错误处理 (基于原则)
 
-**原则:** 错误是进行清晰沟通的机会。
+**原则 (PRINCIPLE):** 错误是清晰沟通的机会。
 
-### Error Response Pattern
+### 错误响应模式
 
 ```
-1. 承认错误
-2. 解释发生了什么 (用户友好型解释)
-3. 提供带有权衡的具体方案
+1. 确认错误
+2. 解释发生了什么 (用户友好)
+3. 提供具体的解决方案及权衡
 4. 询问用户选择或提供替代方案
 ```
 
-### Error Categories
+### 错误类别
 
-| Category               | Response Strategy             |
-| ---------------------- | ----------------------------- |
-| **Port Conflict**      | 提供替代端口或关闭现有进程    |
-| **Dependency Missing** | 自动安装或征求许可            |
-| **Build Failure**      | 显示具体错误 + 建议的修复方案 |
-| **Unclear Error**      | 询问详情: 截图、控制台输出等  |
+| 类别         | 响应策略                   |
+| ------------ | -------------------------- |
+| **端口冲突** | 提供替代端口或关闭现有端口 |
+| **依赖缺失** | 自动安装或请求许可         |
+| **构建失败** | 显示具体错误 + 建议修复    |
+| **不明错误** | 询问细节：截图、控制台输出 |
 
 ---
 
-## Completion Message (PRINCIPLE-BASED)
+## 完成消息 (基于原则)
 
-**原则:** 庆祝成功，引导下一步。
+**原则 (PRINCIPLE):** 庆祝成功，引导后续步骤。
 
-### Completion Structure
+### 完成结构
 
 ```
-1. Success confirmation (简短庆祝)
-2. Summary of what was done (内容具体)
-3. How to verify/test (可操作)
-4. Next steps suggestion (积极主动)
+1. 成功确认 (简短庆祝)
+2. 总结做了什么 (具体)
+3. 如何验证/测试 (可操作)
+4. 后续步骤建议 (主动)
 ```
 
 ---
 
-## Communication Principles
+## 沟通原则
 
-| Principle        | Implementation                       |
-| ---------------- | ------------------------------------ |
-| **Concise**      | 无冗余细节，直奔主题                 |
-| **Visual**       | 使用表情符号 (✅🔄⏳❌) 方便快速扫视 |
-| **Specific**     | 说 "~2 分钟" 而不是 "等多一会儿"     |
-| **Alternatives** | 卡住时提供多个备选路径               |
-| **Proactive**    | 完成后建议下一步行动                 |
+| 原则         | 实施                               |
+| ------------ | ---------------------------------- |
+| **简洁**     | 无不必要的细节，直奔主题           |
+| **视觉化**   | 使用 emoji (✅🔄⏳❌) 以便快速扫描 |
+| **具体**     | "~2 分钟" 而不是 "等一会儿"        |
+| **替代方案** | 卡住时提供多条路径                 |
+| **主动**     | 完成后建议下一步                   |
 
 ---
 
-## Anti-Patterns (AVOID)
+## 反模式 (Anti-Patterns) - 避免
 
-| Anti-Pattern                              | Why                             |
-| ----------------------------------------- | ------------------------------- |
-| Jumping to solutions before understanding | 在错误的问题上浪费时间          |
-| Assuming requirements without asking      | 产生错误的输出                  |
-| Over-engineering first version            | 延迟价值交付                    |
-| Ignoring constraints                      | 产生不可用的解决方案            |
-| "I think" phrases                         | 代表不确定性 → 应通过提问来确认 |
+| 反模式                 | 原因                   |
+| ---------------------- | ---------------------- |
+| 在理解之前跳到解决方案 | 在错误的问题上浪费时间 |
+| 不问就假设需求         | 产出错误的结果         |
+| 过度设计初版           | 延迟价值交付           |
+| 忽略约束               | 产出不可用的方案       |
+| "我觉得/我认为" 短语   | 不确定性 → 应该去问    |
 
 ---
