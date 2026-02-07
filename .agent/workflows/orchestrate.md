@@ -1,28 +1,28 @@
 ---
-description: Coordinate multiple agents for complex tasks. Use for multi-perspective analysis, comprehensive reviews, or tasks requiring different domain expertise.
+description: 协调多 Agent 处理复杂任务。适用于多视角分析、综合评审、或需要跨领域协作的任务。
 ---
 
-# Multi-Agent Orchestration
+# 多 Agent 编排 (Multi-Agent Orchestration)
 
-You are now in **ORCHESTRATION MODE**. Your task: coordinate specialized agents to solve this complex problem.
+你现在处于 **ORCHESTRATION MODE**。任务目标：协调专家 Agent 解决复杂问题。
 
-## Task to Orchestrate
+## 待编排任务 (Task to Orchestrate)
 $ARGUMENTS
 
 ---
 
-## 🔴 CRITICAL: Minimum Agent Requirement
+## 🔴 关键要求：最少 Agent 数量
 
-> ⚠️ **ORCHESTRATION = MINIMUM 3 DIFFERENT AGENTS**
+> ⚠️ **ORCHESTRATION = 至少 3 个不同 Agent**
 > 
-> If you use fewer than 3 agents, you are NOT orchestrating - you're just delegating.
+> 少于 3 个 Agent 不叫编排，只是委派。
 > 
-> **Validation before completion:**
-> - Count invoked agents
-> - If `agent_count < 3` → STOP and invoke more agents
-> - Single agent = FAILURE of orchestration
+> **完成前校验：**
+> - 统计已调用 Agent 数
+> - 若 `agent_count < 3` → 停止并继续调用 Agent
+> - 单 Agent = 编排失败
 
-### Agent Selection Matrix
+### Agent 选择矩阵 (Agent Selection Matrix)
 
 | Task Type | REQUIRED Agents (minimum) |
 |-----------|---------------------------|
@@ -36,43 +36,43 @@ $ARGUMENTS
 
 ---
 
-## Pre-Flight: Mode Check
+## 起飞前检查：模式确认 (Pre-Flight Mode Check)
 
 | Current Mode | Task Type | Action |
 |--------------|-----------|--------|
-| **plan** | Any | ✅ Proceed with planning-first approach |
-| **edit** | Simple execution | ✅ Proceed directly |
-| **edit** | Complex/multi-file | ⚠️ Ask: "This task requires planning. Switch to plan mode?" |
-| **ask** | Any | ⚠️ Ask: "Ready to orchestrate. Switch to edit or plan mode?" |
+| **plan** | Any | ✅ 按规划优先流程继续 |
+| **edit** | Simple execution | ✅ 直接执行 |
+| **edit** | Complex/multi-file | ⚠️ 询问："该任务需要先规划，是否切换到 plan mode？" |
+| **ask** | Any | ⚠️ 询问："可以开始编排，是否切换到 edit 或 plan mode？" |
 
 ---
 
-## 🔴 STRICT 2-PHASE ORCHESTRATION
+## 🔴 严格两阶段编排 (STRICT 2-PHASE ORCHESTRATION)
 
-### PHASE 1: PLANNING (Sequential - NO parallel agents)
+### PHASE 1：规划阶段（串行，禁止并行 Agent）
 
 | Step | Agent | Action |
 |------|-------|--------|
-| 1 | `project-planner` | Create docs/PLAN.md |
-| 2 | (optional) `explorer-agent` | Codebase discovery if needed |
+| 1 | `project-planner` | 生成 `docs/PLAN.md` |
+| 2 | （可选）`explorer-agent` | 如有需要先做代码库探查 |
 
-> 🔴 **NO OTHER AGENTS during planning!** Only project-planner and explorer-agent.
+> 🔴 **规划阶段禁止其他 Agent！** 仅允许 project-planner 与 explorer-agent。
 
-### ⏸️ CHECKPOINT: User Approval
+### ⏸️ 检查点：用户批准 (User Approval)
 
 ```
-After PLAN.md is complete, ASK:
+PLAN.md 完成后，必须询问：
 
-"✅ Plan created: docs/PLAN.md
+"✅ 已生成计划：docs/PLAN.md
 
-Do you approve? (Y/N)
-- Y: Start implementation
-- N: I'll revise the plan"
+是否批准？(Y/N)
+- Y: 开始实现
+- N: 我会先修订计划"
 ```
 
-> 🔴 **DO NOT proceed to Phase 2 without explicit user approval!**
+> 🔴 **未获得用户明确批准，不得进入 Phase 2。**
 
-### PHASE 2: IMPLEMENTATION (Parallel agents after approval)
+### PHASE 2：实现阶段（批准后可并行）
 
 | Parallel Group | Agents |
 |----------------|--------|
@@ -80,35 +80,35 @@ Do you approve? (Y/N)
 | Core | `backend-specialist`, `frontend-specialist` |
 | Polish | `test-engineer`, `devops-engineer` |
 
-> ✅ After user approval, invoke multiple agents in PARALLEL.
+> ✅ 用户批准后，可并行调用多个 Agent。
 
-## Available Agents (17 total)
+## 可用 Agent（共 17 个）
 
 | Agent | Domain | Use When |
 |-------|--------|----------|
-| `project-planner` | Planning | Task breakdown, PLAN.md |
-| `explorer-agent` | Discovery | Codebase mapping |
-| `frontend-specialist` | UI/UX | React, Vue, CSS, HTML |
-| `backend-specialist` | Server | API, Node.js, Python |
-| `database-architect` | Data | SQL, NoSQL, Schema |
-| `security-auditor` | Security | Vulnerabilities, Auth |
-| `penetration-tester` | Security | Active testing |
-| `test-engineer` | Testing | Unit, E2E, Coverage |
-| `devops-engineer` | Ops | CI/CD, Docker, Deploy |
-| `mobile-developer` | Mobile | React Native, Flutter |
-| `performance-optimizer` | Speed | Lighthouse, Profiling |
-| `seo-specialist` | SEO | Meta, Schema, Rankings |
-| `documentation-writer` | Docs | README, API docs |
-| `debugger` | Debug | Error analysis |
-| `game-developer` | Games | Unity, Godot |
-| `orchestrator` | Meta | Coordination |
+| `project-planner` | Planning | 任务拆解、生成 PLAN.md |
+| `explorer-agent` | Discovery | 代码库映射与发现 |
+| `frontend-specialist` | UI/UX | React、Vue、CSS、HTML |
+| `backend-specialist` | Server | API、Node.js、Python |
+| `database-architect` | Data | SQL、NoSQL、Schema |
+| `security-auditor` | Security | 漏洞、安全设计、鉴权 |
+| `penetration-tester` | Security | 主动攻防测试 |
+| `test-engineer` | Testing | 单测、E2E、覆盖率 |
+| `devops-engineer` | Ops | CI/CD、Docker、部署 |
+| `mobile-developer` | Mobile | React Native、Flutter |
+| `performance-optimizer` | Speed | Lighthouse、Profiling |
+| `seo-specialist` | SEO | Meta、Schema、排名 |
+| `documentation-writer` | Docs | README、API 文档 |
+| `debugger` | Debug | 错误分析与排障 |
+| `game-developer` | Games | Unity、Godot |
+| `orchestrator` | Meta | 跨 Agent 协调 |
 
 ---
 
-## Orchestration Protocol
+## 编排协议 (Orchestration Protocol)
 
-### Step 1: Analyze Task Domains
-Identify ALL domains this task touches:
+### Step 1：分析任务领域 (Analyze Task Domains)
+识别该任务涉及的全部领域：
 ```
 □ Security     → security-auditor, penetration-tester
 □ Backend/API  → backend-specialist
@@ -122,40 +122,40 @@ Identify ALL domains this task touches:
 □ Planning     → project-planner
 ```
 
-### Step 2: Phase Detection
+### Step 2：识别阶段 (Phase Detection)
 
 | If Plan Exists | Action |
 |----------------|--------|
-| NO `docs/PLAN.md` | → Go to PHASE 1 (planning only) |
-| YES `docs/PLAN.md` + user approved | → Go to PHASE 2 (implementation) |
+| NO `docs/PLAN.md` | → 进入 PHASE 1（仅规划） |
+| YES `docs/PLAN.md` + user approved | → 进入 PHASE 2（实现） |
 
-### Step 3: Execute Based on Phase
+### Step 3：按阶段执行 (Execute Based on Phase)
 
-**PHASE 1 (Planning):**
+**PHASE 1（规划）：**
 ```
-Use the project-planner agent to create PLAN.md
-→ STOP after plan is created
-→ ASK user for approval
+调用 project-planner 生成 PLAN.md
+→ 计划完成后立即停止
+→ 请求用户批准
 ```
 
-**PHASE 2 (Implementation - after approval):**
+**PHASE 2（实现，批准后）：**
 ```
-Invoke agents in PARALLEL:
+并行调用 Agent：
 Use the frontend-specialist agent to [task]
 Use the backend-specialist agent to [task]
 Use the test-engineer agent to [task]
 ```
 
-**🔴 CRITICAL: Context Passing (MANDATORY)**
+**🔴 关键：上下文传递（强制）(Context Passing)**
 
-When invoking ANY subagent, you MUST include:
+调用任何子 Agent 时，必须携带：
 
-1. **Original User Request:** Full text of what user asked
-2. **Decisions Made:** All user answers to Socratic questions
-3. **Previous Agent Work:** Summary of what previous agents did
-4. **Current Plan State:** If plan files exist in workspace, include them
+1. **Original User Request：** 用户原始需求全文
+2. **Decisions Made：** 用户对苏格拉底式问题的所有回答
+3. **Previous Agent Work：** 前序 Agent 工作摘要
+4. **Current Plan State：** 若工作区存在计划文件，必须附带
 
-**Example with FULL context:**
+**完整上下文示例：**
 ```
 Use the project-planner agent to create PLAN.md:
 
@@ -168,22 +168,22 @@ Use the project-planner agent to create PLAN.md:
 **TASK:** Create detailed PLAN.md based on ABOVE decisions. Do NOT infer from folder name.
 ```
 
-> ⚠️ **VIOLATION:** Invoking subagent without full context = subagent will make wrong assumptions!
+> ⚠️ **违规：** 调用子 Agent 不带完整上下文，会导致错误假设。
 
 
-### Step 4: Verification (MANDATORY)
-The LAST agent must run appropriate verification scripts:
+### Step 4：验证（强制）(Verification)
+最后一个 Agent 必须执行合适的验证脚本：
 ```bash
 python .agent/skills/vulnerability-scanner/scripts/security_scan.py .
 python .agent/skills/lint-and-validate/scripts/lint_runner.py .
 ```
 
-### Step 5: Synthesize Results
-Combine all agent outputs into unified report.
+### Step 5：结果综合 (Synthesize Results)
+将所有 Agent 输出汇总为统一报告。
 
 ---
 
-## Output Format
+## 输出格式 (Output Format)
 
 ```markdown
 ## 🎼 Orchestration Report
@@ -222,16 +222,16 @@ Combine all agent outputs into unified report.
 
 ---
 
-## 🔴 EXIT GATE
+## 🔴 退出闸门 (EXIT GATE)
 
-Before completing orchestration, verify:
+结束编排前，必须确认：
 
 1. ✅ **Agent Count:** `invoked_agents >= 3`
-2. ✅ **Scripts Executed:** At least `security_scan.py` ran
-3. ✅ **Report Generated:** Orchestration Report with all agents listed
+2. ✅ **Scripts Executed:** 至少执行过 `security_scan.py`
+3. ✅ **Report Generated:** 已生成含全部 Agent 的 Orchestration Report
 
-> **If any check fails → DO NOT mark orchestration complete. Invoke more agents or run scripts.**
+> **任一项失败 → 不得标记编排完成。必须补调用 Agent 或补跑脚本。**
 
 ---
 
-**Begin orchestration now. Select 3+ agents, execute sequentially, run verification scripts, synthesize results.**
+**现在开始编排：选择 3+ Agent，按阶段执行，运行验证脚本，输出综合结果。**

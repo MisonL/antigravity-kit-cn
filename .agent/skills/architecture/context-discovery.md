@@ -1,43 +1,43 @@
-# Context Discovery
+# 上下文发现 (Context Discovery)
 
-> Before suggesting any architecture, gather context.
+> 在提出任何架构方案前，先收集上下文信息。
 
-## Question Hierarchy (Ask User FIRST)
+## 问题层级（先问用户）(Question Hierarchy)
 
-1. **Scale**
-   - How many users? (10, 1K, 100K, 1M+)
-   - Data volume? (MB, GB, TB)
-   - Transaction rate? (per second/minute)
+1. **规模 (Scale)**
+   - 用户量级是多少？（10、1K、100K、1M+）
+   - 数据规模是多少？（MB、GB、TB）
+   - 事务速率是多少？（每秒/每分钟）
 
-2. **Team**
-   - Solo developer or team?
-   - Team size and expertise?
-   - Distributed or co-located?
+2. **团队 (Team)**
+   - 个人开发还是团队协作？
+   - 团队规模与能力结构？
+   - 是分布式团队还是同地办公？
 
-3. **Timeline**
-   - MVP/Prototype or long-term product?
-   - Time to market pressure?
+3. **时间线 (Timeline)**
+   - 是 MVP/原型，还是长期产品？
+   - 上线时效压力有多大？
 
-4. **Domain**
-   - CRUD-heavy or business logic complex?
-   - Real-time requirements?
-   - Compliance/regulations?
+4. **业务域 (Domain)**
+   - 以 CRUD 为主，还是业务逻辑复杂？
+   - 是否有实时性要求？
+   - 是否有合规/监管要求？
 
-5. **Constraints**
-   - Budget limitations?
-   - Legacy systems to integrate?
-   - Technology stack preferences?
+5. **约束条件 (Constraints)**
+   - 是否有预算限制？
+   - 是否要集成遗留系统？
+   - 是否有技术栈偏好？
 
-## Project Classification Matrix
+## 项目分类矩阵 (Project Classification Matrix)
 
 ```
                     MVP              SaaS           Enterprise
 ┌─────────────────────────────────────────────────────────────┐
 │ Scale        │ <1K           │ 1K-100K      │ 100K+        │
 │ Team         │ Solo          │ 2-10         │ 10+          │
-│ Timeline     │ Fast (weeks)  │ Medium (months)│ Long (years)│
-│ Architecture │ Simple        │ Modular      │ Distributed  │
-│ Patterns     │ Minimal       │ Selective    │ Comprehensive│
+│ Timeline     │ 快（周级）    │ 中（月级）   │ 长（年级）   │
+│ Architecture │ 简单架构      │ 模块化架构   │ 分布式架构   │
+│ Patterns     │ 最小模式集    │ 选择性模式   │ 全面模式体系 │
 │ Example      │ Next.js API   │ NestJS       │ Microservices│
 └─────────────────────────────────────────────────────────────┘
 ```

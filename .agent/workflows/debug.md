@@ -1,46 +1,46 @@
 ---
-description: Debugging command. Activates DEBUG mode for systematic problem investigation.
+description: 调试命令。激活 DEBUG 模式并系统化排查问题。
 ---
 
-# /debug - Systematic Problem Investigation
+# /debug - 系统化问题排查 (Systematic Problem Investigation)
 
 $ARGUMENTS
 
 ---
 
-## Purpose
+## 目的 (Purpose)
 
-This command activates DEBUG mode for systematic investigation of issues, errors, or unexpected behavior.
-
----
-
-## Behavior
-
-When `/debug` is triggered:
-
-1. **Gather information**
-   - Error message
-   - Reproduction steps
-   - Expected vs actual behavior
-   - Recent changes
-
-2. **Form hypotheses**
-   - List possible causes
-   - Order by likelihood
-
-3. **Investigate systematically**
-   - Test each hypothesis
-   - Check logs, data flow
-   - Use elimination method
-
-4. **Fix and prevent**
-   - Apply fix
-   - Explain root cause
-   - Add prevention measures
+该命令用于激活 DEBUG 模式，以系统化调查异常、报错或非预期行为。
 
 ---
 
-## Output Format
+## 行为 (Behavior)
+
+触发 `/debug` 后：
+
+1. **收集信息**
+   - 错误信息
+   - 复现步骤
+   - 预期行为 vs 实际行为
+   - 最近代码变更
+
+2. **提出假设**
+   - 列出可能原因
+   - 按概率排序
+
+3. **系统化调查**
+   - 逐条验证假设
+   - 检查日志与数据流
+   - 用排除法收敛根因
+
+4. **修复并预防**
+   - 应用修复
+   - 解释根因
+   - 增加预防措施
+
+---
+
+## 输出格式 (Output Format)
 
 ```markdown
 ## 🔍 Debug: [Issue]
@@ -84,7 +84,7 @@ When `/debug` is triggered:
 
 ---
 
-## Examples
+## 示例 (Examples)
 
 ```
 /debug login not working
@@ -95,9 +95,9 @@ When `/debug` is triggered:
 
 ---
 
-## Key Principles
+## 关键原则 (Key Principles)
 
-- **Ask before assuming** - get full error context
-- **Test hypotheses** - don't guess randomly
-- **Explain why** - not just what to fix
-- **Prevent recurrence** - add tests, validation
+- **先问再判** - 先拿到完整错误上下文
+- **验证假设** - 不要凭感觉乱改
+- **解释原因** - 不只说“怎么修”，还要说“为何坏”
+- **防止复发** - 补上测试与校验策略
