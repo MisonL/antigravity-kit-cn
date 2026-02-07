@@ -28,29 +28,29 @@ allowed-tools: Read, Glob, Grep, Bash
 ```
 你要部署什么？
 │
-31: ├── 静态网站 / JAMstack
+├── Static site (静态网站) / JAMstack
 │   └── Vercel, Netlify, Cloudflare Pages
 │
-34: ├── 简单 Web 应用
-│   ├── 全托管 (Managed) → Railway, Render, Fly.io
-│   └── 自控 (Control) → VPS + PM2/Docker
+├── Simple web app (简单 Web 应用)
+│   ├── Managed (全托管) → Railway, Render, Fly.io
+│   └── Control (自控) → VPS + PM2/Docker
 │
-38: ├── 微服务
-│   └── 容器编排 (Container orchestration)
+├── Microservices (微服务)
+│   └── Container orchestration (容器编排)
 │
-41: └── Serverless
+└── Serverless (无服务器)
     └── Edge functions, Lambda
 ```
 
 ### 每个平台都有不同的流程
 
-| 平台               | 部署方法           |
-| ------------------ | ------------------ |
-| **Vercel/Netlify** | Git push, 自动部署 |
-| **Railway/Render** | Git push 或 CLI    |
-| **VPS + PM2**      | SSH + 手动步骤     |
-| **Docker**         | 镜像推送 + 编排    |
-| **Kubernetes**     | kubectl apply      |
+| 平台               | 部署方法                     |
+| ------------------ | ---------------------------- |
+| **Vercel/Netlify** | Git push, 自动部署           |
+| **Railway/Render** | Git push 或 CLI (命令行界面) |
+| **VPS + PM2**      | SSH + 手动步骤               |
+| **Docker**         | 镜像推送 + 编排              |
+| **Kubernetes**     | kubectl apply                |
 
 ---
 
@@ -58,12 +58,12 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ### 4 大验证类别
 
-| 类别                        | 检查内容                          |
-| --------------------------- | --------------------------------- |
-| **代码质量 (Code Quality)** | 测试通过、Lint 无报错、已代码审查 |
-| **构建 (Build)**            | 生产构建成功、无警告              |
-| **环境 (Environment)**      | 环境变量已设置、密钥是最新的      |
-| **安全 (Safety)**           | 备份已完成、回滚计划已就绪        |
+| 类别                        | 检查内容                                              |
+| --------------------------- | ----------------------------------------------------- |
+| **Code Quality (代码质量)** | Tests (测试) 通过、Lint (代码检查) 无报错、已代码审查 |
+| **Build (构建)**            | 生产构建成功、无警告                                  |
+| **Environment (环境)**      | 环境变量已设置、密钥是最新的                          |
+| **Safety (安全)**           | 备份已完成、回滚计划已就绪                            |
 
 ### 部署前检查清单
 
@@ -117,10 +117,10 @@ allowed-tools: Read, Glob, Grep, Bash
 
 | 检查项                            | 原因                   |
 | --------------------------------- | ---------------------- |
-| **健康端点 (Health endpoint)**    | 服务正在运行           |
-| **错误日志 (Error logs)**         | 无新增错误             |
-| **关键用户流程 (Key user flows)** | 核心功能正常工作       |
-| **性能 (Performance)**            | 响应时间在可接受范围内 |
+| **Health endpoint (健康端点)**    | 服务正在运行           |
+| **Error logs (错误日志)**         | 无新增错误             |
+| **Key user flows (关键用户流程)** | 核心功能正常工作       |
+| **Performance (性能)**            | 响应时间在可接受范围内 |
 
 ### 验证窗口
 
@@ -167,9 +167,9 @@ allowed-tools: Read, Glob, Grep, Bash
 
 | 策略                  | 工作原理           |
 | --------------------- | ------------------ |
-| **滚动 (Rolling)**    | 逐个替换实例       |
-| **蓝绿 (Blue-Green)** | 在环境之间切换流量 |
-| **金丝雀 (Canary)**   | 逐渐转移流量       |
+| **Rolling (滚动)**    | 逐个替换实例       |
+| **Blue-Green (蓝绿)** | 在环境之间切换流量 |
+| **Canary (金丝雀)**   | 逐渐转移流量       |
 
 ### 选择原则
 
@@ -192,25 +192,25 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ### 调查顺序
 
-| 检查                    | 常见问题           |
-| ----------------------- | ------------------ |
-| **日志 (Logs)**         | 错误、异常         |
-| **资源 (Resources)**    | 磁盘满了、内存不足 |
-| **网络 (Network)**      | DNS、防火墙        |
-| **依赖 (Dependencies)** | 数据库、API        |
+| 检查                    | 常见问题               |
+| ----------------------- | ---------------------- |
+| **Logs (日志)**         | 错误、异常             |
+| **Resources (资源)**    | 磁盘满了、内存不足     |
+| **Network (网络)**      | DNS, firewall (防火墙) |
+| **Dependencies (依赖)** | 数据库、API            |
 
 ---
 
 ## 8. 反模式 (Anti-Patterns)
 
-| ❌ 不要 (Don't)          | ✅ 要 (Do)       |
-| ------------------------ | ---------------- |
-| 周五部署                 | 在周初部署       |
-| 匆忙部署                 | 遵循流程         |
-| 跳过预发布环境 (Staging) | 始终先测试       |
-| 无备份部署               | 部署前备份       |
-| 部署后走人               | 监控 15 分钟以上 |
-| 一次性做多个变更         | 一次只做一个变更 |
+| ❌ 不要 (Don't)           | ✅ 要 (Do)       |
+| ------------------------- | ---------------- |
+| 周五部署                  | 在周初部署       |
+| 匆忙部署                  | 遵循流程         |
+| 跳过 Staging (预发布环境) | 始终先测试       |
+| 无备份部署                | 部署前备份       |
+| 部署后走人                | 监控 15 分钟以上 |
+| 一次性做多个变更          | 一次只做一个变更 |
 
 ---
 
@@ -230,7 +230,7 @@ allowed-tools: Read, Glob, Grep, Bash
 ## 10. 最佳实践 (Best Practices)
 
 1. **小而频繁的部署** 优于大版本发布
-2. **特性开关 (Feature flags)** 用于风险变更
+2. **Feature flags (特性开关)** 用于风险变更
 3. **自动化** 重复步骤
 4. **记录/文档化** 每次部署
 5. **复盘** 问题发生后的原因
