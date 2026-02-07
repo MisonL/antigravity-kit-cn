@@ -1,16 +1,16 @@
 ---
 name: testing-patterns
-description: 测试模式与原则。覆盖单元测试、集成测试与 Mock 策略。
+description: 测试模式与原则。覆盖单元测试、集成测试与 Mock（模拟）策略。
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# 测试模式 (Testing Patterns)
+# 测试模式
 
 > 构建可靠测试体系的原则。
 
 ---
 
-## 1. 测试金字塔 (Testing Pyramid)
+## 1. 测试金字塔
 
 ```
         /\          E2E（少量）
@@ -25,64 +25,64 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 2. AAA 模式 (AAA Pattern)
+## 2. AAA 模式
 
-| Step | Purpose |
-|------|---------|
-| **Arrange** | 准备测试数据与上下文 |
-| **Act** | 执行被测代码 |
-| **Assert** | 断言结果是否符合预期 |
-
----
-
-## 3. 测试类型选择 (Test Type Selection)
-
-### 各类型使用时机 (When to Use Each)
-
-| Type | Best For | Speed |
-|------|----------|-------|
-| **Unit** | 纯函数、核心逻辑 | 快（<50ms） |
-| **Integration** | API、数据库、服务协作 | 中 |
-| **E2E** | 关键用户流程 | 慢 |
+| 步骤 | 目的 |
+|------|------|
+| **Arrange（准备）** | 准备测试数据与上下文 |
+| **Act（执行）** | 执行被测代码 |
+| **Assert（断言）** | 断言结果是否符合预期 |
 
 ---
 
-## 4. 单元测试原则 (Unit Test Principles)
+## 3. 测试类型选择
 
-### 优秀单元测试特征 (Good Unit Tests)
+### 各类型使用时机
 
-| Principle | Meaning |
-|-----------|---------|
-| 快速 (Fast) | 单个用例 < 100ms |
-| 隔离 (Isolated) | 不依赖外部系统 |
-| 可重复 (Repeatable) | 每次结果一致 |
-| 自校验 (Self-checking) | 无需手工验证 |
-| 及时 (Timely) | 与代码同步编写 |
+| 类型 | 适用场景 | 速度 |
+|------|----------|------|
+| **Unit（单元测试）** | 纯函数、核心逻辑 | 快（<50ms） |
+| **Integration（集成测试）** | API、数据库、服务协作 | 中 |
+| **E2E（端到端）** | 关键用户流程 | 慢 |
 
-### 单元测试该测什么 (What to Unit Test)
+---
 
-| Test | Don't Test |
-|------|------------|
+## 4. 单元测试原则
+
+### 优秀单元测试特征
+
+| 原则 | 含义 |
+|------|------|
+| 快速（Fast） | 单个用例 < 100ms |
+| 隔离（Isolated） | 不依赖外部系统 |
+| 可重复（Repeatable） | 每次结果一致 |
+| 自校验（Self-checking） | 无需手工验证 |
+| 及时（Timely） | 与代码同步编写 |
+
+### 单元测试该测什么
+
+| 应该测试 | 不应测试 |
+|----------|---------|
 | 业务逻辑 | 框架内部实现 |
 | 边界条件 | 第三方库本身 |
 | 错误处理 | 过于简单的 getter |
 
 ---
 
-## 5. 集成测试原则 (Integration Test Principles)
+## 5. 集成测试原则
 
-### 重点覆盖 (What to Test)
+### 重点覆盖
 
-| Area | Focus |
-|------|-------|
+| 领域 | 关注点 |
+|------|--------|
 | API 端点 | 请求/响应链路 |
 | 数据库 | 查询与事务行为 |
 | 外部服务 | 契约一致性 |
 
 ### Setup/Teardown 约定
 
-| Phase | Action |
-|-------|--------|
+| 阶段 | 动作 |
+|------|------|
 | Before All | 建立资源连接 |
 | Before Each | 重置状态 |
 | After Each | 执行清理 |
@@ -90,21 +90,21 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 6. Mock 原则 (Mocking Principles)
+## 6. Mock 原则
 
-### 何时需要 Mock (When to Mock)
+### 何时需要 Mock
 
-| Mock | Don't Mock |
-|------|------------|
+| 应该 Mock | 不应 Mock |
+|----------|----------|
 | 外部 API | 被测代码本身 |
 | 数据库（单元测试） | 简单依赖对象 |
 | 时间/随机数 | 纯函数 |
 | 网络请求 | 内存型替代实现 |
 
-### Mock 类型 (Mock Types)
+### Mock 类型
 
-| Type | Use |
-|------|-----|
+| 类型 | 用途 |
+|------|------|
 | Stub | 返回固定值 |
 | Spy | 跟踪调用行为 |
 | Mock | 预设期望并校验 |
@@ -112,49 +112,49 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 7. 测试组织方式 (Test Organization)
+## 7. 测试组织方式
 
-### 命名规范 (Naming)
+### 命名规范
 
-| Pattern | Example |
-|---------|---------|
+| 模式 | 示例 |
+|------|------|
 | Should 行为式 | "should return error when..." |
 | When 条件式 | "when user not found..." |
-| Given-when-then | "given X, when Y, then Z" |
+| Given-When-Then | "given X, when Y, then Z" |
 
-### 分组方式 (Grouping)
+### 分组方式
 
-| Level | Use |
-|-------|-----|
+| 层级 | 用途 |
+|------|------|
 | describe | 归类相关测试 |
 | it/test | 单个测试用例 |
 | beforeEach | 共享初始化逻辑 |
 
 ---
 
-## 8. 测试数据策略 (Test Data)
+## 8. 测试数据策略
 
-### 常见策略 (Strategies)
+### 常见策略
 
-| Approach | Use |
-|----------|-----|
+| 方法 | 用途 |
+|------|------|
 | Factories | 动态生成测试数据 |
 | Fixtures | 预定义数据集 |
 | Builders | 链式构建对象 |
 
-### 基本原则 (Principles)
+### 基本原则
 
 - 使用贴近真实的数据
 - 非关键字段可随机化（faker）
-- 共享公共 fixtures
+- 共享公共 fixtures（预置数据）
 - 保持最小必要数据集
 
 ---
 
-## 9. 最佳实践 (Best Practices)
+## 9. 最佳实践
 
-| Practice | Why |
-|----------|-----|
+| 实践 | 目的 |
+|------|------|
 | 单测关注单一断言目标 | 失败原因更清晰 |
 | 用例相互独立 | 避免顺序依赖 |
 | 保持测试快速 | 能高频执行 |
@@ -163,10 +163,10 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 10. 反模式 (Anti-Patterns)
+## 10. 反模式
 
-| ❌ Don't | ✅ Do |
-|----------|-------|
+| ❌ 禁止（Don't） | ✅ 推荐（Do） |
+|-----------------|-------------|
 | 测实现细节 | 测可观察行为 |
 | 重复测试代码 | 使用 factories 复用 |
 | 测试前置过于复杂 | 简化或拆分场景 |
