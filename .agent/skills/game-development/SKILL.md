@@ -1,172 +1,180 @@
 ---
 name: game-development
-description: Game development orchestrator. Routes to platform-specific skills based on project needs.
+description: 游戏开发编排器 (Orchestrator)。根据项目需求路由至特定平台的开发技能。
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# 游戏开发
+# 游戏开发 (Game Development)
 
-> **编排器技能**：提供核心原则并路由到专门的子技能。
-
----
-
-## 何时使用此技能
-
-你正在进行游戏开发项目。此技能教授游戏开发原则，并根据上下文指导你使用正确的子技能。
+> **编排类技能**：提供核心原则，并引导至特定的子技能 (Sub-skills)。
 
 ---
 
-## 子技能路由
+## 何时使用此技能 (When to Use)
 
-### 平台选择
+当您正在进行游戏开发项目时。本技能涵盖了游戏开发的**通用原则**，并会根据当前上下文指引您使用正确的子技能。
 
-| 如果游戏目标是...         | 使用子技能                      |
+---
+
+## 子技能路由 (Sub-Skill Routing)
+
+### 平台选择 (Platform Selection)
+
+| 目标平台                  | 使用子技能                      |
 | ------------------------- | ------------------------------- |
 | Web 浏览器 (HTML5, WebGL) | `game-development/web-games`    |
 | 移动端 (iOS, Android)     | `game-development/mobile-games` |
-| PC (Steam, Desktop)       | `game-development/pc-games`     |
-| VR/AR 头显                | `game-development/vr-ar`        |
+| PC 端 (Steam, 桌面应用)   | `game-development/pc-games`     |
+| VR/AR 虚拟现实设备        | `game-development/vr-ar`        |
 
-### 维度选择
+### 维度选择 (Dimension Selection)
 
-| 如果游戏是...       | 使用子技能                  |
-| ------------------- | --------------------------- |
-| 2D (精灵, Tilemaps) | `game-development/2d-games` |
-| 3D (Mesh, Shaders)  | `game-development/3d-games` |
+| 游戏类型                           | 使用子技能                  |
+| ---------------------------------- | --------------------------- |
+| 2D (Sprite 精灵、Tilemap 瓦片地图) | `game-development/2d-games` |
+| 3D (Mesh 网格、Shader 着色器)      | `game-development/3d-games` |
 
-### 专业领域
+### 专业领域 (Specialty Areas)
 
-| 如果你需要...              | 使用子技能                     |
+| 需求                       | 使用子技能                     |
 | -------------------------- | ------------------------------ |
-| GDD, 平衡, 玩家心理        | `game-development/game-design` |
-| 多人游戏, 网络             | `game-development/multiplayer` |
-| 视觉风格, 资产管线, 动画   | `game-development/game-art`    |
-| 音效设计, 音乐, 自适应音频 | `game-development/game-audio`  |
+| GDD 策划、平衡性、用户心理 | `game-development/game-design` |
+| 多人联机、网络同步         | `game-development/multiplayer` |
+| 视觉风格、素材管线、动画   | `game-development/game-art`    |
+| 音效设计、音乐、自适应音频 | `game-development/game-audio`  |
 
 ---
 
-## 核心原则 (所有平台)
+## 核心原则（全平台通用）
 
-### 1. 游戏循环 (Game Loop)
+### 1. 游戏循环 (The Game Loop)
 
-每个游戏，无论平台如何，都遵循此模式：
+无论在何种平台上，所有的游戏都遵循这一模式：
 
 ```
-INPUT (输入)  → 读取玩家动作
-UPDATE (更新) → 处理游戏逻辑（固定时间步长）
-RENDER (渲染) → 绘制帧（插值）
+输入 (INPUT)  → 读取玩家操作
+更新 (UPDATE) → 处理游戏逻辑（固定步长 Fixed timestep）
+渲染 (RENDER) → 绘制帧（插值处理 Interpolated）
 ```
 
-**固定时间步长规则 (Fixed Timestep Rule):**
+**固定步长准则：**
 
-- 物理/逻辑：固定速率（例如 50Hz）
-- 渲染：尽可能快
-- 在状态之间插值以获得平滑的视觉效果
-
----
-
-## 2. 模式选择矩阵
-
-| 模式                              | 何时使用         | 示例             |
-| --------------------------------- | ---------------- | ---------------- |
-| **状态机 (State Machine)**        | 3-5 个离散状态   | 玩家：空闲→走→跳 |
-| **对象池 (Object Pooling)**       | 频繁生成/销毁    | 子弹，粒子       |
-| **观察者/事件 (Observer/Events)** | 跨系统通信       | 生命值→UI 更新   |
-| **ECS (实体组件系统)**            | 数千个相似实体   | RTS 单位，粒子   |
-| **命令 (Command)**                | 撤销，重放，网络 | 输入录制         |
-| **行为树 (Behavior Tree)**        | 复杂 AI 决策     | 敌人 AI          |
-
-**决策规则**: 从状态机开始。仅在性能需要时添加 ECS。
+- 物理/逻辑：应以固定频率运行（如 50Hz）。
+- 渲染：尽可能快。
+- 状态插值：在不同状态间进行插值，以确保视觉上的平滑度。
 
 ---
 
-### 3. 输入抽象
+### 2. 模式选择矩阵 (Pattern Selection Matrix)
 
-将输入抽象为动作 (ACTIONS)，而不是原始按键：
+| 设计模式                    | 使用场景             | 示例                                              |
+| --------------------------- | -------------------- | ------------------------------------------------- |
+| **状态机 (State Machine)**  | 3-5 个离散状态       | 玩家状态：待机 (Idle) → 行走 (Walk) → 跳跃 (Jump) |
+| **对象池 (Object Pooling)** | 频繁创建/销毁        | 子弹、粒子效果                                    |
+| **观察者/事件 (Observer)**  | 跨系统通信           | 生命值变化 → UI 更新                              |
+| **ECS**                     | 数以千计的同类实体   | RTS 单位、大规模粒子                              |
+| **命令模式 (Command)**      | 撤销、重放、联网同步 | 输入记录                                          |
+| **行为树 (Behavior Tree)**  | 复杂的 AI 决策       | 敌人 AI 逻辑                                      |
+
+**决策规则：** 优先从状态机开始。仅在性能需求极高时才引入 ECS。
+
+---
+
+### 3. 输入抽象 (Input Abstraction)
+
+将输入抽象为**动作 (ACTIONS)**，而非原始按键：
 
 ```
-"jump"  → Space, 手柄 A, 触摸点击
-"move"  → WASD, 左摇杆, 虚拟摇杆
+“跳跃 (jump)” → 空格键、手柄 A 键、触摸屏点击
+“移动 (move)” → WASD、左摇杆、虚拟摇杆
 ```
 
-**为什么**: 启用多平台、可重新绑定的控件。
+**理由：** 实现多平台支持及可自定义的按键绑定。
 
 ---
 
-### 4. 性能预算 (60 FPS = 16.67ms)
+### 4. 性能预算 (Performance Budget) (60 FPS = 16.67ms)
 
-| 系统     | 预算   |
-| -------- | ------ |
-| 输入     | 1ms    |
-| 物理     | 3ms    |
-| AI       | 2ms    |
-| 游戏逻辑 | 4ms    |
-| 渲染     | 5ms    |
-| 缓冲     | 1.67ms |
+| 系统             | 预算   |
+| ---------------- | ------ |
+| 输入 (Input)     | 1ms    |
+| 物理 (Physics)   | 3ms    |
+| 人工智能 (AI)    | 2ms    |
+| 游戏逻辑 (Logic) | 4ms    |
+| 渲染 (Rendering) | 5ms    |
+| 缓冲 (Buffer)    | 1.67ms |
 
-**优化优先级:**
+**优化优先级：**
 
-1. 算法 (O(n²) → O(n log n))
-2. Batching (批处理)
-3. Pooling (池化)
-4. LOD (多细节层次)
-5. Culling (剔除)
-
----
-
-### 5. 按复杂度选择 AI
-
-| AI 类型                     | 复杂度 | 何时使用               |
-| --------------------------- | ------ | ---------------------- |
-| **FSM (有限状态机)**        | 简单   | 3-5 个状态，可预测行为 |
-| **Behavior Tree (行为树)**  | 中等   | 模块化，设计师友好     |
-| **GOAP (目标导向行动计划)** | 高     | 涌现式，基于计划       |
-| **Utility AI (效用 AI)**    | 高     | 基于评分的决策         |
+1. **算法** (O(n²) → O(n log n))。
+2. **批处理 (Batching)** (减少绘图调用 draw calls)。
+3. **对象池 (Pooling)** (避免垃圾回收 GC 峰值)。
+4. **LOD** (根据距离调整细节)。
+5. **裁剪 (Culling)** (跳过不可见物体)。
 
 ---
 
-### 6. 碰撞策略
+### 5. AI 复杂度选择
 
-| 类型                        | 最适合             |
-| --------------------------- | ------------------ |
-| **AABB**                    | 矩形，快速检查     |
-| **Circle (圆形)**           | 圆形物体，廉价     |
-| **Spatial Hash (空间哈希)** | 许多相似大小的物体 |
-| **Quadtree (四叉树)**       | 大世界，不同大小   |
-
----
-
-## 反模式 (通用)
-
-| ❌ 不要            | ✅ 要                   |
-| ------------------ | ----------------------- |
-| 每帧更新所有内容   | 使用事件，脏标记        |
-| 在热循环中创建对象 | 对象池 (Object pooling) |
-| 什么都不缓存       | 缓存引用                |
-| 不分析就优化       | 先分析 (Profile first)  |
-| 混合输入与逻辑     | 抽象输入层              |
+| AI 类型                  | 复杂度 | 使用场景               |
+| ------------------------ | ------ | ---------------------- |
+| **FSM (状态机)**         | 简单   | 3-5 个状态，行为可预测 |
+| **行为树**               | 中等   | 模块化，对策划人员友好 |
+| **GOAP**                 | 高     | 基于规划的呈现式行为   |
+| **效用 AI (Utility AI)** | 高     | 基于评分机制的决策     |
 
 ---
 
-## 路由示例
+### 6. 碰撞策略 (Collision Strategy)
 
-### 示例 1: 基于浏览器的 2D 平台游戏
-
-→ 从 `game-development/web-games` 开始进行框架选择
-→ 然后 `game-development/2d-games` 用于精灵/瓦片地图模式
-→ 参考 `game-development/game-design` 进行关卡设计
-
-### 示例 2: iOS 和 Android 的移动益智游戏
-
-→ 从 `game-development/mobile-games` 开始用于触摸输入和商店
-→ 使用 `game-development/game-design` 进行谜题平衡
-
-### 示例 3: 多人 VR 射击游戏
-
-→ `game-development/vr-ar` 用于舒适度和沉浸感
-→ `game-development/3d-games` 用于渲染
-→ `game-development/multiplayer` 用于网络
+| 类型                        | 适用于                   |
+| --------------------------- | ------------------------ |
+| **AABB**                    | 矩形，快速检测           |
+| **圆形 (Circle)**           | 圆形物体，计算开销低     |
+| **空间哈希 (Spatial Hash)** | 大量大小相近的物体       |
+| **四叉树 (Quadtree)**       | 大规模世界，物体大小不一 |
 
 ---
 
-> **记住：** 伟大的游戏源于迭代，而非完美。快速原型，然后打磨。
+## 反模式（通用型） (Anti-Patterns)
+
+| 禁止 (Don't)         | 推荐 (Do)                          |
+| -------------------- | ---------------------------------- |
+| 每帧更新所有内容     | 使用事件机制、脏标记 (Dirty flags) |
+| 在热点循环中创建对象 | 使用对象池                         |
+| 完全不使用缓存       | 缓存常用引用                       |
+| 不做分析就进行优化   | 优先进行性能分析 (Profile)         |
+| 将输入与逻辑混在一起 | 抽象出输入层                       |
+
+---
+
+## 路由示例 (Routing Examples)
+
+### 示例 1：“我想做一个基于浏览器的 2D 平台游戏”
+
+→ 首先参考 `game-development/web-games` 选择框架。
+→ 然后参考 `game-development/2d-games` 学习精灵/瓦片地图模式。
+→ 参考 `game-development/game-design` 进行关卡设计。
+
+### 示例 2：“适用于 iOS 和 Android 的移动端益智游戏”
+
+→ 首先参考 `game-development/mobile-games` 处理触摸输入与商店发布。
+→ 使用 `game-development/game-design` 进行谜题平衡性设计。
+
+### 示例 3：“多人 VR 射击游戏”
+
+→ `game-development/vr-ar` 处理舒适性与沉浸感。
+→ `game-development/3d-games` 处理渲染逻辑。
+→ `game-development/multiplayer` 处理联网同步。
+
+---
+
+> **谨记：** 优秀的游戏源于不断的迭代，而非一步到位的完美。快速产出原型，然后不断打磨。
+
+---
+
+## Skills 兼容说明 (最小补充)
+
+- **机制基线**：沿用上游 `.agent/skills/game-development/SKILL.md`。
+- **Codex 适配**：由适配层映射到 `.agents/skills/game-development/SKILL.md`。
+- **注意**：文档层不改技能流程；仅补充目录映射事实。
