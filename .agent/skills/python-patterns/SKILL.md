@@ -4,170 +4,133 @@ description: Python 开发原则与决策。框架选择、异步模式、类型
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# Python 模式 (Python Patterns)
+# Python 实践模式 (Python Patterns)
 
-> 2025 年 Python 开发的原则与决策。
-> **学会思考，而不是死记代码模式。**
-
----
-
-## ⚠️ 如何使用此技能 (Skill)
-
-本技能教授的是 **决策原则**，而非可以直接复制的固定代码。
-
-- 不清楚时 **询问** 用户关于框架的偏好
-- 根据 **上下文 (Context)** 选择异步 (Async) 或同步 (Sync)
-- 不要每次都默认使用相同的框架
+> 2025 年 Python 开发的原则与决策准则。
+> **学习如何思考 (THINK)，而非死记硬背模式。**
 
 ---
 
-## 1. 框架选择 (2025)
+## ⚠️ 如何使用此技能 (How to Use)
+
+本技能旨在传授**决策原则**，而非固定的、用于复制的代码。
+
+- 在框架选择不明确时，主动请教老板 (ASK)。
+- 根据**上下文 (CONTEXT)** 选择异步 (Async) 或同步 (Sync) 模式。
+- 不要每次都默认使用相同的框架。
+
+---
+
+## 1. 框架选择 (2025) (Framework Selection)
 
 ### 决策树
 
 ```
-你要构建什么？
+您想要构建什么？
 │
-├── API 优先 / 微服务 (Microservices)
-│   └── FastAPI (异步，现代，快速)
+├── API 优先 / 微服务
+│   └── FastAPI (异步支持、现代、高性能)
 │
 ├── 全栈 Web / CMS / 后台管理
-│   └── Django (功能齐整)
+│   └── Django (功能齐整 "Batteries-included")
 │
-├── 简单项目 / 脚本 / 学习
-│   └── Flask (极简，灵活)
+├── 简单应用 / 脚本 / 学习用途
+│   └── Flask (极简、灵活)
 │
-├── AI/ML API 服务
-│   └── FastAPI (Pydantic, 异步, uvicorn)
+├── AI/ML API 部署服务
+│   └── FastAPI (搭配 Pydantic, 异步, uvicorn)
 │
 └── 后台任务处理 (Background workers)
     └── Celery + 任意框架
 ```
 
-### 比较原则
+### 对比原则
 
-| 因素             | FastAPI     | Django      | Flask          |
-| ---------------- | ----------- | ----------- | -------------- |
-| **最适合**       | API, 微服务 | 全栈, CMS   | 简单项目, 学习 |
-| **异步 (Async)** | 原生支持    | Django 5.0+ | 通过扩展支持   |
-| **管理后台**     | 手动构建    | 内置        | 通过扩展支持   |
-| **ORM**          | 自行选择    | Django ORM  | 自行选择       |
-| **学习曲线**     | 低          | 中          | 低             |
+| 维度         | FastAPI     | Django           | Flask          |
+| ------------ | ----------- | ---------------- | -------------- |
+| **最佳用途** | API, 微服务 | 全栈, CMS        | 简单应用, 学习 |
+| **异步支持** | 原生支持    | Django 5.0+ 支持 | 通过插件支持   |
+| **后台管理** | 需手动实现  | 内置 (Admin)     | 通过插件支持   |
+| **ORM 选择** | 自选        | Django ORM       | 自选           |
+| **学习曲线** | 低          | 中               | 低             |
 
-### 选型提问：
+### 务必询问老板的问题：
 
-1. 仅限 API 还是全栈项目？
-2. 是否需要管理后台界面？
-3. 团队是否熟悉异步编程？
-4. 现有的基础设施如何？
+1. 本项是纯 API 还是包含前端的全栈应用？
+2. 是否需要后台管理界面？
+3. 团队对异步编程的熟悉程度如何？
+4. 是否有现成的基础设施限制？
 
 ---
 
-## 2. 异步 vs 同步决策
+## 2. 异步 (Async) vs 同步 (Sync) 决策
 
-### 何时使用异步 (Async)
-
-```
-async def 在以下场景更佳：
-├── I/O 密集型操作 (数据库, HTTP, 文件)
-├── 大量并发连接
-├── 实时特性 (Real-time features)
-├── 微服务间通信
-└── FastAPI / Starlette / Django ASGI
-```
-
-### 何时使用同步 (Sync)
+### 何时使用异步
 
 ```
-def (同步) 在以下场景更佳：
+在以下场景，使用 async def 为佳：
+├── I/O 密集型操作 (数据库、HTTP 请求、文件操作)
+├── 存在大量并发连接
+├── 实时交互功能 (Real-time)
+├── 微服务间的通信
+└── 使用 FastAPI / Starlette / Django ASGI
+```
+
+### 何时使用同步
+
+```
+在以下场景，使用 def (同步) 为佳：
 ├── CPU 密集型操作
 ├── 简单脚本
-├── 遗留代码库
-├── 团队不熟悉异步
-└── 阻塞性库 (无异步版本)
+├── 遗留代码库 (Legacy)
+├── 团队不熟悉异步模式
+└── 使用了阻塞类型的库 (无异步版本)
 ```
 
-### 黄金法则
+### 黄金准则
 
 ```
-I/O 密集型 → 异步 (等待外部响应)
-CPU 密集型 → 同步 + 多进程 (multiprocessing) (进行计算)
+I/O 密集型 → 使用 async (等待外部响应)
+CPU 密集型 → 使用 sync + multiprocessing (多进程计算)
 
-不要：
-├── 随意混合同步与异步
-├── 在异步代码中使用同步库
-└── 强行在 CPU 工作中使用异步
+禁止行为：
+├── 盲目混用同步与异步代码
+├── 在异步代码中调用阻塞同步库
+├── 在 CPU 密集型任务中强行使用异步
 ```
-
-### 异步库选择
-
-| 需求        | 异步库                         |
-| ----------- | ------------------------------ |
-| HTTP 客户端 | httpx                          |
-| PostgreSQL  | asyncpg                        |
-| Redis       | aioredis / redis-py async      |
-| 文件 I/O    | aiofiles                       |
-| 数据库 ORM  | SQLAlchemy 2.0 async, Tortoise |
 
 ---
 
-## 3. 类型提示 (Type Hints) 策略
+## 3. 类型提示策略 (Type Hints Strategy)
 
-### 何时使用类型
+### 何时标注类型
 
 ```
-始终标记类型：
+必须标注：
 ├── 函数参数
 ├── 返回值类型
 ├── 类属性
-├── 公开 API (Public APIs)
+├── 公共 API
+```
 
-可以跳过：
-├── 局部变量（利用类型推断）
+```
+可以省略：
+├── 局部变量 (利用类型推导)
 ├── 一次性脚本
-├── 测试代码（通常）
+├── 测试代码 (通常情况下)
 ```
 
-### 常见类型模式
+### 现代 Pydantic 验证准则
 
-```python
-# 这些是模式，请理解它们：
+使用 Pydantic 的场景：
 
-# Optional → 可能是 None
-from typing import Optional
-def find_user(id: int) -> Optional[User]: ...
-
-# Union → 多种类型之一
-def process(data: str | dict) -> None: ...
-
-# 泛型集合
-def get_items() -> list[Item]: ...
-def get_mapping() -> dict[str, int]: ...
-
-# Callable
-from typing import Callable
-def apply(fn: Callable[[int], str]) -> str: ...
-```
-
-### 使用 Pydantic 进行校验
-
-```
-何时使用 Pydantic：
-├── API 请求/响应模型 (Models)
-├── 配置/设置 (Settings)
-├── 数据验证 (Validation)
-├── 序列化 (Serialization)
-
-优势：
-├── 运行时验证
-├── 自动生成 JSON Schema
-├── 与 FastAPI 原生集成
-└── 清晰的错误消息
-```
+- API 请求/响应模型。
+- 配置项/设置 (Settings)。
+- 关键数据验证与序列化。
 
 ---
 
-## 4. 项目结构原则
+## 4. 项目结构原则 (Project Structure)
 
 ### 结构选择
 
@@ -177,272 +140,112 @@ def apply(fn: Callable[[int], str]) -> str: ...
 ├── utils.py
 └── requirements.txt
 
-中型 API：
+中型 API 项目：
 ├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   └── schemas/
-├── tests/
-└── pyproject.toml
-
-大型应用：
-├── src/
-│   └── myapp/
-│       ├── core/
-│       ├── api/
-│       ├── services/
-│       ├── models/
-│       └── ...
+│   ├── models/ (数据库模型)
+│   ├── routes/ (端点逻辑)
+│   ├── services/ (业务逻辑)
+│   └── schemas/ (Pydantic 模型)
 ├── tests/
 └── pyproject.toml
 ```
 
-### FastAPI 结构原则
+---
 
-```
-按功能或按层组织：
+## 5. Django 准则 (2025)
 
-按层组织：
-├── routes/ (API 端点)
-├── services/ (业务逻辑)
-├── models/ (数据库模型)
-├── schemas/ (Pydantic 模型)
-└── dependencies/ (共享依赖)
+### Django 异步支持 (5.0+)
 
-按功能组织：
-├── users/
-│   ├── routes.py
-│   ├── service.py
-│   └── schemas.py
-└── products/
-    └── ...
-```
+适用场景：外部 API 调用、WebSocket (Channels)、高并发视图。
+
+### 最佳实践
+
+- **厚模型，薄视图 (Fat models, thin views)**：将逻辑下沉至模型层。
+- **查询优化**：使用 `select_related()` (外键) 和 `prefetch_related()` (多对多)，严禁 N+1 查询。
 
 ---
 
-## 5. Django 原则 (2025)
-
-### Django 异步支持 (Django 5.0+)
-
-```
-Django 支持异步：
-├── 异步视图 (Async views)
-├── 异步中间件
-├── 异步 ORM（受限）
-└── ASGI 部署
-
-何时在 Django 中使用异步：
-├── 外部 API 调用
-├── WebSocket (Channels)
-├── 高并发视图
-└── 触发后台任务
-```
-
-### Django 最佳实践
-
-```
-模型设计：
-├── 胖模型，瘦视图 (Fat models, thin views)
-├── 为常用查询使用管理器 (Managers)
-├── 为共享字段使用抽象基类
-
-视图：
-├── 复杂 CRUD 使用类视图 (CBV)
-├── 简单端点使用函数视图 (FBV)
-├── DRF 使用 ViewSets
-
-查询：
-├── select_related() 用于外键 (FKs)
-├── prefetch_related() 用于多对多 (M2M)
-├── 避免 N+1 查询
-└── 使用 .only() 获取特定字段
-```
-
----
-
-## 6. FastAPI 原则
-
-### async def vs def 在 FastAPI 中
-
-```
-在以下情况使用 async def：
-├── 使用异步数据库驱动
-├── 进行异步 HTTP 调用
-├── I/O 密集型操作
-├── 希望处理并发
-
-在以下情况使用 def：
-├── 阻塞性操作
-├── 同步数据库驱动
-├── CPU 密集型工作
-└── FastAPI 会自动在线程池中运行它们
-```
+## 6. FastAPI 准则
 
 ### 依赖注入 (Dependency Injection)
 
-```
-为以下内容使用依赖：
-├── 数据库会话 (Sessions)
-├── 当前用户 / 认证 (Auth)
-├── 配置信息
-├── 共享资源
-
-优势：
-├── 可测试性 (模拟依赖)
-├── 清晰的分离
-├── 自动清理 (yield)
-```
+- 适用于：数据库 Session、当前用户/认证、全局配置。
+- 核心优势：可测试性 (Mocking)、职责分离。
 
 ### Pydantic v2 集成
 
-```python
-# FastAPI + Pydantic 紧密集成：
-
-# 请求验证
-@app.post("/users")
-async def create(user: UserCreate) -> UserResponse:
-    # user 已通过验证
-    ...
-
-# 响应序列化
-# 返回类型即变为响应 Schema
-```
+- 深度利用请求验证与响应序列化。
+- 确保类型提示与 Pydantic 模型 100% 同步。
 
 ---
 
-## 7. 后台任务 (Background Tasks)
+## 7. 后台任务处理 (Background Tasks)
 
-### 选择指南
-
-| 解决方案            | 最适合                            |
-| ------------------- | --------------------------------- |
-| **BackgroundTasks** | 简单的进程内任务                  |
-| **Celery**          | 分布式、复杂的流水线 (Workflows)  |
-| **ARQ**             | 异步、基于 Redis                  |
-| **RQ**              | 简单的 Redis 队列                 |
-| **Dramatiq**        | 基于 Actor 模式，比 Celery 更简单 |
-
-### 何时使用
-
-```
-FastAPI BackgroundTasks：
-├── 快速操作
-├── 无需持久化
-├── fire-and-forget (即发即弃)
-└── 同一进程内
-
-Celery/ARQ：
-├── 长时间运行的任务
-├── 需要重试逻辑
-├── 分布式工作节点 (Workers)
-├── 持久化队列
-└── 复杂的流水线
-```
+| 方案                | 最佳用途                               |
+| ------------------- | -------------------------------------- |
+| **BackgroundTasks** | 简单的、进程内的任务 (Fire-and-forget) |
+| **Celery**          | 分布式的、复杂的、需重试的工作流       |
+| **ARQ**             | 基于 Redis 的异步任务方案              |
+| **RQ**              | 简单的 Redis 队列                      |
 
 ---
 
-## 8. 错误处理原则
+## 8. 错误处理原则 (Error Handling)
 
-### 异常策略
+### 异常处理策略
 
-```
-在 FastAPI 中：
-├── 创建自定义异常类
-├── 注册异常处理器 (Handlers)
-├── 返回一致的错误格式
-└── 记录日志且不暴露内部细节
-
-模式：
-├── 在服务层抛出领域异常
-├── 在处理器中捕获并转换
-└── 客户端获得干净的错误响应
-```
-
-### 错误响应哲学
-
-```
-包含以下项：
-├── 错误代码 (编程使用)
-├── 消息 (人类可读)
-├── 详情 (适用时提供字段级信息)
-└── **禁止** 堆栈跟踪 (安全风险)
-```
+- 创建自定义异常类。
+- 在服务层抛出领域异常，在处理器 (Handlers/Middleware) 中统一转化。
+- 🚫 严禁向外部公开堆栈跟踪 (Security!)。
 
 ---
 
-## 9. 测试原则
+## 9. 测试原则 (Testing Principles)
 
-### 测试策略
+### 异步测试 (Async Testing)
 
-| 类型                       | 目的     | 工具                      |
-| -------------------------- | -------- | ------------------------- |
-| **单元测试 (Unit)**        | 业务逻辑 | pytest                    |
-| **集成测试 (Integration)** | API 端点 | pytest + httpx/TestClient |
-| **端到端测试 (E2E)**       | 完整流程 | pytest + 数据库           |
-
-### 异步测试
-
-```python
-# 使用 pytest-asyncio 进行异步测试
-
-import pytest
-from httpx import AsyncClient
-
-@pytest.mark.asyncio
-async def test_endpoint():
-    async with AsyncClient(app=app, base_url="http://test") as client:
-        response = await client.get("/users")
-        assert response.status_code == 200
-```
-
-### 固件 (Fixtures) 策略
-
-```
-常用固件：
-├── db_session → 数据库连接
-├── client → 测试客户端
-├── authenticated_user → 带有 Token 的用户
-└── sample_data → 测试数据设置
-```
+- 使用 `pytest-asyncio` 或现代内置测试工具。
+- 始终为关键链路、边界情况和错误处理编写测试。
 
 ---
 
-## 10. 决策检查清单
+## 10. 决策检查清单 (Decision Checklist)
 
-在实施之前：
+在实现之前：
 
-- [ ] **询问过用户关于框架的偏好？**
-- [ ] **为当前场景选择了框架？**（而非单纯默认）
-- [ ] **决定了使用异步还是同步？**
-- [ ] **规划了类型提示策略？**
-- [ ] **定义了项目结构？**
-- [ ] **规划了错误处理？**
-- [ ] **考虑了后台任务？**
-
----
-
-## 11. 避免的反模式
-
-### ❌ 不要：
-
-- 在简单的 API 中默认使用 Django（FastAPI 可能更佳）
-- 在异步代码中使用同步库
-- 忽略公开 API 的类型提示
-- 将业务逻辑放在路由/视图中
-- 忽视 N+1 查询
-- 随意混合异步与同步
-
-### ✅ 要：
-
-- 根据上下文选择框架
-- 询问关于异步的需求
-- 使用 Pydantic 进行校验
-- 关注点分离（路由 → 服务 → 仓储）
-- 测试关键路径
+- [ ] **是否询问过老板关于框架的偏好？**
+- [ ] **是否根据当前场景选择了最佳框架？**
+- [ ] **是否明确了异步 vs 同步的选择？**
+- [ ] **是否规划了类型提示策略？**
+- [ ] **是否定义了清晰的项目结构？**
+- [ ] **是否规划了全局错误处理？**
 
 ---
 
-> **记住**：Python 模式核心在于为特定场景进行决策。不要直接复制代码 —— 思考什么最适合你的应用。
+## 11. 应避免的反模式 (Anti-Patterns)
+
+### ❌ 禁止：
+
+- 在简单的 API 项目中默认使用 Django（FastAPI 可能更合适）。
+- 在异步代码中使用同步阻塞库。
+- 忽略公共 API 的类型提示。
+- 将复杂的业务逻辑直接写在路由或视图中。
+- 忽视 N+1 查询问题。
+
+### ✅ 推荐：
+
+- 根据业务上下文选择框架。
+- 明确职责分离 (Routes → Services → Repos)。
+- 优先测试关键业务路径。
+
+---
+
+> **谨记**：Python 模式的核心在于为您的特定上下文做出决策。不要只是复制冗余代码 —— 思考最适合该应用的方案。
+
+---
+
+## Skills 兼容说明 (最小补充)
+
+- **机制基线**：沿用上游 `.agent/skills/python-patterns/SKILL.md`。
+- **Codex 适配**：由适配层映射到 `.agents/skills/python-patterns/SKILL.md`。
+- **注意**：文档层不应替代 Python 架构建议；仅在此定义决策逻辑。
