@@ -1,101 +1,101 @@
-# Touch Psychology Reference
+# 触控心理学参考（Touch Psychology Reference）
 
-> Deep dive into mobile touch interaction, Fitts' Law for touch, thumb zone anatomy, gesture psychology, and haptic feedback.
-> **This is the mobile equivalent of ux-psychology.md - CRITICAL for all mobile work.**
+> 深入覆盖移动端触控交互、触控版 Fitts' Law、拇指热区、手势心理学与触感反馈（Haptics）。
+> **这是移动端版的 ux-psychology.md —— 所有移动端工作必读。**
 
 ---
 
-## 1. Fitts' Law for Touch
+## 1. 触控版 Fitts' Law
 
-### The Fundamental Difference
+### 核心差异（The Fundamental Difference）
 
 ```
-DESKTOP (Mouse/Trackpad):
-├── Cursor size: 1 pixel (precision)
-├── Visual feedback: Hover states
-├── Error cost: Low (easy to retry)
-└── Target acquisition: Fast, precise
+DESKTOP（鼠标/触控板）：
+├── 光标尺寸：1 像素（高精度）
+├── 视觉反馈：Hover 状态
+├── 误差成本：低（易重试）
+└── 目标获取：快且精准
 
-MOBILE (Finger):
-├── Contact area: ~7mm diameter (imprecise)
-├── Visual feedback: No hover, only tap
-├── Error cost: High (frustrating retries)
-├── Occlusion: Finger covers the target
-└── Target acquisition: Slower, needs larger targets
+MOBILE（手指）：
+├── 接触面积：约 7mm 直径（精度低）
+├── 视觉反馈：无 hover，仅点击
+├── 误差成本：高（反复点击很挫败）
+├── 遮挡：手指覆盖目标
+└── 目标获取：更慢，需要更大目标
 ```
 
-### Fitts' Law Formula Adapted
+### Fitts' Law 公式（触控版）
 
 ```
 Touch acquisition time = a + b × log₂(1 + D/W)
 
 Where:
-├── D = Distance to target
-├── W = Width of target
-└── For touch: W must be MUCH larger than desktop
+├── D = 目标距离
+├── W = 目标宽度
+└── 触控下 W 必须远大于桌面端
 ```
 
-### Minimum Touch Target Sizes
+### 最小触控尺寸（Minimum Touch Target Sizes）
 
-| Platform | Minimum | Recommended | Use For |
-|----------|---------|-------------|---------|
-| **iOS (HIG)** | 44pt × 44pt | 48pt+ | All tappable elements |
-| **Android (Material)** | 48dp × 48dp | 56dp+ | All tappable elements |
-| **WCAG 2.2** | 44px × 44px | - | Accessibility compliance |
-| **Critical Actions** | - | 56-64px | Primary CTAs, destructive actions |
+| 平台（Platform） | 最小值（Minimum） | 推荐值（Recommended） | 适用（Use For） |
+|------------------|------------------|-----------------------|-----------------|
+| **iOS (HIG)** | 44pt × 44pt | 48pt+ | 所有可点元素 |
+| **Android (Material)** | 48dp × 48dp | 56dp+ | 所有可点元素 |
+| **WCAG 2.2** | 44px × 44px | - | 无障碍合规 |
+| **关键操作** | - | 56-64px | 主要 CTA、破坏性操作 |
 
-### Visual Size vs Hit Area
+### 视觉尺寸 vs 命中区（Visual Size vs Hit Area）
 
 ```
 ┌─────────────────────────────────────┐
 │                                     │
 │    ┌─────────────────────────┐      │
 │    │                         │      │
-│    │    [  BUTTON  ]         │ ← Visual: 36px
+│    │    [  BUTTON  ]         │ ← 视觉：36px
 │    │                         │      │
 │    └─────────────────────────┘      │
-│                                     │ ← Hit area: 48px (padding extends)
+│                                     │ ← 命中区：48px（padding 扩展）
 └─────────────────────────────────────┘
 
-✅ CORRECT: Visual can be smaller if hit area is minimum 44-48px
-❌ WRONG: Making hit area same as small visual element
+✅ 正确：视觉可以更小，只要命中区 ≥ 44-48px
+❌ 错误：命中区与视觉尺寸一样小
 ```
 
-### Application Rules
+### 规则应用（Application Rules）
 
-| Element | Visual Size | Hit Area |
-|---------|-------------|----------|
-| Icon buttons | 24-32px | 44-48px (padding) |
-| Text links | Any | 44px height minimum |
-| List items | Full width | 48-56px height |
-| Checkboxes/Radio | 20-24px | 44-48px tap area |
-| Close/X buttons | 24px | 44px minimum |
-| Tab bar items | Icon 24-28px | Full tab width, 49px height (iOS) |
+| 元素（Element） | 视觉尺寸（Visual Size） | 命中区（Hit Area） |
+|-----------------|--------------------------|---------------------|
+| 图标按钮 | 24-32px | 44-48px（padding） |
+| 文本链接 | 任意 | 高度 ≥ 44px |
+| 列表项 | 全宽 | 高度 48-56px |
+| 复选/单选 | 20-24px | 44-48px 命中区 |
+| 关闭/X 按钮 | 24px | ≥ 44px |
+| Tab Bar 项 | 图标 24-28px | Tab 宽度全占，iOS 高度 49px |
 
 ---
 
-## 2. Thumb Zone Anatomy
+## 2. 拇指热区（Thumb Zone Anatomy）
 
-### One-Handed Phone Usage
+### 单手持机（One-Handed Phone Usage）
 
 ```
-Research shows: 49% of users hold phone one-handed.
+研究显示：49% 用户单手使用手机。
 
 ┌─────────────────────────────────────┐
 │                                     │
 │  ┌─────────────────────────────┐    │
-│  │       HARD TO REACH         │    │ ← Status bar, top nav
-│  │      (requires stretch)     │    │    Put: Back, menu, settings
+│  │       HARD TO REACH         │    │ ← 顶部状态栏、导航
+│  │      (requires stretch)     │    │    放：返回、菜单、设置
 │  │                             │    │
 │  ├─────────────────────────────┤    │
 │  │                             │    │
-│  │       OK TO REACH           │    │ ← Content area
-│  │      (comfortable)          │    │    Put: Secondary actions, content
+│  │       OK TO REACH           │    │ ← 内容区
+│  │      (comfortable)          │    │    放：次级操作、内容
 │  │                             │    │
 │  ├─────────────────────────────┤    │
 │  │                             │    │
-│  │       EASY TO REACH         │    │ ← Tab bar, FAB zone
-│  │      (thumb's arc)          │    │    Put: PRIMARY CTAs!
+│  │       EASY TO REACH         │    │ ← Tab Bar、FAB 热区
+│  │      (thumb's arc)          │    │    放：主 CTA
 │  │                             │    │
 │  └─────────────────────────────┘    │
 │                                     │
@@ -103,7 +103,7 @@ Research shows: 49% of users hold phone one-handed.
 └─────────────────────────────────────┘
 ```
 
-### Thumb Arc (Right-Handed User)
+### 拇指弧线（右手用户）
 
 ```
 Right hand holding phone:
@@ -118,393 +118,393 @@ Right hand holding phone:
 │   EASY         EASY      EASY │
 └───────────────────────────────┘
 
-Left hand is mirrored.
-→ Design for BOTH hands or assume right-dominant
+左手用户是镜像。
+→ 需兼顾左右手或默认右手为主
 ```
 
-### Placement Guidelines
+### 布局放置建议（Placement Guidelines）
 
-| Element Type | Ideal Position | Reason |
-|--------------|----------------|--------|
-| **Primary CTA** | Bottom center/right | Easy thumb reach |
-| **Tab bar** | Bottom | Natural thumb position |
-| **FAB** | Bottom right | Easy for right hand |
-| **Navigation** | Top (stretch) | Less frequent use |
-| **Destructive actions** | Top left | Hard to reach = harder to accidentally tap |
-| **Dismiss/Cancel** | Top left | Convention + safety |
-| **Confirm/Done** | Top right or bottom | Convention |
+| 元素类型（Element Type） | 理想位置（Ideal Position） | 理由（Reason） |
+|--------------------------|-----------------------------|---------------|
+| **主 CTA** | 底部中间/右侧 | 拇指易达 |
+| **Tab Bar** | 底部 | 符合自然位置 |
+| **FAB** | 右下 | 右手易达 |
+| **导航入口** | 顶部（需伸手） | 使用频率低 |
+| **破坏性操作** | 左上 | 难触达 → 降误触 |
+| **取消/关闭** | 左上 | 习惯 + 安全 |
+| **确认/完成** | 右上或底部 | 习惯 |
 
-### Large Phone Considerations (>6")
-
-```
-On large phones, top 40% becomes "dead zone" for one-handed use.
-
-Solutions:
-├── Reachability features (iOS)
-├── Pull-down interfaces (drawer pulls content down)
-├── Bottom sheet navigation
-├── Floating action buttons
-└── Gesture-based alternatives to top actions
-```
-
----
-
-## 3. Touch vs Click Psychology
-
-### Expectation Differences
-
-| Aspect | Click (Desktop) | Touch (Mobile) |
-|--------|-----------------|----------------|
-| **Feedback timing** | Can wait 100ms | Expect instant (<50ms) |
-| **Visual feedback** | Hover → Click | Immediate tap response |
-| **Error tolerance** | Easy retry | Frustrating, feels broken |
-| **Precision** | High | Low |
-| **Context menu** | Right-click | Long press |
-| **Cancel action** | ESC key | Swipe away, outside tap |
-
-### Touch Feedback Requirements
+### 大屏手机（>6"）
 
 ```
-Tap → Immediate visual change (< 50ms)
-├── Highlight state (background color change)
-├── Scale down slightly (0.95-0.98)
-├── Ripple effect (Android Material)
-├── Haptic feedback for confirmation
-└── Never nothing!
+在大屏手机上，顶部 40% 变成“单手死区”。
 
-Loading → Show within 100ms
-├── If action takes > 100ms
-├── Show spinner/progress
-├── Disable button (prevent double tap)
-└── Optimistic UI when possible
-```
-
-### The "Fat Finger" Problem
-
-```
-Problem: Finger occludes target during tap
-├── User can't see exactly where they're tapping
-├── Visual feedback appears UNDER finger
-└── Increases error rate
-
-Solutions:
-├── Show feedback ABOVE touch point (tooltips)
-├── Use cursor-like offset for precision tasks
-├── Magnification loupe for text selection
-└── Large enough targets that precision doesn't matter
+解决方案：
+├── Reachability（iOS）
+├── 下拉式界面（drawer 下拉）
+├── Bottom sheet 导航
+├── 悬浮操作按钮（FAB）
+└── 用手势替代顶部操作
 ```
 
 ---
 
-## 4. Gesture Psychology
+## 3. 触控 vs 点击心理学（Touch vs Click Psychology）
 
-### Gesture Discoverability Problem
+### 预期差异（Expectation Differences）
 
-```
-Problem: Gestures are INVISIBLE.
-├── User must discover/remember them
-├── No hover/visual hint
-├── Different mental model than tap
-└── Many users never discover gestures
+| 维度（Aspect） | Click（Desktop） | Touch（Mobile） |
+|---------------|------------------|-----------------|
+| **反馈时延** | 可等待 100ms | 期待即时（<50ms） |
+| **视觉反馈** | Hover → Click | 立即点按反馈 |
+| **容错** | 易重试 | 更挫败、易感“坏掉” |
+| **精度** | 高 | 低 |
+| **菜单** | 右键 | 长按 |
+| **取消** | ESC | 滑走/点空白 |
 
-Solution: Always provide visible alternative
-├── Swipe to delete → Also show delete button or menu
-├── Pull to refresh → Also show refresh button
-├── Pinch to zoom → Also show zoom controls
-└── Gestures as shortcuts, not only way
-```
-
-### Common Gesture Conventions
-
-| Gesture | Universal Meaning | Usage |
-|---------|-------------------|-------|
-| **Tap** | Select, activate | Primary action |
-| **Double tap** | Zoom in, like/favorite | Quick action |
-| **Long press** | Context menu, selection mode | Secondary options |
-| **Swipe horizontal** | Navigation, delete, actions | List actions |
-| **Swipe down** | Refresh, dismiss | Pull to refresh |
-| **Pinch** | Zoom in/out | Maps, images |
-| **Two-finger scroll** | Scroll within scroll | Nested scrolls |
-
-### Gesture Affordance Design
+### 触控反馈要求（Touch Feedback Requirements）
 
 ```
-Swipe actions need visual hints:
+点击 → 立即视觉反馈（< 50ms）
+├── 高亮态（背景色变化）
+├── 轻微缩放（0.95-0.98）
+├── Ripple（Android Material）
+├── 触感反馈确认
+└── 绝对不能“无反应”
+
+加载 → 100ms 内提示
+├── 动作 > 100ms
+├── 显示 spinner/progress
+├── 按钮禁用（防连点）
+└── 能做就用 Optimistic UI
+```
+
+### “胖手指”问题（The "Fat Finger" Problem）
+
+```
+问题：手指遮挡目标
+├── 用户看不到准确点击位置
+├── 反馈出现在手指下方
+└── 错误率上升
+
+解决方案：
+├── 在触点上方显示反馈（tooltip）
+├── 精准任务提供偏移光标
+├── 文本选择提供放大镜
+└── 足够大的目标让精度无关紧要
+```
+
+---
+
+## 4. 手势心理学（Gesture Psychology）
+
+### 手势可发现性问题（Gesture Discoverability Problem）
+
+```
+问题：手势不可见
+├── 用户必须自行发现/记住
+├── 无 hover/视觉提示
+├── 心智模型与点击不同
+└── 很多用户永远不会发现手势
+
+解决方案：必须提供可见替代
+├── 左滑删除 → 同时提供删除按钮/菜单
+├── 下拉刷新 → 同时提供刷新按钮
+├── 双指缩放 → 同时提供缩放控制
+└── 手势是捷径，而不是唯一入口
+```
+
+### 常见手势约定（Common Gesture Conventions）
+
+| 手势（Gesture） | 通用语义（Universal Meaning） | 使用场景（Usage） |
+|-----------------|-------------------------------|------------------|
+| **Tap** | 选择、激活 | 主动作 |
+| **Double tap** | 放大、点赞 | 快速操作 |
+| **Long press** | 上下文菜单、选择模式 | 次级操作 |
+| **Swipe horizontal** | 导航、删除、操作 | 列表行为 |
+| **Swipe down** | 刷新、关闭 | 下拉刷新 |
+| **Pinch** | 放大/缩小 | 地图、图片 |
+| **Two-finger scroll** | 嵌套滚动 | 内嵌滚动区 |
+
+### 手势可感知性设计（Gesture Affordance Design）
+
+```
+滑动操作需要视觉提示：
 
 ┌─────────────────────────────────────────┐
 │  ┌───┐                                  │
-│  │ ≡ │  Item with hidden actions...   → │ ← Edge hint (partial color)
+│  │ ≡ │  Item with hidden actions...   → │ ← 边缘提示（颜色露出）
 │  └───┘                                  │
 └─────────────────────────────────────────┘
 
-✅ Good: Slight color peek at edge suggesting swipe
-✅ Good: Drag handle icon ( ≡ ) suggesting reorder
-✅ Good: Onboarding tooltip explaining gesture
-❌ Bad: Hidden gestures with no visual affordance
+✅ 好：边缘轻微露色提示可滑动
+✅ 好：拖拽手柄图标（≡）暗示可排序
+✅ 好：Onboarding tooltip 解释手势
+❌ 坏：隐藏手势且无任何提示
 ```
 
-### Platform Gesture Differences
+### 平台手势差异（Platform Gesture Differences）
 
-| Gesture | iOS | Android |
-|---------|-----|---------|
-| **Back** | Edge swipe from left | System back button/gesture |
-| **Share** | Action sheet | Share sheet |
-| **Context menu** | Long press / Force touch | Long press |
-| **Dismiss modal** | Swipe down | Back button or swipe |
-| **Delete in list** | Swipe left, tap delete | Swipe left, immediate or undo |
+| 手势（Gesture） | iOS | Android |
+|-----------------|-----|---------|
+| **Back** | 左边缘滑动 | 系统返回键/手势 |
+| **Share** | Action Sheet | Share Sheet |
+| **Context menu** | 长按 / Force touch | 长按 |
+| **Dismiss modal** | 下滑关闭 | 返回键或滑动 |
+| **Delete in list** | 左滑后点删除 | 左滑即删或撤销 |
 
 ---
 
-## 5. Haptic Feedback Patterns
+## 5. 触感反馈模式（Haptic Feedback Patterns）
 
-### Why Haptics Matter
-
-```
-Haptics provide:
-├── Confirmation without looking
-├── Richer, more premium feel
-├── Accessibility (blind users)
-├── Reduced error rate
-└── Emotional satisfaction
-
-Without haptics:
-├── Feels "cheap" or web-like
-├── User unsure if action registered
-└── Missed opportunity for delight
-```
-
-### iOS Haptic Types
-
-| Type | Intensity | Use Case |
-|------|-----------|----------|
-| `selection` | Light | Picker scroll, toggle, selection |
-| `light` | Light | Minor actions, hover equivalent |
-| `medium` | Medium | Standard tap confirmation |
-| `heavy` | Strong | Important completed, drop |
-| `success` | Pattern | Task completed successfully |
-| `warning` | Pattern | Warning, attention needed |
-| `error` | Pattern | Error occurred |
-
-### Android Haptic Types
-
-| Type | Use Case |
-|------|----------|
-| `CLICK` | Standard tap feedback |
-| `HEAVY_CLICK` | Important actions |
-| `DOUBLE_CLICK` | Confirm actions |
-| `TICK` | Scroll/scrub feedback |
-| `LONG_PRESS` | Long press activation |
-| `REJECT` | Error/invalid action |
-
-### Haptic Usage Guidelines
+### 为什么触感重要（Why Haptics Matter）
 
 ```
-✅ DO use haptics for:
-├── Button taps
-├── Toggle switches
-├── Picker/slider values
-├── Pull to refresh trigger
-├── Successful action completion
-├── Errors and warnings
-├── Swipe action thresholds
-└── Important state changes
+Haptics 带来的价值：
+├── 不看屏也能确认操作
+├── 更高级、更“真”的体验
+├── 无障碍收益（盲人用户）
+├── 降低误触
+└── 提升情绪满足感
 
-❌ DON'T use haptics for:
-├── Every scroll position
-├── Every list item
-├── Background events
-├── Passive displays
-└── Too frequently (haptic fatigue)
+没有 haptics：
+├── 体验廉价，像网页
+├── 用户不确定是否已触发
+└── 错失体验加分项
 ```
 
-### Haptic Intensity Mapping
+### iOS 触感类型（iOS Haptic Types）
 
-| Action Importance | Haptic Level | Example |
-|-------------------|--------------|---------|
-| Minor/Browsing | Light / None | Scrolling, hovering |
-| Standard Action | Medium / Selection | Tap, toggle |
-| Significant Action | Heavy / Success | Complete, confirm |
-| Critical/Destructive | Heavy / Warning | Delete, payment |
-| Error | Error pattern | Failed action |
+| 类型（Type） | 强度（Intensity） | 场景（Use Case） |
+|-------------|-------------------|------------------|
+| `selection` | Light | Picker 滚动、开关、选择 |
+| `light` | Light | 轻动作、hover 替代 |
+| `medium` | Medium | 标准点击确认 |
+| `heavy` | Strong | 重要完成、落地动作 |
+| `success` | Pattern | 任务成功完成 |
+| `warning` | Pattern | 警告与提醒 |
+| `error` | Pattern | 出错反馈 |
+
+### Android 触感类型（Android Haptic Types）
+
+| 类型（Type） | 场景（Use Case） |
+|-------------|------------------|
+| `CLICK` | 标准点击反馈 |
+| `HEAVY_CLICK` | 重要动作 |
+| `DOUBLE_CLICK` | 确认动作 |
+| `TICK` | 滚动/滑动反馈 |
+| `LONG_PRESS` | 长按触发 |
+| `REJECT` | 错误/无效操作 |
+
+### 触感使用准则（Haptic Usage Guidelines）
+
+```
+✅ 适合使用 haptics 的场景：
+├── 按钮点击
+├── Toggle 开关
+├── Picker/Slider 值变化
+├── 下拉刷新触发
+├── 成功操作完成
+├── 错误与警告
+├── 滑动操作达到阈值
+└── 重要状态变化
+
+❌ 不适合使用 haptics 的场景：
+├── 每个滚动位置
+├── 每条列表项
+├── 后台事件
+├── 被动展示
+└── 频率过高（触感疲劳）
+```
+
+### 触感强度映射（Haptic Intensity Mapping）
+
+| 动作重要性（Action Importance） | 触感级别（Haptic Level） | 示例（Example） |
+|-------------------------------|---------------------------|----------------|
+| 轻操作/浏览 | Light / None | 滚动、Hover
+| 标准操作 | Medium / Selection | 点击、切换
+| 重要操作 | Heavy / Success | 完成、确认
+| 关键/破坏性 | Heavy / Warning | 删除、支付
+| 错误 | Error pattern | 操作失败
 
 ---
 
-## 6. Mobile Cognitive Load
+## 6. 移动端认知负荷（Mobile Cognitive Load）
 
-### How Mobile Differs from Desktop
+### 移动端与桌面差异（How Mobile Differs from Desktop）
 
-| Factor | Desktop | Mobile | Implication |
-|--------|---------|--------|-------------|
-| **Attention** | Focused sessions | Interrupted constantly | Design for micro-sessions |
-| **Context** | Controlled environment | Anywhere, any condition | Handle bad lighting, noise |
-| **Multitasking** | Multiple windows | One app visible | Complete task in-app |
-| **Input speed** | Fast (keyboard) | Slow (touch typing) | Minimize input, smart defaults |
-| **Error recovery** | Easy (undo, back) | Harder (no keyboard shortcuts) | Prevent errors, easy recovery |
+| 因素（Factor） | Desktop | Mobile | 含义（Implication） |
+|---------------|---------|--------|---------------------|
+| **注意力** | 连续专注 | 频繁中断 | 设计应适配碎片化 |
+| **环境** | 可控 | 随时随地 | 处理弱光/噪音 |
+| **多任务** | 多窗口 | 单 App | 尽量一次完成任务 |
+| **输入速度** | 快（键盘） | 慢（触控） | 减少输入、智能默认值 |
+| **纠错** | 便捷（快捷键） | 困难 | 防错 + 易恢复 |
 
-### Reducing Mobile Cognitive Load
-
-```
-1. ONE PRIMARY ACTION per screen
-   └── Clear what to do next
-   
-2. PROGRESSIVE DISCLOSURE
-   └── Show only what's needed now
-   
-3. SMART DEFAULTS
-   └── Pre-fill what you can
-   
-4. CHUNKING
-   └── Break long forms into steps
-   
-5. RECOGNITION over RECALL
-   └── Show options, don't make user remember
-   
-6. CONTEXT PERSISTENCE
-   └── Save state on interrupt/background
-```
-
-### Miller's Law for Mobile
+### 降低移动端认知负荷（Reducing Mobile Cognitive Load）
 
 ```
-Desktop: 7±2 items in working memory
-Mobile: Reduce to 5±1 (more distractions)
+1. 每屏只放一个主动作（ONE PRIMARY ACTION）
+   └── 下一步必须清晰
 
-Navigation: Max 5 tab bar items
-Options: Max 5 per menu level
-Steps: Max 5 visible steps in progress
+2. 渐进披露（PROGRESSIVE DISCLOSURE）
+   └── 只展示当前需要的信息
+
+3. 智能默认值（SMART DEFAULTS）
+   └── 能预填就预填
+
+4. 分块（CHUNKING）
+   └── 长表单拆分步骤
+
+5. 识别优先于记忆（RECOGNITION over RECALL）
+   └── 给选项，不让用户记
+
+6. 上下文保留（CONTEXT PERSISTENCE）
+   └── 中断/后台保存状态
 ```
 
-### Hick's Law for Mobile
+### 移动端米勒定律（Miller's Law for Mobile）
 
 ```
-More choices = slower decisions
+桌面：7±2
+移动：建议 5±1（干扰更大）
 
-Mobile impact: Even worse than desktop
-├── Smaller screen = less overview
-├── Scrolling required = items forgotten
-├── Interruptions = lost context
-└── Decision fatigue faster
-
-Solution: Progressive disclosure
-├── Start with 3-5 options
-├── "More" for additional
-├── Smart ordering (most used first)
-└── Previous selections remembered
+导航：Tab Bar 最多 5 个
+选项：每层最多 5 个
+步骤：进度展示最多 5 步
 ```
 
----
-
-## 7. Touch Accessibility
-
-### Motor Impairment Considerations
+### 移动端希克定律（Hick's Law for Mobile）
 
 ```
-Users with motor impairments may:
-├── Have tremors (need larger targets)
-├── Use assistive devices (different input method)
-├── Have limited reach (one-handed necessity)
-├── Need more time (avoid timeouts)
-└── Make accidental touches (need confirmation)
+选择越多，决策越慢
 
-Design responses:
-├── Generous touch targets (48dp+)
-├── Adjustable timing for gestures
-├── Undo for destructive actions
-├── Switch control support
-└── Voice control support
-```
+移动端影响更严重：
+├── 屏幕更小，整体难看全
+├── 需要滚动，已看内容易遗忘
+├── 中断更频繁
+└── 决策疲劳更快
 
-### Touch Target Spacing (A11y)
-
-```
-WCAG 2.2 Success Criterion 2.5.8:
-
-Touch targets MUST have:
-├── Width: ≥ 44px
-├── Height: ≥ 44px
-├── Spacing: ≥ 8px from adjacent targets
-
-OR the target is:
-├── Inline (within text)
-├── User-controlled (user can resize)
-├── Essential (no alternative design)
-```
-
-### Accessible Touch Patterns
-
-| Pattern | Accessible Implementation |
-|---------|---------------------------|
-| Swipe actions | Provide menu alternative |
-| Drag and drop | Provide select + move option |
-| Pinch zoom | Provide zoom buttons |
-| Force touch | Provide long press alternative |
-| Shake gesture | Provide button alternative |
-
----
-
-## 8. Emotion in Touch
-
-### The Premium Feel
-
-```
-What makes touch feel "premium":
-├── Instant response (< 50ms)
-├── Appropriate haptic feedback
-├── Smooth 60fps animations
-├── Correct resistance/physics
-├── Sound feedback (when appropriate)
-└── Attention to spring physics
-```
-
-### Emotional Touch Feedback
-
-| Emotion | Touch Response |
-|---------|----------------|
-| Success | Haptic success + confetti/check |
-| Error | Haptic error + shake animation |
-| Warning | Haptic warning + attention color |
-| Delight | Unexpected smooth animation |
-| Power | Heavy haptic on significant action |
-
-### Trust Building Through Touch
-
-```
-Trust signals in touch interactions:
-├── Consistent behavior (same action = same response)
-├── Reliable feedback (never fails silently)
-├── Secure feel for sensitive actions
-├── Professional animations (not janky)
-└── No accidental actions (confirmation for destructive)
+解决方案：渐进披露
+├── 首屏只给 3-5 个选项
+├── 用 "More" 承接额外选项
+├── 按使用频率排序
+└── 记住用户上次选择
 ```
 
 ---
 
-## 9. Touch Psychology Checklist
+## 7. 触控无障碍（Touch Accessibility）
 
-### Before Every Screen
+### 运动障碍考虑（Motor Impairment Considerations）
 
-- [ ] **All touch targets ≥ 44-48px?**
-- [ ] **Primary CTA in thumb zone?**
-- [ ] **Destructive actions require confirmation?**
-- [ ] **Gesture alternatives exist (visible buttons)?**
-- [ ] **Haptic feedback on important actions?**
-- [ ] **Immediate visual feedback on tap?**
-- [ ] **Loading states for actions > 100ms?**
+```
+运动障碍用户可能：
+├── 有抖动（需更大目标）
+├── 使用辅助设备（输入方式不同）
+├── 单手使用（触达受限）
+├── 需要更多时间（避免超时）
+└── 更容易误触（需要确认）
 
-### Before Release
+设计响应：
+├── 更大的触控目标（48dp+）
+├── 手势时间可调整
+├── 破坏性操作支持撤销
+├── 支持 Switch Control
+└── 支持语音控制
+```
 
-- [ ] **Tested on smallest supported device?**
-- [ ] **Tested one-handed on large phone?**
-- [ ] **All gestures have visible alternatives?**
-- [ ] **Haptics work correctly (test on device)?**
-- [ ] **Touch targets tested with accessibility settings?**
-- [ ] **No tiny close buttons or icons?**
+### 触控间距标准（Touch Target Spacing, A11y）
+
+```
+WCAG 2.2 Success Criterion 2.5.8：
+
+触控目标必须满足：
+├── 宽度 ≥ 44px
+├── 高度 ≥ 44px
+├── 相邻间距 ≥ 8px
+
+或满足以下条件：
+├── 行内文本（Inline）
+├── 用户可自行放大（User-controlled）
+├── 必要目标（Essential）
+```
+
+### 可达触控模式（Accessible Touch Patterns）
+
+| 模式（Pattern） | 可达实现（Accessible Implementation） |
+|----------------|----------------------------------------|
+| Swipe actions | 提供菜单替代 |
+| Drag and drop | 提供选择 + 移动选项 |
+| Pinch zoom | 提供缩放按钮 |
+| Force touch | 提供长按替代 |
+| Shake gesture | 提供按钮替代 |
 
 ---
 
-## 10. Quick Reference Card
+## 8. 触感中的情绪（Emotion in Touch）
 
-### Touch Target Sizes
+### 高级感来源（The Premium Feel）
+
+```
+“高级触感”来自：
+├── 即时响应（< 50ms）
+├── 合理的 haptic 反馈
+├── 顺滑 60fps 动画
+├── 正确的阻尼与物理感
+├── 适度音效（场景合适时）
+└── 对弹簧物理的细节关注
+```
+
+### 情绪化触控反馈（Emotional Touch Feedback）
+
+| 情绪（Emotion） | 触控反馈（Touch Response） |
+|----------------|---------------------------|
+| Success | 成功 haptic + confetti/check |
+| Error | 错误 haptic + 抖动动画 |
+| Warning | 警告 haptic + 注意色 |
+| Delight | 预期外的顺滑动画 |
+| Power | 关键动作的重触感 |
+
+### 通过触控建立信任（Trust Building Through Touch）
+
+```
+触控中的信任信号：
+├── 一致行为（同操作=同反馈）
+├── 可靠反馈（不默默失败）
+├── 敏感操作更“安全”的手感
+├── 专业级动画（不抖）
+└── 破坏性操作要确认
+```
+
+---
+
+## 9. 触控心理学清单（Touch Psychology Checklist）
+
+### 每个屏幕前（Before Every Screen）
+
+- [ ] **所有触控目标 ≥ 44-48px？**
+- [ ] **主 CTA 在拇指热区？**
+- [ ] **破坏性操作有确认？**
+- [ ] **手势有可见替代入口？**
+- [ ] **关键操作有触感反馈？**
+- [ ] **点击有即时视觉反馈？**
+- [ ] **>100ms 动作有加载态？**
+
+### 发布前（Before Release）
+
+- [ ] **最小设备测试？**
+- [ ] **大屏单手测试？**
+- [ ] **所有手势有可见替代？**
+- [ ] **触感在真机可用？**
+- [ ] **无障碍设置下测试触控目标？**
+- [ ] **没有过小的关闭按钮/图标？**
+
+---
+
+## 10. 速查卡（Quick Reference Card）
+
+### 触控目标尺寸（Touch Target Sizes）
 
 ```
                      iOS        Android     WCAG
@@ -513,15 +513,15 @@ Recommended:       48pt+      56dp+      -
 Spacing:           8pt+       8dp+       8px+
 ```
 
-### Thumb Zone Actions
+### 拇指热区动作（Thumb Zone Actions）
 
 ```
-TOP:      Navigation, settings, back (infrequent)
-MIDDLE:   Content, secondary actions
-BOTTOM:   Primary CTA, tab bar, FAB (frequent)
+TOP:      Navigation, settings, back（低频）
+MIDDLE:   Content, secondary actions（次级）
+BOTTOM:   Primary CTA, tab bar, FAB（高频）
 ```
 
-### Haptic Selection
+### Haptic 选择（Haptic Selection）
 
 ```
 Light:    Selection, toggle, minor
@@ -534,4 +534,4 @@ Warning:  Attention needed
 
 ---
 
-> **Remember:** Every touch is a conversation between user and device. Make it feel natural, responsive, and respectful of human fingers—not precise cursor points.
+> **记住（Remember）**：每一次触控都是用户与设备的对话。要让它自然、响应、尊重人手的真实物理条件，而不是假设“像鼠标一样精准”。
