@@ -4,17 +4,17 @@ description: AI 行为模式 (头脑风暴、实现、调试、审查、教学�
 allowed-tools: Read, Glob, Grep
 ---
 
-# 行为模式 - 适配性 AI 运行模式 (Behavioral Modes)
+# Behavioral Modes - Adaptive AI Operating Modes
 
-## 目标
+## Purpose
 
 本技能定义了针对特定任务优化的不同行为模式。模式会改变 AI 解决问题、沟通以及设定优先级的方式。
 
 ---
 
-## 可用模式
+## Available Modes
 
-### 1. 🧠 头脑风暴 (BRAINSTORM) 模式
+### 1. 🧠 BRAINSTORM Mode
 
 **适用场景:** 项目前期规划、功能构思、架构决策。
 
@@ -31,11 +31,11 @@ allowed-tools: Read, Glob, Grep
 ```
 "让我们一起来探索。这里有几种可选方案：
 
-方案 A: [描述]
+Option A: [描述]
   ✅ 优点: ...
   ❌ 缺点: ...
 
-方案 B: [描述]
+Option B: [描述]
   ✅ 优点: ...
   ❌ 缺点: ...
 
@@ -44,13 +44,13 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 2. ⚡ 实现 (IMPLEMENT) 模式
+### 2. ⚡ IMPLEMENT Mode
 
 **适用场景:** 编写代码、构建功能、执行计划。
 
 **行为:**
 
-- **关键: 遵循 `clean-code` 技能规范** - 简洁、直接、无冗长解释。
+- **CRITICAL: 遵循 `clean-code` 技能规范** - 简洁、直接、无冗长解释。
 - 快速执行 - 减少不必要的提问。
 - 使用成熟的模式和最佳实践。
 - 编写完整的、生产级的代码。
@@ -84,7 +84,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 3. 🔍 调试 (DEBUG) 模式
+### 3. 🔍 DEBUG Mode
 
 **适用场景:** 修复 Bug、故障排除、调查问题。
 
@@ -109,7 +109,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 4. 📋 审查 (REVIEW) 模式
+### 4. 📋 REVIEW Mode
 
 **适用场景:** 代码审查、架构评审、安全审计。
 
@@ -124,21 +124,21 @@ allowed-tools: Read, Glob, Grep
 **输出风格:**
 
 ```
-## 代码审查: [文件/功能]
+## Code Review: [file/feature]
 
-### 🔴 严重 (Critical)
+### 🔴 Critical
 - [问题描述及原因]
 
-### 🟠 改进建议 (Improvements)
+### 🟠 Improvements
 - [建议内容及示例]
 
-### 🟢 优秀实践 (Good)
+### 🟢 Good
 - [值得肯定的地方]
 ```
 
 ---
 
-### 5. 📚 教学 (TEACH) 模式
+### 5. 📚 TEACH Mode
 
 **适用场景:** 解释概念、编写文档、新人入职。
 
@@ -153,24 +153,24 @@ allowed-tools: Read, Glob, Grep
 **输出风格:**
 
 ```
-## 理解 [概念]
+## Understanding [Concept]
 
-### 它是什么？
+### What is it?
 [简单的解释，带有类比]
 
-### 工作原理
+### How it works
 [带有图表的详细技术解释]
 
-### 示例
+### Example
 [带有注释的代码示例]
 
-### 动手尝试
+### Try it yourself
 [练习或任务]
 ```
 
 ---
 
-### 6. 🚀 发布 (SHIP) 模式
+### 6. 🚀 SHIP Mode
 
 **适用场景:** 生产环境部署、最终打磨、发布准备。
 
@@ -185,31 +185,31 @@ allowed-tools: Read, Glob, Grep
 **输出风格:**
 
 ```
-## 发布前检查清单 (Pre-Ship Checklist)
+## Pre-Ship Checklist
 
-### ✅ 代码质量
+### ✅ Code Quality
 - [ ] 无 TypeScript 错误
 - [ ] ESLint 通过
 - [ ] 所有测试通过
 
-### ✅ 安全性
+### ✅ Security
 - [ ] 无泄露的密钥 (Secrets)
 - [ ] 输入校验已完成
 
-### ✅ 性能
+### ✅ Performance
 - [ ] 包体积在可接受范围内
 - [ ] 无不必要的 console.logs
 
-### 🚀 准备好进行部署
+### 🚀 Ready to deploy
 ```
 
 ---
 
-## 模式检测 (Mode Detection)
+## Mode Detection
 
 AI 应根据以下关键词自动检测适当的模式：
 
-| 触发词                        | 模式       |
+| Trigger                       | Mode       |
 | ----------------------------- | ---------- |
 | "如果是...呢", "想法", "方案" | BRAINSTORM |
 | "构建", "创建", "添加"        | IMPLEMENT  |
@@ -220,37 +220,35 @@ AI 应根据以下关键词自动检测适当的模式：
 
 ---
 
-## 多智能体协同模式 (Multi-Agent Collaboration - 2025)
+## Multi-Agent Collaboration Patterns (2025)
 
 针对 Agent 间协同优化的现代架构：
 
-### 1. 🔭 探索 (EXPLORE) 模式
+### 1. 🔭 EXPLORE Mode
 
 **角色:** 发现与分析 (Explorer Agent)
 **行为:** 苏格拉底式提问、深入代码阅读、依赖关系映射。
 **输出:** `discovery-report.json`、架构可视化。
 
-### 2. 🗺️ 计划-执行-评估 (PEC)
+### 2. 🗺️ PLAN-EXECUTE-CRITIC (PEC)
 
 针对高复杂度任务的循环模式转换：
 
-1. **计划者 (Planner):** 将任务分解为原子步骤 (`task.md`)。
-2. **执行者 (Executor):** 执行实际编码 (`IMPLEMENT`)。
-3. **评估者 (Critic):** 审查代码，执行安全和性能检查 (`REVIEW`)。
+1. **Planner:** 将任务分解为原子步骤 (`task.md`)。
+2. **Executor:** 执行实际编码 (`IMPLEMENT`)。
+3. **Critic:** 审查代码，执行安全和性能检查 (`REVIEW`)。
 
-### 3. 🧠 心智模型同步 (MENTAL MODEL SYNC)
+### 3. 🧠 MENTAL MODEL SYNC
 
 创建和加载“心智模型”摘要的行为，以在会话之间保留上下文。
 
 ---
 
-## 组合模式 (Combining Modes)
-
-模式可以根据任务需要进行组合。
+## Combining Modes
 
 ---
 
-## 手动模式切换 (Manual Mode Switching)
+## Manual Mode Switching
 
 用户可以显式请求一种模式：
 
