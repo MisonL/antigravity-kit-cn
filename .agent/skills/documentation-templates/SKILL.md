@@ -4,25 +4,25 @@ description: 文档模板与结构指南。包含 README、API 文档、代码�
 allowed-tools: Read, Glob, Grep
 ---
 
-# 文档模板 (Documentation Templates)
+# 文档模板
 
 > 常见文档类型的模板与结构指南。
 
 ---
 
-## 1. README 结构 (README Structure)
+## 1. README 结构
 
 ### 核心章节（按优先级排序）
 
 | 章节                         | 用途                      |
 | ---------------------------- | ------------------------- |
-| **标题与单句描述 (Title)**   | 这是什么项目？            |
-| **快速开始 (Quick Start)**   | 如何在 5 分钟内运行起来？ |
-| **功能特性 (Features)**      | 用户能用它做什么？        |
-| **配置指南 (Configuration)** | 如何自定义设置？          |
-| **API 参考**                 | 指向详细文档的链接        |
-| **贡献指南 (Contributing)**  | 如何参与开发？            |
-| **开源协议 (License)**       | 法律条款                  |
+| **标题与单句描述（Title）**   | 这是什么项目？            |
+| **快速开始（Quick Start）**   | 如何在 5 分钟内运行起来？ |
+| **功能特性（Features）**      | 用户能用它做什么？        |
+| **配置指南（Configuration）** | 如何自定义设置？          |
+| **API 参考**                  | 指向详细文档的链接        |
+| **贡献指南（Contributing）**  | 如何参与开发？            |
+| **开源协议（License）**       | 法律条款                  |
 
 ### README 模板示例
 
@@ -58,7 +58,7 @@ MIT
 
 ---
 
-## 2. API 文档结构 (API Documentation Structure)
+## 2. API 文档结构
 
 ### 接口模板示例
 
@@ -74,7 +74,7 @@ MIT
 
 **响应结果：**
 
-- 200：用户对象 (User object)
+- 200：用户对象（User object）
 - 404：未找到该用户
 
 **代码示例：**
@@ -83,7 +83,7 @@ MIT
 
 ---
 
-## 3. 代码注释指南 (Code Comment Guidelines)
+## 3. 代码注释指南
 
 ### JSDoc/TSDoc 模板
 
@@ -107,16 +107,16 @@ MIT
 | 解释“为什么”(业务逻辑)   | 解释“是什么”(显而易见的逻辑) |
 | 复杂的算法实现           | 每一行代码都写注释           |
 | 非直观的行为表现         | 自解释的代码                 |
-| API 契约协议 (Contracts) | 具体的实现细节               |
+| API 契约协议（Contracts） | 具体的实现细节               |
 
 ---
 
-## 4. 变更日志模板 (Changelog Template)
+## 4. 变更日志模板
 
 遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/) 规范：
 
 ```markdown
-# 变更日志 (Changelog)
+# 变更日志（Changelog）
 
 ## [尚未发布]
 
@@ -141,35 +141,35 @@ MIT
 
 ---
 
-## 5. 架构决策记录 (ADR) (Architecture Decision Record)
+## 5. 架构决策记录（ADR）
 
 ```markdown
 # ADR-001: [标题]
 
-## 状态 (Status)
+## 状态（Status）
 
-已接受 (Accepted) / 已弃用 (Deprecated) / 已被取代 (Superseded)
+已接受（Accepted）/ 已弃用（Deprecated）/ 已被取代（Superseded）
 
-## 上下文 (Context)
+## 上下文（Context）
 
 我们为什么要做出这个决策？
 
-## 决策 (Decision)
+## 决策（Decision）
 
 我们最终决定了什么？
 
-## 后果 (Consequences)
+## 后果（Consequences）
 
-有哪些权衡 (Trade-offs)？
+有哪些权衡（Trade-offs）？
 ```
 
 ---
 
-## 6. AI 友好型文档 (2025) (AI-Friendly Documentation)
+## 6. AI 友好型文档（2025）
 
 ### llms.txt 模板
 
-专为 AI 爬虫与代理 (Agents) 设计：
+专为 AI 爬虫与代理（Agents）设计：
 
 ```markdown
 # 项目名称
@@ -195,15 +195,15 @@ MIT
 - 采用清晰的 H1-H3 标题层级。
 - 针对数据结构提供 JSON/YAML 示例。
 - 使用 Mermaid 图表描述流程。
-- 章节内容保持自包含性 (Self-contained)。
+- 章节内容保持自包含性（Self-contained）。
 
 ---
 
-## 7. 结构原则 (Structure Principles)
+## 7. 结构原则
 
 | 原则                     | 理由                 |
 | ------------------------ | -------------------- |
-| **可读性强 (Scannable)** | 使用标题、列表、表格 |
+| **可读性强（Scannable）** | 使用标题、列表、表格 |
 | **示例优先**             | 演示而非单纯口述     |
 | **由浅入深**             | 简单 → 复杂          |
 | **保持更新**             | 过时的文档会产生误导 |
@@ -213,4 +213,3 @@ MIT
 > **谨记：** 模板只是起点。请根据您项目的实际需求进行灵活调整。
 
 ---
-
