@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: 架构决策框架。需求分析、权衡评估、ADR 文档。在做架构决策或分析系统设计时使用。
+description: Architectural decision-making framework. Requirements analysis, trade-off evaluation, ADR documentation. Use when making architecture decisions or analyzing system design.
 allowed-tools: Read, Glob, Grep
 ---
 
@@ -22,7 +22,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 🔗 相关技能
+## 🔗 相关技能 (Related Skills)
 
 | 技能                              | 用途               |
 | --------------------------------- | ------------------ |
