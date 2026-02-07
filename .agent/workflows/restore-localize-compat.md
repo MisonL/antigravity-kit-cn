@@ -118,6 +118,17 @@ $ARGUMENTS
 
 - 命令、参数、路径、占位符保持原样；只翻译解释文本。
 
+### 示例 3.1：示例命令中的提示词未翻译（禁止）
+
+错误写法（违规）：
+
+- 保留英文提示词：`python scripts/search.py "fintech crypto" --design-system`
+
+正确写法（合规）：
+
+- 仅翻译提示词语义，命令结构不变：`python scripts/search.py "金融 科技 加密" --design-system`
+- 或：`python scripts/search.py "为金融科技产品生成设计系统关键词" --design-system`
+
 ### 示例 4：代码块“优化重排”（禁止）
 
 错误写法（违规）：
@@ -150,23 +161,32 @@ $ARGUMENTS
 
 ---
 
-## 术语保留规则（不要翻译）
+## 术语保留与双语标注规则
 
-默认保留英文写法：
+针对“英文专用/通用名称”，执行以下规则：
 
-- Antigravity
-- Codex
-- Skill / Skills
-- Agent / Agents
-- Workflow / Workflows
-- Rule / Rules
-- MCP
-- CLI
-- Frontmatter
-- Schema
-- API / SDK
-- URL
-- path
+1. **原名保留**：英文原名必须保留，不得强行替换为纯中文。
+2. **首次双语**：同一文档内首次出现时，使用 `English（中文）` 格式。
+3. **后续一致**：后续可使用 `English` 或 `English（中文）`，但全篇保持一致，不得混乱切换。
+4. **机制文本例外**：命令、参数、路径、占位符、Frontmatter key 一律保持原样，不追加中文到代码/命令本体中。
+5. **示例命令中的提示词需汉化**：若命令参数中包含自然语言提示词（prompt/query），该提示词需做语义中文翻译。
+6. **禁止反向格式**：避免把术语写成“中文（English）”作为主格式，默认以英文原名为主。
+
+推荐术语首现写法示例：
+
+- Antigravity（反重力框架）
+- Codex（代码智能体环境）
+- Agent（智能体）
+- Skill（技能）
+- Workflow（工作流）
+- Rule（规则）
+- MCP（模型上下文协议）
+- CLI（命令行界面）
+- Frontmatter（文档头元数据）
+- Schema（模式定义）
+- API（应用程序接口）/ SDK（软件开发工具包）
+- URL（统一资源定位符）
+- path（路径）
 
 ---
 
@@ -229,6 +249,7 @@ diff -u reference/antigravity-kit/<file> <file>
 2. 代码块数量与上游一致。
 3. 机制关键字不丢失（命令、参数、脚本名、路径、工作流触发词）。
 4. 不允许出现“本地新增解释覆盖上游原意”的段落。
+5. 示例命令中若包含自然语言提示词，提示词已完成语义汉化（仅提示词翻译，命令结构不变）。
 
 ---
 
