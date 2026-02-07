@@ -14,12 +14,12 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ### 链式命令 (Chaining Commands)
 
-| 操作符 | 含义               | 示例                         |
-| ------ | ------------------ | ---------------------------- | ------------------ | ----------- | --- | -------------------- |
-| `;`    | 顺序执行           | `cmd1; cmd2`                 |
-| `&&`   | 前一命令成功后执行 | `npm install && npm run dev` |
-| `      |                    | `                            | 前一命令失败后执行 | `npm test   |     | echo "测试执行失败"` |
-| `      | `                  | 管道 (Pipe) 输出             | `ls                | grep ".js"` |
+| 操作符 | 含义               | 示例                                |
+| ------ | ------------------ | ----------------------------------- |
+| `;`    | 顺序执行           | `cmd1; cmd2`                        |
+| `&&`   | 前一命令成功后执行 | `npm install && npm run dev`        |
+| `\|\|` | 前一命令失败后执行 | `npm test \|\| echo "测试执行失败"` |
+| `\|`   | 管道 (Pipe) 输出   | `ls \| grep ".js"`                  |
 
 ---
 
@@ -44,9 +44,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ## 3. 进程管理 (Process Management)
 
 | 任务               | 命令                          |
-| ------------------ | ----------------------------- | ---------- |
+| ------------------ | ----------------------------- |
 | 列出所有进程       | `ps aux`                      |
-| 按名称查找进程     | `ps aux                       | grep node` |
+| 按名称查找进程     | `ps aux \| grep node`         |
 | 按 PID 杀掉进程    | `kill -9 <PID>`               |
 | 查找占用端口的程序 | `lsof -i :3000`               |
 | 关掉端口占用       | `kill -9 $(lsof -t -i :3000)` |
@@ -61,13 +61,13 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ### 核心工具 (Core Tools)
 
 | 工具   | 用途               | 示例                            |
-| ------ | ------------------ | ------------------------------- | -------- |
+| ------ | ------------------ | ------------------------------- |
 | `grep` | 搜索               | `grep -rn "TODO" src/`          |
 | `sed`  | 替换               | `sed -i 's/old/new/g' file.txt` |
 | `awk`  | 列提取             | `awk '{print $1}' file.txt`     |
 | `cut`  | 字段切割           | `cut -d',' -f1 data.csv`        |
 | `sort` | 排序               | `sort -u file.txt`              |
-| `uniq` | 去重/统计 (Unique) | `sort file.txt                  | uniq -c` |
+| `uniq` | 去重/统计 (Unique) | `sort file.txt \| uniq -c`      |
 | `wc`   | 计数 (Count)       | `wc -l file.txt`                |
 
 ---
