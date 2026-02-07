@@ -1,516 +1,516 @@
-# Mobile Decision Trees
+# 移动端决策树（Mobile Decision Trees）
 
-> Framework selection, state management, storage strategy, and context-based decisions.
-> **These are THINKING guides, not copy-paste answers.**
+> 框架选择、状态管理、存储策略与上下文决策。
+> **这些是“思考指引”，不是可复制粘贴的答案。**
 
 ---
 
-## 1. Framework Selection
+## 1. 框架选择（Framework Selection）
 
-### Master Decision Tree
+### 总决策树（Master Decision Tree）
 
 ```
-WHAT ARE YOU BUILDING?
+你在做什么类型的产品？
         │
-        ├── Need OTA updates without app store review?
+        ├── 需要 OTA 更新且不走应用商店审核？
         │   │
-        │   ├── Yes → React Native + Expo
-        │   │         ├── Expo Go for development
-        │   │         ├── EAS Update for production OTA
-        │   │         └── Best for: rapid iteration, web teams
+        │   ├── 是 → React Native + Expo
+        │   │         ├── Expo Go 供开发调试
+        │   │         ├── EAS Update 生产 OTA
+        │   │         └── 适合：快速迭代、Web 团队
         │   │
-        │   └── No → Continue ▼
+        │   └── 否 → 继续 ▼
         │
-        ├── Need pixel-perfect custom UI across platforms?
+        ├── 需要跨平台像素级一致 UI？
         │   │
-        │   ├── Yes → Flutter
-        │   │         ├── Custom rendering engine
-        │   │         ├── Single UI for iOS + Android
-        │   │         └── Best for: branded, visual apps
+        │   ├── 是 → Flutter
+        │   │         ├── 自定义渲染引擎
+        │   │         ├── iOS + Android 同一 UI
+        │   │         └── 适合：强品牌视觉型 App
         │   │
-        │   └── No → Continue ▼
+        │   └── 否 → 继续 ▼
         │
-        ├── Heavy native features (ARKit, HealthKit, specific sensors)?
+        ├── 强原生能力（ARKit/HealthKit/特定传感器）？
         │   │
-        │   ├── iOS only → SwiftUI / UIKit
-        │   │              └── Maximum native capability
+        │   ├── 仅 iOS → SwiftUI / UIKit
+        │   │              └── 原生能力最大化
         │   │
-        │   ├── Android only → Kotlin + Jetpack Compose
-        │   │                  └── Maximum native capability
+        │   ├── 仅 Android → Kotlin + Jetpack Compose
+        │   │                  └── 原生能力最大化
         │   │
-        │   └── Both → Consider native with shared logic
-        │              └── Kotlin Multiplatform for shared
+        │   └── 两端都要 → 考虑原生 + 共享逻辑
+        │              └── Kotlin Multiplatform 共享逻辑
         │
-        ├── Existing web team + TypeScript codebase?
+        ├── 已有 Web 团队 + TypeScript 代码库？
         │   │
-        │   └── Yes → React Native
-        │             ├── Familiar paradigm for React devs
-        │             ├── Share code with web (limited)
-        │             └── Large ecosystem
+        │   └── 是 → React Native
+        │             ├── React 开发者上手快
+        │             ├── 可与 Web 共享部分代码
+        │             └── 生态成熟
         │
-        └── Enterprise with existing Flutter team?
+        └── 企业已有 Flutter 团队？
             │
-            └── Yes → Flutter
-                      └── Leverage existing expertise
+            └── 是 → Flutter
+                      └── 复用既有经验
 ```
 
-### Framework Comparison
+### 框架对比（Framework Comparison）
 
-| Factor | React Native | Flutter | Native (Swift/Kotlin) |
-|--------|-------------|---------|----------------------|
+| 维度（Factor） | React Native | Flutter | Native（Swift/Kotlin） |
+|---------------|-------------|---------|-------------------------|
 | **OTA Updates** | ✅ Expo | ❌ No | ❌ No |
-| **Learning Curve** | Low (React devs) | Medium | Higher |
-| **Performance** | Good | Excellent | Best |
-| **UI Consistency** | Platform-native | Identical | Platform-native |
-| **Bundle Size** | Medium | Larger | Smallest |
-| **Native Access** | Via bridges | Via channels | Direct |
-| **Hot Reload** | ✅ | ✅ | ✅ (Xcode 15+) |
+| **学习曲线** | 低（React 开发者友好） | 中 | 高 |
+| **性能** | 好 | 很好 | 最佳 |
+| **UI 一致性** | 平台原生风格 | 跨平台一致 | 平台原生风格 |
+| **包体积** | 中 | 更大 | 最小 |
+| **原生访问** | Bridge | Channel | 直接 |
+| **热更新/热重载** | ✅ | ✅ | ✅（Xcode 15+） |
 
-### When to Choose Native
+### 何时选择原生（When to Choose Native）
 
 ```
-CHOOSE NATIVE WHEN:
-├── Maximum performance required (games, 3D)
-├── Deep OS integration needed
-├── Platform-specific features are core
-├── Team has native expertise
-├── App store presence is primary
-└── Long-term maintenance priority
+选择原生当：
+├── 必须极致性能（游戏、3D）
+├── 深度系统集成
+├── 平台特性是核心卖点
+├── 团队已有原生能力
+├── 应用商店体验是核心
+└── 长期维护优先
 
-AVOID NATIVE WHEN:
-├── Limited budget/time
-├── Need rapid iteration
-├── Identical UI on both platforms
-├── Team is web-focused
-└── Cross-platform is priority
+避免原生当：
+├── 预算/时间紧
+├── 需要快速迭代
+├── 两端 UI 强一致
+├── 团队偏 Web 技术栈
+└── 跨平台优先
 ```
 
 ---
 
-## 2. State Management Selection
+## 2. 状态管理选择（State Management Selection）
 
-### React Native State Decision
+### React Native 状态决策
 
 ```
-WHAT'S YOUR STATE COMPLEXITY?
+你的状态复杂度如何？
         │
-        ├── Simple app, few screens, minimal shared state
+        ├── 简单 App，屏幕少，共享状态少
         │   │
-        │   └── Zustand (or just useState/Context)
-        │       ├── Minimal boilerplate
-        │       ├── Easy to understand
-        │       └── Scales OK to medium
+        │   └── Zustand（或 useState/Context）
+        │       ├── 样板少
+        │       ├── 易理解
+        │       └── 可扩展到中等规模
         │
-        ├── Primarily server data (API-driven)
+        ├── 主要是服务器数据（API 驱动）
         │   │
-        │   └── TanStack Query (React Query) + Zustand
-        │       ├── Query for server state
-        │       ├── Zustand for UI state
-        │       └── Excellent caching, refetching
+        │   └── TanStack Query（React Query）+ Zustand
+        │       ├── Query 负责 server state
+        │       ├── Zustand 负责 UI state
+        │       └── 缓存/重拉做得好
         │
-        ├── Complex app with many features
+        ├── 功能复杂、模块多
         │   │
         │   └── Redux Toolkit + RTK Query
-        │       ├── Predicable, debuggable
-        │       ├── RTK Query for API
-        │       └── Good for large teams
+        │       ├── 可预测、易调试
+        │       ├── RTK Query 管 API
+        │       └── 适合大团队协作
         │
-        └── Atomic, granular state needs
+        └── 需要原子级细粒度状态
             │
             └── Jotai
-                ├── Atom-based (like Recoil)
-                ├── Minimizes re-renders
-                └── Good for derived state
+                ├── 原子状态（类似 Recoil）
+                ├── 降低重渲染
+                └── 适合衍生状态
 ```
 
-### Flutter State Decision
+### Flutter 状态决策
 
 ```
-WHAT'S YOUR STATE COMPLEXITY?
+你的状态复杂度如何？
         │
-        ├── Simple app, learning Flutter
+        ├── 简单 App，或处于学习 Flutter
         │   │
-        │   └── Provider (or setState)
-        │       ├── Official, simple
-        │       ├── Built into Flutter
-        │       └── Good for small apps
+        │   └── Provider（或 setState）
+        │       ├── 官方方案，简单
+        │       ├── Flutter 内置习惯
+        │       └── 适合小型项目
         │
-        ├── Modern, type-safe, testable
+        ├── 现代、类型安全、可测试
         │   │
         │   └── Riverpod 2.0
-        │       ├── Compile-time safety
-        │       ├── Code generation
-        │       ├── Excellent for medium-large apps
-        │       └── Recommended for new projects
+        │       ├── 编译期安全
+        │       ├── 支持代码生成
+        │       ├── 适合中大型项目
+        │       └── 新项目推荐
         │
-        ├── Enterprise, strict patterns needed
+        ├── 企业级，需要严谨模式
         │   │
         │   └── BLoC
-        │       ├── Event → State pattern
-        │       ├── Very testable
-        │       ├── More boilerplate
-        │       └── Good for large teams
+        │       ├── Event → State 模式
+        │       ├── 很易测试
+        │       ├── 样板较多
+        │       └── 适合大团队
         │
-        └── Quick prototyping
+        └── 快速原型
             │
-            └── GetX (with caution)
-                ├── Fast to implement
-                ├── Less strict patterns
-                └── Can become messy at scale
+            └── GetX（谨慎使用）
+                ├── 上手快
+                ├── 约束较少
+                └── 大型项目易混乱
 ```
 
-### State Management Anti-Patterns
+### 状态管理反模式（State Management Anti-Patterns）
 
 ```
-❌ DON'T:
-├── Use global state for everything
-├── Mix state management approaches
-├── Store server state in local state
-├── Skip state normalization
-├── Overuse Context (re-render heavy)
-└── Put navigation state in app state
+❌ 不要：
+├── 所有状态都放全局
+├── 一个项目混用多套方案
+├── 把 server state 放在 local state
+├── 不做状态归一化
+├── 过度使用 Context（重渲染严重）
+└── 把导航状态塞进业务状态
 
-✅ DO:
-├── Server state → Query library
-├── UI state → Minimal, local first
-├── Lift state only when needed
-├── Choose ONE approach per project
-└── Keep state close to where it's used
+✅ 应该：
+├── Server state → Query 类库
+├── UI state → 先局部、再上提
+├── 只在需要时上提状态
+├── 项目只选一套方案
+└── 状态贴近使用位置
 ```
 
 ---
 
-## 3. Navigation Pattern Selection
+## 3. 导航模式选择（Navigation Pattern Selection）
 
 ```
-HOW MANY TOP-LEVEL DESTINATIONS?
+顶层入口有几个？
         │
-        ├── 2 destinations
-        │   └── Consider: Top tabs or simple stack
+        ├── 2 个入口
+        │   └── 可能用 Top tabs 或简单 Stack
         │
-        ├── 3-5 destinations (equal importance)
+        ├── 3-5 个入口（同等重要）
         │   └── ✅ Tab Bar / Bottom Navigation
-        │       ├── Most common pattern
-        │       └── Easy discovery
+        │       ├── 最常见模式
+        │       └── 可发现性强
         │
-        ├── 5+ destinations
+        ├── 5+ 个入口
         │   │
-        │   ├── All important → Drawer Navigation
-        │   │                   └── Hidden but many options
+        │   ├── 都重要 → Drawer Navigation
+        │   │             └── 入口多但隐藏
         │   │
-        │   └── Some less important → Tab bar + drawer hybrid
+        │   └── 有些不重要 → Tab + Drawer 混合
         │
-        └── Single linear flow?
-            └── Stack Navigation only
-                └── Onboarding, checkout, etc.
+        └── 单一线性流程？
+            └── 仅 Stack Navigation
+                └── Onboarding、Checkout 等
 ```
 
-### Navigation by App Type
+### 按 App 类型选择导航（Navigation by App Type）
 
-| App Type | Pattern | Reason |
-|----------|---------|--------|
-| Social (Instagram) | Tab bar | Frequent switching |
-| E-commerce | Tab bar + stack | Categories as tabs |
-| Email (Gmail) | Drawer + list-detail | Many folders |
-| Settings | Stack only | Deep drill-down |
-| Onboarding | Stack wizard | Linear flow |
-| Messaging | Tab (chats) + stack | Threads |
+| App 类型 | 模式 | 原因 |
+|----------|------|------|
+| 社交（Instagram） | Tab bar | 高频切换 |
+| 电商 | Tab bar + stack | 分类为 Tab |
+| 邮箱（Gmail） | Drawer + list-detail | 文件夹多 |
+| 设置 | Stack only | 深层级 |
+| 引导流程 | Stack wizard | 线性流程 |
+| IM/聊天 | Tab（会话）+ stack | 线程内深入 |
 
 ---
 
-## 4. Storage Strategy Selection
+## 4. 存储策略选择（Storage Strategy Selection）
 
 ```
-WHAT TYPE OF DATA?
+数据类型是什么？
         │
-        ├── Sensitive (tokens, passwords, keys)
+        ├── 敏感数据（token、密码、密钥）
         │   │
-        │   └── ✅ Secure Storage
-        │       ├── iOS: Keychain
-        │       ├── Android: EncryptedSharedPreferences
-        │       └── RN: expo-secure-store / react-native-keychain
+        │   └── ✅ 安全存储（Secure Storage）
+        │       ├── iOS：Keychain
+        │       ├── Android：EncryptedSharedPreferences
+        │       └── RN：expo-secure-store / react-native-keychain
         │
-        ├── User preferences (settings, theme)
+        ├── 用户偏好（设置、主题）
         │   │
-        │   └── ✅ Key-Value Storage
-        │       ├── iOS: UserDefaults
-        │       ├── Android: SharedPreferences
-        │       └── RN: AsyncStorage / MMKV
+        │   └── ✅ Key-Value 存储
+        │       ├── iOS：UserDefaults
+        │       ├── Android：SharedPreferences
+        │       └── RN：AsyncStorage / MMKV
         │
-        ├── Structured data (entities, relationships)
+        ├── 结构化数据（实体/关系）
         │   │
-        │   └── ✅ Database
-        │       ├── SQLite (expo-sqlite, sqflite)
-        │       ├── Realm (NoSQL, reactive)
-        │       └── WatermelonDB (large datasets)
+        │   └── ✅ 数据库
+        │       ├── SQLite（expo-sqlite, sqflite）
+        │       ├── Realm（NoSQL, reactive）
+        │       └── WatermelonDB（大数据集）
         │
-        ├── Large files (images, documents)
+        ├── 大文件（图片、文档）
         │   │
-        │   └── ✅ File System
-        │       ├── iOS: Documents / Caches directory
-        │       ├── Android: Internal/External storage
-        │       └── RN: react-native-fs / expo-file-system
+        │   └── ✅ 文件系统
+        │       ├── iOS：Documents / Caches
+        │       ├── Android：Internal/External storage
+        │       └── RN：react-native-fs / expo-file-system
         │
-        └── Cached API data
+        └── API 缓存数据
             │
-            └── ✅ Query Library Cache
-                ├── TanStack Query (RN)
-                ├── Riverpod async (Flutter)
-                └── Automatic invalidation
+            └── ✅ Query 库缓存
+                ├── TanStack Query（RN）
+                ├── Riverpod async（Flutter）
+                └── 自动失效管理
 ```
 
-### Storage Comparison
+### 存储对比（Storage Comparison）
 
-| Storage | Speed | Security | Capacity | Use Case |
-|---------|-------|----------|----------|----------|
-| Secure Storage | Medium | 🔒 High | Small | Tokens, secrets |
-| Key-Value | Fast | Low | Medium | Settings |
-| SQLite | Fast | Low | Large | Structured data |
-| File System | Medium | Low | Very Large | Media, documents |
-| Query Cache | Fast | Low | Medium | API responses |
+| 存储（Storage） | 速度（Speed） | 安全（Security） | 容量（Capacity） | 场景（Use Case） |
+|----------------|--------------|------------------|------------------|-----------------|
+| Secure Storage | 中 | 🔒 高 | 小 | token、密钥 |
+| Key-Value | 快 | 低 | 中 | 设置偏好 |
+| SQLite | 快 | 低 | 大 | 结构化数据 |
+| File System | 中 | 低 | 很大 | 媒体、文档 |
+| Query Cache | 快 | 低 | 中 | API 响应 |
 
 ---
 
-## 5. Offline Strategy Selection
+## 5. 离线策略选择（Offline Strategy Selection）
 
 ```
-HOW CRITICAL IS OFFLINE?
+离线有多关键？
         │
-        ├── Nice to have (works when possible)
+        ├── 可有可无（尽量能用）
         │   │
-        │   └── Cache last data + show stale
-        │       ├── Simple implementation
-        │       ├── TanStack Query with staleTime
-        │       └── Show "last updated" timestamp
+        │   └── 缓存上次数据 + 标记过期
+        │       ├── 实现简单
+        │       ├── TanStack Query + staleTime
+        │       └── 展示“最后更新时间”
         │
-        ├── Essential (core functionality offline)
+        ├── 关键（核心功能必须离线）
         │   │
-        │   └── Offline-first architecture
-        │       ├── Local database as source of truth
-        │       ├── Sync to server when online
-        │       ├── Conflict resolution strategy
-        │       └── Queue actions for later sync
+        │   └── Offline-first 架构
+        │       ├── 本地数据库是事实源（source of truth）
+        │       ├── 联网时同步服务器
+        │       ├── 冲突解决策略
+        │       └── 操作入队，稍后同步
         │
-        └── Real-time critical (collaboration, chat)
+        └── 实时关键（协作、聊天）
             │
-            └── WebSocket + local queue
+            └── WebSocket + 本地队列
                 ├── Optimistic updates
-                ├── Eventual consistency
-                └── Complex conflict handling
+                ├── 最终一致性
+                └── 冲突处理更复杂
 ```
 
-### Offline Implementation Patterns
+### 离线实现模式（Offline Implementation Patterns）
 
 ```
-1. CACHE-FIRST (Simple)
-   Request → Check cache → If stale, fetch → Update cache
-   
+1. CACHE-FIRST（简单）
+   Request → 查缓存 → 过期则拉取 → 更新缓存
+
 2. STALE-WHILE-REVALIDATE
-   Request → Return cached → Fetch update → Update UI
-   
-3. OFFLINE-FIRST (Complex)
-   Action → Write to local DB → Queue sync → Sync when online
-   
+   Request → 返回缓存 → 后台更新 → 更新 UI
+
+3. OFFLINE-FIRST（复杂）
+   Action → 写本地 DB → 入队同步 → 联网后同步
+
 4. SYNC ENGINE
    Use: Firebase, Realm Sync, Supabase realtime
-   Handles conflict resolution automatically
+   自动处理冲突
 ```
 
 ---
 
-## 6. Authentication Pattern Selection
+## 6. 认证模式选择（Authentication Pattern Selection）
 
 ```
-WHAT AUTH TYPE NEEDED?
+需要哪种认证？
         │
-        ├── Simple email/password
+        ├── 简单邮箱/密码
         │   │
-        │   └── Token-based (JWT)
-        │       ├── Store refresh token securely
-        │       ├── Access token in memory
-        │       └── Silent refresh flow
+        │   └── Token-based（JWT）
+        │       ├── Refresh token 安全存储
+        │       ├── Access token 放内存
+        │       └── 静默刷新
         │
-        ├── Social login (Google, Apple, etc.)
+        ├── 社交登录（Google/Apple 等）
         │   │
         │   └── OAuth 2.0 + PKCE
-        │       ├── Use platform SDKs
-        │       ├── Deep link callback
-        │       └── Apple Sign-In required for iOS
+        │       ├── 使用平台 SDK
+        │       ├── Deep link 回调
+        │       └── iOS 必须支持 Apple Sign-In
         │
-        ├── Enterprise/SSO
+        ├── 企业级 SSO
         │   │
         │   └── OIDC / SAML
-        │       ├── Web view or system browser
-        │       └── Handle redirect properly
+        │       ├── WebView 或系统浏览器
+        │       └── 正确处理重定向
         │
-        └── Biometric (FaceID, fingerprint)
+        └── 生物识别（FaceID / 指纹）
             │
-            └── Local auth + secure token
-                ├── Biometrics unlock stored token
-                ├── Not a replacement for server auth
-                └── Fallback to PIN/password
+            └── 本地验证 + 安全 token
+                ├── 通过生物识别解锁 token
+                ├── 不能替代服务端认证
+                └── 兜底 PIN/密码
 ```
 
-### Auth Token Storage
+### Token 存储（Auth Token Storage）
 
 ```
-❌ NEVER store tokens in:
-├── AsyncStorage (plain text)
-├── Redux/state (not persisted correctly)
-├── Local storage equivalent
-└── Logs or debug output
+❌ 绝不存 token 于：
+├── AsyncStorage（明文）
+├── Redux/state（不可控持久化）
+├── Local storage 等价物
+└── Logs 或 debug 输出
 
-✅ ALWAYS store tokens in:
-├── iOS: Keychain
-├── Android: EncryptedSharedPreferences
-├── Expo: SecureStore
-├── Biometric-protected if available
-```
-
----
-
-## 7. Project Type Templates
-
-### E-Commerce App
-
-```
-RECOMMENDED STACK:
-├── Framework: React Native + Expo (OTA for pricing)
-├── Navigation: Tab bar (Home, Search, Cart, Account)
-├── State: TanStack Query (products) + Zustand (cart)
-├── Storage: SecureStore (auth) + SQLite (cart cache)
-├── Offline: Cache products, queue cart actions
-└── Auth: Email/password + Social + Apple Pay
-
-KEY DECISIONS:
-├── Product images: Lazy load, cache aggressively
-├── Cart: Sync across devices via API
-├── Checkout: Secure, minimal steps
-└── Deep links: Product shares, marketing
-```
-
-### Social/Content App
-
-```
-RECOMMENDED STACK:
-├── Framework: React Native or Flutter
-├── Navigation: Tab bar (Feed, Search, Create, Notifications, Profile)
-├── State: TanStack Query (feed) + Zustand (UI)
-├── Storage: SQLite (feed cache, drafts)
-├── Offline: Cache feed, queue posts
-└── Auth: Social login primary, Apple required
-
-KEY DECISIONS:
-├── Feed: Infinite scroll, memoized items
-├── Media: Upload queuing, background upload
-├── Push: Deep link to content
-└── Real-time: WebSocket for notifications
-```
-
-### Productivity/SaaS App
-
-```
-RECOMMENDED STACK:
-├── Framework: Flutter (consistent UI) or RN
-├── Navigation: Drawer or Tab bar
-├── State: Riverpod/BLoC or Redux Toolkit
-├── Storage: SQLite (offline), SecureStore (auth)
-├── Offline: Full offline editing, sync
-└── Auth: SSO/OIDC for enterprise
-
-KEY DECISIONS:
-├── Data sync: Conflict resolution strategy
-├── Collaborative: Real-time or eventual?
-├── Files: Large file handling
-└── Enterprise: MDM, compliance
+✅ 必须存 token 于：
+├── iOS：Keychain
+├── Android：EncryptedSharedPreferences
+├── Expo：SecureStore
+├── 可用时开启生物识别保护
 ```
 
 ---
 
-## 8. Decision Checklist
+## 7. 项目类型模板（Project Type Templates）
 
-### Before Starting ANY Project
-
-- [ ] Target platforms defined (iOS/Android/both)?
-- [ ] Framework selected based on criteria?
-- [ ] State management approach chosen?
-- [ ] Navigation pattern selected?
-- [ ] Storage strategy for each data type?
-- [ ] Offline requirements defined?
-- [ ] Auth flow designed?
-- [ ] Deep linking planned from start?
-
-### Questions to Ask User
+### 电商 App（E-Commerce App）
 
 ```
-If project details are vague, ASK:
+推荐栈：
+├── Framework：React Native + Expo（便于 OTA）
+├── Navigation：Tab bar（Home, Search, Cart, Account）
+├── State：TanStack Query（商品）+ Zustand（购物车）
+├── Storage：SecureStore（auth）+ SQLite（购物车缓存）
+├── Offline：缓存商品 + 购物车操作入队
+└── Auth：邮箱/密码 + 社交登录 + Apple Pay
 
-1. "Will this need OTA updates without app store review?"
-   → Affects framework choice (Expo = yes)
-
-2. "Do iOS and Android need identical UI?"
-   → Affects framework (Flutter = identical)
-
-3. "What's the offline requirement?"
-   → Affects architecture complexity
-
-4. "Is there an existing backend/auth system?"
-   → Affects auth and API approach
-
-5. "What devices? Phone only, or tablet?"
-   → Affects navigation and layout
-
-6. "Enterprise or consumer?"
-   → Affects auth (SSO), security, compliance
+关键决策：
+├── 商品图：懒加载 + 强缓存
+├── 购物车：跨设备同步
+├── 结算：安全且步骤最少
+└── 深链：商品分享、营销落地
 ```
 
----
-
-## 9. Anti-Pattern Decisions
-
-### ❌ Decision Anti-Patterns
-
-| Anti-Pattern | Why It's Bad | Better Approach |
-|--------------|--------------|-----------------|
-| **Redux for simple app** | Massive overkill | Zustand or context |
-| **Native for MVP** | Slow development | Cross-platform MVP |
-| **Drawer for 3 sections** | Hidden navigation | Tab bar |
-| **AsyncStorage for tokens** | Insecure | SecureStore |
-| **No offline consideration** | Broken on subway | Plan from start |
-| **Same stack for all projects** | Doesn't fit context | Evaluate per project |
-
----
-
-## 10. Quick Reference
-
-### Framework Quick Pick
+### 社交/内容 App（Social/Content App）
 
 ```
-OTA needed?           → React Native + Expo
-Identical UI?         → Flutter
-Maximum performance?  → Native
-Web team?            → React Native
-Quick prototype?     → Expo
+推荐栈：
+├── Framework：React Native 或 Flutter
+├── Navigation：Tab bar（Feed, Search, Create, Notifications, Profile）
+├── State：TanStack Query（feed）+ Zustand（UI）
+├── Storage：SQLite（feed 缓存、草稿）
+├── Offline：缓存 feed + 发布队列
+└── Auth：社交登录为主，iOS 要求 Apple
+
+关键决策：
+├── Feed：无限滚动 + 列表项 memo
+├── Media：上传队列 + 后台上传
+├── Push：深链到内容
+└── Real-time：WebSocket 通知
 ```
 
-### State Quick Pick
+### 生产力/SaaS App（Productivity/SaaS App）
 
 ```
-Simple app?          → Zustand / Provider
-Server-heavy?        → TanStack Query / Riverpod
-Enterprise?          → Redux / BLoC
-Atomic state?        → Jotai
-```
+推荐栈：
+├── Framework：Flutter（一致 UI）或 RN
+├── Navigation：Drawer 或 Tab bar
+├── State：Riverpod/BLoC 或 Redux Toolkit
+├── Storage：SQLite（离线）+ SecureStore（auth）
+├── Offline：完整离线编辑 + 同步
+└── Auth：企业 SSO/OIDC
 
-### Storage Quick Pick
-
-```
-Secrets?             → SecureStore / Keychain
-Settings?            → AsyncStorage / UserDefaults
-Structured data?     → SQLite
-API cache?           → Query library
+关键决策：
+├── 数据同步：冲突解决策略
+├── 协作：实时还是最终一致？
+├── 文件：大文件处理
+└── 企业：MDM、合规性
 ```
 
 ---
 
-> **Remember:** These trees are guides for THINKING, not rules to follow blindly. Every project has unique constraints. ASK clarifying questions when requirements are vague, and choose based on actual needs, not defaults.
+## 8. 决策检查清单（Decision Checklist）
+
+### 开始任意项目之前（Before Starting ANY Project）
+
+- [ ] 目标平台已明确（iOS/Android/双端）。
+- [ ] 框架已按标准选定。
+- [ ] 状态管理方案已确定。
+- [ ] 导航模式已选择。
+- [ ] 各数据类型的存储策略明确。
+- [ ] 离线需求已定义。
+- [ ] 认证流程已设计。
+- [ ] Deep linking 已从一开始规划。
+
+### 向用户确认的问题（Questions to Ask User）
+
+```
+当需求不清晰时，必须询问：
+
+1. “是否需要 OTA 更新且不走商店审核？”
+   → 影响框架选择（Expo = Yes）
+
+2. “iOS 与 Android 是否需要完全一致 UI？”
+   → 影响框架选择（Flutter = Yes）
+
+3. “离线需求到什么程度？”
+   → 影响架构复杂度
+
+4. “是否已有后端/认证体系？”
+   → 影响 auth 与 API 方案
+
+5. “目标设备是手机还是平板？”
+   → 影响导航与布局
+
+6. “面向企业还是消费者？”
+   → 影响 SSO/安全/合规
+```
+
+---
+
+## 9. 反模式决策（Anti-Pattern Decisions）
+
+### ❌ 决策反模式
+
+| 反模式（Anti-Pattern） | 为什么不好（Why It's Bad） | 更好做法（Better Approach） |
+|------------------------|----------------------------|-----------------------------|
+| **小项目用 Redux** | 过度复杂 | Zustand 或 Context |
+| **MVP 就用原生** | 开发慢 | 先跨平台 MVP |
+| **3 个入口用 Drawer** | 导航隐藏 | Tab bar |
+| **AsyncStorage 存 token** | 不安全 | SecureStore |
+| **不考虑离线** | 地铁/弱网直接坏 | 从一开始规划 |
+| **所有项目用同一栈** | 不匹配上下文 | 每次评估 |
+
+---
+
+## 10. 速查（Quick Reference）
+
+### 框架速选（Framework Quick Pick）
+
+```
+需要 OTA？          → React Native + Expo
+UI 必须一致？       → Flutter
+极致性能？          → Native
+Web 团队？          → React Native
+快速原型？          → Expo
+```
+
+### 状态速选（State Quick Pick）
+
+```
+简单 App？          → Zustand / Provider
+Server-heavy？      → TanStack Query / Riverpod
+企业级？            → Redux / BLoC
+原子状态？          → Jotai
+```
+
+### 存储速选（Storage Quick Pick）
+
+```
+Secrets？           → SecureStore / Keychain
+Settings？          → AsyncStorage / UserDefaults
+Structured data？   → SQLite
+API cache？         → Query library
+```
+
+---
+
+> **记住（Remember）**：这些决策树是“思考路线图”，不是死规则。每个项目都有独特约束；当需求含糊时必须补问澄清，再基于实际需求做选择。
