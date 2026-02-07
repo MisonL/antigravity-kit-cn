@@ -1,41 +1,41 @@
 ---
 name: tailwind-patterns
-description: Tailwind CSS v4 原则。CSS-first 配置、容器查询、现代化模式与 Design Token 架构。
+description: Tailwind CSS v4 原则。CSS-first 配置、容器查询、现代化模式与 Design Token（设计令牌）架构。
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# Tailwind CSS 模式 (Tailwind CSS Patterns, v4 - 2025)
+# Tailwind CSS 模式（v4，2025）
 
-> 采用 CSS 原生配置的现代 Utility-first CSS。
+> 采用 CSS 原生配置的现代 Utility-first CSS（工具优先）。
 
 ---
 
-## 1. Tailwind v4 架构 (Tailwind v4 Architecture)
+## 1. Tailwind v4 架构
 
-### 相比 v3 的变化 (What Changed from v3)
+### 相比 v3 的变化
 
-| v3 (Legacy) | v4 (Current) |
-|-------------|--------------|
+| v3（Legacy） | v4（Current） |
+|-------------|---------------|
 | `tailwind.config.js` | 基于 CSS 的 `@theme` 指令 |
 | PostCSS plugin | Oxide 引擎（约 10x 更快） |
 | JIT mode | 原生内建、始终开启 |
 | Plugin system | CSS 原生能力增强 |
 | `@apply` directive | 仍可用，但不推荐重度依赖 |
 
-### v4 核心概念 (v4 Core Concepts)
+### v4 核心概念
 
-| Concept | Description |
-|---------|-------------|
-| **CSS-first** | 配置写在 CSS 中，而不是 JavaScript |
+| 概念 | 说明 |
+|------|------|
+| **CSS-first（CSS 优先）** | 配置写在 CSS 中，而不是 JavaScript |
 | **Oxide Engine** | Rust 编译引擎，速度更快 |
 | **Native Nesting** | 不依赖 PostCSS 的 CSS 嵌套 |
 | **CSS Variables** | 设计 token 通过 `--*` 变量暴露 |
 
 ---
 
-## 2. 基于 CSS 的配置 (CSS-Based Configuration)
+## 2. 基于 CSS 的配置
 
-### 主题定义 (Theme Definition)
+### 主题定义
 
 ```
 @theme {
@@ -56,49 +56,49 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 }
 ```
 
-### 何时扩展 vs 覆盖 (When to Extend vs Override)
+### 何时扩展与覆盖
 
-| Action | Use When |
-|--------|----------|
+| 动作 | 适用场景 |
+|------|----------|
 | **Extend** | 在保留默认值的同时新增 |
 | **Override** | 需要整体替换默认刻度体系 |
 | **Semantic tokens** | 采用项目语义命名（primary、surface） |
 
 ---
 
-## 3. 容器查询（v4 原生）(Container Queries)
+## 3. 容器查询（v4 原生）
 
 ### Breakpoint 与 Container 的区别
 
-| Type | Responds To |
-|------|-------------|
-| **Breakpoint** (`md:`) | 视口宽度 (viewport) |
-| **Container** (`@container`) | 父容器宽度 |
+| 类型 | 响应对象 |
+|------|----------|
+| **Breakpoint（断点）** (`md:`) | 视口宽度（viewport） |
+| **Container（容器）** (`@container`) | 父容器宽度 |
 
-### 容器查询用法 (Container Query Usage)
+### 容器查询用法
 
-| Pattern | Classes |
-|---------|---------|
+| 模式 | 类名 |
+|------|------|
 | 定义容器 | 在父元素上添加 `@container` |
 | 容器断点 | 在子元素上使用 `@sm:`、`@md:`、`@lg:` |
 | 命名容器 | `@container/card` 提升语义与精确性 |
 
-### 何时使用 (When to Use)
+### 何时使用
 
-| Scenario | Use |
-|----------|-----|
+| 场景 | 选择 |
+|------|------|
 | 页面级布局 | 视口断点 |
 | 组件级响应式 | 容器查询 |
 | 可复用组件 | 容器查询（与上下文解耦） |
 
 ---
 
-## 4. 响应式设计 (Responsive Design)
+## 4. 响应式设计
 
-### 断点系统 (Breakpoint System)
+### 断点系统
 
-| Prefix | Min Width | Target |
-|--------|-----------|--------|
+| 前缀 | 最小宽度 | 目标 |
+|------|----------|------|
 | (none) | 0px | Mobile-first 基础样式 |
 | `sm:` | 640px | 大手机/小平板 |
 | `md:` | 768px | 平板 |
@@ -114,32 +114,32 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 5. 深色模式 (Dark Mode)
+## 5. 深色模式
 
-### 配置策略 (Configuration Strategies)
+### 配置策略
 
-| Method | Behavior | Use When |
-|--------|----------|----------|
+| 方法 | 行为 | 适用场景 |
+|------|------|----------|
 | `class` | 通过 `.dark` 类切换 | 需要手动主题切换 |
 | `media` | 跟随系统主题 | 不提供用户开关 |
 | `selector` | 自定义选择器（v4） | 复杂多主题体系 |
 
-### 深色模式模式 (Dark Mode Pattern)
+### 深色模式示例
 
-| Element | Light | Dark |
-|---------|-------|------|
+| 元素 | 浅色 | 深色 |
+|------|------|------|
 | Background | `bg-white` | `dark:bg-zinc-900` |
 | Text | `text-zinc-900` | `dark:text-zinc-100` |
 | Borders | `border-zinc-200` | `dark:border-zinc-700` |
 
 ---
 
-## 6. 现代布局模式 (Modern Layout Patterns)
+## 6. 现代布局模式
 
 ### Flexbox 模式
 
-| Pattern | Classes |
-|---------|---------|
+| 模式 | 类名 |
+|------|------|
 | 双轴居中 | `flex items-center justify-center` |
 | 纵向堆叠 | `flex flex-col gap-4` |
 | 横向排列 | `flex gap-4` |
@@ -148,50 +148,50 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ### Grid 模式
 
-| Pattern | Classes |
-|---------|---------|
+| 模式 | 类名 |
+|------|------|
 | Auto-fit 响应式网格 | `grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))]` |
 | 非对称（Bento） | `grid grid-cols-3 grid-rows-2` + spans |
 | 侧栏布局 | `grid grid-cols-[auto_1fr]` |
 
-> **说明：** 优先使用非对称/Bento 布局，避免千篇一律的对称三列网格。
+> **说明：** 优先使用非对称/Bento（便当格）布局，避免千篇一律的对称三列网格。
 
 ---
 
-## 7. 现代颜色系统 (Modern Color System)
+## 7. 现代颜色系统
 
-### OKLCH vs RGB/HSL
+### OKLCH 与 RGB/HSL
 
-| Format | Advantage |
-|--------|-----------|
+| 格式 | 优势 |
+|------|------|
 | **OKLCH** | 感知均匀，更利于设计一致性 |
 | **HSL** | 色相/饱和度语义直观 |
 | **RGB** | 兼容性传统且广泛 |
 
-### 颜色 Token 架构 (Color Token Architecture)
+### 颜色 Token 架构
 
-| Layer | Example | Purpose |
-|-------|---------|---------|
+| 层级 | 示例 | 作用 |
+|------|------|------|
 | **Primitive** | `--blue-500` | 原始色值层 |
 | **Semantic** | `--color-primary` | 语义命名层 |
 | **Component** | `--button-bg` | 组件局部层 |
 
 ---
 
-## 8. 排版系统 (Typography System)
+## 8. 排版系统
 
-### 字体栈模式 (Font Stack Pattern)
+### 字体栈模式
 
-| Type | Recommended |
-|------|-------------|
+| 类型 | 推荐 |
+|------|------|
 | Sans | `'Inter', 'SF Pro', system-ui, sans-serif` |
 | Mono | `'JetBrains Mono', 'Fira Code', monospace` |
 | Display | `'Outfit', 'Poppins', sans-serif` |
 
-### 字号刻度 (Type Scale)
+### 字号刻度
 
-| Class | Size | Use |
-|-------|------|-----|
+| 类名 | 大小 | 用途 |
+|------|------|------|
 | `text-xs` | 0.75rem | 标签、说明文字 |
 | `text-sm` | 0.875rem | 次级文本 |
 | `text-base` | 1rem | 正文 |
@@ -200,21 +200,21 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 9. 动画与过渡 (Animation & Transitions)
+## 9. 动画与过渡
 
-### 内置动画 (Built-in Animations)
+### 内置动画
 
-| Class | Effect |
-|-------|--------|
+| 类名 | 效果 |
+|------|------|
 | `animate-spin` | 持续旋转 |
 | `animate-ping` | 注意力脉冲效果 |
 | `animate-pulse` | 轻微透明度脉冲 |
 | `animate-bounce` | 弹跳效果 |
 
-### 过渡模式 (Transition Patterns)
+### 过渡模式
 
-| Pattern | Classes |
-|---------|---------|
+| 模式 | 类名 |
+|------|------|
 | 所有属性 | `transition-all duration-200` |
 | 指定属性 | `transition-colors duration-150` |
 | 缓动函数 | `ease-out` 或 `ease-in-out` |
@@ -222,30 +222,30 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 10. 组件抽取 (Component Extraction)
+## 10. 组件抽取
 
-### 何时抽取 (When to Extract)
+### 何时抽取
 
-| Signal | Action |
-|--------|--------|
+| 信号 | 动作 |
+|------|------|
 | 同一类组合出现 3 次以上 | 抽为组件 |
 | 状态变体复杂 | 抽为组件 |
 | 设计系统核心元素 | 抽取并补文档 |
 
-### 抽取方式 (Extraction Methods)
+### 抽取方式
 
-| Method | Use When |
-|--------|----------|
+| 方法 | 适用场景 |
+|------|----------|
 | **React/Vue component** | 需要动态逻辑或 JS 行为 |
 | **@apply in CSS** | 静态样式、无需 JS |
-| **Design tokens** | 复用基础值（颜色/间距/字号） |
+| **Design tokens（设计令牌）** | 复用基础值（颜色/间距/字号） |
 
 ---
 
-## 11. 反模式 (Anti-Patterns)
+## 11. 反模式
 
-| Don't | Do |
-|-------|-----|
+| ❌ 不要这样做 | ✅ 推荐做法 |
+|-------------|------------|
 | 到处用任意值（arbitrary values） | 使用设计系统刻度 |
 | 滥用 `!important` | 正确处理样式优先级 |
 | 内联 `style=` | 优先使用 utilities |
@@ -255,10 +255,10 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 12. 性能原则 (Performance Principles)
+## 12. 性能原则
 
-| Principle | Implementation |
-|-----------|----------------|
+| 原则 | 实现方式 |
+|------|----------|
 | **清理未使用样式** | v4 默认自动处理 |
 | **避免动态 class 拼接** | 不要用模板字符串生成类名 |
 | **使用 Oxide** | v4 默认启用，速度更快 |
