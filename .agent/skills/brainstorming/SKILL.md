@@ -1,162 +1,170 @@
 ---
 name: brainstorming
-description: Socratic questioning protocol + user communication. MANDATORY for complex requests, new features, or unclear requirements. Includes progress reporting and error handling.
+description: 苏格拉底式提问协议 (Socratic questioning protocol) 与用户沟通准则。对于复杂请求、新功能或不明确的需求是强制性 (MANDATORY) 要求的。包含进度汇报与错误处理。
 allowed-tools: Read, Glob, Grep
 ---
 
-# 头脑风暴与沟通协议
+# 头脑风暴与沟通协议 (Brainstorming & Communication Protocol)
 
-> **MANDATORY (强制):** 用于复杂/模糊的请求、新功能、更新。
-
----
-
-## 🛑 苏格拉底之门 (强制实施) - SOCRATIC GATE
-
-### 何时触发
-
-| 模式                                                         | 行动                                                      |
-| ------------------------------------------------------------ | --------------------------------------------------------- |
-| "Build/Create/Make [thing]" (构建/创建/制作 [东西]) 且无细节 | 🛑 ASK 3 questions (问 3 个问题)                          |
-| 复杂功能或架构                                               | 🛑 Clarify before implementing (实施前澄清)               |
-| 更新/变更请求                                                | 🛑 Confirm scope (确认范围)                               |
-| 模糊的需求                                                   | 🛑 Ask purpose, users, constraints (询问目的、用户、约束) |
-
-### 🚫 MANDATORY (强制): 实施前的 3 个问题
-
-1. **STOP (停)** - 不要开始编码
-2. **ASK (问)** - 至少 3 个问题：
-    - 🎯 Purpose (目的): 你要解决什么问题？
-    - 👥 Users (用户): 谁将使用这个？
-    - 📦 Scope (范围): 必须有 vs 最好有？
-3. **WAIT (等)** - 在继续之前获得回应
+> **强制要求 (MANDATORY)：** 适用于复杂/模糊的请求、新功能开发或系统更新。
 
 ---
 
-## 🧠 动态提问生成
+## 🛑 苏格拉底之门 (SOCRATIC GATE) —— 强制执行
 
-**⛔ NEVER use static templates (绝不使用静态模板)。** 阅读 `dynamic-questioning.md` 了解原则。
+### 触发时机 (When to Trigger)
 
-### 核心原则
+| 模式                                          | 行动                            |
+| --------------------------------------------- | ------------------------------- |
+| 在没有细节的情况下要求“构建/创建/制作 [某物]” | 🛑 **提出 3 个问题**            |
+| 涉及复杂功能或架构设计                        | 🛑 在交付方案前先进行澄清       |
+| 针对现有系统的更新/变更请求                   | 🛑 确认影响范围                 |
+| 需求描述过于模糊                              | 🛑 询问目的、用户群体及约束条件 |
 
-| 原则                                                    | 以此为原则                                                                    |
-| ------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **Questions Reveal Consequences (问题揭示后果)**        | 每个问题都连接到一个架构决策                                                  |
-| **Context Before Content (内容前的上下文)**             | 首先了解 greenfield (绿地)/feature (功能)/refactor (重构)/debug (调试) 上下文 |
-| **Minimum Viable Questions (最小可行问题)**             | 每个问题必须消除实施路径                                                      |
-| **Generate Data, Not Assumptions (生成数据，而非假设)** | 不要猜测——用权衡来提问                                                        |
+### 🚫 强制要求：实施前的 3 个问题
 
-### 问题生成流程
+1. **停止 (STOP)** —— **不得**立即开始编写代码。
+2. **提问 (ASK)** —— 至少提出 3 个关键问题：
+    - 🎯 **目的**：您要解决什么问题？
+    - 👥 **用户**：谁将使用这个功能？
+    - 📦 **范围**：哪些是必须有的 (Must-have)，哪些是可选的 (Nice-to-have)？
+3. **等待 (WAIT)** —— 在收到明确回复后再继续后续步骤。
+
+---
+
+## 🧠 动态提问生成 (Dynamic Question Generation)
+
+**⛔ 严禁使用静态模板。** 请查阅 `dynamic-questioning.md` 了解核心原则。
+
+### 核心原则 (Core Principles)
+
+| 原则                 | 含义                                           |
+| -------------------- | ---------------------------------------------- |
+| **提问揭示后果**     | 每个问题都应关联到一个架构决策                 |
+| **背景先于内容**     | 首先理解是全新开发、功能增强、重构还是调试背景 |
+| **最小可行问题**     | 每个问题都必须能够排除掉某些特定的实现路径     |
+| **生成数据而非假设** | 不要猜测 —— 带着权衡 (Trade-offs) 方案去询问   |
+
+### 提问生成流程
 
 ```
-1. Parse request (解析请求) → Extract domain (提取领域), features (功能), scale indicators (规模指标)
-2. Identify decision points (识别决策点) → Blocking (阻塞) vs. deferable (可推迟)
-3. Generate questions (生成问题) → Priority (优先级): P0 (blocking/阻塞) > P1 (high-leverage/高杠杆) > P2 (nice-to-have/最好有)
-4. Format with trade-offs (格式化权衡) → What (什么), Why (为什么), Options (选项), Default (默认)
+1. 解析请求 → 提取领域、功能点、规模指标
+2. 识别决策点 → 区分阻塞性决策与可延后决策
+3. 生成问题 → 优先级：P0 (阻塞) > P1 (高杠杆) > P2 (可选)
+4. 格式化权衡方案 → 包含：内容、原因、选项、默认值
 ```
 
-### 问题格式 (MANDATORY/强制)
+### 提问格式 (强制要求)
 
 ```markdown
 ### [优先级] **[决策点]**
 
-**Question:** [清晰的问题]
+**问题：** [清晰简洁的问题描述]
 
-**Why This Matters:**
+**为什么要问：**
 
-- [架构后果]
-- [影响: 成本/复杂性/时间线/规模]
+- [由此涉及的架构后果]
+- [影响范围：成本/复杂度/工期/规模]
 
-**Options:**
-| 选项 | 优点 | 缺点 | 适用场景 |
+**备选方案：**
+| 选项 | 优点 (+) | 缺点 (-) | 适用场景 |
 |--------|------|------|----------|
-| A | [+] | [-] | [用例] |
+| A | ... | ... | ... |
 
-**If Not Specified:** [默认值 + 理由]
+**若未指定：** [默认执行方案 + 理由]
 ```
 
-**有关详细的特定领域问题库和算法**，请参阅：`dynamic-questioning.md`
+**关于特定领域的详细问题库与算法**，请参阅：`dynamic-questioning.md`
 
 ---
 
-## 进度报告 (基于原则) - Progress Reporting
+## 进度汇报原则 (Progress Reporting)
 
-**PRINCIPLE (原则):** Transparency builds trust (透明建立信任)。Status must be visible and actionable (状态必须可见且可操作)。
+**原则：** 透明度建立信任。状态必须是可见且可操作的。
 
-### 状态板格式
+### 状态看板格式 (Status Board)
 
-| Agent        | 状态       | 当前任务   | 进度        |
+| 代理 (Agent) | 状态       | 当前任务   | 进度        |
 | ------------ | ---------- | ---------- | ----------- |
-| [Agent Name] | ✅🔄⏳❌⚠️ | [任务描述] | [% 或 计数] |
+| [代理名称]   | ✅🔄⏳❌⚠️ | [任务描述] | [% 或 数量] |
 
-### 状态图标
+### 状态图标含义
 
-| 图标 | 含义               | 用法             |
-| ---- | ------------------ | ---------------- |
-| ✅   | Completed (已完成) | 任务成功完成     |
-| 🔄   | Running (运行中)   | 当前正在执行     |
-| ⏳   | Waiting (等待中)   | 受阻，等待依赖   |
-| ❌   | Error (错误)       | 失败，需要关注   |
-| ⚠️   | Warning (警告)     | 潜在问题，不阻塞 |
+| 图标 | 含义               | 使用场景                   |
+| ---- | ------------------ | -------------------------- |
+| ✅   | 已完成 (Completed) | 任务已成功结束             |
+| 🔄   | 运行中 (Running)   | 正在执行相应指令           |
+| ⏳   | 等待中 (Waiting)   | 已阻塞，正在等待依赖项     |
+| ❌   | 错误 (Error)       | 任务失败，需要人工干预     |
+| ⚠️   | 警告 (Warning)     | 存在潜在问题，但不影响阻塞 |
 
 ---
 
-## 错误处理 (基于原则) - Error Handling
+## 错误处理原则 (Error Handling)
 
-**PRINCIPLE (原则):** Errors are opportunities for clear communication (错误是清晰沟通的机会)。
+**原则：** 错误是进行清晰沟通的契机。
 
 ### 错误响应模式
 
 ```
-1. Acknowledge the error (承认错误)
-2. Explain what happened (user-friendly) (解释发生了什么 (用户友好))
-3. Offer specific solutions with trade-offs (提供带有权衡的具体解决方案)
-4. Ask user to choose or provide alternative (请用户选择或提供替代方案)
+1. 承认并确认错误
+2. 解释发生了什么（对老板友好的中文化描述）
+3. 提供带有权衡建议的特定解决方案
+4. 请老板选择或提供其他替代路径
 ```
 
-### 错误类别
+### 错误分类
 
-| 类别                              | 响应策略                   |
-| --------------------------------- | -------------------------- |
-| **Port Conflict (端口冲突)**      | 提供替代端口或关闭现有端口 |
-| **Dependency Missing (依赖缺失)** | 自动安装或请求权限         |
-| **Build Failure (构建失败)**      | 显示具体错误 + 建议修复    |
-| **Unclear Error (不清楚的错误)**  | 询问细节：截图，控制台输出 |
+| 类别             | 响应策略                           |
+| ---------------- | ---------------------------------- |
+| **端口冲突**     | 提供备选端口或询问是否关闭现有服务 |
+| **缺少依赖项**   | 自动安装或请求授权                 |
+| **构建失败**     | 展示具体错误信息 + 建议的修复方案  |
+| **不明原因错误** | 请求细节信息：截图、控制台输出日志 |
 
 ---
 
-## 完成消息 (基于原则) - Completion Message
+## 完成消息原则 (Completion Message)
 
-**PRINCIPLE (原则):** Celebrate success, guide next steps (庆祝成功，引导后续步骤)。
+**原则：** 庆祝成功，指引后续步骤。
 
-### 完成结构
+### 完成消息结构
 
 ```
-1. Success confirmation (celebrate briefly) (成功确认 (简短庆祝))
-2. Summary of what was done (concrete) (已完成内容的总结 (具体))
-3. How to verify/test (actionable) (如何验证/测试 (可操作))
-4. Next steps suggestion (proactive) (下一步建议 (主动))
+1. 成功确认 (简短庆祝)
+2. 工作总结 (具体内容)
+3. 如何验证/测试 (可操作性)
+4. 后续建议 (主动性)
 ```
 
 ---
 
-## 沟通原则
+## 沟通准则 (Communication Principles)
 
-| 原则                        | 实施                                                          |
-| --------------------------- | ------------------------------------------------------------- |
-| **Concise (简洁)**          | 无不必要的细节，直击要点                                      |
-| **Visual (视觉化)**         | 使用表情符号 (✅🔄⏳❌) 以便快速浏览                          |
-| **Specific (具体)**         | "~2 分钟" 也就是 "~2 minutes"，不要说 "wait a bit (稍等一下)" |
-| **Alternatives (替代方案)** | 受阻时提供多种路径                                            |
-| **Proactive (主动)**        | 完成后建议下一步                                              |
+| 原则         | 实施方式                            |
+| ------------ | ----------------------------------- |
+| **简洁**     | 无冗余细节，直奔主题                |
+| **可视化**   | 使用图标 (✅🔄⏳❌) 方便快速扫视    |
+| **具体化**   | 使用“大约 2 分钟”而非“请稍等一会儿” |
+| **多选方案** | 陷入困境时提供多条备选路径          |
+| **主动性**   | 任务完成后立即建议后续步骤          |
 
 ---
 
-## 反模式 (Anti-Patterns) (避免/AVOID)
+## 反模式 (应避免的行为) (Anti-Patterns)
 
-| 反模式                                                             | 为什么                   |
-| ------------------------------------------------------------------ | ------------------------ |
-| Jumping to solutions before understanding (在理解之前跳到解决方案) | 把时间浪费在错误的问题上 |
-| Assuming requirements without asking (假设需求而不询问)            | 创造错误的输出           |
-| Over-engineering first version (过度设计第一个版本)                | 延迟价值交付             |
-| Ignoring constraints (忽略约束)                                    | 创造不可用的解决方案     |
-| "I think" phrases ("我认为" 短语)                                  | 不确定性 → 改为询问      |
+| 反模式                       | 后果                               |
+| ---------------------------- | ---------------------------------- |
+| 在理解需求前就急于给出方案   | 浪费时间在错误的路径上             |
+| 在未询问的情况下擅自假设需求 | 产出结果偏离预期                   |
+| 在首个版本就进行过度设计     | 延误价值交付的进度                 |
+| 忽略既有的约束条件           | 产生无法落地的无效方案             |
+| 使用“我觉得”之类的模糊措辞   | 造成不确定性 —— 应改为直接提问确认 |
+
+---
+
+## Skills 兼容说明 (最小补充)
+
+- **机制基线**：沿用上游 `.agent/skills/brainstorming/SKILL.md`。
+- **Codex 适配**：由适配层映射到 `.agents/skills/brainstorming/SKILL.md`。
+- **注意**：文档层不改技能流程；仅补充目录映射事实。
