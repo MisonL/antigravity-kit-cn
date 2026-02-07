@@ -2,112 +2,122 @@
 description: 面向项目与功能的结构化头脑风暴。在落地实现前先探索多个可选方案。
 ---
 
-# /brainstorm - 结构化想法探索
+# /brainstorm - 结构化思路探索
 
 $ARGUMENTS
 
 ---
 
-## 目的
+## 目的 (Purpose)
 
-此命令会激活 BRAINSTORM 模式，用于结构化地探索思路。在承诺具体实现之前需要比较方案时使用。
+此命令激活 BRAINSTORM 模式以进行结构化的思路探索。当您在决定具体的实现方案之前需要探索多个可选选项时，请使用此命令。
 
 ---
 
-## 行为
+## 行为 (Behavior)
 
-当触发 `/brainstorm` 时：
+当你触发 `/brainstorm` 时：
 
 1. **理解目标**
-   - 我们要解决什么问题？
-   - 用户是谁？
-   - 存在哪些约束？
+    - 我们要解决什么问题？
+    - 目标用户是谁？
+    - 存在哪些约束条件？
 
-2. **生成选项**
-   - 至少给出 3 种不同方案
-   - 每种方案都包含优缺点
-   - 适当考虑非常规方案
+2. **生成方案**
+    - 提供至少 3 种不同的处理方法
+    - 每种方法都包含 优点 (Pros) 和 缺点 (Cons)
+    - 考虑非传统的解决方案
 
-3. **对比并推荐**
-   - 总结关键权衡
-   - 给出带理由的推荐
+3. **比较与推荐**
+    - 汇总各方案的权衡 (Tradeoffs)
+    - 给出带有理由的建议方案
 
 ---
 
-## 输出格式
+## 输出格式 (Output Format)
 
 ```markdown
-## 🧠 Brainstorm: [Topic]
+## 🧠 头脑风暴 (Brainstorm)：[主题]
 
-### Context
-[Brief problem statement]
+### 上下文 (Context)
 
----
-
-### Option A: [Name]
-[Description]
-
-✅ **Pros:**
-- [benefit 1]
-- [benefit 2]
-
-❌ **Cons:**
-- [drawback 1]
-
-📊 **Effort:** Low | Medium | High
+[简要的问题描述]
 
 ---
 
-### Option B: [Name]
-[Description]
+### 方案 A：[方案名称]
 
-✅ **Pros:**
-- [benefit 1]
+[方案描述]
 
-❌ **Cons:**
-- [drawback 1]
-- [drawback 2]
+✅ **优点 (Pros)：**
 
-📊 **Effort:** Low | Medium | High
+- [优点 1]
+- [优点 2]
 
----
+❌ **缺点 (Cons)：**
 
-### Option C: [Name]
-[Description]
+- [缺点 1]
 
-✅ **Pros:**
-- [benefit 1]
-
-❌ **Cons:**
-- [drawback 1]
-
-📊 **Effort:** Low | Medium | High
+📊 **所需精力 (Effort)：** 低 | 中 | 高
 
 ---
 
-## 💡 Recommendation
+### 方案 B：[方案名称]
 
-**Option [X]** because [reasoning].
+[方案描述]
 
-What direction would you like to explore?
+✅ **优点 (Pros)：**
+
+- [优点 1]
+
+❌ **缺点 (Cons)：**
+
+- [缺点 1]
+- [缺点 2]
+
+📊 **所需精力 (Effort)：** 低 | 中 | 高
+
+---
+
+### 方案 C：[方案名称]
+
+[方案描述]
+
+✅ **优点 (Pros)：**
+
+- [优点 1]
+
+❌ **缺点 (Cons)：**
+
+- [缺点 1]
+
+📊 **所需精力 (Effort)：** 低 | 中 | 高
+
+---
+
+## 💡 推荐方案
+
+**方案 [X]**，因为 [具体理由]。
+
+老板，您想深入探索哪一个方向？
 ```
 
 ---
 
-## 示例
+## 示例 (Examples)
 
 ```
-/brainstorm authentication system
-/brainstorm state management for complex form
-/brainstorm database schema for social app
-/brainstorm caching strategy
+/brainstorm 身份验证系统
+/brainstorm 用于复杂表单的状态管理方案
+/brainstorm 社交类应用的数据库 Schema 设计
+/brainstorm 缓存策略
 ```
 
 ---
 
-## 关键原则
+## 核心原则 (Key Principles)
 
-- **不写代码** - 此流程关注想法，而不是直接实现
-- **必要时可视化** - 涉及架构时可使用图示
-- **诚实呈现权衡** - 不要隐藏复杂度
-- **由用户决策** - 提供选项，最终由用户选择方向
+- **不涉及代码** —— 本阶段侧重于思路，而非具体实现。
+- **必要时可视化** —— 对于架构设计，使用图表进行说明。
+- **诚实的权衡** —— 不要隐瞒方案的复杂度。
+- **选择权交给用户** —— 展示所有选项，由老板进行最终决策。
