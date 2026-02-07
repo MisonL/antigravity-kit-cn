@@ -1,51 +1,51 @@
 ---
 name: red-team-tactics
-description: 基于 MITRE ATT&CK 的红队战术原理。攻击阶段、检测规避、报告。
+description: 基于 MITRE ATT&CK 的红队战术原理。涵盖攻击阶段、检测规避与报告。
 allowed-tools: Read, Glob, Grep
 ---
 
-# 红队战术 (Red Team Tactics)
+# 红队战术
 
 > 基于 MITRE ATT&CK 框架的对抗模拟原则。
 
 ---
 
-## 1. MITRE ATT&CK 攻击阶段 (Phases)
+## 1. MITRE ATT&CK 攻击阶段
 
-### 攻击生命周期 (Attack Lifecycle)
+### 攻击生命周期
 
 ```
-侦察 (RECONNAISSANCE) → 初始访问 (INITIAL ACCESS) → 执行 (EXECUTION) → 持久化 (PERSISTENCE)
+侦察（Reconnaissance）→ 初始访问（Initial Access）→ 执行（Execution）→ 持久化（Persistence）
         ↓                    ↓                    ↓                  ↓
-    权限提升 (PRIV ESC) → 防御规避 (DEFENSE EVASION) → 凭据访问 (CRED ACCESS) → 发现 (DISCOVERY)
+    权限提升（Priv Esc）→ 防御规避（Defense Evasion）→ 凭据访问（Credential Access）→ 发现（Discovery）
         ↓                    ↓                    ↓                  ↓
-    横向移动 (LATERAL MOV) → 数据收集 (COLLECTION) → 指挥控制 (C2) → 数据泄露 (EXFIL) → 影响力 (IMPACT)
+    横向移动（Lateral Movement）→ 数据收集（Collection）→ 指挥控制（C2）→ 数据泄露（Exfiltration）→ 影响力（Impact）
 ```
 
-### 各阶段目标 (Phase Objectives)
+### 各阶段目标
 
 | 阶段                 | 核心目标                        |
 | -------------------- | ------------------------------- |
-| **侦察 (Recon)**     | 映射攻击面                      |
+| **侦察（Recon）**     | 映射攻击面                      |
 | **初始访问**         | 获取首个立足点                  |
-| **执行 (Execution)** | 在目标上运行代码                |
+| **执行（Execution）** | 在目标上运行代码                |
 | **持久化**           | 在重启后依然存活                |
-| **权限提升**         | 获取管理员 (Admin) 或 Root 权限 |
+| **权限提升**         | 获取管理员（Admin）或 Root 权限 |
 | **防御规避**         | 躲避安全检测                    |
 | **凭据访问**         | 收集并提取各类凭据              |
-| **发现 (Discovery)** | 映射内网环境                    |
+| **发现（Discovery）** | 映射内网环境                    |
 | **横向移动**         | 扩散至其他系统                  |
 | **数据收集**         | 搜集目标敏感数据                |
-| **指挥控制 (C2)**    | 维持命令下发通道                |
-| **数据泄露 (Exfil)** | 提取并带出数据                  |
+| **指挥控制（C2）**    | 维持命令下发通道                |
+| **数据泄露（Exfil）** | 提取并带出数据                  |
 
 ---
 
-## 2. 侦察准则 (Reconnaissance Principles)
+## 2. 侦察准则
 
-### 被动侦察 vs 主动侦察
+### 被动侦察与主动侦察
 
-| 类型         | 权衡 (Trade-off)                             |
+| 类型         | 权衡（Trade-off）                            |
 | ------------ | -------------------------------------------- |
 | **被动侦察** | 不与目标直接接触，获取信息有限，但安全性极高 |
 | **主动侦察** | 直接接触目标，获取信息多，但暴露风险极高     |
@@ -61,20 +61,20 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 3. 初始访问向量 (Initial Access)
+## 3. 初始访问向量
 
 ### 选择标准
 
 | 向量                    | 适用场景                   |
 | ----------------------- | -------------------------- |
-| **网络钓鱼 (Phishing)** | 针对人员，需要邮件访问权限 |
-| **公开漏洞 (Exploits)** | 暴露在外的易受攻击服务     |
+| **网络钓鱼（Phishing）** | 针对人员，需要邮件访问权限 |
+| **公开漏洞（Exploits）** | 暴露在外的易受攻击服务     |
 | **合规凭据**            | 泄露或被暴力破解的帐号     |
 | **供应链攻击**          | 通过第三方供应商接入       |
 
 ---
 
-## 4. 权限提升原则 (Privilege Escalation)
+## 4. 权限提升原则
 
 ### Windows 平台关注点
 
@@ -82,7 +82,7 @@ allowed-tools: Read, Glob, Grep
 | ------------------ | ------------------- |
 | 未加引号的服务路径 | 利用路径写入漏洞    |
 | 弱服务权限         | 修改服务执行逻辑    |
-| 令牌特权 (Token)   | 滥用 SeDebug 等特权 |
+| 令牌特权（Token）   | 滥用 SeDebug 等特权 |
 | 存储的凭据         | 离线或在线提取      |
 
 ### Linux 平台关注点
@@ -91,23 +91,23 @@ allowed-tools: Read, Glob, Grep
 | --------------- | ----------------------- |
 | SUID 二进制文件 | 以所有者权限执行        |
 | Sudo 配置错误   | 越权命令执行            |
-| 内核漏洞        | 执行内核提取 (Exploits) |
-| 定时任务 (Cron) | 修改可写脚本            |
+| 内核漏洞        | 执行内核提取（Exploits） |
+| 定时任务（Cron） | 修改可写脚本            |
 
 ---
 
-## 5. 防御规避原则 (Defense Evasion)
+## 5. 防御规避原则
 
 ### 核心技术
 
 | 技术名                    | 目的                   |
 | ------------------------- | ---------------------- |
 | LOLBins                   | 利用系统内置的合法工具 |
-| 代码混淆 (Obfuscation)    | 隐藏恶意代码特征       |
-| 时间戳篡改 (Timestomping) | 隐藏文件修改痕迹       |
+| 代码混淆（Obfuscation）    | 隐藏恶意代码特征       |
+| 时间戳篡改（Timestomping） | 隐藏文件修改痕迹       |
 | 日志清理                  | 抹除攻击证据           |
 
-### 运营安全 (OpSec)
+### 运营安全（OpSec）
 
 - 在工作时间内操作，降低异常感。
 - 模仿合规的流量模式。
@@ -116,26 +116,26 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 6. 横向移动原则 (Lateral Movement)
+## 6. 横向移动原则
 
 ### 凭据类型
 
 | 类型               | 使用方法                   |
 | ------------------ | -------------------------- |
-| 密码 (Password)    | 标准认证                   |
-| 哈希值 (Hash)      | 哈希传递 (Pass-the-hash)   |
-| 票据 (Ticket)      | 票据传递 (Pass-the-ticket) |
-| 证书 (Certificate) | 证书级别认证               |
+| 密码（Password）    | 标准认证                   |
+| 哈希值（Hash）      | 哈希传递（Pass-the-hash）  |
+| 票据（Ticket）      | 票据传递（Pass-the-ticket） |
+| 证书（Certificate） | 证书级别认证               |
 
 ### 移动路径
 
 - 管理员共享。
-- 远程服务 (RDP, SSH, WinRM)。
+- 远程服务（RDP、SSH、WinRM）。
 - 内部服务的漏洞利用。
 
 ---
 
-## 7. 活动目录 (Active Directory) 攻击
+## 7. 活动目录（Active Directory）攻击
 
 ### 攻击类别
 
@@ -148,9 +148,9 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 8. 报告编写准则 (Reporting)
+## 8. 报告编写准则
 
-### 攻击叙述 (Attack Narrative)
+### 攻击叙述
 
 记录完整的攻击链：
 
@@ -159,7 +159,7 @@ allowed-tools: Read, Glob, Grep
 3. 达成了哪些目标。
 4. 检测流程在何处失效。
 
-### 检测缺口 (Detection Gaps)
+### 检测缺口
 
 针对每项成功的技术：
 
@@ -169,27 +169,27 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 9. 伦理红线 (Ethical Boundaries)
+## 9. 伦理红线
 
-### 始终坚持 (Always)
+### 始终坚持（Always）
 
-- 保持在授权范围内 (Scope)。
+- 保持在授权范围内（Scope）。
 - 尽量减小业务影响。
 - 如发现真实威胁，立即报告。
 - 详尽记录所有操作行为。
 
-### 严禁行为 (Never)
+### 严禁行为（Never）
 
 - 破坏生产数据。
-- 造成拒绝服务 (DoS) (除非有明确授权)。
-- 超出概念验证 (PoC) 所需的访问权限。
+- 造成拒绝服务（DoS）（除非有明确授权）。
+- 超出概念验证（PoC）所需的访问权限。
 - 持有或保留敏感数据。
 
 ---
 
-## 10. 应避免的反模式 (Anti-Patterns)
+## 10. 应避免的反模式
 
-| ❌ 禁止 (Don't)  | ✅ 推荐 (Do)     |
+| ❌ 禁止（Don't）  | ✅ 推荐（Do）     |
 | ---------------- | ---------------- |
 | 仓促进行漏洞利用 | 遵循科学的方法论 |
 | 造成破坏性的损失 | 尽量减小影响范围 |
@@ -201,4 +201,3 @@ allowed-tools: Read, Glob, Grep
 > **谨记：** 红队模拟攻击是为了提升防御能力，而非造成真实伤害。
 
 ---
-
