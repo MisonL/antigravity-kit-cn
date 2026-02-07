@@ -2,76 +2,79 @@
 description: 预览服务器启动、停止与状态检查。本地开发服务管理。
 ---
 
-# /preview - 预览管理
+# /preview - 预览管理 (Preview Management)
 
 $ARGUMENTS
 
 ---
 
-## 任务
+## 任务 (Task)
 
 管理预览服务器：启动、停止、状态检查。
 
-### 命令
+### 指令集 (Commands)
 
 ```
-/preview           - 显示当前状态
-/preview start     - 启动服务器
-/preview stop      - 停止服务器
-/preview restart   - 重启
-/preview check     - 健康检查
+/preview           - 显示当前实时状态
+/preview start     - 启动预览服务器
+/preview stop      - 停止预览服务器
+/preview restart   - 重启服务器
+/preview check     - 运行健康检查 (Health check)
 ```
 
 ---
 
-## 使用示例
+## 使用示例 (Usage Examples)
 
 ### 启动服务器
+
 ```
 /preview start
 
-Response:
-🚀 Starting preview...
-   Port: 3000
-   Type: Next.js
+响应：
+🚀 正在启动预览……
+   端口 (Port)：3000
+   类型：Next.js
 
-✅ Preview ready!
-   URL: http://localhost:3000
+✅ 预览已就绪！
+   URL 地址：http://localhost:3000
 ```
 
 ### 状态检查
+
 ```
 /preview
 
-Response:
-=== Preview Status ===
+响应：
+=== 预览状态 (Preview Status) ===
 
-🌐 URL: http://localhost:3000
-📁 Project: C:/projects/my-app
-🏷️ Type: nextjs
-💚 Health: OK
+🌐 URL 地址：http://localhost:3000
+📁 项目路径：C:/projects/my-app
+🏷️ 项目类型：nextjs
+💚 健康状态：正常 (OK)
 ```
 
-### 端口冲突
+### 端口冲突处理
+
 ```
 /preview start
 
-Response:
-⚠️ Port 3000 is in use.
+响应：
+⚠️ 端口 3000 已被占用。
 
-Options:
-1. Start on port 3001
-2. Close app on 3000
-3. Specify different port
+您可以选择：
+1. 在端口 3001 启动
+2. 关闭占用 3000 端口的应用
+3. 指定一个不同的端口
 
-Which one? (default: 1)
+您想执行哪项操作？(默认：1)
 ```
 
 ---
 
-## 技术说明
+## 技术细节 (Technical)
 
-自动预览使用 `auto_preview.py` 脚本：
+自动预览使用的是 `auto_preview.py` 脚本：
 
 ```bash
 python .agent/scripts/auto_preview.py start [port]
