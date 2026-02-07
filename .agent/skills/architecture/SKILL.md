@@ -1,55 +1,63 @@
 ---
 name: architecture
-description: Architectural decision-making framework. Requirements analysis, trade-off evaluation, ADR documentation. Use when making architecture decisions or analyzing system design.
+description: 架构决策框架。包含需求分析、权衡评估 (Trade-off evaluation) 及 ADR 文档编写。在进行架构决策或分析系统设计时使用。
 allowed-tools: Read, Glob, Grep
 ---
 
-# 架构决策框架
+# 架构决策框架 (Architecture Decision Framework)
 
-> "需求驱动架构。权衡告知决策。ADR (架构决策记录) 记录理由。"
+> “需求驱动架构。权衡决定结论。ADR 记录依据。”
 
-## 🎯 选择性阅读规则
+## 🎯 选择性阅读规则 (Selective Reading Rule)
 
-**仅阅读与请求相关的目标文件！** 请先检查内容地图，找到你需要的内容。
+**仅阅读与请求相关的文档！** 查阅内容地图，找到你需要的信息。
 
-| 文件                    | 描述                                      | 何时阅读       |
-| ----------------------- | ----------------------------------------- | -------------- |
-| `context-discovery.md`  | 问题, 项目分类                            | 开始架构设计时 |
-| `trade-off-analysis.md` | ADR 模板, 权衡框架                        | 记录决策时     |
-| `pattern-selection.md`  | 决策树, 反模式                            | 选择模式时     |
-| `examples.md`           | MVP, SaaS, 企业示例 (Enterprise examples) | 参考实现时     |
-| `patterns-reference.md` | 快速查找                                  | 模式比较时     |
-
----
-
-## 🔗 相关 Skill
-
-| Skill (技能)                      | 用于               |
-| --------------------------------- | ------------------ |
-| `@[skills/database-design]`       | 数据库 Schema 设计 |
-| `@[skills/api-patterns]`          | API 设计模式       |
-| `@[skills/deployment-procedures]` | 部署架构           |
+| 文件                    | 描述                      | 阅读时机       |
+| ----------------------- | ------------------------- | -------------- |
+| `context-discovery.md`  | 提问列表、项目分类        | 开始架构设计时 |
+| `trade-off-analysis.md` | ADR 模板、权衡分析框架    | 记录决策时     |
+| `pattern-selection.md`  | 决策树、反模式            | 选择模式时     |
+| `examples.md`           | MVP、SaaS、企业级应用示例 | 参考实现方案时 |
+| `patterns-reference.md` | 模式快速查阅              | 模式对比时     |
 
 ---
 
-## 核心原则
+## 🔗 相关技能 (Related Skills)
 
-**"简单是终极的复杂。"**
-
-- 从简单开始
-- 仅在被证明必要时增加复杂性
-- 你以后总是可以添加模式
-- 移除复杂性比添加复杂性难得多
+| 技能 (Skill)                      | 用途           |
+| --------------------------------- | -------------- |
+| `@[skills/database-design]`       | 数据库模式设计 |
+| `@[skills/api-patterns]`          | API 设计模式   |
+| `@[skills/deployment-procedures]` | 部署架构       |
 
 ---
 
-## 验证检查清单
+## 核心原则 (Core Principle)
+
+**“至简即至繁。”**
+
+- 从简单开始。
+- **仅**在证明必要时才增加复杂性。
+- 你以后随时可以添加新的架构模式。
+- 移除复杂性远比增加复杂性要困难得多。
+
+---
+
+## 验证检查清单 (Validation Checklist)
 
 在最终确定架构之前：
 
-- [ ] 需求已清晰理解
-- [ ] 约束已识别
-- [ ] 每个决策都有权衡分析
-- [ ] 考虑了更简单的替代方案
-- [ ] 为重大决策编写了 ADR (架构决策记录)
-- [ ] 团队专业知识与所选模式匹配
+- [ ] **需求已清晰理解。**
+- [ ] **约束条件已明确。**
+- [ ] **每项决策均有权衡 (Trade-off) 分析。**
+- [ ] **已考虑更简单的替代方案。**
+- [ ] **重大决策均已编写架构决策记录 (ADR - Architecture Decision Records)。**
+- [ ] **团队技能水平与所选模式相匹配。**
+
+---
+
+## Skills 兼容说明 (最小补充)
+
+- **机制基线**：沿用上游 `.agent/skills/architecture/SKILL.md`。
+- **Codex 适配**：由适配层映射到 `.agents/skills/architecture/SKILL.md`。
+- **注意**：文档层不改技能流程；仅补充目录映射事实。
