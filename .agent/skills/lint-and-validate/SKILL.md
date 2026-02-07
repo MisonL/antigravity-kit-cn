@@ -4,30 +4,30 @@ description: Automatic quality control, linting, and static analysis procedures.
 allowed-tools: Read, Glob, Grep, Bash
 ---
 
-# Lint 与校验技能 (Lint and Validate Skill)
+# 校验与验证技能 (Lint and Validate Skill)
 
-> **MANDATORY:** 在每次代码修改后，务必运行相应的校验工具。在代码通过所有校验之前，不要宣布任务完成。
+> **MANDATORY:** 在每次代码修改后，务必运行相应的验证工具。在代码通过所有校验之前，不要宣布任务完成。
 
 ### 不同生态系统的处理流程 (Procedures by Ecosystem)
 
 #### Node.js / TypeScript
 
-1. **Lint/修复：** `npm run lint` 或 `npx eslint "path" --fix`
-2. **类型检查：** `npx tsc --noEmit`
-3. **安全性：** `npm audit --audit-level=high`
+1. **Lint/修复:** `npm run lint` 或 `npx eslint "path" --fix`
+2. **类型检查:** `npx tsc --noEmit`
+3. **安全性:** `npm audit --audit-level=high`
 
 #### Python
 
-1. **Linter (Ruff)：** `ruff check "path" --fix` (快速且现代)
-2. **安全性 (Bandit)：** `bandit -r "path" -ll`
-3. **类型检查 (MyPy)：** `mypy "path"`
+1. **Linter (Ruff):** `ruff check "path" --fix` (快速且现代)
+2. **安全性 (Bandit):** `bandit -r "path" -ll`
+3. **类型检查 (MyPy):** `mypy "path"`
 
 ## 质量闭环 (The Quality Loop)
 
 1. **编写/编辑代码**
-2. **运行审计：** `npm run lint && npx tsc --noEmit`
-3. **分析报告：** 检查 "FINAL AUDIT REPORT" 部分。
-4. **修复并重复：** 严禁提交包含 "FINAL AUDIT" 失败项的代码。
+2. **运行审计:** `npm run lint && npx tsc --noEmit`
+3. **分析报告:** 检查 "FINAL AUDIT REPORT" 部分。
+4. **修复并重复:** 严禁提交包含 "FINAL AUDIT" 失败项的代码。
 
 ## 错误处理 (Error Handling)
 
