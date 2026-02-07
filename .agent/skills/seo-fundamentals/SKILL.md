@@ -1,10 +1,10 @@
 ---
 name: seo-fundamentals
-description: SEO 基础、E-E-A-T、核心 Web 指标 (Core Web Vitals) 以及 Google 算法原理。
+description: SEO 基础、E-E-A-T、核心 Web 指标（Core Web Vitals）以及 Google 算法原理。
 allowed-tools: Read, Glob, Grep
 ---
 
-# SEO 基础 (SEO Fundamentals)
+# SEO 基础
 
 > 搜索引擎可见性的核心准则。
 
@@ -12,16 +12,18 @@ allowed-tools: Read, Glob, Grep
 
 ## 1. E-E-A-T 框架
 
-| 准则                           | 信号 (Signals)                 |
+| 准则                           | 信号（Signals）                |
 | ------------------------------ | ------------------------------ |
-| **Experience (经验)**          | 第一手知识、真实的案例         |
-| **Expertise (专业性)**         | 专业资质、知识深度             |
-| **Authoritativeness (权威性)** | 反向链接、提及度、行业认可     |
-| **Trustworthiness (信任度)**   | HTTPS 协议、透明度、信息准确性 |
+| **Experience（经验）**          | 第一手知识、真实的案例         |
+| **Expertise（专业性）**         | 专业资质、知识深度             |
+| **Authoritativeness（权威性）** | 反向链接、提及度、行业认可     |
+| **Trustworthiness（信任度）**   | HTTPS 协议、透明度、信息准确性 |
 
 ---
 
-## 2. 核心 Web 指标 (Core Web Vitals)
+## 2. 核心 Web 指标
+
+核心 Web 指标（Core Web Vitals，CWV）包括 LCP、INP、CLS。
 
 | 指标    | 目标值  | 衡量维度   |
 | ------- | ------- | ---------- |
@@ -31,28 +33,28 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 3. 技术 SEO 准则 (Technical SEO)
+## 3. 技术 SEO 准则
 
 ### 网站结构
 
 | 元素                      | 目的             |
 | ------------------------- | ---------------- |
-| XML 站点地图 (Sitemap)    | 协助搜索引擎抓取 |
+| XML 站点地图（Sitemap）    | 协助搜索引擎抓取 |
 | robots.txt                | 控制访问权限     |
-| 规范标签 (Canonical tags) | 防止内容重复     |
+| 规范标签（Canonical tags） | 防止内容重复     |
 | HTTPS                     | 安全性权重信号   |
 
 ### 性能表现
 
 | 因素       | 影响维度            |
 | ---------- | ------------------- |
-| 页面速度   | 核心 Web 指标 (CWV) |
+| 页面速度   | 核心 Web 指标（CWV） |
 | 移动端友好 | 排名核心因子        |
 | 纯净的 URL | 可抓取性            |
 
 ---
 
-## 4. 内容 SEO 准则 (Content SEO)
+## 4. 内容 SEO 准则
 
 ### 页面级元素
 
@@ -62,7 +64,7 @@ allowed-tools: Read, Glob, Grep
 | Meta 描述  | 150-160 字符，引人入胜     |
 | H1 标签    | 每页仅限一个，包含主关键词 |
 | H2-H6 标签 | 逻辑层级分明               |
-| Alt 文本   | 具有描述性，严禁关键词堆砌 |
+| Alt 文本（替代文本） | 具有描述性，严禁关键词堆砌 |
 
 ### 内容质量
 
@@ -75,58 +77,59 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 5. 结构化数据 (Schema Markup) 类型
+## 5. 结构化数据类型
+
+结构化数据（Schema Markup）常见类型如下：
 
 | 类型                | 使用场景     |
 | ------------------- | ------------ |
-| Article (文章)      | 博客、新闻稿 |
-| Organization (组织) | 公司信息     |
-| Person (人员)       | 作者简介     |
+| Article（文章）      | 博客、新闻稿 |
+| Organization（组织） | 公司信息     |
+| Person（人员）       | 作者简介     |
 | FAQPage             | 问答内容     |
-| Product (产品)      | 电子商务     |
-| Review (评价)       | 评分与口碑   |
+| Product（产品）      | 电子商务     |
+| Review（评价）       | 评分与口碑   |
 | BreadcrumbList      | 导航面包屑   |
 
 ---
 
-## 6. AI 内容准则 (AI Content Guidelines)
+## 6. AI 内容准则
 
 ### Google 的关注点
 
-| ✅ 推荐 (Do)       | ❌ 禁止 (Don't)              |
+| ✅ 推荐（Do）       | ❌ 禁止（Don't）              |
 | ------------------ | ---------------------------- |
 | AI 初稿 + 人工编辑 | 直接发布原生 AI 内容         |
 | 加入原创见解       | 毫无价值的机械搬运           |
-| 专家审阅确认       | 跳过事实核查 (Fact-checking) |
+| 专家审阅确认       | 跳过事实核查（Fact-checking） |
 | 遵循 E-E-A-T 原则  | 关键词堆砌                   |
 
 ---
 
-## 7. 排名因素优先级 (Ranking Factors)
+## 7. 排名因素优先级
 
 | 优先级 | 因素                               |
 | ------ | ---------------------------------- |
 | 1      | 高质量、相关的原创内容             |
-| 2      | 来自权威网站的反向链接 (Backlinks) |
-| 3      | 页面体验 (核心 Web 指标)           |
+| 2      | 来自权威网站的反向链接（Backlinks） |
+| 3      | 页面体验（核心 Web 指标）           |
 | 4      | 移动端优化程度                     |
-| 5      | 技术 SEO 基础 (抓取与收录)         |
+| 5      | 技术 SEO 基础（抓取与收录）         |
 
 ---
 
-## 8. 效果评估 (Measurement)
+## 8. 效果评估
 
 | 指标          | 推荐工具               |
 | ------------- | ---------------------- |
-| 关键词排名    | Search Console, Ahrefs |
-| 流量统计      | Analytics              |
-| 核心 Web 指标 | PageSpeed Insights     |
-| 收录情况      | Search Console         |
-| 反向链接      | Ahrefs, Semrush        |
+| 关键词排名    | Search Console（搜索控制台）、Ahrefs |
+| 流量统计      | Google Analytics（分析）             |
+| 核心 Web 指标 | PageSpeed Insights（页面速度分析）   |
+| 收录情况      | Search Console（搜索控制台）         |
+| 反向链接      | Ahrefs、Semrush                      |
 
 ---
 
 > **谨记：** SEO 是一场马拉松。高质量内容 + 卓越技术 + 耐心 = 最终成果。
 
 ---
-
