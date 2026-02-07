@@ -1,124 +1,176 @@
 ---
 name: mcp-builder
-description: MCP (模型上下文协议) 服务器构建原则、工具设计与资源模式。
+description: MCP (Model Context Protocol) server building principles. Tool design, resource patterns, best practices.
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# MCP 构建器 (MCP Builder)
+# MCP Builder
 
-> 构建 MCP 服务器的原则与最佳实践。
-
----
-
-## 1. MCP 概览
-
-### 什么是 MCP？
-
-模型上下文协议 (Model Context Protocol) —— 连接 AI 系统与外部工具、数据源的统一标准。
-
-### 核心概念
-
-| 概念                 | 用途                             |
-| -------------------- | -------------------------------- |
-| **工具 (Tools)**     | AI 可以调用的函数/能力           |
-| **资源 (Resources)** | AI 可以读取的数据 (如文件、文档) |
-| **指示 (Prompts)**   | 预定义的提示词模板               |
+> Principles for building MCP servers.
 
 ---
 
-## 2. 服务器架构 (Server Architecture)
+## 1. MCP Overview
 
-### 项目结构示例
+### What is MCP?
+
+Model Context Protocol - standard for connecting AI systems with external tools and data sources.
+
+### Core Concepts
+
+| Concept       | Purpose                      |
+| ------------- | ---------------------------- |
+| **Tools**     | Functions AI can call        |
+| **Resources** | Data AI can read             |
+| **Prompts**   | Pre-defined prompt templates |
+
+---
+
+## 2. Server Architecture
+
+### Project Structure
 
 ```
 my-mcp-server/
 ├── src/
-│   └── index.ts      # 主入口文件
+│   └── index.ts      # Main entry
 ├── package.json
 └── tsconfig.json
 ```
 
-### 传输类型 (Transport Types)
+### Transport Types
 
-| 类型          | 适用场景               |
-| ------------- | ---------------------- |
-| **Stdio**     | 本地运行、基于命令行   |
-| **SSE**       | 基于 Web、支持流式传输 |
-| **WebSocket** | 实时、双向通信         |
-
----
-
-## 3. 工具设计原则 (Tool Design)
-
-| 原则           | 描述                                       |
-| -------------- | ------------------------------------------ |
-| **名称清晰**   | 面向动作 (如 `get_weather`, `create_user`) |
-| **职责单一**   | 一个工具只做好一件事                       |
-| **输入校验**   | 带有类型和描述的完整 Schema                |
-| **结构化输出** | 可预测的、易于解析的响应格式               |
+| Type          | Use                      |
+| ------------- | ------------------------ |
+| **Stdio**     | Local, CLI-based         |
+| **SSE**       | Web-based, streaming     |
+| **WebSocket** | Real-time, bidirectional |
 
 ---
 
-## 4. 资源模式 (Resource Patterns)
+## 3. Tool Design Principles
 
-| 类型                | 用途                        |
-| ------------------- | --------------------------- |
-| **静态 (Static)**   | 固定数据 (如配置、静态文档) |
-| **动态 (Dynamic)**  | 根据请求即时生成的数据      |
-| **模板 (Template)** | 带有参数的 URI 路径         |
+### Good Tool Design
 
----
+| Principle         | Description                                |
+| ----------------- | ------------------------------------------ |
+| Clear name        | Action-oriented (get_weather, create_user) |
+| Single purpose    | One thing well                             |
+| Validated input   | Schema with types and descriptions         |
+| Structured output | Predictable response format                |
 
-## 5. 错误处理 (Error Handling)
+### Input Schema Design
 
-| 情景       | 响应方式                           |
-| ---------- | ---------------------------------- |
-| 参数无效   | 返回详细的校验错误信息             |
-| 未找到     | 返回明确的 "Not Found" 状态        |
-| 服务器错误 | 返回通用错误，但在后台记录详细日志 |
-
----
-
-## 6. 多模态处理 (Multimodal)
-
-| 类型 | 编码方式           |
-| ---- | ------------------ |
-| 文本 | 纯文本             |
-| 图像 | Base64 + MIME 类型 |
-| 文件 | Base64 + MIME 类型 |
+| Field       | Required?             |
+| ----------- | --------------------- |
+| Type        | Yes - object          |
+| Properties  | Define each param     |
+| Required    | List mandatory params |
+| Description | Human-readable        |
 
 ---
 
-## 7. 安全原则 (Security)
+## 4. Resource Patterns
 
-- **输入验证**：严格校验所有工具的输入参数。
-- **脱敏处理**：清理用户提供的数据，防止注入攻击。
-- **权限控制**：限制资源访问权限，不暴露敏感信息。
-- **密钥管理**：使用环境变量，严禁将 Secret 写入日志。
+### Resource Types
 
----
+| Type     | Use                       |
+| -------- | ------------------------- |
+| Static   | Fixed data (config, docs) |
+| Dynamic  | Generated on request      |
+| Template | URI with parameters       |
 
-## 8. 调试与测试
+### URI Patterns
 
-### 测试分类
-
-| 类型                   | 焦点                |
-| ---------------------- | ------------------- |
-| 单元测试 (Unit)        | 工具的核心逻辑      |
-| 集成测试 (Integration) | 完整的服务器链路    |
-| 契约测试 (Contract)    | Schema 的合法性验证 |
-
----
-
-## 9. 最佳实践检查清单
-
-- [ ] **工具命名**：是否清晰且面向动作？
-- [ ] **参数 Schema**：是否完整且带有描述？
-- [ ] **输出格式**：是否为结构化的 JSON？
-- [ ] **错误处理**：是否涵盖了各种异常情况？
-- [ ] **环境配置**：是否使用了基于环境变量的动态配置？
-- [ ] **日志记录**：是否开启了必要的调试日志？
+| Pattern       | Example             |
+| ------------- | ------------------- |
+| Fixed         | `docs://readme`     |
+| Parameterized | `users://{userId}`  |
+| Collection    | `files://project/*` |
 
 ---
 
-> **记住：** MCP 工具应该保持简单、专注且文档齐全。AI 极度依赖工具描述来判断何时以及如何使用它们。
+## 5. Error Handling
+
+### Error Types
+
+| Situation      | Response                   |
+| -------------- | -------------------------- |
+| Invalid params | Validation error message   |
+| Not found      | Clear "not found"          |
+| Server error   | Generic error, log details |
+
+### Best Practices
+
+- Return structured errors
+- Don't expose internal details
+- Log for debugging
+- Provide actionable messages
+
+---
+
+## 6. Multimodal Handling
+
+### Supported Types
+
+| Type   | Encoding           |
+| ------ | ------------------ |
+| Text   | Plain text         |
+| Images | Base64 + MIME type |
+| Files  | Base64 + MIME type |
+
+---
+
+## 7. Security Principles
+
+### Input Validation
+
+- Validate all tool inputs
+- Sanitize user-provided data
+- Limit resource access
+
+### API Keys
+
+- Use environment variables
+- Don't log secrets
+- Validate permissions
+
+---
+
+## 8. Configuration
+
+### Claude Desktop Config
+
+| Field   | Purpose               |
+| ------- | --------------------- |
+| command | Executable to run     |
+| args    | Command arguments     |
+| env     | Environment variables |
+
+---
+
+## 9. Testing
+
+### Test Categories
+
+| Type        | Focus             |
+| ----------- | ----------------- |
+| Unit        | Tool logic        |
+| Integration | Full server       |
+| Contract    | Schema validation |
+
+---
+
+## 10. Best Practices Checklist
+
+- [ ] Clear, action-oriented tool names
+- [ ] Complete input schemas with descriptions
+- [ ] Structured JSON output
+- [ ] Error handling for all cases
+- [ ] Input validation
+- [ ] Environment-based configuration
+- [ ] Logging for debugging
+
+---
+
+> **Remember:** MCP tools should be simple, focused, and well-documented. The AI relies on descriptions to use them correctly.
