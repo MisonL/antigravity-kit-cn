@@ -1,211 +1,211 @@
 ---
 name: documentation-templates
-description: 文档模板和结构指南。README、API 文档、代码注释和 AI 友好文档。
+description: Documentation templates and structure guidelines. README, API docs, code comments, and AI-friendly documentation.
 allowed-tools: Read, Glob, Grep
 ---
 
 # 文档模板 (Documentation Templates)
 
-> 常用文档类型的模板与结构指南。
+> 常见文档类型的模板和结构指南。
 
 ---
 
-## 1. README 结构
+## 1. README 结构 (README Structure)
 
-### 核心章节 (按优先级排序)
+### 核心部分 (优先级顺序)
 
-| 章节                        | 目的                 |
-| --------------------------- | -------------------- |
-| **标题 + 一句话简介**       | 这是什么？           |
-| **快速上手 (Quick Start)**  | 在 <5 分钟内运行起来 |
-| **功能特性 (Features)**     | 能做什么？           |
-| **配置 (Configuration)**    | 如何自定义           |
-| **API 参考**                | 链接到详细文档       |
-| **贡献指南 (Contributing)** | 如何参与开发         |
-| **许可证 (License)**        | 法律条款             |
+| 部分                  | 用途                |
+| --------------------- | ------------------- |
+| **标题 + 一句话描述** | 这是什么？          |
+| **快速开始**          | 在 5 分钟内运行起来 |
+| **功能特性**          | 我能做什么？        |
+| **配置**              | 如何自定义          |
+| **API 参考**          | 链接到详细文档      |
+| **贡献**              | 如何提供帮助        |
+| **许可证**            | 法律条款            |
 
 ### README 模板
 
 ```markdown
-# 项目名称
+# Project Name
 
-简明扼要的一句话描述。
+Brief one-line description.
 
-## 快速上手
+## Quick Start
 
-[运行该项目的最简步骤]
+[Minimum steps to run]
 
-## 功能特性
+## Features
 
-- 功能 1
-- 功能 2
+- Feature 1
+- Feature 2
 
-## 配置
+## Configuration
 
-| 变量名 | 描述       | 默认值 |
-| ------ | ---------- | ------ |
-| PORT   | 服务器端口 | 3000   |
+| Variable | Description | Default |
+| -------- | ----------- | ------- |
+| PORT     | Server port | 3000    |
 
-## 相关文档
+## Documentation
 
-- [API 参考](./docs/api.md)
-- [架构设计](./docs/architecture.md)
+- [API Reference](./docs/api.md)
+- [Architecture](./docs/architecture.md)
 
-## 许可证
+## License
 
 MIT
 ```
 
 ---
 
-## 2. API 文档结构
+## 2. API 文档结构 (API Documentation Structure)
 
-### 单个端点模板 (Per-Endpoint Template)
+### 单端点模板 (Per-Endpoint Template)
 
 ```markdown
 ## GET /users/:id
 
-按 ID 获取用户信息。
+Get a user by ID.
 
-**参数:**
-| 名称 | 类型 | 是否必填 | 描述 |
+**Parameters:**
+| Name | Type | Required | Description |
 |------|------|----------|-------------|
-| id | string | 是 | 用户 ID |
+| id | string | Yes | User ID |
 
-**响应 (Response):**
+**Response:**
 
-- 200: 用户对象
-- 404: 未找到该用户
+- 200: User object
+- 404: User not found
 
-**示例:**
-[请求和响应示例代码块]
+**Example:**
+[Request and response example]
 ```
 
 ---
 
-## 3. 代码注释指南
+## 3. 代码注释指南 (Code Comment Guidelines)
 
 ### JSDoc/TSDoc 模板
 
 ```typescript
 /**
- * 简要描述函数的功能。
+ * Brief description of what the function does.
  *
- * @param paramName - 参数描述
- * @returns 返回值描述
- * @throws ErrorType - 何时会抛出此错误
+ * @param paramName - Description of parameter
+ * @returns Description of return value
+ * @throws ErrorType - When this error occurs
  *
  * @example
  * const result = functionName(input);
  */
 ```
 
-### 何时应该写注释
+### 何时注释
 
-| ✅ 应该写注释           | ❌ 不建议写注释               |
-| ----------------------- | ----------------------------- |
-| 解释“为什么” (业务逻辑) | 解释“是什么” (显而易见的代码) |
-| 复杂的算法逻辑          | 每一行都写注释                |
-| 非直观的行为            | 自解释的代码                  |
-| API 契约/约定           | 内部实现细节                  |
+| ✅ 注释           | ❌ 不要注释       |
+| ----------------- | ----------------- |
+| 为什么 (业务逻辑) | 是什么 (显而易见) |
+| 复杂算法          | 每一行            |
+| 非显而易见的行为  | 自解释的代码      |
+| API 契约          | 实现细节          |
 
 ---
 
 ## 4. 变更日志模板 (Keep a Changelog)
 
 ```markdown
-# 变更日志 (Changelog)
+# Changelog
 
-## [未发布]
+## [Unreleased]
 
-### 新增
+### Added
 
-- 某项新功能
+- New feature
 
 ## [1.0.0] - 2025-01-01
 
-### 新增
+### Added
 
-- 首次发布
+- Initial release
 
-### 变更
+### Changed
 
-- 更新了依赖库
+- Updated dependency
 
-### 修复
+### Fixed
 
-- 修复了某项 Bug
+- Bug fix
 ```
 
 ---
 
-## 5. 架构决策记录 (ADR)
+## 5. 架构决策记录 (ADR) (Architecture Decision Record)
 
 ```markdown
-# ADR-001: [决策标题]
+# ADR-001: [Title]
 
-## 状态
+## Status
 
-已采纳 (Accepted) / 已废弃 (Deprecated) / 已被替代 (Superseded)
+Accepted / Deprecated / Superseded
 
-## 背景
+## Context
 
-我们为什么要做出这个决定？当时的上下文是什么？
+Why are we making this decision?
 
-## 决策
+## Decision
 
-我们最终决定了什么？
+What did we decide?
 
-## 后果
+## Consequences
 
-这一决策带来了哪些权衡 (Trade-offs)？
+What are the trade-offs?
 ```
 
 ---
 
-## 6. AI 友好文档 (2025)
+## 6. AI 友好文档 (2025) (AI-Friendly Documentation)
 
 ### llms.txt 模板
 
-针对 AI 爬虫和 Agent 优化的说明文件：
+针对 AI 爬虫和 Agents (智能体)：
 
 ```markdown
-# 项目名称
+# Project Name
 
-> 项目目标的一句话概述。
+> One-line objective.
 
-## 核心文件
+## Core Files
 
-- [src/index.ts]: 主入口
-- [src/api/]: API 路由
-- [docs/]: 文档目录
+- [src/index.ts]: Main entry
+- [src/api/]: API routes
+- [docs/]: Documentation
 
-## 关键概念
+## Key Concepts
 
-- 概念 1: 简要解释
-- 概念 2: 简要解释
+- Concept 1: Brief explanation
+- Concept 2: Brief explanation
 ```
 
-### 适配 MCP 的文档规范
+### MCP 就绪文档 (MCP-Ready Documentation)
 
-为了便于 RAG (检索增强生成) 索引：
+针对 RAG (检索增强生成) 索引：
 
 - 清晰的 H1-H3 层级
-- 针对数据结构的 JSON/YAML 示例
-- 针对流程的 Mermaid 图表
-- 自包含的章节内容
+- 用于数据结构的 JSON/YAML 示例
+- 用于流程的 Mermaid 图表
+- 自包含的章节
 
 ---
 
 ## 7. 结构原则 (Structure Principles)
 
-| 原则                          | 原因                           |
-| ----------------------------- | ------------------------------ |
-| **可扫描性 (Scannable)**      | 使用标题、列表、表格方便查阅   |
-| **示例优先 (Examples first)** | 展示而非仅仅陈述               |
-| **渐进式描述**                | 从简单到复杂                   |
-| **保持更新**                  | 过时的文档比没有文档更具误导性 |
+| 原则         | 原因                     |
+| ------------ | ------------------------ |
+| **可扫描**   | 标题、列表、表格         |
+| **示例优先** | 展示出来，而不仅仅是讲述 |
+| **循序渐进** | 简单 → 复杂              |
+| **保持更新** | 过时 = 误导              |
 
 ---
 
-> **记住：** 模板只是起点。请根据您项目的实际需求进行灵活调整。
+> **记住：** 模板只是起点。根据你的项目需求进行调整。
