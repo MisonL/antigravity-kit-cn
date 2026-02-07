@@ -10,7 +10,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 1. TDD 循环 (The TDD Cycle)
+## 1. TDD 循环
 
 ```
 🔴 RED (红) → 编写失败的测试
@@ -24,7 +24,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 2. TDD 三定律 (The Three Laws of TDD)
+## 2. TDD 三定律
 
 1. 除非为了让一个失败的测试通过，否则不编写生产代码
 2. 只编写足以展示失败的测试
@@ -32,7 +32,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 3. RED 阶段原则 (RED Phase Principles)
+## 3. RED 阶段原则
 
 ### 写什么
 
@@ -50,7 +50,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 4. GREEN 阶段原则 (GREEN Phase Principles)
+## 4. GREEN 阶段原则
 
 ### 最小代码
 
@@ -68,7 +68,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 5. REFACTOR 阶段原则 (REFACTOR Phase Principles)
+## 5. REFACTOR 阶段原则
 
 ### 改进什么
 
@@ -87,7 +87,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 6. AAA 模式 (AAA Pattern)
+## 6. AAA 模式
 
 每个测试遵循：
 
@@ -111,7 +111,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 8. 测试优先级 (Test Prioritization)
+## 8. 测试优先级
 
 | 优先级 | 测试类型               |
 | ------ | ---------------------- |
@@ -122,7 +122,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 9. 反模式 (Anti-Patterns)
+## 9. 反模式
 
 | ❌ 不要 (Don't) | ✅ 要 (Do)       |
 | --------------- | ---------------- |
@@ -134,7 +134,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 10. AI 增强 TDD (AI-Augmented TDD)
+## 10. AI 增强 TDD
 
 ### 多智能体模式
 

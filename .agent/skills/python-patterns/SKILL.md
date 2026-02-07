@@ -21,7 +21,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 1. 框架选择 (2025)
+## 1. 框架选择
 
 ### 决策树
 
@@ -83,7 +83,7 @@ def (sync) 在以下情况更好：
 └── 阻塞库 (无异步版本)
 ```
 
-### 黄金法则 (The Golden Rule)
+### 黄金法则
 
 ```
 I/O 密集型 → async (等待外部)
@@ -107,7 +107,7 @@ CPU 密集型 → sync + multiprocessing (多进程计算)
 
 ---
 
-## 3. 类型提示策略 (Type Hints Strategy)
+## 3. 类型提示策略
 
 ### 何时添加类型
 
@@ -163,7 +163,7 @@ def apply(fn: Callable[[int], str]) -> str: ...
 
 ---
 
-## 4. 项目结构原则 (Project Structure Principles)
+## 4. 项目结构原则
 
 ### 结构选择
 
@@ -219,7 +219,7 @@ def apply(fn: Callable[[int], str]) -> str: ...
 
 ---
 
-## 5. Django 原则 (2025)
+## 5. Django 原则
 
 ### Django Async (Django 5.0+)
 
@@ -261,7 +261,7 @@ Django 支持异步:
 
 ## 6. FastAPI 原则
 
-### async def vs def (FastAPI)
+### async def vs def
 
 ```
 使用 async def 当:
@@ -277,7 +277,7 @@ Django 支持异步:
 └── FastAPI 会自动在线程池中运行它
 ```
 
-### 依赖注入 (Dependency Injection)
+### 依赖注入
 
 ```
 使用依赖注入用于:
@@ -309,7 +309,7 @@ async def create(user: UserCreate) -> UserResponse:
 
 ---
 
-## 7. 后台任务 (Background Tasks)
+## 7. 后台任务
 
 ### 选择指南
 
@@ -340,7 +340,7 @@ Celery/ARQ:
 
 ---
 
-## 8. 错误处理原则 (Error Handling Principles)
+## 8. 错误处理原则
 
 ### 异常策略
 
@@ -369,7 +369,7 @@ Celery/ARQ:
 
 ---
 
-## 9. 测试原则 (Testing Principles)
+## 9. 测试原则
 
 ### 测试策略
 
@@ -406,7 +406,7 @@ async def test_endpoint():
 
 ---
 
-## 10. 决策检查清单 (Decision Checklist)
+## 10. 决策检查清单
 
 实施前：
 
@@ -420,7 +420,7 @@ async def test_endpoint():
 
 ---
 
-## 11. 避免的反模式 (Anti-Patterns to Avoid)
+## 11. 避免的反模式
 
 ### ❌ 不要 (DON'T):
 

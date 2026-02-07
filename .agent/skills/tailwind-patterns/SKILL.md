@@ -4,7 +4,7 @@ description: Tailwind CSS v4 最佳实践、设计系统配置
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# Tailwind CSS Patterns (v4 - 2025)
+# Tailwind CSS Patterns
 
 > 具有 CSS 原生配置的现代实用优先 CSS。
 
@@ -12,7 +12,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ## 1. Tailwind v4 架构
 
-### v3 相比的变化 (What Changed from v3)
+### v3 相比的变化
 
 | v3 (Legacy)          | v4 (Current)              |
 | -------------------- | ------------------------- |
@@ -22,7 +22,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 | 插件系统             | CSS 原生特性              |
 | `@apply` 指令        | 仍然工作，但不鼓励        |
 
-### v4 核心概念 (Core Concepts)
+### v4 核心概念
 
 | 概念                     | 描述                             |
 | ------------------------ | -------------------------------- |
@@ -35,7 +35,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ## 2. 基于 CSS 的配置
 
-### 主题定义 (Theme Definition)
+### 主题定义
 
 ```css
 @theme {
@@ -66,7 +66,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 3. 容器查询 (Container Queries - v4 Native)
+## 3. 容器查询
 
 ### 断点 vs 容器
 
@@ -93,7 +93,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 4. 响应式设计 (Responsive Design)
+## 4. 响应式设计
 
 ### 断点系统
 
@@ -114,7 +114,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 5. 暗色模式 (Dark Mode)
+## 5. 暗色模式
 
 ### 配置策略
 
@@ -134,7 +134,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 6. 现代布局模式 (Modern Layout Patterns)
+## 6. 现代布局模式
 
 ### Flexbox 模式
 
@@ -158,7 +158,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 7. 现代颜色系统 (Modern Color System)
+## 7. 现代颜色系统
 
 ### OKLCH vs RGB/HSL
 
@@ -178,7 +178,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 8. 排版系统 (Typography System)
+## 8. 排版系统
 
 ### 字体栈模式
 
@@ -188,7 +188,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 | Mono    | `'JetBrains Mono', 'Fira Code', monospace` |
 | Display | `'Outfit', 'Poppins', sans-serif`          |
 
-### 字体比例 (Type Scale)
+### 字体比例
 
 | 类          | 大小     | 用途       |
 | ----------- | -------- | ---------- |
@@ -200,7 +200,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 9. 动画与过渡 (Animation & Transitions)
+## 9. 动画与过渡
 
 ### 内置动画
 
@@ -222,7 +222,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 10. 组件提取 (Component Extraction)
+## 10. 组件提取
 
 ### 何时提取
 
@@ -242,7 +242,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 11. 反模式 (Anti-Patterns)
+## 11. 反模式
 
 | 不要 (Don't)      | 要 (Do)             |
 | ----------------- | ------------------- |
@@ -255,7 +255,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 12. 性能原则 (Performance Principles)
+## 12. 性能原则
 
 | 原则             | 实现              |
 | ---------------- | ----------------- |

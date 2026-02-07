@@ -10,7 +10,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 1. 运算符语法规则 (Operator Syntax Rules)
+## 1. 运算符语法规则
 
 ### 关键：括号是必须的
 
@@ -39,7 +39,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 3. 空值检查模式 (Null Check Patterns)
+## 3. 空值检查模式
 
 ### 访问前始终检查
 
@@ -50,7 +50,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 4. 字符串插值 (String Interpolation)
+## 4. 字符串插值
 
 ### 复杂表达式
 
@@ -67,7 +67,7 @@ Write-Output "Value: $value"
 
 ---
 
-## 5. 错误处理 (Error Handling)
+## 5. 错误处理
 
 ### ErrorActionPreference
 
@@ -85,7 +85,7 @@ Write-Output "Value: $value"
 
 ---
 
-## 6. 文件路径 (File Paths)
+## 6. 文件路径
 
 ### Windows 路径规则
 
@@ -99,7 +99,7 @@ Write-Output "Value: $value"
 
 ---
 
-## 7. 数组操作 (Array Operations)
+## 7. 数组操作
 
 ### 正确模式
 
@@ -111,7 +111,7 @@ Write-Output "Value: $value"
 
 ---
 
-## 8. JSON 操作 (JSON Operations)
+## 8. JSON 操作
 
 ### 关键：Depth 参数
 
@@ -130,7 +130,7 @@ Write-Output "Value: $value"
 
 ---
 
-## 9. 常见错误 (Common Errors)
+## 9. 常见错误
 
 | 错误消息               | 原因         | 修复                          |
 | ---------------------- | ------------ | ----------------------------- |
@@ -141,7 +141,7 @@ Write-Output "Value: $value"
 
 ---
 
-## 10. 脚本模板 (Script Template)
+## 10. 脚本模板
 
 ```powershell
 # Strict mode

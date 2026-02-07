@@ -8,26 +8,26 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 > 掌握 Rust 1.75+ 特性，高级类型系统用法，构建高性能、内存安全的系统。深入了解异步编程、现代 Web 框架和不断演进的 Rust 生态系统。
 
-## 适用场景 (Use this skill when)
+## 适用场景
 
 - 构建 Rust 服务、库或系统工具
 - 解决所有权、生命周期或异步设计问题
 - 在保证内存安全的前提下优化性能
 
-## 不适用场景 (Do not use this skill when)
+## 不适用场景
 
 - 你需要快速脚本或动态运行时
 - 你只需要基本的 Rust 语法
 - 你不能将 Rust 引入技术栈
 
-## 指令 (Instructions)
+## 指令
 
 1. 阐明性能、安全和运行时约束。
 2. 选择异步/运行时和 Crate 生态系统方案。
 3. 实施测试和 Lint。
 4. 分析并优化性能热点。
 
-## 能力 (Capabilities)
+## 能力
 
 ### 现代 Rust 语言特性
 
@@ -135,7 +135,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 - IDE 集成和开发工作流
 - 依赖管理和版本决议
 
-## 行为特征 (Behavioral Traits)
+## 行为特征
 
 - 利用类型系统确保编译时正确性
 - 在不牺牲性能的前提下优先考虑内存安全
@@ -147,7 +147,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 - 拥抱函数式编程模式
 - 紧跟 Rust 语言演进
 
-## 响应策略 (Response Approach)
+## 响应策略
 
 1. **需求分析**: 确定 Rust 特定的安全与性能边界。
 2. **API 设计**: 设计类型安全的接口与综合错误处理。

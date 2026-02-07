@@ -10,7 +10,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 1. 测试金字塔 (Testing Pyramid)
+## 1. 测试金字塔
 
 ```
         /\          E2E (Few - 少)
@@ -25,7 +25,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 2. AAA 模式 (AAA Pattern)
+## 2. AAA 模式
 
 | 步骤        | 目的         |
 | ----------- | ------------ |
@@ -47,7 +47,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 4. 单元测试原则 (Unit Test Principles)
+## 4. 单元测试原则
 
 ### 好的单元测试
 
@@ -69,7 +69,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 5. 集成测试原则 (Integration Test Principles)
+## 5. 集成测试原则
 
 ### 测试什么
 
@@ -90,7 +90,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 6. Mocking 原则 (Mocking Principles)
+## 6. Mocking 原则
 
 ### 何时 Mock
 
@@ -112,9 +112,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 7. 测试组织 (Test Organization)
+## 7. 测试组织
 
-### 命名 (Naming)
+### 命名
 
 | 模式            | 示例                          |
 | --------------- | ----------------------------- |
@@ -122,7 +122,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 | When condition  | "when user not found..."      |
 | Given-when-then | "given X, when Y, then Z"     |
 
-### 分组 (Grouping)
+### 分组
 
 | 级别       | 用途         |
 | ---------- | ------------ |
@@ -132,7 +132,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 8. 测试数据 (Test Data)
+## 8. 测试数据
 
 ### 策略
 
@@ -151,7 +151,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 9. 最佳实践 (Best Practices)
+## 9. 最佳实践
 
 | 实践             | 为什么         |
 | ---------------- | -------------- |
@@ -163,7 +163,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 10. 反模式 (Anti-Patterns)
+## 10. 反模式
 
 | ❌ 不要 (Don't)  | ✅ 要 (Do)     |
 | ---------------- | -------------- |

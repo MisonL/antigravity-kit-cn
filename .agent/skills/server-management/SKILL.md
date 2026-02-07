@@ -11,7 +11,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 1. 进程管理原则 (Process Management Principles)
+## 1. 进程管理原则
 
 ### 工具选择
 
@@ -33,7 +33,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 2. 监控原则 (Monitoring Principles)
+## 2. 监控原则
 
 ### 监控什么
 
@@ -63,7 +63,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 3. 日志管理原则 (Log Management Principles)
+## 3. 日志管理原则
 
 ### 日志策略
 
@@ -82,7 +82,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 4. 扩缩容决策 (Scaling Decisions)
+## 4. 扩缩容决策
 
 ### 何时扩缩容
 
@@ -103,7 +103,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 5. 健康检查原则 (Health Check Principles)
+## 5. 健康检查原则
 
 ### 什么是健康
 
@@ -122,7 +122,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 6. 安全原则 (Security Principles)
+## 6. 安全原则
 
 | 领域       | 原则                |
 | ---------- | ------------------- |
@@ -134,7 +134,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 7. 故障排除优先级 (Troubleshooting Priority)
+## 7. 故障排除优先级
 
 当出问题时：
 
@@ -146,7 +146,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 8. 反模式 (Anti-Patterns)
+## 8. 反模式
 
 | ❌ 不要 (Don't) | ✅ 要 (Do)       |
 | --------------- | ---------------- |

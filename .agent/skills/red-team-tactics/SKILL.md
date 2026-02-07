@@ -41,9 +41,9 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 2. 侦察原则 (Reconnaissance Principles)
+## 2. 侦察原则
 
-### 被动 (Passive) vs 主动 (Active)
+### 被动 (Passive) vs 主动
 
 | 类型        | 权衡                   |
 | ----------- | ---------------------- |
@@ -61,7 +61,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 3. 初始访问向量 (Initial Access Vectors)
+## 3. 初始访问向量
 
 ### 选择标准
 
@@ -74,7 +74,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 4. 提权原则 (Privilege Escalation Principles)
+## 4. 提权原则
 
 ### Windows 目标
 
@@ -96,7 +96,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 5. 防御规避原则 (Defense Evasion Principles)
+## 5. 防御规避原则
 
 ### 关键技术
 
@@ -107,7 +107,7 @@ allowed-tools: Read, Glob, Grep
 | 时间篡改 (Timestomping) | 隐藏文件修改 |
 | 日志清除                | 移除证据     |
 
-### 操作安全 (OPSEC)
+### 操作安全
 
 - 在工作时间工作
 - 模仿合法流量模式
@@ -116,7 +116,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 6. 横向移动原则 (Lateral Movement Principles)
+## 6. 横向移动原则
 
 ### 凭证类型
 
@@ -148,7 +148,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 8. 报告原则 (Reporting Principles)
+## 8. 报告原则
 
 ### 攻击叙事
 
@@ -159,7 +159,7 @@ allowed-tools: Read, Glob, Grep
 3. 实现了什么目标
 4. 哪里检测失败
 
-### 检测缺口 (Detection Gaps)
+### 检测缺口
 
 对于每个成功的技术：
 
@@ -169,16 +169,16 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 9. 道德边界 (Ethical Boundaries)
+## 9. 道德边界
 
-### 始终 (Always)
+### 始终
 
 - 保持在范围内
 - 最小化影响
 - 如果发现真实威胁立即报告
 - 记录所有行动
 
-### 绝不 (Never)
+### 绝不
 
 - 破坏生产数据
 - 造成拒绝服务 (除非在范围内)
@@ -187,7 +187,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 10. 反模式 (Anti-Patterns)
+## 10. 反模式
 
 | ❌ 不要 (Don't) | ✅ 要 (Do)   |
 | --------------- | ------------ |

@@ -8,7 +8,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 > 发现并测试一切。不遗漏任何路由。
 
-## 🔧 运行时脚本 (Runtime Scripts)
+## 🔧 运行时脚本
 
 **执行这些进行自动化浏览器测试：**
 
@@ -22,7 +22,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 1. 深度审计方法 (Deep Audit Approach)
+## 1. 深度审计方法
 
 ### 发现优先
 
@@ -41,7 +41,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 2. Web 测试金字塔 (Testing Pyramid for Web)
+## 2. Web 测试金字塔
 
 ```
         /\          E2E (Few - 少)
@@ -56,7 +56,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 3. E2E 测试原则 (E2E Test Principles)
+## 3. E2E 测试原则
 
 ### 测试什么
 
@@ -100,7 +100,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 5. 视觉测试 (Visual Testing)
+## 5. 视觉测试
 
 ### 何时使用
 
@@ -120,7 +120,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 6. API 测试原则 (API Testing Principles)
+## 6. API 测试原则
 
 ### 覆盖领域
 
@@ -133,7 +133,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 7. 测试组织 (Test Organization)
+## 7. 测试组织
 
 ### 文件结构
 
@@ -154,7 +154,7 @@ tests/
 
 ---
 
-## 8. CI 集成 (CI Integration)
+## 8. CI 集成
 
 ### 流水线步骤
 
@@ -173,7 +173,7 @@ tests/
 
 ---
 
-## 9. 反模式 (Anti-Patterns)
+## 9. 反模式
 
 | ❌ 不要 (Don't)  | ✅ 要 (Do)   |
 | ---------------- | ------------ |

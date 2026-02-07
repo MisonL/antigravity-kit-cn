@@ -21,7 +21,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 2. 核心 Web 指标 (Core Web Vitals)
+## 2. 核心 Web 指标
 
 | 指标    | 目标    | 衡量       |
 | ------- | ------- | ---------- |
@@ -31,7 +31,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 3. 技术 SEO 原则 (Technical SEO Principles)
+## 3. 技术 SEO 原则
 
 ### 站点结构
 
@@ -52,7 +52,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 4. 内容 SEO 原则 (Content SEO Principles)
+## 4. 内容 SEO 原则
 
 ### 页面元素
 
@@ -75,7 +75,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 5. Schema 标记类型 (Schema Markup Types)
+## 5. Schema 标记类型
 
 | 类型           | 用途           |
 | -------------- | -------------- |
@@ -89,7 +89,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 6. AI 内容指南 (AI Content Guidelines)
+## 6. AI 内容指南
 
 ### Google 寻找什么
 
@@ -114,7 +114,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 8. 衡量 (Measurement)
+## 8. 衡量
 
 | 指标          | 工具                   |
 | ------------- | ---------------------- |

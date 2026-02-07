@@ -8,24 +8,24 @@ allowed-tools: Read, Glob, Grep
 
 > 来源: obra/superpowers
 
-## 概述 (Overview)
+## 概述
 
 此 Skill 提供了一种结构化的调试方法，防止随机猜测，确保问题在解决之前被正确理解。
 
-## 4 阶段调试流程 (4-Phase Debugging Process)
+## 4 阶段调试流程
 
 ### 第一阶段：重现 (Phase 1: Reproduce)
 
 在修复之前，可靠地重现问题。
 
 ```markdown
-## 重现步骤 (Reproduction Steps)
+## 重现步骤
 
 1. [重现的确切步骤]
 2. [下一步]
 3. [预期 vs 实际结果]
 
-## 重现率 (Reproduction Rate)
+## 重现率
 
 - [ ] 总是 (100%)
 - [ ] 经常 (50-90%)
@@ -38,7 +38,7 @@ allowed-tools: Read, Glob, Grep
 缩小来源范围。
 
 ```markdown
-## 隔离问题 (Isolation Questions)
+## 隔离问题
 
 - 什么时候开始发生的？
 - 最近有什么变化？
@@ -52,9 +52,9 @@ allowed-tools: Read, Glob, Grep
 找到根本原因，而不仅仅是症状。
 
 ```markdown
-## 根因分析 (Root Cause Analysis)
+## 根因分析
 
-### 5 个为什么 (The 5 Whys)
+### 5 个为什么
 
 1. 为什么: [第一个观察]
 2. 为什么: [更深的原因]
@@ -68,7 +68,7 @@ allowed-tools: Read, Glob, Grep
 修复并验证它确实修复了。
 
 ```markdown
-## 修复验证 (Fix Verification)
+## 修复验证
 
 - [ ] Bug 不再重现
 - [ ] 相关功能仍然工作
@@ -76,7 +76,7 @@ allowed-tools: Read, Glob, Grep
 - [ ] 已添加测试以防止回归
 ```
 
-## 调试检查清单 (Debugging Checklist)
+## 调试检查清单
 
 ```markdown
 ## 开始前
@@ -100,7 +100,7 @@ allowed-tools: Read, Glob, Grep
 - [ ] 已检查类似代码
 ```
 
-## 常用调试命令 (Common Debugging Commands)
+## 常用调试命令
 
 ```bash
 # 最近的更改
@@ -114,7 +114,7 @@ grep -r "errorPattern" --include="*.ts"
 pm2 logs app-name --err --lines 100
 ```
 
-## 反模式 (Anti-Patterns)
+## 反模式
 
 ❌ **随机更改** - "也许如果我改这个..."
 ❌ **忽略证据** - "那不可能是原因"
