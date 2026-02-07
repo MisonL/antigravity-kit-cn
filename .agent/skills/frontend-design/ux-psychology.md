@@ -1,60 +1,60 @@
-# UX Psychology Reference
+# UX 心理学参考（UX Psychology Reference）
 
-> Deep dive into UX laws, emotional design, trust building, and behavioral psychology.
+> 深入覆盖 UX 法则、情感化设计、信任构建与行为心理学。
 
 ---
 
-## 1. Core UX Laws
+## 1. 核心 UX 法则（Core UX Laws）
 
-### Hick's Law
+### Hick's Law（希克定律）
 
-**Principle:** The time to make a decision increases logarithmically with the number of choices.
+**Principle（原则）**：决策时间会随着可选项数量的增加而呈对数增长。
 
 ```
 Decision Time = a + b × log₂(n + 1)
 Where n = number of choices
 ```
 
-**Application:**
-- Navigation: Max 5-7 top-level items
-- Forms: Break into steps (progressive disclosure)
-- Options: Default selections when possible
-- Filters: Prioritize most-used, hide advanced
+**Application（应用）**：
+- 导航：顶层入口控制在 5-7 个。
+- 表单：拆成分步（progressive disclosure，渐进披露）。
+- 选项：尽量给默认值。
+- 筛选：优先展示高频项，进阶项折叠。
 
-**Example:**
+**Example（示例）**：
 ```
-❌ Bad: 15 menu items in one nav
-✅ Good: 5 main categories + "More" 
+❌ Bad：一个导航里放 15 个菜单项
+✅ Good：5 个主分类 + "More"
 
-❌ Bad: 20 form fields at once
-✅ Good: 3-step wizard with 5-7 fields each
+❌ Bad：一次性展示 20 个表单字段
+✅ Good：3 步向导，每步 5-7 个字段
 ```
 
 ---
 
-### Fitts' Law
+### Fitts' Law（菲茨定律）
 
-**Principle:** Time to reach a target = function of distance and size.
+**Principle（原则）**：命中目标所需时间由距离（D）与目标尺寸（W）共同决定。
 
 ```
 MT = a + b × log₂(1 + D/W)
 Where D = distance, W = width
 ```
 
-**Application:**
-- CTAs: Make primary buttons larger (min 44px height)
-- Touch targets: 44×44px minimum on mobile
-- Placement: Important actions near natural cursor position
-- Corners: "Magic corners" (infinite edge = easy to hit)
+**Application（应用）**：
+- CTA：主按钮做更大（高度至少 44px）。
+- 触控目标：移动端最小 44×44px。
+- 布局：重要操作靠近自然光标路径。
+- 角落：利用“Magic corners（魔法角）”提升命中率。
 
-**Button Sizing:**
+**Button Sizing（按钮尺寸）**：
 ```css
-/* Size by importance */
+/* 按重要级别设定尺寸 */
 .btn-primary { height: 48px; padding: 0 24px; }
 .btn-secondary { height: 40px; padding: 0 16px; }
 .btn-tertiary { height: 36px; padding: 0 12px; }
 
-/* Mobile touch targets */
+/* 移动端触控命中面积 */
 @media (hover: none) {
   .btn { min-height: 44px; min-width: 44px; }
 }
@@ -62,48 +62,48 @@ Where D = distance, W = width
 
 ---
 
-### Miller's Law
+### Miller's Law（米勒定律）
 
-**Principle:** Average person can hold 7±2 chunks in working memory.
+**Principle（原则）**：人的工作记忆通常能同时容纳 7±2 个信息块（chunks）。
 
-**Application:**
-- Lists: Group into chunks of 5-7 items
-- Navigation: Max 7 menu items
-- Content: Break long content with headings
-- Phone numbers: 555-123-4567 (chunked)
+**Application（应用）**：
+- 列表：按 5-7 个一组分块。
+- 导航：菜单项不超过 7 个。
+- 内容：长文用小标题分段。
+- 数字：如手机号按分组展示（chunking）。
 
-**Chunking Example:**
+**Chunking Example（分块示例）**：
 ```
 ❌ 5551234567
 ✅ 555-123-4567
 
-❌ Long paragraph of text without breaks
-✅ Short paragraphs
-   With bullet points
-   And subheadings
+❌ 一大段无断点长文
+✅ 短段落
+   + 列表
+   + 小标题
 ```
 
 ---
 
-### Von Restorff Effect (Isolation Effect)
+### Von Restorff Effect（隔离效应）
 
-**Principle:** An item that stands out is more likely to be remembered.
+**Principle（原则）**：显著突出的元素更容易被记住。
 
-**Application:**
-- CTA buttons: Distinct color from other elements
-- Pricing: Highlight recommended plan
-- Important info: Visual differentiation
-- New features: Badge or callout
+**Application（应用）**：
+- CTA：主按钮颜色应显著区别于其他元素。
+- 定价：突出推荐套餐。
+- 关键提示：做视觉区分。
+- 新功能：使用 Badge 或 Callout。
 
-**Example:**
+**Example（示例）**：
 ```css
-/* All buttons gray, primary stands out */
+/* 所有按钮为灰，主按钮突出 */
 .btn { background: #E5E7EB; }
 .btn-primary { background: #3B82F6; }
 
-/* Recommended plan highlighted */
+/* 推荐套餐高亮 */
 .pricing-card { border: 1px solid #E5E7EB; }
-.pricing-card.popular { 
+.pricing-card.popular {
   border: 2px solid #3B82F6;
   box-shadow: var(--shadow-lg);
 }
@@ -111,651 +111,653 @@ Where D = distance, W = width
 
 ---
 
-### Serial Position Effect
+### Serial Position Effect（序列位置效应）
 
-**Principle:** Items at the beginning (primacy) and end (recency) of a list are remembered best.
+**Principle（原则）**：列表的开头（首因）和结尾（近因）最容易被记住。
 
-**Application:**
-- Navigation: Most important items first and last
-- Lists: Key info at top and bottom
-- Forms: Most critical fields at start
-- CTAs: Repeat at top and bottom of long pages
+**Application（应用）**：
+- 导航：最关键项放开头和结尾。
+- 列表：重点放顶部和底部。
+- 表单：关键字段提前。
+- 长页面：顶部和底部都给 CTA。
 
-**Example:**
+**Example（示例）**：
 ```
 Navigation: Home | [key items] | Contact
 
-Long landing page:
-- CTA at hero (top)
-- Content sections
-- CTA repeated at bottom
-```
-
-### Jakob’s Law
-
-**Principle:** Users spend most of their time on other sites. They prefer your site to work the same way as all the other sites they already know.
-
-**Application:**
-- **Patterns:** Use standard placement for search bars and carts.
-- **Mental Models:** Leverage familiar icons (e.g., a magnifying glass).
-- **Vocabulary:** Use "Log In" instead of "Enter the Portal."
-- **Layout:** Keep the logo in the top-left for "Home" navigation.
-- **Interaction:** Swiping right to go back/next should feel native.
-- **Feedback:** Standard colors (Red = Error, Green = Success).
-
-**Example:**
-```
-❌ Bad: A website where clicking the logo takes you to an "About Us" page.
-✅ Good: Clicking the logo always returns the user to the Homepage.
-
-❌ Bad: Using a "Star" icon to represent "Delete."
-✅ Good: Using a "Trash Can" icon to represent "Delete."
+长落地页：
+- Hero 顶部放 CTA
+- 中间内容区
+- 底部再次 CTA
 ```
 
 ---
 
-### Tesler’s Law (Conservation of Complexity)
+### Jakob’s Law（雅各布定律）
 
-**Principle:** For any system, there is a certain amount of complexity which cannot be reduced, only shifted from user to software.
+**Principle（原则）**：用户多数时间花在其他网站上，因此他们期望你的站点遵循熟悉模式。
 
-**Application:**
-- **Backend:** Let the system handle formatting (e.g., currency).
-- **Detection:** Auto-detect card type or city via ZIP code.
-- **Automation:** Pre-fill returning user data.
-- **Personalization:** Show only relevant fields based on previous answers.
-- **Defaults:** Smart defaults for common settings.
-- **Integration:** Use SSO (Social Logins) to offload registration friction.
+**Application（应用）**：
+- **Patterns（模式）**：搜索框、购物车放在常见位置。
+- **Mental Models（心智模型）**：使用常见图标（如放大镜）。
+- **Vocabulary（措辞）**：用“Log In”而非“Enter the Portal”。
+- **Layout（布局）**：Logo 左上角点击返回首页。
+- **Interaction（交互）**：返回/前进手势应符合平台习惯。
+- **Feedback（反馈）**：颜色语义遵循通用约定（红错绿对）。
 
-**Example:**
+**Example（示例）**：
 ```
-❌ Bad: Making users type "USD $" before every price field in a form.
-✅ Good: The app automatically prefixing the "$" based on the user's location.
+❌ Bad：点击 Logo 进入 About Us
+✅ Good：点击 Logo 返回首页
 
-❌ Bad: Forcing users to manually select their "Card Type" (Visa/Mastercard).
-✅ Good: Detecting the card type automatically from the first four digits entered.
-```
-
----
-
-### Parkinson’s Law
-
-**Principle:** Any task will inflate until all available time is spent.
-
-**Application:**
-- **Efficiency:** Use "Auto-save" to reduce task completion time.
-- **Speed:** Limit the steps in a conversion funnel.
-- **Clarity:** Use clear labels to prevent "hover-poking" for meaning.
-- **Feedback:** Real-time validation to stop users from wasting time on errors.
-- **Onboarding:** Quick "Express" setup for power users.
-- **Constraints:** Set character limits on inputs to focus thoughts.
-
-**Example:**
-```
-❌ Bad: A 10-page registration form that allows users to browse away and lose data.
-✅ Good: A "One-Tap Sign In" using Google or Apple ID.
-
-❌ Bad: Giving a user an indefinite amount of time to fill out a bio.
-✅ Good: Providing a "Suggested Bios" feature to help them finish in seconds.
+❌ Bad：用星标表示 Delete
+✅ Good：用垃圾桶表示 Delete
 ```
 
 ---
 
-### Doherty Threshold
+### Tesler’s Law（复杂度守恒）
 
-**Principle:** Productivity skyrockets when a computer and its users interact at a pace (<400ms) that ensures neither has to wait on the other.
+**Principle（原则）**：系统复杂度无法消失，只能在“用户”和“软件”之间转移。
 
-**Application:**
-- **Feedback:** Use immediate visual cues for clicks.
-- **Loading:** Use skeleton screens for perceivable performance.
-- **Optimism:** Update UI before the server responds (Optimistic UI).
-- **Motion:** Use micro-animations to mask slight delays.
-- **Caching:** Pre-load next pages or assets in the background.
-- **Prioritization:** Load text content before heavy high-res images.
+**Application（应用）**：
+- **Backend**：格式化交给系统（如货币格式）。
+- **Detection**：自动识别卡类型、邮编推断城市。
+- **Automation**：回访用户自动填充信息。
+- **Personalization**：按先前输入动态展示字段。
+- **Defaults**：合理默认值。
+- **Integration**：用 SSO/Social Login 降低注册摩擦。
 
-**Example:**
+**Example（示例）**：
 ```
-❌ Bad: A button that does nothing for 2 seconds after being clicked.
-✅ Good: A button that immediately changes color and shows a "Loading" spinner.
+❌ Bad：每个价格字段都让用户手输 "USD $"
+✅ Good：按用户地区自动补全 "$"
 
-❌ Bad: A blank white screen that appears while data is fetching.
-✅ Good: A skeleton screen showing the gray outlines of where content will appear.
-```
-
----
-
-### Postel’s Law (Robustness Principle)
-
-**Principle:** Be conservative in what you do, be liberal in what you accept from others.
-
-**Application:**
-- **Error Handling:** Don't error out for a missing space or dash.
-- **Formatting:** Accept dates in DD/MM/YYYY or MM/DD/YYYY.
-- **Inputs:** Strip trailing/leading white space automatically.
-- **Fallbacks:** Use default avatars if a user hasn't uploaded a photo.
-- **Search:** Accept typos and provide "Did you mean...?" suggestions.
-- **Accessibility:** Ensure the site works across all browsers and devices.
-
-**Example:**
-```
-❌ Bad: Rejecting a phone number because the user put a space in it.
-✅ Good: Accepting the input and stripping the spaces automatically.
-
-❌ Bad: Forcing users to type "January" instead of "01" or "Jan."
-✅ Good: A date field that understands all three formats.
+❌ Bad：让用户手选卡类型（Visa/Mastercard）
+✅ Good：根据卡号前几位自动识别
 ```
 
 ---
 
-### Occam’s Razor
+### Parkinson’s Law（帕金森定律）
 
-**Principle:** Among competing hypotheses that predict equally well, the one with the fewest assumptions should be selected. The simplest solution is usually the best.
+**Principle（原则）**：任务会膨胀到耗尽可用时间。
 
-**Application:**
-- **Logic:** Remove unnecessary clicks.
-- **Visuals:** Use only as many fonts/colors as strictly necessary.
-- **Function:** If one field can do the work of two, combine them.
-- **Copy:** Use the shortest possible text to convey meaning.
-- **Layout:** Remove decorative elements that don't serve a goal.
-- **Flow:** Avoid branching paths unless absolutely required.
+**Application（应用）**：
+- **Efficiency**：自动保存（Auto-save）。
+- **Speed**：减少转化路径步骤。
+- **Clarity**：标签清晰，避免“到处试探”。
+- **Feedback**：实时校验减少返工。
+- **Onboarding**：为高阶用户提供快速入口。
+- **Constraints**：字符限制帮助聚焦。
 
-**Example:**
+**Example（示例）**：
 ```
-❌ Bad: A "Login" button that opens a new page, then email, then password.
-✅ Good: A single login modal that asks for both on one screen.
+❌ Bad：10 页注册流程，离开页面就丢数据
+✅ Good：一键登录（Google/Apple）
 
-❌ Bad: Using 5 different font sizes and 4 colors on a single card.
-✅ Good: Using 2 font sizes and 1 accent color.
-```
-
----
-
-## 2. Visual Perception (Gestalt Principles)
-
-### Law of Proximity
-
-**Principle:** Objects that are near, or proximate to each other, tend to be grouped together.
-
-**Application:**
-- **Grouping:** Keep labels physically close to input fields.
-- **Spacing:** Larger margins between unrelated content blocks.
-- **Cards:** Text inside a card should be closer to its image than the border.
-- **Footers:** Cluster legal links together away from social links.
-- **Navigation:** Group "User" settings separate from "App" settings.
-- **Forms:** Group Address fields together, separate from Credit Card fields.
-
-**Example:**
-```
-❌ Bad: Large, equal gaps between every line of text in a form.
-✅ Good: Tight spacing between a label and its input, with larger gaps between pairs.
-
-❌ Bad: A "Submit" button floating in the middle of a page, far from the form.
-✅ Good: The "Submit" button placed directly under the last input field.
+❌ Bad：写简介没有时间与结构约束
+✅ Good：提供 Suggested Bios 快速完成
 ```
 
 ---
 
-### Law of Similarity
+### Doherty Threshold（多尔蒂阈值）
 
-**Principle:** The human eye tends to perceive similar elements in a design as a complete picture, shape, or group, even if those elements are separated.
+**Principle（原则）**：当系统反馈速度 < 400ms 时，人机协作效率显著提升。
 
-**Application:**
-- **Consistency:** Consistent colors for all clickable links.
-- **Iconography:** All icons in a set should have the same stroke weight.
-- **Buttons:** Same shape/size for buttons with the same importance.
-- **Typography:** Use the same H2 style for all section headers.
-- **Feedback:** All "Delete" actions should use the same color (e.g. Red).
-- **States:** Hover and Active states must be consistent across the app.
+**Application（应用）**：
+- **Feedback**：点击后立即视觉反馈。
+- **Loading**：用 Skeleton 提升感知性能。
+- **Optimism**：采用 Optimistic UI 先更新界面。
+- **Motion**：微动效掩盖轻微延迟。
+- **Caching**：后台预加载下一屏资源。
+- **Prioritization**：先加载文本后加载大图。
 
-**Example:**
+**Example（示例）**：
 ```
-❌ Bad: Some links are blue, some are green, and some are just bold black.
-✅ Good: Every clickable text element in the app is the same shade of Blue.
+❌ Bad：按钮点击后 2 秒毫无反应
+✅ Good：立刻变色并出现 Loading 状态
 
-❌ Bad: Using a "Blue Button" for "Submit" and the same "Blue Button" for "Cancel."
-✅ Good: "Submit" is Solid Blue; "Cancel" is a Blue Outline (Ghost Button).
-```
-
----
-
-### Law of Common Region
-
-**Principle:** Elements tend to be perceived into groups if they are sharing an area with a clearly defined boundary.
-
-**Application:**
-- **Containerizing:** Use cards to group images and titles.
-- **Borders:** Use lines to separate the sidebar from the main feed.
-- **Backgrounds:** Use a different background color for the footer.
-- **Modals:** Use a distinct box to separate pop-ups from the page.
-- **Lists:** Alternating background colors (zebra striping) for rows.
-- **Header:** A solid bar across the top to group navigation items.
-
-**Example:**
-```
-❌ Bad: A list of news articles where the text and image of different stories overlap.
-✅ Good: Each article is contained within its own white card on a light gray background.
-
-❌ Bad: A footer that has the same background color as the main body.
-✅ Good: A dark-themed footer that clearly separates legal links from page content.
+❌ Bad：数据加载时白屏
+✅ Good：Skeleton 显示内容骨架
 ```
 
 ---
 
-### Law of Uniform Connectedness
+### Postel’s Law（稳健性原则）
 
-**Principle:** Elements that are visually connected (e.g., via lines, arrows) are perceived as more related than elements with no connection.
+**Principle（原则）**：输出要保守，输入要宽容。
 
-**Application:**
-- **Flow:** Use lines to connect steps in a progress wizard.
-- **Menus:** Dropdowns that "touch" or connect to their parent button.
-- **Graphs:** Lines connecting data points in a chart.
-- **Relationship:** Connecting a toggle switch to the text it controls.
-- **Hierarchy:** Tree structures for file directories.
-- **Forms:** Connecting a "Credit Card" radio button to the fieldset below it.
+**Application（应用）**：
+- **Error Handling**：输入有空格/破折号不应直接报错。
+- **Formatting**：日期允许多种格式。
+- **Inputs**：自动去首尾空白。
+- **Fallbacks**：无头像时自动回退默认头像。
+- **Search**：支持拼写容错并提示“你是不是想搜…”。
+- **Accessibility**：保证跨浏览器/设备可用。
 
-**Example:**
+**Example（示例）**：
 ```
-❌ Bad: A 3-step setup where the numbers "1", "2", and "3" are scattered.
-✅ Good: A horizontal line connecting "1", "2", and "3" to show a sequence.
+❌ Bad：手机号有空格就拒绝
+✅ Good：接受并自动清洗空格
 
-❌ Bad: Floating dropdown menus that don't touch the button that opened them.
-✅ Good: A dropdown menu that visually "attaches" to the parent button.
-```
-
----
-
-### Law of Prägnanz (Simplicity)
-
-**Principle:** People will perceive and interpret ambiguous or complex images as the simplest form possible, because it is the interpretation that requires the least cognitive effort.
-
-**Application:**
-- **Clarity:** Use clear, geometric icons for navigation.
-- **Reduction:** Remove unnecessary 3D textures or shadows.
-- **Shapes:** Prefer standard rectangles/circles over complex polygons.
-- **Focus:** Use high-contrast silhouettes for primary actions.
-- **Logos:** Simple brand marks that are recognizable at small sizes.
-- **UX:** One main goal per page to keep the "mental shape" simple.
-
-**Example:**
-```
-❌ Bad: A hyper-realistic 3D illustration of a file folder for the "Files" icon.
-✅ Good: A simple 2D outline of a folder.
-
-❌ Bad: A multi-colored, complex logo used as a loading spinner.
-✅ Good: A simple, single-color circular ring.
+❌ Bad：日期必须输入完整 January
+✅ Good：支持 January / Jan / 01
 ```
 
 ---
 
-### Law of Figure/Ground
+### Occam’s Razor（奥卡姆剃刀）
 
-**Principle:** The eye differentiates an object from its surrounding area. a form, silhouette, or shape is perceived as figure (object), while the surrounding area is perceived as ground (background).
+**Principle（原则）**：在效果等价时，优先选择假设最少、结构最简单的方案。
 
-**Application:**
-- **Focus:** Use overlays (scrims) for modals to pop the content.
-- **Depth:** Drop shadows to imply the "figure" is sitting above the "ground."
-- **Contrast:** Light text on dark ground (or vice versa).
-- **Blur:** Use background blur to emphasize foreground text.
-- **Navigation:** Floating sticky headers that stay above the page content.
-- **Hover:** Elevate cards slightly on hover to define them as the figure.
+**Application（应用）**：
+- **Logic**：减少不必要点击。
+- **Visuals**：字体/颜色数量越少越好（满足表达即可）。
+- **Function**：能一个字段解决就不要拆两个。
+- **Copy**：最短文案表达清楚含义。
+- **Layout**：删除不服务目标的装饰。
+- **Flow**：非必要不分叉。
 
-**Example:**
+**Example（示例）**：
 ```
-❌ Bad: A popup window that has no shadow or border, blending into the page.
-✅ Good: A modal with a drop shadow and a dimmed background overlay.
+❌ Bad：登录流程分新页 -> 邮箱 -> 密码
+✅ Good：一个 Modal 完成邮箱+密码
 
-❌ Bad: White text placed directly over a busy, multi-colored photograph.
-✅ Good: White text placed over a dark semi-transparent "scrim."
-```
-
----
-
-### Law of Focal Point
-
-**Principle:** Whatever stands out visually will capture and hold the viewer’s attention first.
-
-**Application:**
-- **Entry:** Place the primary value proposition at the focal point.
-- **Color:** Use one high-vibrancy "Action Color" against a neutral UI.
-- **Movement:** Use subtle animation on the CTA to draw the eye.
-- **Size:** The most important statistic should be the largest font.
-- **Typography:** Use bold weights for headers and standard weights for body.
-- **Direction:** Use arrows or gaze (images of people looking at a button).
-
-**Example:**
-```
-❌ Bad: A homepage with 5 buttons of the same size and color.
-✅ Good: One large "Get Started" button in a bright color.
-
-❌ Bad: A dashboard where "Total Revenue" is the same size as "System Version."
-✅ Good: "Total Revenue" displayed in huge, bold numbers at the top center.
+❌ Bad：单卡片用 5 个字号 + 4 种颜色
+✅ Good：2 个字号 + 1 个强调色
 ```
 
 ---
 
-## 3. Cognitive Biases & Behavior
+## 2. 视觉知觉（Visual Perception / Gestalt Principles）
 
-### Zeigarnik Effect
+### Law of Proximity（接近律）
 
-**Principle:** People remember uncompleted or interrupted tasks better than completed tasks.
+**Principle（原则）**：彼此接近的元素会被感知为同组。
 
-**Application:**
-- **Gamification:** Use "Profile 60% complete" bars.
-- **Engagement:** Tease the next module in a learning path.
-- **Retention:** Show a "To-Do" list of features yet to be explored.
-- **Feedback:** Persistent badges for unread messages.
-- **Momentum:** Show "Next" steps immediately after completing one.
-- **Shopping:** "Finish your order" reminders in the cart.
+**Application（应用）**：
+- **Grouping**：标签贴近输入框。
+- **Spacing**：无关区块之间留更大间距。
+- **Cards**：卡片内文字应更靠近其图片而非边框。
+- **Footers**：法律链接与社交链接分组。
+- **Navigation**：用户设置与应用设置分区。
+- **Forms**：地址字段一组，支付字段一组。
 
-**Example:**
+**Example（示例）**：
 ```
-❌ Bad: A silent onboarding process that gives no indication of what's left.
-✅ Good: A checklist that shows "3 of 5 steps finished."
+❌ Bad：表单每行间距都一样大
+✅ Good：标签和输入框间距紧凑，字段组之间间距更大
 
-❌ Bad: An e-learning app that shows a checkmark even if a video was half-watched.
-✅ Good: A progress ring that stays half-full until the video is finished.
-```
-
-### Goal Gradient Effect
-
-**Principle:** The tendency to approach a goal increases with proximity to the goal.
-
-**Application:**
-- **Momentum:** Give users "Artificial Advancement" (e.g. 2 free stamps).
-- **Progress:** Break a 10-field form into two 5-field steps.
-- **Feedback:** Celebrate milestones halfway through a task.
-- **Motivation:** Show the user how close they are to a reward/status.
-- **Navigation:** Use breadcrumbs to show how close they are to the end.
-- **Loading:** Speed up the loading animation as it nears 100%.
-
-**Example:**
-```
-❌ Bad: A progress bar that starts at 0% and feels like a long climb.
-✅ Good: A bar that starts at 20% because the user "started" by opening the app.
-
-❌ Bad: A checkout flow where the "Final Review" feels like a surprise 5th step.
-✅ Good: Clearly labeling the steps: "Shipping > Payment > Almost Done!"
-```
-
-### Peak-End Rule
-
-**Principle:** People judge an experience largely based on how they felt at its peak (the most intense point) and at its end, rather than the total sum or average of every moment.
-
-**Application:**
-- **Success:** Make the "Order Confirmed" screen memorable.
-- **Delight:** Add confetti or a unique animation at the point of value.
-- **Support:** Ensure the final interaction with a chat bot is helpful.
-- **Unboarding:** Even when a user leaves, make the final exit clean.
-- **Onboarding:** End the first session with a clear "Win."
-- **Error Handling:** Turn a 404 page into a fun, helpful interaction.
-
-**Example:**
-```
-❌ Bad: After a 20-minute tax filing process, the app just says "Submitted."
-✅ Good: A "Congratulations!" screen with a summary of the refund amount.
-
-❌ Bad: A game that ends with a simple "Game Over" text in plain font.
-✅ Good: A summary screen showing high scores with celebratory music.
-```
-
-### Aesthetic-Usability Effect
-
-**Principle:** Users often perceive aesthetically pleasing design as design that’s more usable.
-
-**Application:**
-- **Trust:** High-fidelity visuals buy "trust credit" for minor bugs.
-- **Branding:** Consistent high-quality imagery build professionalism.
-- **Engagement:** Beautiful interfaces keep users exploring longer.
-- **Patience:** Users are more forgiving of load times if the UI is pretty.
-- **Confidence:** Clean design makes complex tools feel more manageable.
-- **Loyalty:** People form emotional bonds with beautiful products.
-
-**Example:**
-```
-❌ Bad: A banking app with misaligned text and clashing 1990s colors.
-✅ Good: A sleek, modern banking app with smooth animations.
-
-❌ Bad: Using low-resolution, pixelated stock photos.
-✅ Good: Using high-definition, custom brand illustrations.
-```
-
-### Anchoring Bias
-
-**Principle:** Users rely heavily on the first piece of information offered (the "anchor") when making decisions.
-
-**Application:**
-- **Pricing:** Show the original price crossed out.
-- **Tiers:** Put the most expensive "Enterprise" plan on the far left.
-- **Sorting:** Highlight "Most Popular" as the first recommendation.
-- **Discounts:** State the "Save 20%" before showing the final price.
-- **Limits:** "Limit 12 per customer" anchors the idea that it's high value.
-- **Defaults:** Start with a high "Suggested Donation" amount.
-
-**Example:**
-```
-❌ Bad: Only showing the price "$49."
-✅ Good: Showing "~~$99~~ $49 (50% Off)."
-
-❌ Bad: Sorting a list of laptops from cheapest to most expensive.
-✅ Good: Showing a high-end "Pro" model first to make others seem cheap.
-```
-
-### Social Proof
-
-**Principle:** People copy the actions of others in an attempt to undertake behavior in a given situation.
-
-**Application:**
-- **Validation:** Display "Join 50,000+ others."
-- **Reviews:** Star ratings and verified customer testimonials.
-- **Logos:** "Trusted by" section showing partner brands.
-- **Live Feed:** "Sarah just bought this 5 mins ago" notifications.
-- **Activity:** "300 people are currently viewing this item."
-- **Certificates:** Industry awards and security badges.
-
-**Example:**
-```
-❌ Bad: A signup page with just a form.
-✅ Good: A signup page that says "Join 2 million designers."
-
-❌ Bad: Anonymous reviews with no names or photos.
-✅ Good: Reviews that include a face, a name, and a "Verified Buyer" tag.
-```
-
-### Scarcity Principle
-
-**Principle:** Humans place a higher value on an object that is scarce, and a lower value on those that are in abundance.
-
-**Application:**
-- **Urgency:** "Only 2 items left in stock."
-- **Time:** Ticking countdown timers for sales.
-- **Access:** "Invite-only" betas or exclusive tiers.
-- **Seasonality:** "Summer Edition" products.
-- **Low Stock:** "Back in stock soon - pre-order now."
-- **Demand:** "In high demand - 10 people have this in their cart."
-
-**Example:**
-```
-❌ Bad: A sale that never ends and has no countdown.
-✅ Good: A "Deal of the Day" with a ticking timer.
-
-❌ Bad: Showing a product is available with no stock count.
-✅ Good: "Only 3 left at this price!"
-```
-
-### Authority Bias
-
-**Principle:** The tendency to attribute greater accuracy to the opinion of an authority figure and be more influenced by that opinion.
-
-**Application:**
-- **Expertise:** Use "Expert-verified" or professional headshots.
-- **Certifications:** Trust seals (Norton, ISO, HIPAA).
-- **Media:** "As seen on TechCrunch/Forbes" logos.
-- **Endorsements:** Testimonials from industry leaders or influencers.
-- **Language:** Confident, professional, and accurate copy.
-- **History:** "Established in 1950" to imply longevity and trust.
-
-**Example:**
-```
-❌ Bad: A health blog written by "Admin."
-✅ Good: A health article "Reviewed by Dr. Jane Smith, Cardiologist."
-
-❌ Bad: A security app with no mentions of certifications.
-✅ Good: Displaying "ISO 27001 Certified" and "Norton Secured" logos.
-```
-
-### Loss Aversion
-
-**Principle:** People generally prefer avoiding losses to acquiring equivalent gains. It is better to not lose $5 than to find $5.
-
-**Application:**
-- **Messaging:** "Don't lose your discount."
-- **Trials:** "Your free trial is ending - keep your data now."
-- **Scarcity:** "Once it's gone, it's gone for good."
-- **Carts:** "Don't miss out on the items in your cart."
-- **Loyalty:** "You've earned 500 points - don't let them expire."
-- **Risk:** "30-day money-back guarantee" (reduces the "loss" of money).
-
-**Example:**
-```
-❌ Bad: "Click here to get a $10 coupon."
-✅ Good: "You have a $10 credit waiting. Use it before it expires tonight!"
-
-❌ Bad: "Cancel your subscription."
-✅ Good: "If you cancel, you will lose access to your 50 saved projects."
-```
-
-### False-Consensus Effect
-
-**Principle:** People tend to overestimate the extent to which their opinions, beliefs, preferences, values, and habits are normal and typical of those of others.
-
-**Application:**
-- **Testing:** You are not the user - test with real target audiences.
-- **Research:** Use qualitative data (interviews) and quantitative data (analytics).
-- **Bias:** Use "Blind Design Reviews" to avoid personal favoritism.
-- **Persona:** Stick to established User Personas over personal hunches.
-- **Variation:** Test with users from different demographics/abilities.
-- **Objectivity:** Use heatmaps to see actual user behavior.
-
-**Example:**
-```
-❌ Bad: A designer deciding a feature is "intuitive" without testing it.
-✅ Good: Running an A/B test to see which version users prefer.
-
-❌ Bad: Building an app entirely in English because "everyone knows English."
-✅ Good: Adding localization based on actual user location data.
-```
-
-### Curse of Knowledge
-
-**Principle:** A cognitive bias that occurs when an individual, communicating with other individuals, unknowingly assumes that the others have the background to understand.
-
-**Application:**
-- **Copy:** Avoid jargon and use plain language.
-- **Onboarding:** Tutorials that assume the user knows nothing.
-- **Tooltips:** Explain complex terms on hover.
-- **Structure:** Progressive disclosure (hide advanced settings).
-- **Labels:** Use icons + text labels for navigation (don't rely on icons alone).
-- **Support:** Comprehensive FAQs for first-time users.
-
-**Example:**
-```
-❌ Bad: An error message saying "Exception: Null Pointer at 0x0045."
-✅ Good: An error message saying "Something went wrong. Please try refreshing."
-
-❌ Bad: Navigating a cloud app using terms like "S3 Bucket Instances."
-✅ Good: Using simple terms like "File Storage."
-```
-
-### Stepping Stone Effect (Foot-in-the-Door)
-
-**Principle:** Users commit to large tasks if they start with small ones.
-
-**Application:**
-- **Funnel:** Ask for email before asking for credit card.
-- **Engagement:** Ask for one preference (e.g. "Dark Mode?") before registration.
-- **Onboarding:** Use a series of "Quick Yes/No" questions.
-- **Trust:** Offer a free PDF/tool before asking for a subscription.
-- **Profile:** Ask to upload a photo first, then fill out the bio later.
-- **Sales:** Offer a low-cost "tripwire" product before the main service.
-
-**Example:**
-```
-❌ Bad: A "Start Free Trial" button that immediately requires credit card info.
-✅ Good: Asking for an email and password first, then offering the trial.
-
-❌ Bad: A survey that shows all 50 questions on one page.
-✅ Good: A survey that starts with one easy "Yes/No" question.
+❌ Bad：提交按钮漂在页面中间
+✅ Good：提交按钮紧跟最后一个字段
 ```
 
 ---
 
-## 2. Emotional Design (Don Norman)
+### Law of Similarity（相似律）
 
-### Three Levels of Processing
+**Principle（原则）**：视觉上相似的元素会被识别为同一组。
+
+**Application（应用）**：
+- **Consistency**：所有可点击文字保持一致色。
+- **Iconography**：同组图标线宽一致。
+- **Buttons**：同等级按钮形态一致。
+- **Typography**：所有 H2 使用同一风格。
+- **Feedback**：同类危险操作统一色（如红色）。
+- **States**：Hover/Active 规则统一。
+
+**Example（示例）**：
+```
+❌ Bad：链接有蓝有绿有黑粗体
+✅ Good：所有可点击文本统一蓝色
+
+❌ Bad：Submit 和 Cancel 同样式同颜色
+✅ Good：Submit 实心，Cancel 轮廓（Ghost）
+```
+
+---
+
+### Law of Common Region（共同区域律）
+
+**Principle（原则）**：处于同一边界区域内的元素更容易被视作一组。
+
+**Application（应用）**：
+- **Containerizing**：用卡片包裹图片+标题。
+- **Borders**：侧栏与主区之间用线分隔。
+- **Backgrounds**：页脚使用差异背景色。
+- **Modals**：弹窗使用独立容器边界。
+- **Lists**：表格斑马纹辅助分行识别。
+- **Header**：顶部实色条聚合导航项。
+
+**Example（示例）**：
+```
+❌ Bad：新闻列表图文互相穿插难分
+✅ Good：每条新闻独立卡片承载
+
+❌ Bad：页脚背景与正文无差异
+✅ Good：页脚深色，明确与正文分离
+```
+
+---
+
+### Law of Uniform Connectedness（一致连通律）
+
+**Principle（原则）**：视觉上被线条或连接关系串联的元素会被认为更相关。
+
+**Application（应用）**：
+- **Flow**：向导步骤间用线连接。
+- **Menus**：下拉菜单与触发按钮视觉相连。
+- **Graphs**：折线图用线连接数据点。
+- **Relationship**：开关与其控制文本对应连接。
+- **Hierarchy**：目录树体现层级。
+- **Forms**：单选项与对应字段组关联。
+
+**Example（示例）**：
+```
+❌ Bad：步骤 1/2/3 分散摆放
+✅ Good：水平连线体现顺序
+
+❌ Bad：下拉菜单与触发按钮分离漂浮
+✅ Good：菜单视觉上“挂接”在按钮下方
+```
+
+---
+
+### Law of Prägnanz（简洁律）
+
+**Principle（原则）**：人会倾向将复杂/模糊图形解释为最简单、最稳定的形态。
+
+**Application（应用）**：
+- **Clarity**：导航图标保持几何清晰。
+- **Reduction**：移除无必要 3D 纹理与阴影。
+- **Shapes**：优先矩形/圆形等标准形。
+- **Focus**：主动作保持高对比轮廓。
+- **Logos**：Logo 在小尺寸下仍可识别。
+- **UX**：一页一个核心目标。
+
+**Example（示例）**：
+```
+❌ Bad：Files 图标做成超写实 3D 文件夹
+✅ Good：简洁 2D 轮廓图标
+
+❌ Bad：复杂多色 Logo 拿来当 loading
+✅ Good：单色圆环式 loading
+```
+
+---
+
+### Law of Figure/Ground（图地关系）
+
+**Principle（原则）**：视觉系统会区分“主体（figure）”与“背景（ground）”。
+
+**Application（应用）**：
+- **Focus**：Modal 配合遮罩（scrim）突出主体。
+- **Depth**：用阴影表现主体浮于背景。
+- **Contrast**：明暗对比保证层次。
+- **Blur**：背景模糊强调前景信息。
+- **Navigation**：悬浮吸顶头部保持层级。
+- **Hover**：卡片悬停轻抬升以强化主体感。
+
+**Example（示例）**：
+```
+❌ Bad：弹窗无边界无阴影，融入背景
+✅ Good：弹窗 + 阴影 + 背景变暗
+
+❌ Bad：白字直接压在复杂彩色图上
+✅ Good：白字置于半透明深色遮罩之上
+```
+
+---
+
+### Law of Focal Point（焦点律）
+
+**Principle（原则）**：视觉上最突出的元素会最先抓住注意力。
+
+**Application（应用）**：
+- **Entry**：核心价值主张放焦点位。
+- **Color**：中性界面中仅一个高饱和行动色。
+- **Movement**：CTA 可用轻动效吸引视线。
+- **Size**：最重要数据用最大字号。
+- **Typography**：标题加粗，正文常规字重。
+- **Direction**：用箭头/人物视线引导注意。
+
+**Example（示例）**：
+```
+❌ Bad：首页 5 个同色同尺寸按钮
+✅ Good：1 个主按钮明显更大更亮
+
+❌ Bad：Total Revenue 与 System Version 同等级
+✅ Good：Total Revenue 用大号粗体置顶
+```
+
+---
+
+## 3. 认知偏差与行为（Cognitive Biases & Behavior）
+
+### Zeigarnik Effect（蔡格尼克效应）
+
+**Principle（原则）**：未完成任务比已完成任务更容易被记住。
+
+**Application（应用）**：
+- **Gamification**：显示“Profile 60% complete”。
+- **Engagement**：预告下一学习模块。
+- **Retention**：展示待探索功能 To-Do。
+- **Feedback**：未读消息徽标常驻。
+- **Momentum**：每完成一步即展示下一步。
+- **Shopping**：购物车提醒“继续完成订单”。
+
+**Example（示例）**：
+```
+❌ Bad：引导过程无剩余步骤提示
+✅ Good：清单显示“已完成 3/5”
+
+❌ Bad：课程视频看一半也打勾完成
+✅ Good：进度环保持半满直到看完
+```
+
+### Goal Gradient Effect（目标梯度效应）
+
+**Principle（原则）**：用户越接近目标，完成动机越强。
+
+**Application（应用）**：
+- **Momentum**：给用户“人工领先”（如赠送 2 枚印章）。
+- **Progress**：10 字段表单拆成 2×5 字段。
+- **Feedback**：中途里程碑反馈。
+- **Motivation**：明确告知离目标还有多远。
+- **Navigation**：面包屑体现终点接近度。
+- **Loading**：接近 100% 时可加快进度节奏。
+
+**Example（示例）**：
+```
+❌ Bad：进度条从 0% 起步，心理负担大
+✅ Good：打开应用即从 20% 起步
+
+❌ Bad：结账流程突然冒出“第 5 步”
+✅ Good：明确步骤：Shipping > Payment > Almost Done
+```
+
+### Peak-End Rule（峰终定律）
+
+**Principle（原则）**：用户对体验的评价主要取决于“峰值时刻”和“结束时刻”。
+
+**Application（应用）**：
+- **Success**：让完成页可记忆。
+- **Delight**：在价值达成点添加庆祝反馈。
+- **Support**：客服对话结束要有明确帮助感。
+- **Unboarding**：即使离开也要体面退出。
+- **Onboarding**：首次使用结尾要有“我完成了”的胜利感。
+- **Error Handling**：404 也可做成有帮助且友好的体验。
+
+**Example（示例）**：
+```
+❌ Bad：报税 20 分钟后只显示 "Submitted"
+✅ Good：显示 "Congratulations" + 退款摘要
+
+❌ Bad：游戏结束仅 "Game Over"
+✅ Good：展示高分总结 + 庆祝反馈
+```
+
+### Aesthetic-Usability Effect（美即易用效应）
+
+**Principle（原则）**：用户常将“美观”感知为“更易用”。
+
+**Application（应用）**：
+- **Trust**：高保真视觉能获得初始信任额度。
+- **Branding**：高质量视觉一致性提升专业度。
+- **Engagement**：好看界面提升探索意愿。
+- **Patience**：好看界面让用户更容忍轻微加载。
+- **Confidence**：干净设计降低复杂工具的心理门槛。
+- **Loyalty**：美学体验有助于情感忠诚。
+
+**Example（示例）**：
+```
+❌ Bad：银行 App 文本错位、配色冲突
+✅ Good：现代、干净、动画顺滑
+
+❌ Bad：低清像素化图库图
+✅ Good：高质量品牌插图/图片
+```
+
+### Anchoring Bias（锚定偏差）
+
+**Principle（原则）**：用户会强依赖最先看到的信息（anchor）做后续判断。
+
+**Application（应用）**：
+- **Pricing**：显示划线原价。
+- **Tiers**：最贵 Enterprise 放在显眼位置。
+- **Sorting**：先展示 Most Popular。
+- **Discounts**：先说 Save 20%，再说最终价。
+- **Limits**："每人限购 12" 形成价值锚点。
+- **Defaults**：建议赞助金额可先给较高默认值。
+
+**Example（示例）**：
+```
+❌ Bad：只显示 "$49"
+✅ Good："~~$99~~ $49 (50% Off)"
+
+❌ Bad：笔记本按最低价到最高价排序
+✅ Good：先展示高端 Pro 款，让其他选项更显性价比
+```
+
+### Social Proof（社会认同）
+
+**Principle（原则）**：人在不确定情境下会参考他人行为。
+
+**Application（应用）**：
+- **Validation**：显示“已有 50,000+ 用户加入”。
+- **Reviews**：星级 + 真实认证评价。
+- **Logos**：Trusted by 品牌墙。
+- **Live Feed**：实时购买动态提示。
+- **Activity**：当前浏览人数提示。
+- **Certificates**：行业奖项与安全认证。
+
+**Example（示例）**：
+```
+❌ Bad：注册页只有表单
+✅ Good：注册页展示 "Join 2 million designers"
+
+❌ Bad：匿名无头像评价
+✅ Good：带头像+姓名+Verified Buyer 标识
+```
+
+### Scarcity Principle（稀缺性原则）
+
+**Principle（原则）**：稀缺资源会被主观赋予更高价值。
+
+**Application（应用）**：
+- **Urgency**："仅剩 2 件"。
+- **Time**：限时倒计时。
+- **Access**：邀请制内测/专属层级。
+- **Seasonality**：季节限定款。
+- **Low Stock**：缺货预定提醒。
+- **Demand**："10 人已加入购物车"。
+
+**Example（示例）**：
+```
+❌ Bad：永不结束的“促销”且无倒计时
+✅ Good：Deal of the Day + 实时倒计时
+
+❌ Bad：商品可售但无库存信息
+✅ Good："当前价格仅剩 3 件"
+```
+
+### Authority Bias（权威偏差）
+
+**Principle（原则）**：用户更容易相信权威主体观点。
+
+**Application（应用）**：
+- **Expertise**：专家背书与职业信息。
+- **Certifications**：Norton / ISO / HIPAA 等认证。
+- **Media**：As seen on 媒体露出。
+- **Endorsements**：行业专家/影响者推荐。
+- **Language**：文案专业、准确、稳定。
+- **History**：成立年份强调长期可信。
+
+**Example（示例）**：
+```
+❌ Bad：健康文章作者写 "Admin"
+✅ Good："Reviewed by Dr. Jane Smith"
+
+❌ Bad：安全产品无任何认证信息
+✅ Good：展示 ISO 27001 + Norton Secured
+```
+
+### Loss Aversion（损失厌恶）
+
+**Principle（原则）**：用户更在意“避免损失”而非“获得同等收益”。
+
+**Application（应用）**：
+- **Messaging**：强调“不要失去已有权益”。
+- **Trials**：试用到期提醒“保留你的数据”。
+- **Scarcity**：一旦错过不再有。
+- **Carts**：提醒购物车内容可能失效。
+- **Loyalty**：积分将到期提醒。
+- **Risk**：30 天退款保证，降低“损失恐惧”。
+
+**Example（示例）**：
+```
+❌ Bad："点击领取 10 美元券"
+✅ Good："你有 10 美元额度今晚到期"
+
+❌ Bad："Cancel your subscription"
+✅ Good："取消后将失去 50 个已保存项目访问权"
+```
+
+### False-Consensus Effect（虚假共识效应）
+
+**Principle（原则）**：人会高估自己的偏好与大众一致的程度。
+
+**Application（应用）**：
+- **Testing**：你不是用户，必须做真实用户测试。
+- **Research**：访谈（定性）+ 数据分析（定量）。
+- **Bias**：盲审设计，避免个人偏好主导。
+- **Persona**：遵循用户画像而非直觉。
+- **Variation**：覆盖不同人群/能力。
+- **Objectivity**：借助热力图验证真实行为。
+
+**Example（示例）**：
+```
+❌ Bad：设计师主观判断“这很直觉”就上线
+✅ Good：先做 A/B test 再决策
+
+❌ Bad：假设“所有人都懂英文”，不做本地化
+✅ Good：根据用户地域数据做 localization
+```
+
+### Curse of Knowledge（知识诅咒）
+
+**Principle（原则）**：专家容易默认他人具备同等背景知识。
+
+**Application（应用）**：
+- **Copy**：避免术语堆砌，使用平实语言。
+- **Onboarding**：按“零基础用户”设计引导。
+- **Tooltips**：复杂术语提供悬浮解释。
+- **Structure**：渐进披露隐藏高级项。
+- **Labels**：图标 + 文本，不只靠图标。
+- **Support**：为新手提供完整 FAQ。
+
+**Example（示例）**：
+```
+❌ Bad：报错 "Exception: Null Pointer at 0x0045"
+✅ Good："出现异常，请刷新后重试"
+
+❌ Bad：云产品导航直接使用 "S3 Bucket Instances"
+✅ Good：使用 "File Storage" 等易懂术语
+```
+
+### Stepping Stone Effect（登门槛效应 / Foot-in-the-Door）
+
+**Principle（原则）**：用户先完成小任务，更容易承诺大任务。
+
+**Application（应用）**：
+- **Funnel**：先要邮箱，再要信用卡。
+- **Engagement**：注册前先问一个偏好问题。
+- **Onboarding**：用一系列快速 Yes/No。
+- **Trust**：先给免费工具，再引导订阅。
+- **Profile**：先传头像，再完善个人简介。
+- **Sales**：先提供低门槛前置商品（tripwire）。
+
+**Example（示例）**：
+```
+❌ Bad：点击试用立刻要求信用卡
+✅ Good：先邮箱+密码，后续再引导绑定
+
+❌ Bad：问卷一页展示 50 题
+✅ Good：从 1 个简单 Yes/No 开始
+```
+
+---
+
+## 4. 情感化设计（Emotional Design, Don Norman）
+
+### 三层处理模型（Three Levels of Processing）
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  VISCERAL (Lizard Brain)                                    │
+│  VISCERAL（本能层）                                          │
 │  ─────────────────────                                      │
-│  • Immediate, automatic reaction                            │
-│  • First impressions (first 50ms)                          │
-│  • Aesthetics: colors, shapes, imagery                      │
+│  • 即时、自动反应                                             │
+│  • 首次印象（前 50ms）                                        │
+│  • 由颜色、形状、图像触发                                     │
 │  • "Wow, this looks beautiful!"                            │
 ├─────────────────────────────────────────────────────────────┤
-│  BEHAVIORAL (Functional Brain)                              │
+│  BEHAVIORAL（行为层）                                         │
 │  ─────────────────────────────                              │
-│  • Usability and function                                   │
-│  • Pleasure from effective use                              │
-│  • Performance, reliability, ease                           │
+│  • 可用性与功能完成感                                         │
+│  • 使用过程中的愉悦                                            │
+│  • 性能、可靠、易用                                            │
 │  • "This works exactly how I expected!"                    │
 ├─────────────────────────────────────────────────────────────┤
-│  REFLECTIVE (Conscious Brain)                               │
+│  REFLECTIVE（反思层）                                         │
 │  ─────────────────────────────                              │
-│  • Conscious thought and meaning                            │
-│  • Personal identity and values                             │
-│  • Long-term memory and loyalty                             │
+│  • 价值认同与意义建构                                          │
+│  • 个人身份与品牌关系                                          │
+│  • 长期记忆与忠诚                                              │
 │  • "This brand represents who I am"                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Designing for Each Level
+### 面向三层进行设计（Designing for Each Level）
 
-**Visceral:**
+**Visceral（本能层）**：
 ```css
-/* Beautiful first impression */
+/* 第一眼美感 */
 .hero {
   background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
   color: white;
 }
 
-/* Pleasing microinteractions */
+/* 令人愉悦的微交互 */
 .button:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
 ```
 
-**Behavioral:**
+**Behavioral（行为层）**：
 ```javascript
-// Instant feedback
+// 即时反馈
 button.onclick = () => {
   button.disabled = true;
   button.textContent = 'Saving...';
-  
+
   save().then(() => {
-    showSuccess('Saved!');  // Immediate confirmation
+    showSuccess('Saved!');  // 立刻确认完成
   });
 };
 ```
 
-**Reflective:**
+**Reflective（反思层）**：
 ```html
-<!-- Brand story and values -->
+<!-- 品牌使命与价值 -->
 <section class="about">
   <h2>Why We Exist</h2>
   <p>We believe technology should empower, not complicate...</p>
 </section>
 
-<!-- Social proof connecting to identity -->
+<!-- 将社会认同与身份认同绑定 -->
 <blockquote>
   "This tool helped me become the designer I wanted to be."
 </blockquote>
@@ -763,51 +765,51 @@ button.onclick = () => {
 
 ---
 
-## 3. Trust Building System
+## 5. 信任构建系统（Trust Building System）
 
-### Trust Signal Categories
+### 信任信号分类（Trust Signal Categories）
 
-| Category | Elements | Implementation |
-|----------|----------|----------------|
-| **Security** | SSL, badges, encryption | Visible padlock, security logos on forms |
-| **Social Proof** | Reviews, testimonials, logos | Star ratings, customer photos, brand logos |
-| **Transparency** | Policies, pricing, contact | Clear links, no hidden fees, real address |
-| **Professional** | Design quality, consistency | No broken elements, consistent branding |
-| **Authority** | Certifications, awards, media | "As seen in...", industry certifications |
+| Category（类别） | Elements（元素） | Implementation（实现） |
+|------------------|------------------|------------------------|
+| **Security（安全）** | SSL、安全徽章、加密 | 表单附近可见锁标与安全标识 |
+| **Social Proof（社会认同）** | 评价、证言、品牌 logo | 星级评分、用户头像、客户品牌墙 |
+| **Transparency（透明）** | 政策、价格、联系方式 | 清晰入口、无隐藏费用、真实地址 |
+| **Professional（专业感）** | 设计质量、一致性 | 无断裂样式，品牌表达统一 |
+| **Authority（权威）** | 认证、奖项、媒体背书 | "As seen in..."、行业认证 |
 
-### Trust Signal Placement
+### 信任信号放置（Trust Signal Placement）
 
 ```
 ┌────────────────────────────────────────────────────┐
-│  HEADER: Trust banner ("Free shipping | 30-day    │
-│          returns | Secure checkout")               │
+│  HEADER：信任条（"Free shipping | 30-day returns | │
+│          Secure checkout"）                       │
 ├────────────────────────────────────────────────────┤
-│  HERO: Social proof ("Trusted by 10,000+")        │
+│  HERO：社会认同（"Trusted by 10,000+"）            │
 ├────────────────────────────────────────────────────┤
-│  PRODUCT: Reviews visible, security badges         │
+│  PRODUCT：评价可见 + 安全徽章                      │
 ├────────────────────────────────────────────────────┤
-│  CHECKOUT: Payment icons, SSL badge, guarantee     │
+│  CHECKOUT：支付图标 + SSL + 保障承诺                │
 ├────────────────────────────────────────────────────┤
-│  FOOTER: Contact info, policies, certifications    │
+│  FOOTER：联系方式 + 政策 + 认证                     │
 └────────────────────────────────────────────────────┘
 ```
 
-### Trust-Building CSS Patterns
+### 信任样式 CSS 模式（Trust-Building CSS Patterns）
 
 ```css
-/* Trust badge styling */
+/* 信任徽章 */
 .trust-badge {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background: #F0FDF4;  /* Light green = security */
-  border-radius: 2px; /* Sharp for trust = precision feel */
+  background: #F0FDF4;  /* 浅绿 = 安全感 */
+  border-radius: 2px; /* 更直角 = 更精确/严谨 */
   font-size: 14px;
   color: #166534;
 }
 
-/* Secure form indicator */
+/* 安全表单提示 */
 .secure-form::before {
   content: '🔒 Secure form';
   display: block;
@@ -816,63 +818,63 @@ button.onclick = () => {
   margin-bottom: 8px;
 }
 
-/* Testimonial card */
+/* 证言卡片 */
 .testimonial {
   display: flex;
   gap: 16px;
   padding: 24px;
   background: white;
-  border-radius: 16px; /* Friendly = larger radius */
+  border-radius: 16px; /* 更大圆角 = 更友好 */
   box-shadow: var(--shadow-sm);
 }
 
 .testimonial-avatar {
   width: 48px;
   height: 48px;
-  border-radius: 50%;  /* Real photos > initials */
+  border-radius: 50%;  /* 真人头像优于缩写字母 */
 }
 ```
 
 ---
 
-## 4. Cognitive Load Management
+## 6. 认知负荷管理（Cognitive Load Management）
 
-### Three Types of Cognitive Load
+### 三种认知负荷（Three Types of Cognitive Load）
 
-| Type | Definition | Designer's Role |
-|------|------------|-----------------|
-| **Intrinsic** | Inherent complexity of task | Break into smaller steps |
-| **Extraneous** | Load from poor design | Eliminate this! |
-| **Germane** | Effort for learning | Support and encourage |
+| Type（类型） | Definition（定义） | Designer's Role（设计者职责） |
+|--------------|--------------------|-------------------------------|
+| **Intrinsic** | 任务本身固有复杂度 | 拆分为更小步骤 |
+| **Extraneous** | 由糟糕设计引入的负担 | 必须消除 |
+| **Germane** | 用于学习与理解的必要负担 | 通过引导支持它 |
 
-### Reduction Strategies
+### 降负策略（Reduction Strategies）
 
-**1. Simplify (Reduce Extraneous)**
+**1. Simplify（简化，降低 Extraneous）**
 ```css
-/* Visual noise → Clean */
+/* 视觉噪声高 → 视觉简洁 */
 .card-busy {
   border: 2px solid red;
   background: linear-gradient(...);
   box-shadow: 0 0 20px ...;
-  /* Too much! */
+  /* 过度设计 */
 }
 
 .card-clean {
   background: white;
   border-radius: 16px;
   box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-  /* Calm, focused */
+  /* 平静、聚焦 */
 }
 ```
 
-**2. Chunk Information**
+**2. Chunk Information（信息分块）**
 ```html
-<!-- Overwhelming -->
+<!-- 压迫式展示 -->
 <form>
-  <!-- 15 fields at once -->
+  <!-- 一次性 15 个字段 -->
 </form>
 
-<!-- Chunked -->
+<!-- 分块展示 -->
 <form>
   <fieldset>
     <legend>Step 1: Personal Info</legend>
@@ -885,41 +887,41 @@ button.onclick = () => {
 </form>
 ```
 
-**3. Progressive Disclosure**
+**3. Progressive Disclosure（渐进披露）**
 ```html
-<!-- Hide complexity until needed -->
+<!-- 复杂项按需展开 -->
 <div class="filters">
   <div class="filters-basic">
-    <!-- Common filters visible -->
+    <!-- 高频筛选可见 -->
   </div>
   <button onclick="toggleAdvanced()">
     Advanced Options ▼
   </button>
   <div class="filters-advanced" hidden>
-    <!-- Complex filters hidden -->
+    <!-- 高级筛选默认隐藏 -->
   </div>
 </div>
 ```
 
-**4. Use Familiar Patterns**
+**4. Use Familiar Patterns（使用熟悉模式）**
 ```
-✅ Standard navigation placement
-✅ Expected icon meanings (🔍 = search)
-✅ Conventional form layouts
-✅ Common gesture patterns (swipe, pinch)
+✅ 标准导航位置
+✅ 常见图标语义（🔍 = search）
+✅ 常规表单布局
+✅ 常见手势模式（swipe、pinch）
 ```
 
-**5. Offload Information**
+**5. Offload Information（把记忆负担交给系统）**
 ```html
-<!-- Don't make users remember -->
+<!-- 不要求用户死记 -->
 <label>
   Card Number
-  <input type="text" inputmode="numeric" 
-         autocomplete="cc-number" 
+  <input type="text" inputmode="numeric"
+         autocomplete="cc-number"
          placeholder="1234 5678 9012 3456">
 </label>
 
-<!-- Show what they entered -->
+<!-- 明确展示已填内容 -->
 <div class="order-summary">
   <p>Shipping to: <strong>John Doe, 123 Main St...</strong></p>
   <a href="#">Edit</a>
@@ -928,31 +930,31 @@ button.onclick = () => {
 
 ---
 
-## 5. Persuasive Design (Ethical)
+## 7. 说服式设计（Persuasive Design, Ethical）
 
-### Ethical Persuasion Techniques
+### 合伦理的说服策略（Ethical Persuasion Techniques）
 
-| Technique | Ethical Use | Dark Pattern (Avoid) |
-|-----------|-------------|----------------------|
-| **Scarcity** | Real stock levels | Fake countdown timers |
-| **Social Proof** | Genuine reviews | Fake testimonials |
-| **Authority** | Real credentials | Misleading badges |
-| **Urgency** | Real deadlines | Manufactured FOMO |
-| **Commitment** | Progress saving | Guilt-tripping |
+| Technique（技术） | Ethical Use（合伦理用法） | Dark Pattern（需避免） |
+|-------------------|---------------------------|------------------------|
+| **Scarcity** | 真实库存稀缺 | 伪造倒计时 |
+| **Social Proof** | 真实用户评价 | 伪造证言 |
+| **Authority** | 真实资质背书 | 误导性徽章 |
+| **Urgency** | 真实截止时间 | 人造 FOMO |
+| **Commitment** | 进度保存与延续 | 情绪绑架/内疚诱导 |
 
-### Nudge Patterns
+### Nudge 模式（Nudge Patterns）
 
-**Smart Defaults:**
+**Smart Defaults（智能默认）**：
 ```html
-<!-- Pre-select the recommended option -->
+<!-- 默认选推荐项 -->
 <input type="radio" name="plan" value="monthly">
 <input type="radio" name="plan" value="annual" checked>
   Annual (Save 20%)
 ```
 
-**Anchoring:**
+**Anchoring（锚定）**：
 ```html
-<!-- Show original price to frame discount -->
+<!-- 用原价框定折扣价值 -->
 <div class="price">
   <span class="original">$99</span>
   <span class="current">$79</span>
@@ -960,21 +962,21 @@ button.onclick = () => {
 </div>
 ```
 
-**Social Proof:**
+**Social Proof（社会认同）**：
 ```html
-<!-- Real-time activity -->
+<!-- 实时活动 -->
 <div class="activity">
   <span class="avatar">👤</span>
   <span>Sarah from NYC just purchased</span>
 </div>
 
-<!-- Aggregate proof -->
+<!-- 聚合证明 -->
 <p>Join 50,000+ designers who use our tool</p>
 ```
 
-**Progress & Commitment:**
+**Progress & Commitment（进度与承诺）**：
 ```html
-<!-- Show progress to encourage completion -->
+<!-- 进度可视化促进完成 -->
 <div class="progress">
   <div class="progress-bar" style="width: 60%"></div>
   <span>60% complete - almost there!</span>
@@ -983,83 +985,83 @@ button.onclick = () => {
 
 ---
 
-## 6. User Persona Quick Reference
+## 8. 用户画像速查（User Persona Quick Reference）
 
-### Gen Z (Born 1997-2012)
-
-```
-CHARACTERISTICS:
-- Digital natives, mobile-first
-- Value authenticity, diversity
-- Short attention spans
-- Visual learners
-
-DESIGN APPROACH:
-├── Colors: Vibrant, hypercolor, bold gradients
-├── Typography: Large, variable, experimental
-├── Layout: Vertical scroll, mobile-native
-├── Interactions: Fast, gamified, gesture-based
-├── Content: Short-form video, memes, stories
-└── Trust: Peer reviews > authority
-```
-
-### Millennials (Born 1981-1996)
+### Gen Z（1997-2012）
 
 ```
-CHARACTERISTICS:
-- Value experiences over things
-- Research before buying
-- Socially conscious
-- Price-sensitive but quality-aware
+CHARACTERISTICS（特征）：
+- 数字原住民，移动优先
+- 重视真实与多元
+- 注意力周期较短
+- 偏视觉学习
 
-DESIGN APPROACH:
-├── Colors: Muted pastels, earth tones
-├── Typography: Clean, readable sans-serif
-├── Layout: Responsive, card-based
-├── Interactions: Smooth, purposeful animations
-├── Content: Value-driven, transparent
-└── Trust: Reviews, sustainability, values
+DESIGN APPROACH（设计策略）：
+├── Colors：高饱和、强对比、大胆渐变
+├── Typography：大字号、可变、实验性
+├── Layout：纵向滚动、移动端原生
+├── Interactions：快节奏、游戏化、手势化
+├── Content：短视频、meme、story 形态
+└── Trust：同伴评价 > 权威背书
 ```
 
-### Gen X (Born 1965-1980)
+### Millennials（1981-1996）
 
 ```
-CHARACTERISTICS:
-- Independent, self-reliant
-- Value efficiency
-- Skeptical of marketing
-- Balanced tech comfort
+CHARACTERISTICS（特征）：
+- 重体验胜过重占有
+- 购买前会充分研究
+- 社会责任意识更强
+- 价格敏感且重品质
 
-DESIGN APPROACH:
-├── Colors: Professional, trustworthy
-├── Typography: Familiar, conservative
-├── Layout: Clear hierarchy, traditional
-├── Interactions: Functional, not flashy
-├── Content: Direct, fact-based
-└── Trust: Expertise, track record
+DESIGN APPROACH（设计策略）：
+├── Colors：低饱和粉彩、自然土色
+├── Typography：清晰易读 Sans-serif
+├── Layout：响应式、卡片化
+├── Interactions：平滑且有目的动效
+├── Content：价值导向、透明表达
+└── Trust：评价、可持续、价值观一致
 ```
 
-### Baby Boomers (Born 1946-1964)
+### Gen X（1965-1980）
 
 ```
-CHARACTERISTICS:
-- Detail-oriented
-- Loyal when trusted
-- Value personal service
-- Less tech-confident
+CHARACTERISTICS（特征）：
+- 独立、自主
+- 重效率
+- 对营销说辞更谨慎
+- 科技接受度平衡
 
-DESIGN APPROACH:
-├── Colors: High contrast, simple palette
-├── Typography: Large (18px+), high contrast
-├── Layout: Simple, linear, spacious
-├── Interactions: Minimal, clear feedback
-├── Content: Comprehensive, detailed
-└── Trust: Phone numbers, real people
+DESIGN APPROACH（设计策略）：
+├── Colors：专业、可信
+├── Typography：熟悉、保守
+├── Layout：清晰层级、传统结构
+├── Interactions：功能优先，不炫技
+├── Content：直接、事实导向
+└── Trust：专业能力、过往记录
+```
+
+### Baby Boomers（1946-1964）
+
+```
+CHARACTERISTICS（特征）：
+- 重细节
+- 建立信任后忠诚度高
+- 重视真人服务
+- 科技自信度相对较低
+
+DESIGN APPROACH（设计策略）：
+├── Colors：高对比、简色板
+├── Typography：大字号（18px+）、高对比
+├── Layout：线性、简单、留白充分
+├── Interactions：最小化且反馈明确
+├── Content：完整、细致
+└── Trust：电话、地址、真人信息
 ```
 
 ---
 
-## 7. Emotion Color Mapping
+## 9. 情绪与颜色映射（Emotion Color Mapping）
 
 ```
 ┌────────────────────────────────────────────────────┐
@@ -1080,37 +1082,37 @@ DESIGN APPROACH:
 
 ---
 
-## 8. Psychology Checklist
+## 10. 心理学上线前清单（Psychology Checklist）
 
-### Before Launch
+### Before Launch（上线前）
 
-- [ ] **Hick's Law:** No more than 7 choices in navigation. Have choices been narrowed to reduce decision fatigue?
-- [ ] **Fitts' Law:** Primary CTAs are large and reachable. Are the most important buttons easy to hit on mobile?
-- [ ] **Miller's Law:** Content is chunked appropriately. Is information grouped into digestible units of 5-7?
-- [ ] **Jakob's Law:** Does the site follow standard web conventions that users already understand?
-- [ ] **Doherty Threshold:** Does the system provide feedback within 400ms? Are skeleton screens in place?
-- [ ] **Tesler's Law:** Has complexity been moved from the user to the system where possible?
-- [ ] **Parkinson’s Law:** Are there features like "One-Click Checkout" to minimize task completion time?
-- [ ] **Von Restorff:** Does the primary CTA visually stand out from all other elements?
-- [ ] **Serial Position:** Is the most critical information at the very beginning or end of lists?
-- [ ] **Gestalt Laws:** Are related items physically grouped together (Proximity) or within a Card (Common Region)?
-- [ ] **Zeigarnik Effect:** Are there visual indicators (like progress bars) for incomplete tasks?
-- [ ] **Goal Gradient:** Is the user given a "head start" (e.g., 20% progress) to encourage completion?
-- [ ] **Peak-End Rule:** Does the final "Success" screen create a moment of delight?
-- [ ] **Occam’s Razor:** Have unnecessary visual or functional elements been removed?
-- [ ] **Aesthetic-Usability:** Is the UI high-fidelity enough to build initial user trust?
-- [ ] **Trust & Authority:** Are security badges, reviews, and expert certifications visible?
-- [ ] **Social Proof:** Are real user numbers or testimonials visible at decision points?
-- [ ] **Scarcity & Urgency:** If used, is the scarcity real and ethical (e.g., actual low stock)?
-- [ ] **Loss Aversion:** Does the copy emphasize what the user stands to keep rather than just gain?
-- [ ] **Anchoring:** Is the pricing presented in a way that frames the desired choice as a great value?
-- [ ] **Postel’s Law:** Is the system flexible enough to accept various input formats without errors?
-- [ ] **False-Consensus:** Has the design been tested with real users rather than just the internal team?
-- [ ] **Curse of Knowledge:** Is the copy free of technical jargon and easy for a beginner to understand?
-- [ ] **Stepping Stone:** Does the funnel start with low-friction tasks (e.g., email only)?
-- [ ] **Cognitive Load:** Is extraneous visual noise minimized to keep the interface clean?
-- [ ] **Emotional Design:** Does the color palette and imagery evoke the intended visceral reaction?
-- [ ] **Feedback:** Do all interactive elements have immediate hover, active, and success states?
-- [ ] **Accessibility:** Is the contrast ratio sufficient, and is the site navigable via keyboard/screen reader?
-- [ ] **Prägnanz:** Are icons and shapes simple enough to be recognized at a glance?
-- [ ] **Figure/Ground:** Is it clear which element is in focus (e.g., using shadows or scrims for modals)?
+- [ ] **Hick's Law**：导航选项是否控制在 7 项内，减少决策疲劳？
+- [ ] **Fitts' Law**：主 CTA 是否足够大且移动端易点击？
+- [ ] **Miller's Law**：信息是否按 5-7 单元分块？
+- [ ] **Jakob's Law**：是否遵循用户熟悉的 Web 约定？
+- [ ] **Doherty Threshold**：核心反馈是否在 400ms 内返回？是否有 Skeleton？
+- [ ] **Tesler's Law**：复杂度是否尽量转移给系统处理？
+- [ ] **Parkinson’s Law**：是否提供一键式捷径减少完成时间？
+- [ ] **Von Restorff**：主 CTA 是否相对其他元素足够突出？
+- [ ] **Serial Position**：关键信息是否放在开头或结尾？
+- [ ] **Gestalt Laws**：相关元素是否通过接近/区域等方式清晰成组？
+- [ ] **Zeigarnik Effect**：未完成任务是否有进度提示？
+- [ ] **Goal Gradient**：是否给用户“起步领先”以提高完成率？
+- [ ] **Peak-End Rule**：成功页是否制造了愉悦收尾时刻？
+- [ ] **Occam’s Razor**：是否去除了多余视觉/功能元素？
+- [ ] **Aesthetic-Usability**：视觉质量是否足以建立初始信任？
+- [ ] **Trust & Authority**：安全标识、评价、认证是否可见？
+- [ ] **Social Proof**：关键决策点是否提供真实社会认同？
+- [ ] **Scarcity & Urgency**：稀缺和紧迫是否真实、合伦理？
+- [ ] **Loss Aversion**：文案是否强调“避免失去”而不仅是“获得”？
+- [ ] **Anchoring**：定价呈现是否合理锚定期望？
+- [ ] **Postel’s Law**：输入格式是否足够宽容且鲁棒？
+- [ ] **False-Consensus**：是否经过真实用户测试，而非仅内部评审？
+- [ ] **Curse of Knowledge**：文案是否去术语化并对新手友好？
+- [ ] **Stepping Stone**：漏斗是否从低摩擦任务开始（如仅邮箱）？
+- [ ] **Cognitive Load**：视觉噪声是否被有效控制？
+- [ ] **Emotional Design**：色彩与图像是否触发预期情绪反应？
+- [ ] **Feedback**：交互元素是否具备 hover/active/success 即时反馈？
+- [ ] **Accessibility**：对比度与键盘/读屏可达性是否达标？
+- [ ] **Prägnanz**：图标和形状是否“一眼识别”？
+- [ ] **Figure/Ground**：焦点元素与背景层次是否明确？

@@ -1,187 +1,187 @@
 [
-    {
-        "name": "nextjs-react-expert",
-        "description": "Next.js App Router、React Hooks、RSC 与性能优化",
-        "category": "前端与 UI"
-    },
-    {
-        "name": "tailwind-patterns",
-        "description": "Tailwind CSS v4 工具与模式",
-        "category": "前端与 UI"
-    },
-    {
-        "name": "frontend-design",
-        "description": "UI/UX 模式与设计系统",
-        "category": "前端与 UI"
-    },
-    {
-        "name": "web-design-guidelines",
-        "description": "专业 Web 设计规范、50 种风格、21 套调色板",
-        "category": "前端与 UI"
-    },
-    {
-        "name": "api-patterns",
-        "description": "REST、GraphQL、tRPC 设计模式",
-        "category": "后端与 API"
-    },
-    {
-        "name": "nodejs-best-practices",
-        "description": "Node.js 异步、模块与架构",
-        "category": "后端与 API"
-    },
-    {
-        "name": "python-patterns",
-        "description": "Python 标准与 FastAPI 实践",
-        "category": "后端与 API"
-    },
-    {
-        "name": "rust-pro",
-        "description": "Rust 1.75+ 高级实践与生产级系统编程",
-        "category": "后端与 API"
-    },
-    {
-        "name": "database-design",
-        "description": "数据模型设计与优化",
-        "category": "数据库"
-    },
-    {
-        "name": "deployment-procedures",
-        "description": "CI/CD 与部署流程",
-        "category": "云与基础设施"
-    },
-    {
-        "name": "server-management",
-        "description": "基础设施与服务器管理",
-        "category": "云与基础设施"
-    },
-    {
-        "name": "testing-patterns",
-        "description": "Jest/Vitest 与测试策略",
-        "category": "测试与质量"
-    },
-    {
-        "name": "webapp-testing",
-        "description": "E2E 与 Playwright",
-        "category": "测试与质量"
-    },
-    {
-        "name": "tdd-workflow",
-        "description": "测试驱动开发流程",
-        "category": "测试与质量"
-    },
-    {
-        "name": "code-review-checklist",
-        "description": "代码评审规范",
-        "category": "测试与质量"
-    },
-    {
-        "name": "lint-and-validate",
-        "description": "Lint 与校验",
-        "category": "测试与质量"
-    },
-    {
-        "name": "vulnerability-scanner",
-        "description": "安全审计与 OWASP",
-        "category": "安全"
-    },
-    {
-        "name": "red-team-tactics",
-        "description": "攻防与渗透思路",
-        "category": "安全"
-    },
-    {
-        "name": "app-builder",
-        "description": "全栈应用脚手架",
-        "category": "架构与规划"
-    },
-    {
-        "name": "architecture",
-        "description": "系统设计模式",
-        "category": "架构与规划"
-    },
-    {
-        "name": "plan-writing",
-        "description": "任务拆解与计划",
-        "category": "架构与规划"
-    },
-    {
-        "name": "brainstorming",
-        "description": "苏格拉底式提问",
-        "category": "架构与规划"
-    },
-    {
-        "name": "mobile-design",
-        "description": "移动端 UI/UX 模式",
-        "category": "移动端"
-    },
-    {
-        "name": "game-development",
-        "description": "游戏逻辑与机制",
-        "category": "游戏开发"
-    },
-    {
-        "name": "seo-fundamentals",
-        "description": "SEO、E-E-A-T、核心 Web 指标",
-        "category": "SEO 与增长"
-    },
-    {
-        "name": "geo-fundamentals",
-        "description": "生成式引擎优化（GEO）",
-        "category": "SEO 与增长"
-    },
-    {
-        "name": "bash-linux",
-        "description": "Linux 命令与脚本",
-        "category": "Shell/CLI"
-    },
-    {
-        "name": "powershell-windows",
-        "description": "Windows PowerShell",
-        "category": "Shell/CLI"
-    },
-    {
-        "name": "clean-code",
-        "description": "代码规范（全局）",
-        "category": "其他"
-    },
-    {
-        "name": "behavioral-modes",
-        "description": "行为模式与 Agent 人格",
-        "category": "其他"
-    },
-    {
-        "name": "parallel-agents",
-        "description": "多智能体协作模式",
-        "category": "其他"
-    },
-    {
-        "name": "mcp-builder",
-        "description": "MCP 模型上下文协议",
-        "category": "其他"
-    },
-    {
-        "name": "documentation-templates",
-        "description": "文档模板与格式",
-        "category": "其他"
-    },
-    {
-        "name": "i18n-localization",
-        "description": "国际化与本地化",
-        "category": "其他"
-    },
-    {
-        "name": "performance-profiling",
-        "description": "性能指标与优化",
-        "category": "其他"
-    },
-    {
-        "name": "systematic-debugging",
-        "description": "系统化排错",
-        "category": "其他"
-    },
-    {
-        "name": "intelligent-routing",
-        "description": "自动路由与 Agent 选择",
-        "category": "其他"
-    }
+  {
+    "name": "nextjs-react-expert",
+    "description": "Next.js App Router、React Hooks、RSC 与性能优化",
+    "category": "前端与 UI"
+  },
+  {
+    "name": "tailwind-patterns",
+    "description": "Tailwind CSS v4 工具与模式",
+    "category": "前端与 UI"
+  },
+  {
+    "name": "frontend-design",
+    "description": "UI/UX 模式与设计系统",
+    "category": "前端与 UI"
+  },
+  {
+    "name": "web-design-guidelines",
+    "description": "专业 Web 设计规范、50 种风格、21 套调色板",
+    "category": "前端与 UI"
+  },
+  {
+    "name": "api-patterns",
+    "description": "REST、GraphQL、tRPC 设计模式",
+    "category": "后端与 API"
+  },
+  {
+    "name": "nodejs-best-practices",
+    "description": "Node.js 异步、模块与架构",
+    "category": "后端与 API"
+  },
+  {
+    "name": "python-patterns",
+    "description": "Python 标准与 FastAPI 实践",
+    "category": "后端与 API"
+  },
+  {
+    "name": "rust-pro",
+    "description": "Rust 1.75+ 高级实践与生产级系统编程",
+    "category": "后端与 API"
+  },
+  {
+    "name": "database-design",
+    "description": "数据模型设计与优化",
+    "category": "数据库"
+  },
+  {
+    "name": "deployment-procedures",
+    "description": "CI/CD 与部署流程",
+    "category": "云与基础设施"
+  },
+  {
+    "name": "server-management",
+    "description": "基础设施与服务器管理",
+    "category": "云与基础设施"
+  },
+  {
+    "name": "testing-patterns",
+    "description": "Jest/Vitest 与测试策略",
+    "category": "测试与质量"
+  },
+  {
+    "name": "webapp-testing",
+    "description": "E2E 与 Playwright",
+    "category": "测试与质量"
+  },
+  {
+    "name": "tdd-workflow",
+    "description": "测试驱动开发流程",
+    "category": "测试与质量"
+  },
+  {
+    "name": "code-review-checklist",
+    "description": "代码评审规范",
+    "category": "测试与质量"
+  },
+  {
+    "name": "lint-and-validate",
+    "description": "Lint 与校验",
+    "category": "测试与质量"
+  },
+  {
+    "name": "vulnerability-scanner",
+    "description": "安全审计与 OWASP",
+    "category": "安全"
+  },
+  {
+    "name": "red-team-tactics",
+    "description": "攻防与渗透思路",
+    "category": "安全"
+  },
+  {
+    "name": "app-builder",
+    "description": "全栈应用脚手架",
+    "category": "架构与规划"
+  },
+  {
+    "name": "architecture",
+    "description": "系统设计模式",
+    "category": "架构与规划"
+  },
+  {
+    "name": "plan-writing",
+    "description": "任务拆解与计划",
+    "category": "架构与规划"
+  },
+  {
+    "name": "brainstorming",
+    "description": "苏格拉底式提问",
+    "category": "架构与规划"
+  },
+  {
+    "name": "mobile-design",
+    "description": "移动端 UI/UX 模式",
+    "category": "移动端"
+  },
+  {
+    "name": "game-development",
+    "description": "游戏逻辑与机制",
+    "category": "游戏开发"
+  },
+  {
+    "name": "seo-fundamentals",
+    "description": "SEO、E-E-A-T、核心 Web 指标",
+    "category": "SEO 与增长"
+  },
+  {
+    "name": "geo-fundamentals",
+    "description": "生成式引擎优化（GEO）",
+    "category": "SEO 与增长"
+  },
+  {
+    "name": "bash-linux",
+    "description": "Linux 命令与脚本",
+    "category": "Shell/CLI"
+  },
+  {
+    "name": "powershell-windows",
+    "description": "Windows PowerShell",
+    "category": "Shell/CLI"
+  },
+  {
+    "name": "clean-code",
+    "description": "代码规范（全局）",
+    "category": "其他"
+  },
+  {
+    "name": "behavioral-modes",
+    "description": "行为模式与 Agent 人格",
+    "category": "其他"
+  },
+  {
+    "name": "parallel-agents",
+    "description": "多智能体协作模式",
+    "category": "其他"
+  },
+  {
+    "name": "mcp-builder",
+    "description": "MCP 模型上下文协议",
+    "category": "其他"
+  },
+  {
+    "name": "documentation-templates",
+    "description": "文档模板与格式",
+    "category": "其他"
+  },
+  {
+    "name": "i18n-localization",
+    "description": "国际化与本地化",
+    "category": "其他"
+  },
+  {
+    "name": "performance-profiling",
+    "description": "性能指标与优化",
+    "category": "其他"
+  },
+  {
+    "name": "systematic-debugging",
+    "description": "系统化排错",
+    "category": "其他"
+  },
+  {
+    "name": "intelligent-routing",
+    "description": "自动路由与 Agent 选择",
+    "category": "其他"
+  }
 ]

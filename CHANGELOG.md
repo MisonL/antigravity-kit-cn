@@ -7,6 +7,13 @@
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-02-04
+
+- **New Skills**:
+    - `rust-pro` - 掌握 Rust 1.75+ (Master Rust 1.75+)
+- **Agent Workflows**:
+    - 更新 `orchestrate.md` 修复土耳其语输出问题 (Updated `orchestrate.md` fix output turkish)
+
 ## [2.0.1] - 2026-01-26
 
 ### 新增 (Added)

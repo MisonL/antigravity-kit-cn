@@ -1,418 +1,418 @@
-# Decision Trees & Context Templates
+# 决策树与上下文模板（Decision Trees & Context Templates）
 
-> Context-based design THINKING, not fixed solutions.
-> **These are decision GUIDES, not copy-paste templates.**
-> **For UX psychology principles (Hick's, Fitts', etc.) see:** [ux-psychology.md](ux-psychology.md)
-
----
-
-## ⚠️ How to Use This File
-
-This file helps you DECIDE, not copy.
-
-- Decision trees → Help you THINK through options
-- Templates → Show STRUCTURE and PRINCIPLES, not exact values
-- **Always ask user preferences** before applying
-- **Generate fresh palettes** based on context, don't copy hex codes
-- **Apply UX laws** from ux-psychology.md to validate decisions
+> 基于上下文的设计思考（THINKING），不是固定答案。
+> **这些是“决策指引（decision guides）”，不是可直接复制粘贴的模板。**
+> **如需 UX 心理学法则（Hick's、Fitts' 等），请查看：** [ux-psychology.md](ux-psychology.md)
 
 ---
 
-## 1. Master Decision Tree
+## ⚠️ 本文件使用方式（How to Use This File）
+
+本文件用于帮助你“做判断”，不是照抄。
+
+- 决策树（Decision trees）→ 帮助你梳理思路。
+- 模板（Templates）→ 提供结构与原则，不提供固定参数。
+- **在套用前必须先询问用户偏好**。
+- **颜色必须根据上下文重新生成**，不要直接复用十六进制色值。
+- **使用 ux-psychology.md 中的 UX 法则**校验你的决策。
+
+---
+
+## 1. 总决策树（Master Decision Tree）
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     WHAT ARE YOU BUILDING?                   │
+│                        你在做什么类型的产品？                │
 └─────────────────────────────────────────────────────────────┘
                               │
         ┌─────────────────────┼─────────────────────┐
         │                     │                     │
         ▼                     ▼                     ▼
    E-COMMERCE            SaaS/APP              CONTENT
-   - Product pages       - Dashboard           - Blog
-   - Checkout            - Tools               - Portfolio
-   - Catalog             - Admin               - Landing
+   - 产品页               - Dashboard           - Blog
+   - 结算页               - 工具端               - Portfolio
+   - 商品目录             - 管理后台             - Landing
         │                     │                     │
         ▼                     ▼                     ▼
-   PRINCIPLES:           PRINCIPLES:           PRINCIPLES:
-   - Trust               - Functionality       - Storytelling
-   - Action              - Clarity             - Emotion
-   - Urgency             - Efficiency          - Creativity
+   核心原则：             核心原则：             核心原则：
+   - 信任                 - 功能优先             - 讲好故事
+   - 行动导向             - 清晰                 - 情绪连接
+   - 紧迫感               - 效率                 - 创造力
 ```
 
 ---
 
-## 2. Audience Decision Tree
+## 2. 受众决策树（Audience Decision Tree）
 
-### Who is your target user?
+### 你的目标用户是谁？
 
 ```
 TARGET AUDIENCE
       │
-      ├── Gen Z (18-25)
-      │   ├── Colors: Bold, vibrant, unexpected combinations
-      │   ├── Type: Large, expressive, variable
-      │   ├── Layout: Mobile-first, vertical, snackable
-      │   ├── Effects: Motion, gamification, interactive
-      │   └── Approach: Authentic, fast, no corporate feel
+      ├── Gen Z（18-25）
+      │   ├── Colors：大胆、鲜明、出其不意的配色
+      │   ├── Type：字号更大、表达感强、可变字体（variable）
+      │   ├── Layout：移动优先、纵向流、碎片化易消费
+      │   ├── Effects：动效、游戏化、互动性
+      │   └── Approach：真实、快速、避免企业化腔调
       │
-      ├── Millennials (26-41)
-      │   ├── Colors: Muted, earthy, sophisticated
-      │   ├── Type: Clean, readable, functional
-      │   ├── Layout: Responsive, card-based, organized
-      │   ├── Effects: Subtle, purposeful only
-      │   └── Approach: Value-driven, transparent, sustainable
+      ├── Millennials（26-41）
+      │   ├── Colors：低饱和、自然、精致
+      │   ├── Type：清晰、可读、功能导向
+      │   ├── Layout：响应式、卡片化、有组织
+      │   ├── Effects：克制且有目的的动效
+      │   └── Approach：价值导向、透明、可持续
       │
-      ├── Gen X (42-57)
-      │   ├── Colors: Professional, trusted, conservative
-      │   ├── Type: Familiar, clear, no-nonsense
-      │   ├── Layout: Traditional hierarchy, predictable
-      │   ├── Effects: Minimal, functional feedback
-      │   └── Approach: Direct, efficient, reliable
+      ├── Gen X（42-57）
+      │   ├── Colors：专业、可信、偏保守
+      │   ├── Type：熟悉、清楚、直接
+      │   ├── Layout：传统层级、可预测
+      │   ├── Effects：最小化，仅保留功能反馈
+      │   └── Approach：直给、效率、可靠
       │
-      ├── Boomers (58+)
-      │   ├── Colors: High contrast, simple, clear
-      │   ├── Type: Large sizes, high readability
-      │   ├── Layout: Simple, linear, uncluttered
-      │   ├── Effects: None or very minimal
-      │   └── Approach: Clear, detailed, trustworthy
+      ├── Boomers（58+）
+      │   ├── Colors：高对比、简洁、清晰
+      │   ├── Type：大字号、高可读性
+      │   ├── Layout：线性、简单、去杂乱
+      │   ├── Effects：无或极少
+      │   └── Approach：明确、详细、可信
       │
       └── B2B / Enterprise
-          ├── Colors: Professional palette, muted
-          ├── Type: Clean, data-friendly, scannable
-          ├── Layout: Grid-based, organized, efficient
-          ├── Effects: Professional, subtle
-          └── Approach: Expert, solution-focused, ROI-driven
+          ├── Colors：专业色板、低饱和
+          ├── Type：清晰、数据友好、易扫读
+          ├── Layout：网格化、有序、高效
+          ├── Effects：专业且克制
+          └── Approach：专家感、方案导向、ROI 导向
 ```
 
 ---
 
-## 3. Color Selection Decision Tree
+## 3. 配色决策树（Color Selection Decision Tree）
 
-### Instead of fixed hex codes, use this process:
+### 不给固定色值，而使用以下流程：
 
 ```
-WHAT EMOTION/ACTION DO YOU WANT?
+你希望传达什么情绪/行动？
             │
-            ├── Trust & Security
-            │   └── Consider: Blue family, professional neutrals
-            │       → ASK user for specific shade preference
+            ├── Trust & Security（信任/安全）
+            │   └── 可考虑：蓝色系、专业中性色
+            │       → 询问用户具体色相偏好
             │
-            ├── Growth & Health
-            │   └── Consider: Green family, natural tones
-            │       → ASK user if eco/nature/wellness focus
+            ├── Growth & Health（成长/健康）
+            │   └── 可考虑：绿色系、自然色调
+            │       → 询问是否强调环保/自然/健康
             │
-            ├── Urgency & Action
-            │   └── Consider: Warm colors (orange/red) as ACCENTS
-            │       → Use sparingly, ASK if appropriate
+            ├── Urgency & Action（紧迫/行动）
+            │   └── 可考虑：暖色（橙/红）作强调色
+            │       → 控制使用比例，并确认是否合适
             │
-            ├── Luxury & Premium
-            │   └── Consider: Deep darks, metallics, restrained palette
-            │       → ASK about brand positioning
+            ├── Luxury & Premium（高端/奢华）
+            │   └── 可考虑：深色、金属色、克制色板
+            │       → 询问品牌定位
             │
-            ├── Creative & Playful
-            │   └── Consider: Multi-color, unexpected combinations
-            │       → ASK about brand personality
+            ├── Creative & Playful（创意/活泼）
+            │   └── 可考虑：多色、非常规组合
+            │       → 询问品牌个性
             │
-            └── Calm & Minimal
-                └── Consider: Neutrals with single accent
-                    → ASK what accent color fits brand
+            └── Calm & Minimal（平静/极简）
+                └── 可考虑：中性色 + 单一强调色
+                    → 询问哪个强调色更符合品牌
 ```
 
-### The Process:
-1. Identify the emotion needed
-2. Narrow to color FAMILY
-3. ASK user for preference within family
-4. Generate fresh palette using HSL principles
+### 流程（The Process）
+1. 先明确需要传达的情绪。
+2. 收敛到颜色“家族（color family）”。
+3. 在该家族中询问用户偏好。
+4. 使用 HSL 原则生成新色板。
 
 ---
 
-## 4. Typography Decision Tree
+## 4. 字体决策树（Typography Decision Tree）
 
 ```
-WHAT'S THE CONTENT TYPE?
+内容类型是什么？
           │
-          ├── Data-Heavy (Dashboard, SaaS)
-          │   ├── Style: Sans-serif, clear, compact
-          │   ├── Scale: Tighter ratio (1.125-1.2)
-          │   └── Priority: Scannability, density
+          ├── Data-Heavy（仪表盘、SaaS）
+          │   ├── 风格：Sans-serif，清晰、紧凑
+          │   ├── 比例：更紧凑（1.125-1.2）
+          │   └── 优先级：可扫读性、信息密度
           │
-          ├── Editorial (Blog, Magazine)
-          │   ├── Style: Serif heading + Sans body works well
-          │   ├── Scale: More dramatic (1.333+)
-          │   └── Priority: Reading comfort, hierarchy
+          ├── Editorial（博客、杂志）
+          │   ├── 风格：Serif 标题 + Sans 正文常见有效
+          │   ├── 比例：更有戏剧性（1.333+）
+          │   └── 优先级：阅读舒适、层级
           │
-          ├── Modern Tech (Startup, SaaS Marketing)
-          │   ├── Style: Geometric or humanist sans
-          │   ├── Scale: Balanced (1.25)
-          │   └── Priority: Modern feel, clarity
+          ├── Modern Tech（创业、SaaS 营销）
+          │   ├── 风格：几何或人文 Sans
+          │   ├── 比例：平衡（1.25）
+          │   └── 优先级：现代感、清晰度
           │
-          ├── Luxury (Fashion, Premium)
-          │   ├── Style: Elegant serif or thin sans
-          │   ├── Scale: Dramatic (1.5-1.618)
-          │   └── Priority: Sophistication, whitespace
+          ├── Luxury（时尚、高端）
+          │   ├── 风格：优雅 Serif 或纤细 Sans
+          │   ├── 比例：更夸张（1.5-1.618）
+          │   └── 优先级：高级感、留白
           │
-          └── Playful (Kids, Games, Casual)
-              ├── Style: Rounded, friendly fonts
-              ├── Scale: Varied, expressive
-              └── Priority: Fun, approachable, readable
+          └── Playful（儿童、游戏、轻松场景）
+              ├── 风格：圆润、友好字体
+              ├── 比例：更有变化、更具表现力
+              └── 优先级：有趣、亲和、可读
 ```
 
-### Selection Process:
-1. Identify content type
-2. Choose style DIRECTION
-3. ASK user if they have brand fonts
-4. Select fonts that match direction
+### 选择流程（Selection Process）
+1. 确认内容类型。
+2. 选择字体风格方向（direction）。
+3. 询问用户是否已有品牌字体。
+4. 选择符合方向的字体组合。
 
 ---
 
-## 5. E-commerce Guidelines {#e-commerce}
+## 5. 电商指南（E-commerce Guidelines） {#e-commerce}
 
-### Key Principles (Not Fixed Rules)
-- **Trust first:** How will you show security?
-- **Action-oriented:** Where are the CTAs?
-- **Scannable:** Can users compare quickly?
+### 关键原则（不是固定规则）
+- **信任优先（Trust first）**：你如何证明站点可信？
+- **行动导向（Action-oriented）**：CTA 放在哪里最有效？
+- **易扫读（Scannable）**：用户能否快速比较？
 
-### Color Thinking:
+### 配色思路（Color Thinking）
 ```
-E-commerce typically needs:
-├── Trust color (often blue family) → ASK preference
-├── Clean background (white/neutral) → depends on brand
-├── Action accent (for CTAs, sales) → depends on urgency level
-├── Success/error semantics → standard conventions work
-└── Brand integration → ASK about existing colors
+电商通常需要：
+├── 信任色（常见蓝色系）→ 先问用户偏好
+├── 干净背景（白/中性）→ 取决于品牌
+├── 行动强调色（CTA/促销）→ 取决于紧迫级别
+├── 成功/错误语义色 → 可用通用约定
+└── 品牌色融合 → 先确认现有品牌色
 ```
 
-### Layout Principles:
+### 布局原则（Layout Principles）
 ```
 ┌────────────────────────────────────────────────────┐
-│  HEADER: Brand + Search + Cart                      │
-│  (Keep essential actions visible)                   │
+│  HEADER：品牌 + 搜索 + 购物车                       │
+│  （核心动作始终可见）                                │
 ├────────────────────────────────────────────────────┤
-│  TRUST ZONE: Why trust this site?                   │
-│  (Shipping, returns, security - if applicable)      │
+│  TRUST ZONE：为什么值得信任？                        │
+│  （物流、退换、支付安全等，按需）                     │
 ├────────────────────────────────────────────────────┤
-│  HERO: Primary message or offer                     │
-│  (Clear CTA, single focus)                          │
+│  HERO：主信息/主活动                                 │
+│  （单一焦点 + 清晰 CTA）                             │
 ├────────────────────────────────────────────────────┤
-│  CATEGORIES: Easy navigation                        │
-│  (Visual, filterable, scannable)                    │
+│  CATEGORIES：易导航                                  │
+│  （可视化、可筛选、可扫读）                           │
 ├────────────────────────────────────────────────────┤
-│  PRODUCTS: Easy comparison                          │
-│  (Price, rating, quick actions visible)             │
+│  PRODUCTS：易比较                                    │
+│  （价格、评分、快捷操作清晰可见）                     │
 ├────────────────────────────────────────────────────┤
-│  SOCIAL PROOF: Why others trust                     │
-│  (Reviews, testimonials - if available)             │
+│  SOCIAL PROOF：他人为什么信任                         │
+│  （评价、证言，按实际情况）                           │
 ├────────────────────────────────────────────────────┤
-│  FOOTER: All the details                            │
-│  (Policies, contact, trust badges)                  │
+│  FOOTER：完整信息                                    │
+│  （政策、联系、信任标识）                             │
 └────────────────────────────────────────────────────┘
 ```
 
-### Psychology to Apply:
-- Hick's Law: Limit navigation choices
-- Fitts' Law: Size CTAs appropriately
-- Social proof: Show where relevant
-- Scarcity: Use honestly if at all
+### 需应用的心理学原则（Psychology to Apply）
+- Hick's Law：限制导航选项数量。
+- Fitts' Law：为 CTA 提供合理点击面积。
+- Social proof：在关键决策点显示社会证明。
+- Scarcity：仅在真实前提下使用稀缺性。
 
 ---
 
-## 6. SaaS Dashboard Guidelines {#saas}
+## 6. SaaS 仪表盘指南（SaaS Dashboard Guidelines） {#saas}
 
-### Key Principles
-- **Functional first:** Data clarity over decoration
-- **Calm UI:** Reduce cognitive load
-- **Consistent:** Predictable patterns
+### 关键原则（Key Principles）
+- **功能优先（Functional first）**：数据清晰高于装饰。
+- **平静界面（Calm UI）**：降低认知负担。
+- **一致性（Consistent）**：保证模式可预测。
 
-### Color Thinking:
+### 配色思路（Color Thinking）
 ```
-Dashboard typically needs:
-├── Background: Light OR dark (ASK preference)
-├── Surface: Slight contrast from background
-├── Primary accent: For key actions
-├── Data colors: Success/warning/danger semantics
-└── Muted: For secondary information
-```
-
-### Layout Principles:
-```
-Consider these patterns (not mandated):
-
-OPTION A: Sidebar + Content
-├── Fixed sidebar for navigation
-└── Main area for content
-
-OPTION B: Top nav + Content
-├── Horizontal navigation
-└── More horizontal content space
-
-OPTION C: Collapsed + Expandable
-├── Icon-only sidebar expands
-└── Maximum content area
-
-→ ASK user about their navigation preference
+仪表盘通常需要：
+├── 背景：浅色或深色（先问偏好）
+├── Surface：与背景有轻微层次对比
+├── 主强调色：关键操作
+├── 数据语义色：success/warning/danger
+└── 弱化色：次要信息
 ```
 
-### Psychology to Apply:
-- Hick's Law: Group navigation items
-- Miller's Law: Chunk information
-- Cognitive Load: Whitespace, consistency
+### 布局原则（Layout Principles）
+```
+可考虑以下模式（非强制）：
+
+OPTION A：Sidebar + Content
+├── 侧边导航固定
+└── 主区域承载内容
+
+OPTION B：Top nav + Content
+├── 顶部横向导航
+└── 获得更多横向内容空间
+
+OPTION C：Collapsed + Expandable
+├── 图标侧栏可展开
+└── 最大化内容区
+
+→ 必须询问用户偏好的导航模式
+```
+
+### 需应用的心理学原则（Psychology to Apply）
+- Hick's Law：对导航进行分组。
+- Miller's Law：信息分块。
+- Cognitive Load：用留白与一致性降低负担。
 
 ---
 
-## 7. Landing Page Guidelines {#landing-page}
+## 7. 落地页指南（Landing Page Guidelines） {#landing-page}
 
-### Key Principles
-- **Hero-centric:** First impression matters most
-- **Single focus:** One primary CTA
-- **Emotional:** Connect before selling
+### 关键原则（Key Principles）
+- **Hero 优先（Hero-centric）**：首屏印象最重要。
+- **单一焦点（Single focus）**：只保留一个主 CTA。
+- **情绪连接（Emotional）**：先建立共鸣，再促成转化。
 
-### Color Thinking:
+### 配色思路（Color Thinking）
 ```
-Landing page typically needs:
-├── Brand primary: Hero background or accent
-├── Clean secondary: Most of page
-├── CTA color: Stands out from everything
-├── Supporting: For sections, testimonials
-└── ASK about brand colors first!
+落地页通常需要：
+├── Brand primary：Hero 背景或强调色
+├── Clean secondary：覆盖页面大部分区域
+├── CTA color：与其余元素明显区分
+├── Supporting：分区与证言辅助色
+└── 先询问品牌色再定方案
 ```
 
-### Structure Principles:
+### 结构原则（Structure Principles）
 ```
 ┌────────────────────────────────────────────────────┐
-│  Navigation: Minimal, CTA visible                   │
+│  Navigation：简洁，CTA 保持可见                     │
 ├────────────────────────────────────────────────────┤
-│  HERO: Hook + Value + CTA                          │
-│  (Most important section, biggest impact)           │
+│  HERO：钩子 + 价值 + CTA                            │
+│  （最大影响力区块）                                  │
 ├────────────────────────────────────────────────────┤
-│  PROBLEM: What pain do they have?                   │
+│  PROBLEM：目标用户痛点                               │
 ├────────────────────────────────────────────────────┤
-│  SOLUTION: How you solve it                         │
+│  SOLUTION：你如何解决                                │
 ├────────────────────────────────────────────────────┤
-│  PROOF: Why believe you?                            │
-│  (Testimonials, logos, stats)                       │
+│  PROOF：为什么值得相信                               │
+│  （证言、品牌 logo、数据）                            │
 ├────────────────────────────────────────────────────┤
-│  HOW: Simple explanation of process                 │
+│  HOW：流程解释                                       │
 ├────────────────────────────────────────────────────┤
-│  PRICING: If applicable                             │
+│  PRICING：如适用                                     │
 ├────────────────────────────────────────────────────┤
-│  FAQ: Address objections                            │
+│  FAQ：回应异议                                       │
 ├────────────────────────────────────────────────────┤
-│  FINAL CTA: Repeat main action                      │
+│  FINAL CTA：重复主行动                               │
 └────────────────────────────────────────────────────┘
 ```
 
-### Psychology to Apply:
-- Visceral: Beautiful hero impression
-- Serial Position: Key info top/bottom
-- Social Proof: Testimonials work
+### 需应用的心理学原则（Psychology to Apply）
+- Visceral：首屏视觉冲击与好感。
+- Serial Position：关键内容放在开头/结尾。
+- Social Proof：证言与案例增强说服。
 
 ---
 
-## 8. Portfolio Guidelines {#portfolio}
+## 8. 作品集指南（Portfolio Guidelines） {#portfolio}
 
-### Key Principles
-- **Personality:** Show who you are
-- **Work-focused:** Let projects speak
-- **Memorable:** Stand out from templates
+### 关键原则（Key Principles）
+- **个性表达（Personality）**：让人知道“你是谁”。
+- **作品优先（Work-focused）**：让项目本身说话。
+- **可记忆性（Memorable）**：避免模板化同质。
 
-### Color Thinking:
+### 配色思路（Color Thinking）
 ```
-Portfolio is personal - many options:
-├── Minimal: Neutrals + one signature accent
-├── Bold: Unexpected color choices
-├── Dark: Moody, artistic feel
-├── Light: Clean, professional feel
-└── ASK about personal brand identity!
+作品集高度个性化，可选方向很多：
+├── Minimal：中性色 + 单一签名强调色
+├── Bold：非常规大胆配色
+├── Dark：情绪化、艺术感
+├── Light：干净、职业感
+└── 必须先询问个人品牌定位
 ```
 
-### Structure Principles:
+### 结构原则（Structure Principles）
 ```
 ┌────────────────────────────────────────────────────┐
-│  Navigation: Unique to your personality             │
+│  Navigation：体现个人风格                            │
 ├────────────────────────────────────────────────────┤
-│  INTRO: Who you are, what you do                   │
-│  (Make it memorable, not generic)                   │
+│  INTRO：你是谁，你做什么                             │
+│  （避免泛泛而谈，要有记忆点）                         │
 ├────────────────────────────────────────────────────┤
-│  WORK: Featured projects                            │
-│  (Large, visual, interactive)                       │
+│  WORK：代表项目                                      │
+│  （大图、视觉优先、可交互）                           │
 ├────────────────────────────────────────────────────┤
-│  ABOUT: Personal story                              │
-│  (Creates connection)                               │
+│  ABOUT：个人故事                                     │
+│  （建立连接）                                         │
 ├────────────────────────────────────────────────────┤
-│  CONTACT: Easy to reach                             │
-│  (Clear, direct)                                    │
+│  CONTACT：低成本联系                                 │
+│  （清晰、直接）                                       │
 └────────────────────────────────────────────────────┘
 ```
 
-### Psychology to Apply:
-- Von Restorff: Be uniquely memorable
-- Reflective: Personal story creates connection
-- Emotional: Personality over professionalism
+### 需应用的心理学原则（Psychology to Apply）
+- Von Restorff：制造独特记忆点。
+- Reflective：个人故事增强认同。
+- Emotional：适度突出个性表达。
 
 ---
 
-## 9. Pre-Design Checklists
+## 9. 设计前检查清单（Pre-Design Checklists）
 
-### Before Starting ANY Design
+### 开始任何设计前（Before Starting ANY Design）
 
-- [ ] **Audience defined?** (who exactly)
-- [ ] **Primary goal identified?** (what action)
-- [ ] **Constraints known?** (time, brand, tech)
-- [ ] **Content available?** (or placeholders needed)
-- [ ] **User preferences asked?** (colors, style, layout)
+- [ ] **受众已定义？**（是谁）
+- [ ] **主目标已明确？**（希望用户做什么）
+- [ ] **约束已识别？**（时间、品牌、技术）
+- [ ] **内容已准备？**（是否需要占位内容）
+- [ ] **已询问用户偏好？**（颜色、风格、布局）
 
-### Before Choosing Colors
+### 选择颜色前（Before Choosing Colors）
 
-- [ ] **Asked user preference?**
-- [ ] **Considered context?** (industry, emotion)
-- [ ] **Different from your default?**
-- [ ] **Checked accessibility?**
+- [ ] **已问用户偏好？**
+- [ ] **已考虑上下文？**（行业、情绪）
+- [ ] **是否区别于默认风格？**
+- [ ] **无障碍可读性已检查？**
 
-### Before Finalizing Layout
+### 定稿布局前（Before Finalizing Layout）
 
-- [ ] **Hierarchy clear?**
-- [ ] **Primary CTA obvious?**
-- [ ] **Mobile considered?**
-- [ ] **Content fits structure?**
+- [ ] **层级是否清晰？**
+- [ ] **主 CTA 是否明显？**
+- [ ] **是否考虑移动端？**
+- [ ] **内容是否匹配结构？**
 
-### Before Delivery
+### 交付前（Before Delivery）
 
-- [ ] **Looks premium, not generic?**
-- [ ] **Would you be proud of this?**
-- [ ] **Different from last project?**
+- [ ] **是否达到高级感而非模板感？**
+- [ ] **你自己是否认可这次输出？**
+- [ ] **与上个项目是否有明确差异？**
 
 ---
 
-## 10. Complexity Estimation
+## 10. 复杂度估算（Complexity Estimation）
 
-### Quick Projects (Hours)
+### 小型项目（小时级，Quick Projects）
 ```
 Simple landing page
 Small portfolio
 Basic form
 Single component
 ```
-→ Approach: Minimal decisions, focused execution
+→ 建议策略：少决策、快执行、聚焦关键目标。
 
-### Medium Projects (Days)
+### 中型项目（天级，Medium Projects）
 ```
 Multi-page site
 Dashboard with modules
 E-commerce category
 Complex forms
 ```
-→ Approach: Establish tokens, custom components
+→ 建议策略：先建立 design tokens，再做定制组件。
 
-### Large Projects (Weeks)
+### 大型项目（周级，Large Projects）
 ```
 Full SaaS application
 E-commerce platform
 Custom design system
 Complex workflows
 ```
-→ Approach: Full design system, documentation, testing
+→ 建议策略：完整设计系统 + 文档化 + 系统化测试。
 
 ---
 
-> **Remember**: These templates show STRUCTURE and THINKING process. Every project needs fresh color, typography, and styling decisions based on its unique context. ASK when unclear.
+> **记住（Remember）**：这些模板提供的是“结构与思考路径”。每个项目都必须基于其独特上下文，重新做配色、排版与风格决策；不确定时就先问用户。
