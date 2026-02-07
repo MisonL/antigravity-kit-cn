@@ -1,6 +1,6 @@
 ---
 name: i18n-localization
-description: 国际化 (i18n) 与本地化 (L10n) 模式。检测硬编码字符串、管理翻译、语言区域文件、RTL 支持。
+description: Internationalization and localization patterns. Detecting hardcoded strings, managing translations, locale files, RTL support.
 allowed-tools: Read, Glob, Grep
 ---
 
@@ -12,24 +12,24 @@ allowed-tools: Read, Glob, Grep
 
 ## 1. 核心概念
 
-| 术语       | 含义                                                 |
-| ---------- | ---------------------------------------------------- |
-| **i18n**   | 国际化 (Internationalization) - 使应用可翻译         |
-| **L10n**   | 本地化 (Localization) - 实际执行的翻译工作           |
-| **Locale** | 语言区域 - 语言 + 地区 (如 en-US, zh-CN)             |
-| **RTL**    | 从右向左 (Right-to-left) 语言 (如阿拉伯语、希伯来语) |
+| 术语                  | 含义                                         |
+| --------------------- | -------------------------------------------- |
+| **i18n**              | Internationalization (国际化) - 让应用可翻译 |
+| **L10n**              | Localization (本地化) - 实际翻译             |
+| **Locale (区域设置)** | 语言 + 地区 (en-US, tr-TR)                   |
+| **RTL**               | 从右到左语言 (Arabic, Hebrew)                |
 
 ---
 
-## 2. 何时需要 i18n
+## 2. 何时使用 i18n
 
-| 项目类型      | 是否需要 i18n？       |
-| ------------- | --------------------- |
-| 公共 Web 应用 | ✅ 是                 |
-| SaaS 产品     | ✅ 是                 |
-| 内部工具      | ⚠️ 视情况而定         |
-| 单一地区应用  | ⚠️ 考虑未来可能的扩展 |
-| 个人项目      | ❌ 可选               |
+| 项目类型      | 需要 i18n 吗？ |
+| ------------- | -------------- |
+| 公共 Web 应用 | ✅ 是          |
+| SaaS 产品     | ✅ 是          |
+| 内部工具      | ⚠️ 也许        |
+| 单区域应用    | ⚠️ 考虑未来    |
+| 个人项目      | ❌ 可选        |
 
 ---
 
@@ -67,88 +67,88 @@ print(_("Welcome to our app"))
 
 ---
 
-## 4. 文件结构示例
+## 4. 文件结构
 
 ```
 locales/
-├── zh/          # 中文
+├── en/
 │   ├── common.json
 │   ├── auth.json
 │   └── errors.json
-├── en/          # 英文
+├── tr/
 │   ├── common.json
 │   ├── auth.json
 │   └── errors.json
-└── ar/          # 阿拉伯语 (RTL)
-    └── ...
+├── ar/          # RTL
+│   └── ...
 ```
 
 ---
 
 ## 5. 最佳实践
 
-### 要做 ✅
+### DO ✅ (要)
 
-- 使用翻译 Key，而不是原始文本。
-- 按功能模块使用命名空间 (Namespace) 组织翻译。
-- 支持复数形式处理。
-- 根据各地区处理日期、数字格式。
-- 从一开始就考虑对 RTL (从右向左) 布局的支持。
-- 对复杂的字符串使用 ICU 消息格式。
+- 使用翻译键，而非原始文本
+- 按功能命名空间化翻译
+- 支持复数形式
+- 按区域设置处理日期/数字格式
+- 从一开始就规划 RTL (从右到左布局)
+- 对复杂字符串使用 ICU 消息格式
 
-### 不要 ❌
+### DON'T ❌ (不要)
 
-- 在组件中硬编码字符串。
-- 拼接翻译后的字符串片段。
-- 假设文本长度 (例如德文通常比英文长 30%)。
-- 忘记考虑相应的 RTL 布局调整。
-- 在同一个文件中混合多种语言。
+- 在组件中硬编码字符串
+- 拼接翻译后的字符串
+- 假设文本长度 (德语通常长 30%)
+- 忘记 RTL 布局
+- 在同一文件中混合语言
 
 ---
 
 ## 6. 常见问题
 
-| 问题         | 解决方案                       |
-| ------------ | ------------------------------ |
-| 缺失翻译     | 提供默认的回退语言 (Fallback)  |
-| 硬编码字符串 | 使用 Linter 或检查脚本进行检测 |
-| 日期格式     | 使用 `Intl.DateTimeFormat`     |
-| 数字格式     | 使用 `Intl.NumberFormat`       |
-| 复数形式     | 使用 ICU 消息格式              |
+| 问题         | 解决方案                 |
+| ------------ | ------------------------ |
+| 缺失翻译     | 回退到默认语言           |
+| 硬编码字符串 | 使用 linter/检查脚本     |
+| 日期格式     | 使用 Intl.DateTimeFormat |
+| 数字格式     | 使用 Intl.NumberFormat   |
+| 复数形式     | 使用 ICU 消息格式        |
 
 ---
 
-## 7. 从右向左 (RTL) 支持
+## 7. RTL 支持
 
 ```css
-/* 使用 CSS 逻辑属性 */
+/* CSS 逻辑属性 */
 .container {
-    margin-inline-start: 1rem; /* 而非 margin-left */
-    padding-inline-end: 1rem; /* 而非 padding-right */
+    margin-inline-start: 1rem; /* 不是 margin-left */
+    padding-inline-end: 1rem; /* 不是 padding-right */
 }
 
 [dir="rtl"] .icon {
-    transform: scaleX(-1); /* 翻转特定图标 */
+    transform: scaleX(-1);
 }
 ```
 
 ---
 
-## 8. 检查清单 (Checklist)
+## 8. 检查清单
 
-上线前核对：
+发布之前：
 
-- [ ] 所有面向用户的字符串都使用了翻译 Key。
-- [ ] 所有支持的语言都有对应的 Locale 文件。
-- [ ] 日期/数字格式化使用了 `Intl` API。
-- [ ] 已测试 RTL 布局 (如果适用)。
-- [ ] 已配置好回退语言 (Fallback language)。
-- [ ] 组件中不存在硬编码的字符串。
+- [ ] 所有面向用户的字符串都使用翻译键
+- [ ] 所有支持的语言都存在区域文件
+- [ ] 日期/数字格式化使用 Intl API
+- [ ] RTL 布局已测试 (如果适用)
+- [ ] 回退语言已配置
+- [ ] 组件中无硬编码字符串
 
 ---
 
-## 脚本 (Script)
+## 脚本
 
-| 脚本                      | 目的                         | 命令                                        |
-| ------------------------- | ---------------------------- | ------------------------------------------- |
-| `scripts/i18n_checker.py` | 检测硬编码字符串和缺失的翻译 | `python scripts/i18n_checker.py <项目路径>` |
+| 脚本                      | 用途                         | 命令                                            |
+| ------------------------- | ---------------------------- | ----------------------------------------------- |
+| `scripts/i18n_checker.py` | 检测硬编码字符串和缺失的翻译 | `python scripts/i18n_checker.py <project_path>` |
