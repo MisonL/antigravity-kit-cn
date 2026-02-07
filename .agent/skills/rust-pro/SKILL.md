@@ -105,8 +105,3 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 6. Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/rust-pro/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/rust-pro/SKILL.md`。
-- **注意**：文档层不应替代 Rust 编译规范；仅在此定义专家级开发准则。

@@ -4,7 +4,7 @@ description: 审阅 Web 界面指南 (WIG) 规范。当用户要求“审阅我�
 metadata:
     author: vercel
     version: "1.0.0"
-    argument-hint: <文件或匹配路径>
+    argument-hint: <file-or-pattern>
 ---
 
 # Web 界面指南 (Web Interface Guidelines - WIG)
@@ -66,9 +66,3 @@ https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/comm
 ```
 
 ---
-
-## Skills 兼容说明 (最小补充)
-
-- **机制基线**：沿用上游 `.agent/skills/web-design-guidelines/SKILL.md`。
-- **Codex 适配**：由适配层映射到 `.agents/skills/web-design-guidelines/SKILL.md`。
-- **注意**：文档层仅定义了 WIG 审计的执行框架；具体规则应从云端源动态获取。
