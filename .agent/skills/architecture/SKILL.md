@@ -1,55 +1,55 @@
 ---
 name: architecture
-description: 架构决策框架。需求分析、权衡评估、ADR 文档。在做架构决策或分析系统设计时使用。
+description: Architectural decision-making framework. Requirements analysis, trade-off evaluation, ADR documentation. Use when making architecture decisions or analyzing system design.
 allowed-tools: Read, Glob, Grep
 ---
 
-# 架构决策框架 (Architecture Decision Framework)
+# Architecture Decision Framework
 
-> "需求驱动架构。权衡引导决策。ADR 捕捉理由。"
+> "Requirements drive architecture. Trade-offs inform decisions. ADRs capture rationale."
 
-## 🎯 选择性阅读规则
+## 🎯 Selective Reading Rule
 
-**仅阅读与请求相关的目标文件！** 请先检查内容地图，找到你需要的内容。
+**Read ONLY files relevant to the request!** Check the content map, find what you need.
 
-| 文件                    | 描述                  | 何时阅读       |
-| ----------------------- | --------------------- | -------------- |
-| `context-discovery.md`  | 提问清单, 项目分类    | 开始架构设计时 |
-| `trade-off-analysis.md` | ADR 模板, 权衡框架    | 记录决策时     |
-| `pattern-selection.md`  | 决策树, 反模式        | 选择模式时     |
-| `examples.md`           | MVP, SaaS, 企业级示例 | 参考实现时     |
-| `patterns-reference.md` | 模式快速查询          | 模式对比时     |
-
----
-
-## 🔗 相关技能 (Related Skills)
-
-| 技能                              | 用途               |
-| --------------------------------- | ------------------ |
-| `@[skills/database-design]`       | 数据库 Schema 设计 |
-| `@[skills/api-patterns]`          | API 设计模式       |
-| `@[skills/deployment-procedures]` | 部署架构           |
+| File                    | Description                              | When to Read                 |
+| ----------------------- | ---------------------------------------- | ---------------------------- |
+| `context-discovery.md`  | Questions to ask, project classification | Starting architecture design |
+| `trade-off-analysis.md` | ADR templates, trade-off framework       | Documenting decisions        |
+| `pattern-selection.md`  | Decision trees, anti-patterns            | Choosing patterns            |
+| `examples.md`           | MVP, SaaS, Enterprise examples           | Reference implementations    |
+| `patterns-reference.md` | Quick lookup for patterns                | Pattern comparison           |
 
 ---
 
-## 核心原则 (Core Principle)
+## 🔗 Related Skills
 
-**"简单是终极的复杂。" (Simplicity is the ultimate sophistication.)**
-
-- 从简单开始
-- 仅在被证明必要时才增加复杂性
-- 你总是可以在以后添加模式
-- 移除复杂性远比增加它要困难得多
+| Skill                             | Use For                 |
+| --------------------------------- | ----------------------- |
+| `@[skills/database-design]`       | Database schema design  |
+| `@[skills/api-patterns]`          | API design patterns     |
+| `@[skills/deployment-procedures]` | Deployment architecture |
 
 ---
 
-## 验证检查清单 (Validation Checklist)
+## Core Principle
 
-在最终确定架构之前：
+**"Simplicity is the ultimate sophistication."**
 
-- [ ] 需求已清晰理解
-- [ ] 约束已识别
-- [ ] 每个决策都进行了权衡分析
-- [ ] 已考虑更简单的替代方案
-- [ ] 为重大决策编写了 ADR (架构决策记录)
-- [ ] 团队专长与所选模式相匹配
+- Start simple
+- Add complexity ONLY when proven necessary
+- You can always add patterns later
+- Removing complexity is MUCH harder than adding it
+
+---
+
+## Validation Checklist
+
+Before finalizing architecture:
+
+- [ ] Requirements clearly understood
+- [ ] Constraints identified
+- [ ] Each decision has trade-off analysis
+- [ ] Simpler alternatives considered
+- [ ] ADRs written for significant decisions
+- [ ] Team expertise matches chosen patterns
