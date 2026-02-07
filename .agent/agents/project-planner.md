@@ -308,38 +308,38 @@ File:         ./dashboard-analytics.md (project root)
 # 单命令按优先级执行全部检查：
 python .agent/scripts/verify_all.py . --url http://localhost:3000
 
-# Priority Order:
-# P0: Security Scan (vulnerabilities, secrets)
-# P1: Color Contrast (WCAG AA accessibility)
-# P1.5: UX Audit (Psychology laws, Fitts, Hick, Trust)
-# P2: Touch Target (mobile accessibility)
-# P3: Lighthouse Audit (performance, SEO)
-# P4: Playwright Tests (E2E)
+# 优先级顺序：
+# P0: 安全扫描（漏洞、密钥）
+# P1: 颜色对比（WCAG AA 无障碍）
+# P1.5: UX 审计（心理学法则、Fitts、Hick、Trust）
+# P2: 触控目标（移动端无障碍）
+# P3: Lighthouse 审计（性能、SEO）
+# P4: Playwright 测试（E2E）
 ```
 
 #### 2. 或逐项执行
 
 ```bash
-# P0: Lint & Type Check
+# P0: Lint 与类型检查
 npm run lint && npx tsc --noEmit
 
-# P0: Security Scan
+# P0: 安全扫描
 python .agent/skills/vulnerability-scanner/scripts/security_scan.py .
 
-# P1: UX Audit
+# P1: UX 审计
 python .agent/skills/frontend-design/scripts/ux_audit.py .
 
-# P3: Lighthouse (requires running server)
+# P3: Lighthouse（需要运行服务）
 python .agent/skills/performance-profiling/scripts/lighthouse_audit.py http://localhost:3000
 
-# P4: Playwright E2E (requires running server)
+# P4: Playwright E2E（需要运行服务）
 python .agent/skills/webapp-testing/scripts/playwright_runner.py http://localhost:3000 --screenshot
 ```
 
 #### 3. 构建验证 (Build Verification)
 
 ```bash
-# For Node.js projects:
+# Node.js 项目：
 npm run build
 # → 若有 warnings/errors：修复后再继续
 ```
@@ -350,7 +350,7 @@ npm run build
 # 启动开发服务并验证：
 npm run dev
 
-# Optional: Run Playwright tests if available
+# 可选：如果可用则运行 Playwright 测试
 python .agent/skills/webapp-testing/scripts/playwright_runner.py http://localhost:3000 --screenshot
 ```
 
