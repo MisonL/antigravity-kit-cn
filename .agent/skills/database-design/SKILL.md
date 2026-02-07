@@ -1,52 +1,60 @@
 ---
 name: database-design
-description: Database design principles and decision-making. Schema design, indexing strategy, ORM selection, serverless databases.
+description: 数据库设计原则与决策。包含模式 (Schema) 设计、索引策略、ORM 选择及 Serverless 数据库。
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# 数据库设计
+# 数据库设计 (Database Design)
 
-> **学会思考，而不是复制 SQL 模式。**
+> **学习如何思考 (THINK)，而非机械复制 SQL 模式。**
 
-## 🎯 选择性阅读规则
+## 🎯 选择性阅读规则 (Selective Reading Rule)
 
-**仅阅读与请求相关的目标文件！** 请先检查内容地图，找到你需要的内容。
+**仅阅读与请求相关的文档！** 查阅内容地图，找到你需要的信息。
 
-| 文件                    | 描述                                  | 何时阅读                   |
-| ----------------------- | ------------------------------------- | -------------------------- |
-| `database-selection.md` | PostgreSQL vs Neon vs Turso vs SQLite | 选择数据库时               |
-| `orm-selection.md`      | Drizzle vs Prisma vs Kysely           | 选择 ORM (对象关系映射) 时 |
-| `schema-design.md`      | 规范化, 主键, 关系                    | 设计 Schema 时             |
-| `indexing.md`           | 索引类型, 复合索引                    | 性能调优时                 |
-| `optimization.md`       | N+1, EXPLAIN ANALYZE                  | 查询优化时                 |
-| `migrations.md`         | 安全迁移, 无服务器数据库              | Schema 变更时              |
-
----
-
-## ⚠️ 核心原则
-
-- 询问用户不明确的数据库偏好
-- 根据上下文选择 Database/ORM
-- 不要总是默认使用 PostgreSQL (Postgres)
+| 文件                    | 描述                                         | 阅读时机     |
+| ----------------------- | -------------------------------------------- | ------------ |
+| `database-selection.md` | PostgreSQL vs Neon vs Turso vs SQLite        | 选择数据库时 |
+| `orm-selection.md`      | Drizzle vs Prisma vs Kysely                  | 选择 ORM 时  |
+| `schema-design.md`      | 范式化 (Normalization)、主键 (PKs)、关系设计 | 设计模式时   |
+| `indexing.md`           | 索引类型、复合索引                           | 性能调优时   |
+| `optimization.md`       | N+1 问题、EXPLAIN ANALYZE                    | 查询优化时   |
+| `migrations.md`         | 安全迁移、Serverless 数据库                  | 模式变更时   |
 
 ---
 
-## 决策检查清单
+## ⚠️ 核心原则 (Core Principle)
 
-在设计 Schema 之前：
-
-- [ ] 询问过用户的数据库偏好了吗？
-- [ ] 为此场景选择了合适的数据库吗？
-- [ ] 考虑了部署环境吗？
-- [ ] 规划了索引策略吗？
-- [ ] 定义了关系类型吗？
+- 当需求不明确时，**主动询问**老板对数据库的偏好。
+- 根据**实际上下文 (CONTEXT)** 选择数据库及其 ORM。
+- 不要任何场景都默认使用 PostgreSQL。
 
 ---
 
-## 反模式
+## 决策检查清单 (Decision Checklist)
 
-❌ 对于简单应用默认使用 PostgreSQL (SQLite 可能就够了)
-❌ 跳过索引
-❌ 在生产环境使用 SELECT \*
-❌ 当结构化数据更好时使用 JSON 存储
-❌ 忽略 N+1 查询
+在设计模式 (Schema) 之前：
+
+- [ ] **是否已询问老板的数据库偏好？**
+- [ ] **是否已为当前上下文选择了合适的数据库？**
+- [ ] **是否考虑了部署环境？**
+- [ ] **是否规划了索引策略？**
+- [ ] **是否定义了关系类型？**
+
+---
+
+## 反模式 (Anti-Patterns)
+
+❌ 为简单的应用默认使用 PostgreSQL（SQLite 可能已经足够）。
+❌ 忽略索引设计。
+❌ 在生产环境中使用 `SELECT *`。
+❌ 在结构化数据更优的情况下强行存储 JSON。
+❌ 忽略 N+1 查询问题。
+
+---
+
+## Skills 兼容说明 (最小补充)
+
+- **机制基线**：沿用上游 `.agent/skills/database-design/SKILL.md`。
+- **Codex 适配**：由适配层映射到 `.agents/skills/database-design/SKILL.md`。
+- **注意**：文档层不改技能流程；仅补充目录映射事实。
