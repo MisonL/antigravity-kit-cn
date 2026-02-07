@@ -1,35 +1,35 @@
 ---
 name: geo-fundamentals
-description: 针对 AI 搜索引擎（如 ChatGPT, Claude, Perplexity）的生成式引擎优化 (Generative Engine Optimization)。
+description: 针对 AI 搜索引擎（如 ChatGPT, Claude, Perplexity）的生成式引擎优化（Generative Engine Optimization）。
 allowed-tools: Read, Glob, Grep
 ---
 
-# GEO 基础 (GEO Fundamentals)
+# GEO 基础
 
 > 针对 AI 驱动型搜索引擎的优化。
 
 ---
 
-## 1. 什么是 GEO？ (What is GEO?)
+## 1. 什么是 GEO？
 
-**GEO** = 生成式引擎优化 (Generative Engine Optimization)
+**GEO** = 生成式引擎优化（Generative Engine Optimization）
 
 | 目标                 | 涉及平台                            |
 | -------------------- | ----------------------------------- |
 | 在 AI 的回答中被引用 | ChatGPT, Claude, Perplexity, Gemini |
 
-### SEO vs GEO
+### SEO 与 GEO 对比
 
 | 维度 | SEO                   | GEO                    |
 | ---- | --------------------- | ---------------------- |
-| 目标 | 排名第一              | 被 AI 引用 (Citations) |
+| 目标 | 排名第一              | 被 AI 引用（Citations） |
 | 平台 | Google 等传统搜索引擎 | AI 引擎                |
-| 指标 | 排名、点击率 (CTR)    | 引用率                 |
-| 核心 | 关键词 (Keywords)     | 实体、数据             |
+| 指标 | 排名、点击率（CTR）   | 引用率                 |
+| 核心 | 关键词（Keywords）    | 实体、数据             |
 
 ---
 
-## 2. AI 引擎版图 (AI Engine Landscape)
+## 2. AI 引擎版图
 
 | 引擎           | 引用样式        | 机遇          |
 | -------------- | --------------- | ------------- |
@@ -40,21 +40,21 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 3. RAG 检索因子 (RAG Retrieval Factors)
+## 3. RAG 检索因子
 
 AI 引擎如何选择要引用的内容：
 
-| 因子                            | 权重 (估算) |
+| 因子                            | 权重（估算） |
 | ------------------------------- | ----------- |
-| 语义相关性 (Semantic relevance) | ~40%        |
+| 语义相关性（Semantic relevance） | ~40%        |
 | 关键词匹配                      | ~20%        |
-| 权威性信号 (Authority signals)  | ~15%        |
+| 权威性信号（Authority signals） | ~15%        |
 | 时效性                          | ~10%        |
 | 来源多样性                      | ~15%        |
 
 ---
 
-## 4. 易被引用的内容类型 (Content That Gets Cited)
+## 4. 易被引用的内容类型
 
 | 元素             | 作用原则               |
 | ---------------- | ---------------------- |
@@ -67,22 +67,22 @@ AI 引擎如何选择要引用的内容：
 
 ---
 
-## 5. GEO 内容检查清单 (GEO Content Checklist)
+## 5. GEO 内容检查清单
 
 ### 内容元素
 
-- [ ] 基于问题的标题 (Question-based titles)。
-- [ ] 顶部包含摘要/TL;DR。
+- [ ] 基于问题的标题（Question-based titles）。
+- [ ] 顶部包含摘要/TL;DR（要点）。
 - [ ] 带有来源说明的原创数据。
 - [ ] 专家语录（包含姓名、头衔）。
-- [ ] FAQ 章节 (3-5 个问答)。
+- [ ] FAQ 章节（3-5 个问答）。
 - [ ] 清晰的定义。
 - [ ] “最后更新”时间戳。
 - [ ] 包含资质证明的作者介绍。
 
 ### 技术元素
 
-- [ ] 包含日期的 Article 模式 (Schema)。
+- [ ] 包含日期的 Article 模式（Schema）。
 - [ ] 针对作者的 Person 模式。
 - [ ] FAQPage 模式。
 - [ ] 极速加载 (< 2.5s)。
@@ -90,20 +90,22 @@ AI 引擎如何选择要引用的内容：
 
 ---
 
-## 6. 实体构建 (Entity Building)
+## 6. 实体构建
 
 | 动作                              | 目的         |
 | --------------------------------- | ------------ |
-| Google 知识面板 (Knowledge Panel) | 实现实体识别 |
+| Google 知识面板（Knowledge Panel） | 实现实体识别 |
 | 维基百科（如具备知名度）          | 建立权威来源 |
 | 全网信息保持一致                  | 实体整合     |
 | 行业媒体提及                      | 增强权威信号 |
 
 ---
 
-## 7. AI 爬虫访问 (AI Crawler Access)
+## 7. AI 爬虫访问
 
-### 关键 AI 浏览器标识 (User-Agents)
+### 关键 AI 浏览器标识
+
+常见 User-Agent（UA）如下：
 
 | 爬虫          | 对应引擎       |
 | ------------- | -------------- |
@@ -122,7 +124,7 @@ AI 引擎如何选择要引用的内容：
 
 ---
 
-## 8. 效果衡量 (Measurement)
+## 8. 效果衡量
 
 | 指标                  | 追踪方式         |
 | --------------------- | ---------------- |
@@ -133,9 +135,9 @@ AI 引擎如何选择要引用的内容：
 
 ---
 
-## 9. 反模式 (Anti-Patterns)
+## 9. 反模式
 
-| ❌ 禁止 (Don't)    | ✅ 推荐 (Do)       |
+| ❌ 禁止（Don't）    | ✅ 推荐（Do）       |
 | ------------------ | ------------------ |
 | 发布不带日期的内容 | 添加时间戳         |
 | 模糊的来源引用     | 明确标注来源名称   |
@@ -148,11 +150,10 @@ AI 引擎如何选择要引用的内容：
 
 ---
 
-## 运行脚本 (Script)
+## 运行脚本
 
 | 脚本                     | 用途                          | 执行命令                                   |
 | ------------------------ | ----------------------------- | ------------------------------------------ |
-| `scripts/geo_checker.py` | GEO 审计 (检查 AI 引用就绪度) | `python scripts/geo_checker.py <project_path>` |
+| `scripts/geo_checker.py` | GEO 审计（检查 AI 引用就绪度） | `python scripts/geo_checker.py <project_path>` |
 
 ---
-
