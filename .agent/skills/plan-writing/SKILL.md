@@ -4,44 +4,44 @@ description: 结构化任务规划能力。强调清晰拆解、依赖关系与�
 allowed-tools: Read, Glob, Grep
 ---
 
-# 计划编写 (Plan Writing)
+# 计划编写
 
-> 来源 (Source): obra/superpowers
+> 来源：obra/superpowers
 
-## 概览 (Overview)
+## 概览
 该技能提供一套框架，用于将工作拆解为清晰、可执行、可验证的任务。
 
-## 任务拆解原则 (Task Breakdown Principles)
+## 任务拆解原则
 
-### 1. 小而聚焦的任务 (Small, Focused Tasks)
+### 1. 小而聚焦的任务
 - 每个任务建议控制在 2-5 分钟内
 - 每个任务只对应一个明确结果
 - 每个任务都应可独立验证
 
-### 2. 明确的验证标准 (Clear Verification)
+### 2. 明确的验证标准
 - 如何判断它已经完成？
 - 可以检查/测试什么？
 - 预期输出是什么？
 
-### 3. 合理的执行顺序 (Logical Ordering)
+### 3. 合理的执行顺序
 - 识别任务依赖关系
 - 尽可能并行执行
-- 标出关键路径 (Critical Path)
-- **阶段 X：验证 (Verification) 永远放在最后**
+- 标出关键路径（Critical Path）
+- **阶段 X：验证（Verification）永远放在最后**
 
-### 4. 在项目根目录动态命名 (Dynamic Naming in Project Root)
+### 4. 在项目根目录动态命名
 - 计划文件保存为项目根目录下的 `{task-slug}.md`
 - 文件名由任务语义派生（例如“添加鉴权” → `auth-feature.md`）
 - **绝不能**放在 `.claude/`、`docs/` 或临时目录中
 
-## 规划原则（不是模板）(Planning Principles)
+## 规划原则（不是模板）
 
 > 🔴 **不要使用固定模板。每份计划都必须匹配当前任务。**
 
-### 原则 1：保持简洁 (Keep It SHORT)
+### 原则 1：保持简洁
 
-| ❌ Wrong | ✅ Right |
-|----------|----------|
+| ❌ 错误 | ✅ 正确 |
+|---------|---------|
 | 50 个任务并含多层子任务 | 最多 5-10 个清晰任务 |
 | 罗列所有微步骤 | 只保留可执行项 |
 | 描述冗长 | 每个任务一行说明 |
@@ -50,10 +50,10 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 原则 2：具体，不要泛化 (Be SPECIFIC, Not Generic)
+### 原则 2：具体，不要泛化
 
-| ❌ Wrong | ✅ Right |
-|----------|----------|
+| ❌ 错误 | ✅ 正确 |
+|---------|---------|
 | “搭建项目” | “运行 `npx create-next-app`” |
 | “添加鉴权” | “安装 next-auth，并创建 `/api/auth/[...nextauth].ts`” |
 | “美化界面” | “为 `Header.tsx` 添加 Tailwind 类” |
@@ -62,31 +62,31 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 原则 3：按项目类型动态生成内容 (Dynamic Content Based on Project Type)
+### 原则 3：按项目类型动态生成内容
 
-**对于新项目 (NEW PROJECT)：**
+**对于新项目（NEW PROJECT）：**
 - 技术栈是什么？（先决定）
 - MVP（最小可行产品）是什么？（最小功能集合）
 - 文件结构如何设计？
 
-**对于功能新增 (FEATURE ADDITION)：**
+**对于功能新增（FEATURE ADDITION）：**
 - 会影响哪些文件？
 - 需要哪些依赖？
 - 如何验证功能可用？
 
-**对于缺陷修复 (BUG FIX)：**
+**对于缺陷修复（BUG FIX）：**
 - 根因是什么？
 - 需要改哪一个文件/哪一行？
 - 如何验证修复有效？
 
 ---
 
-### 原则 4：脚本必须与项目匹配 (Scripts Are Project-Specific)
+### 原则 4：脚本必须与项目匹配
 
 > 🔴 **不要复制粘贴脚本命令。必须按项目类型选择。**
 
-| Project Type | Relevant Scripts |
-|--------------|------------------|
+| 项目类型 | 相关脚本 |
+|----------|----------|
 | Frontend/React | `ux_audit.py`, `accessibility_checker.py` |
 | Backend/API | `api_validator.py`, `security_scan.py` |
 | Mobile | `mobile_audit.py` |
@@ -98,43 +98,43 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-### 原则 5：验证应简单直接 (Verification is Simple)
+### 原则 5：验证应简单直接
 
-| ❌ Wrong | ✅ Right |
-|----------|----------|
+| ❌ 错误 | ✅ 正确 |
+|---------|---------|
 | “验证组件工作正常” | “运行 `npm run dev`，点击按钮，看到 toast” |
 | “测试 API” | “`curl localhost:3000/api/users` 返回 200” |
 | “检查样式” | “打开浏览器，确认深色模式切换可用” |
 
 ---
 
-## 计划结构（灵活而非固定）(Plan Structure)
+## 计划结构（灵活而非固定）
 
 ```
 # [任务名称]
 
-## 目标 (Goal)
+## 目标（Goal）
 一句话：我们要构建/修复什么？
 
-## 任务 (Tasks)
+## 任务（Tasks）
 - [ ] 任务 1：[具体动作] → 验证：[如何检查]
 - [ ] 任务 2：[具体动作] → 验证：[如何检查]
 - [ ] 任务 3：[具体动作] → 验证：[如何检查]
 
-## 完成标准 (Done When)
+## 完成标准（Done When）
 - [ ] [主要成功标准]
 ```
 
 > **就这些。** 除非确实必要，否则不要额外加阶段和子章节。  
 > 保持最小化，只有在需要时才增加复杂度。
 
-## 备注 (Notes)
+## 备注（Notes）
 [任何重要注意事项]
 ```
 
 ---
 
-## 最佳实践（速查）(Best Practices)
+## 最佳实践（速查）
 
 1. **先写目标** - 明确构建/修复的对象
 2. **最多 10 个任务** - 超过就拆为多份计划
@@ -144,7 +144,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 适用场景 (When to Use)
+## 适用场景
 
 - 从零开始新项目
 - 新增功能
