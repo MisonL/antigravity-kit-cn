@@ -2,88 +2,89 @@
 description: 使用 project-planner agent 创建项目计划。不写代码，只生成计划文件。
 ---
 
-# /plan - 项目规划模式
+# /plan - 项目规划模式 (Project Planning Mode)
 
 $ARGUMENTS
 
 ---
 
-## 🔴 关键规则
+## 🔴 关键规则 (CRITICAL RULES)
 
-1. **禁止写代码** - 本命令仅创建计划文件
-2. **必须使用 project-planner agent** - 不是 Antigravity Agent 原生 Plan 模式
-3. **苏格拉底闸门** - 规划前先做澄清提问
-4. **动态命名** - 计划文件名需基于任务生成
-
----
-
-## 任务
-
-使用 `project-planner` agent，并传入以下上下文：
-
-```
-CONTEXT:
-- User Request: $ARGUMENTS
-- Mode: PLANNING ONLY (no code)
-- Output: docs/PLAN-{task-slug}.md (dynamic naming)
-
-NAMING RULES:
-1. Extract 2-3 key words from request
-2. Lowercase, hyphen-separated
-3. Max 30 characters
-4. Example: "e-commerce cart" → PLAN-ecommerce-cart.md
-
-RULES:
-1. Follow project-planner.md Phase -1 (Context Check)
-2. Follow project-planner.md Phase 0 (Socratic Gate)
-3. Create PLAN-{slug}.md with task breakdown
-4. DO NOT write any code files
-5. REPORT the exact file name created
-```
+1. **绝对禁止编写代码** —— 此命令仅用于创建计划文件。
+2. **使用 project-planner 代理** —— 而不是使用 Antigravity Agent 自带的原生计划模式。
+3. **苏格拉底之门 (Socratic Gate)** —— 在规划前，必须先通过提问澄清需求。
+4. **动态命名** —— 计划文件将根据具体任务目标进行动态命名。
 
 ---
 
-## 预期输出
+## 任务 (Task)
 
-| Deliverable | Location |
-|-------------|----------|
-| Project Plan | `docs/PLAN-{task-slug}.md` |
-| Task Breakdown | Inside plan file |
-| Agent Assignments | Inside plan file |
-| Verification Checklist | Phase X in plan file |
+请在以下上下文中调用 `project-planner` (项目规划代理)：
 
----
-
-## 规划完成后
-
-告知用户：
 ```
-[OK] Plan created: docs/PLAN-{slug}.md
+上下文 (CONTEXT)：
+- 老板的请求：$ARGUMENTS
+- 模式：仅限规划 (PLANNING ONLY)，严禁编写代码
+- 输出路径：docs/PLAN-{task-slug}.md (动态命名)
 
-Next steps:
-- Review the plan
-- Run `/create` to start implementation
-- Or modify plan manually
+命名规则 (NAMING RULES)：
+1. 从请求中提取 2-3 个关键词。
+2. 全小写，使用连字符 (-) 分隔。
+3. 长度上限 30 个字符。
+4. 示例：“e-commerce cart” → PLAN-ecommerce-cart.md
+
+执行准则：
+1. 遵循 project-planner.md 中的阶段 -1 (上下文检查)。
+2. 遵循 project-planner.md 中的阶段 0 (苏格拉底之门)。
+3. 创建包含任务拆解的 PLAN-{slug}.md 文件。
+4. 绝对严禁编写任何业务代码文件。
+5. 汇报所创建的准确文件名。
 ```
 
 ---
 
-## 命名示例
+## 预期产出 (Expected Output)
 
-| Request | Plan File |
-|---------|-----------|
-| `/plan e-commerce site with cart` | `docs/PLAN-ecommerce-cart.md` |
-| `/plan mobile app for fitness` | `docs/PLAN-fitness-app.md` |
-| `/plan add dark mode feature` | `docs/PLAN-dark-mode.md` |
-| `/plan fix authentication bug` | `docs/PLAN-auth-fix.md` |
-| `/plan SaaS dashboard` | `docs/PLAN-saas-dashboard.md` |
+| 交付物                    | 存储位置                    |
+| ------------------------- | --------------------------- |
+| 项目计划书 (Project Plan) | `docs/PLAN-{task-slug}.md`  |
+| 任务拆解                  | 计划文件内部                |
+| 代理分配方案              | 计划文件内部                |
+| 验证检查清单              | 计划文件内部的 Phase X 章节 |
 
 ---
 
-## 使用方式
+## 规划完成后 (After Planning)
+
+告知老板：
 
 ```
-/plan e-commerce site with cart
-/plan mobile app for fitness tracking
-/plan SaaS dashboard with analytics
+[OK] 计划已创建：docs/PLAN-{slug}.md
+
+后续步骤：
+- 请审阅该计划。
+- 运行 `/create` 命令开始落地实施。
+- 或者您可以手动对该计划进行微调。
+```
+
+---
+
+## 命名示例 (Naming Examples)
+
+| 用户请求                   | 生成的计划文件                |
+| -------------------------- | ----------------------------- |
+| `/plan 带购物车的电商网站` | `docs/PLAN-ecommerce-cart.md` |
+| `/plan 健身类移动端应用`   | `docs/PLAN-fitness-app.md`    |
+| `/plan 添加深色模式功能`   | `docs/PLAN-dark-mode.md`      |
+| `/plan 修复身份验证 Bug`   | `docs/PLAN-auth-fix.md`       |
+| `/plan SaaS 仪表盘`        | `docs/PLAN-saas-dashboard.md` |
+
+---
+
+## 使用场景 (Usage)
+
+```
+/plan 带购物车的电商网站
+/plan 带健身追踪功能的移动端应用
+/plan 带数据分析功能的 SaaS 仪表盘
 ```
