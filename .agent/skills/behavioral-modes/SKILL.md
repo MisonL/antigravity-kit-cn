@@ -8,7 +8,7 @@ allowed-tools: Read, Glob, Grep
 
 ## 目的 (Purpose)
 
-本技能定义了独特的行为模式，以优化 AI 在特定任务中的表现。不同模式会改变 AI 处理问题、沟通和优先级排列的方式。
+本技能定义了独特的行为模式 (Behavioral Modes) 以优化 AI 在特定任务中的表现。不同模式会改变 AI 处理问题、沟通和优先级排列的方式。
 
 ---
 
@@ -209,20 +209,20 @@ allowed-tools: Read, Glob, Grep
 
 AI 应根据以下触发词自动检测合适的模式：
 
-| 触发词                                                    | 模式       |
-| --------------------------------------------------------- | ---------- |
-| "what if", "ideas", "options", "如果", "想法", "选项"     | BRAINSTORM |
-| "build", "create", "add", "构建", "创建", "添加"          | IMPLEMENT  |
-| "not working", "error", "bug", "不工作", "错误"           | DEBUG      |
-| "review", "check", "audit", "审查", "检查", "审计"        | REVIEW     |
-| "explain", "how does", "learn", "解释", "如何", "学习"    | TEACH      |
-| "deploy", "release", "production", "部署", "发布", "生产" | SHIP       |
+| 触发词                            | 模式       |
+| --------------------------------- | ---------- |
+| "what if", "ideas", "options"     | BRAINSTORM |
+| "build", "create", "add"          | IMPLEMENT  |
+| "not working", "error", "bug"     | DEBUG      |
+| "review", "check", "audit"        | REVIEW     |
+| "explain", "how does", "learn"    | TEACH      |
+| "deploy", "release", "production" | SHIP       |
 
 ---
 
 ## 多智能体协同模式 (2025) (Multi-Agent Collaboration Patterns)
 
-针对 Agent 对 Agent 协作优化的现代架构：
+针对 Agent (智能体) 之间协作优化的现代架构：
 
 ### 1. 🔭 探索模式 (EXPLORE Mode)
 
