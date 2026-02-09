@@ -1,14 +1,14 @@
 ---
 name: database-design
-description: 数据库设计原则与决策。包含模式（Schema）设计、索引策略、ORM 选择及 Serverless（无服务器）数据库。
+description: 数据库设计原则与决策。包含模式（schema）设计、索引策略、ORM 选择及 Serverless（无服务器）数据库。
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# 数据库设计（Database Design）
+# 数据库设计
 
 > **学习如何思考（THINK），而非机械复制 SQL 模式。**
 
-## 🎯 选择性阅读规则（Selective Reading Rule）
+## 🎯 选择性阅读规则
 
 **仅阅读与请求相关的文档！** 查阅内容地图，找到你需要的信息。
 
@@ -23,15 +23,15 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## ⚠️ 核心原则（Core Principle）
+## ⚠️ 核心原则
 
 - 当需求不明确时，**主动询问**老板对数据库的偏好。
-- 根据**实际上下文（Context）**选择数据库及其 ORM。
+- 根据**实际上下文**选择数据库及其 ORM。
 - 不要任何场景都默认使用 PostgreSQL。
 
 ---
 
-## 决策检查清单（Decision Checklist）
+## 决策检查清单
 
 在设计模式（Schema）之前：
 
@@ -43,7 +43,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 反模式（Anti-Patterns）
+## 反模式
 
 ❌ 为简单的应用默认使用 PostgreSQL（SQLite 可能已经足够）。
 ❌ 忽略索引设计。
