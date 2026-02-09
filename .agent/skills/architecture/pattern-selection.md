@@ -11,20 +11,20 @@
 │  ├─ 高（复杂查询，需要测试）
 │  │  → Repository Pattern（仓储模式）+ Unit of Work（工作单元）
 │  │  验证：数据源会频繁变化吗？
-│  │     ├─ 是 → Repository 值得增加间接层
-│  │     └─ 否 → 考虑更简单的 ORM 直连访问
-│  └─ 低（简单 CRUD，单一数据库）
-│     → ORM 直连（Prisma, Drizzle）
+│  │     ├─ 是 → Repository（仓储模式）值得增加间接层
+│  │     └─ 否 → 考虑更简单的 ORM（对象关系映射）直连访问
+│  └─ 低（简单 CRUD（增删改查），单一数据库）
+│     → ORM（对象关系映射）直连（Prisma, Drizzle）
 │     越简单 = 越好、越快
 │
 ├─ 业务规则复杂度？
 │  ├─ 高（领域逻辑复杂，规则随上下文变化）
-│  │  → Domain-Driven Design（DDD）
+│  │  → Domain-Driven Design（领域驱动设计，DDD）
 │  │  验证：团队里有领域专家吗？
 │  │     ├─ 是 → Full DDD（聚合、值对象）
 │  │     └─ 否 → Partial DDD（富实体、清晰边界）
 │  └─ 低（主要是 CRUD，简单校验）
-│     → Transaction Script pattern（事务脚本模式）
+│     → Transaction Script（事务脚本）模式
 │     越简单 = 越好、越快
 │
 ├─ 需要独立扩缩吗？
@@ -43,7 +43,7 @@
    ├─ 高（即时更新，多用户同步）
    │  → Event-Driven Architecture（事件驱动架构）
    │  → Message Queue（消息队列）（RabbitMQ, Redis, Kafka）
-   │  验证：你能处理最终一致性吗？
+   │  验证：你能处理最终一致性（eventual consistency）吗？
    │     ├─ 是 → 事件驱动可行
    │     └─ 否 → 同步 + 轮询
    └─ 低（可接受最终一致性）
