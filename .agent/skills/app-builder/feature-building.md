@@ -1,27 +1,27 @@
-# 功能构建
+# Feature Building（功能构建）
 
 > 如何分析并实现新功能。
 
-## 功能分析
+## Feature Analysis（功能分析）
 
 ```
-请求: "增加支付系统"
+Request（请求）: “增加支付系统”
 
-分析:
+Analysis（分析）:
 ├── 所需变更:
 │   ├── 数据库: orders, payments 表
-│   ├── 后端: /api/checkout, /api/webhooks/stripe 端点
+│   ├── 后端: /api/checkout, /api/webhooks/stripe 路由
 │   ├── 前端: CheckoutForm, PaymentSuccess 组件
 │   └── 配置: Stripe API 密钥
 │
-├── 依赖项:
-│   ├── stripe 软件包
+├── Dependencies（依赖）:
+│   ├── stripe package（stripe 包）
 │   └── 现有的用户认证系统
 │
-└── 预计耗时: 15-20 分钟
+└── Estimated Time（预计耗时）: 15-20 分钟
 ```
 
-## 迭代增强流程
+## Iterative Enhancement Process（迭代增强流程）
 
 ```
 1. 分析现有项目
@@ -33,16 +33,16 @@
 7. 显示预览
 ```
 
-## 错误处理
+## Error Handling（错误处理）
 
-| 错误类型        | 解决策略               |
-| --------------- | ---------------------- |
-| TypeScript 错误 | 修复类型，添加缺失导入 |
-| 缺失依赖        | 运行 npm install       |
-| 端口冲突        | 建议替代端口           |
-| 数据库错误      | 检查迁移，验证连接     |
+| Error Type | Solution Strategy |
+| --- | --- |
+| TypeScript Error | 修复类型，添加缺失导入 |
+| Missing Dependency | 运行 npm install |
+| Port Conflict | 建议替代端口 |
+| Database Error | 检查迁移，验证连接 |
 
-## 恢复策略
+## Recovery Strategy（恢复策略）
 
 ```
 1. 检测错误
