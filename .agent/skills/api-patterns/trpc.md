@@ -1,16 +1,16 @@
-# tRPC 原则（tRPC Principles）
+# tRPC 原则
 
-> 为 TypeScript Monorepos（TypeScript 单仓）提供的端到端类型安全。
+> 为 TypeScript monorepos（TS 单仓）提供的端到端类型安全（type safety）。
 
 ## 何时使用
 
 ```
 ✅ 完美契合:
 ├── 前后端均为 TypeScript
-├── Monorepo 结构
+├── monorepo（单仓）结构
 ├── 内部工具
 ├── 快速迭代开发
-├── 类型安全至关重要
+├── 类型安全（type safety）至关重要
 
 ❌ 不契合:
 ├── 非 TypeScript 客户端
@@ -25,7 +25,7 @@
 为什么要用 tRPC:
 ├── 零 Schema（模式）维护成本
 ├── 端到端类型推断
-├── 跨技术栈的 IDE 自动补全
+├── 跨技术栈的 IDE（集成开发环境）自动补全
 ├── API 变更即时反映在前端
 └── 无需代码生成步骤
 ```
@@ -35,7 +35,7 @@
 ```
 常见配置:
 ├── Next.js + tRPC（最常见）
-├── Monorepo 共享类型定义
+├── monorepo（单仓）共享类型定义
 ├── Remix + tRPC
-└── 任意 TS 前端 + 后端
+└── 任意 TS（TypeScript）前端 + 后端
 ```
