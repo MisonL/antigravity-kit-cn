@@ -1,6 +1,6 @@
-# 限流原则 (Rate Limiting Principles)
+# 限流原则（Rate Limiting Principles）
 
-> 保护你的 API 免受滥用和过载。
+> 保护你的 API（接口）免受滥用和过载。
 
 ## 为什么要限流
 
@@ -8,24 +8,24 @@
 防范措施:
 ├── 暴力破解攻击
 ├── 资源耗尽
-├── 成本超支 (如果是按量计费)
+├── 成本超支（如果是按量计费）
 └── 不公平的使用
 ```
 
-## 策略选择 (Strategy Selection)
+## 策略选择（Strategy Selection）
 
-| 类型                          | 机制                     | 适用场景   |
-| :---------------------------- | :----------------------- | :--------- |
-| **令牌桶 (Token bucket)**     | 允许突发流量，随时间填充 | 大多数 API |
-| **滑动窗口 (Sliding window)** | 平滑分布                 | 严格限制   |
-| **固定窗口 (Fixed window)**   | 每个窗口的简单计数器     | 基本需求   |
+| 类型 | 机制 | 适用场景 |
+| :--- | :--- | :------- |
+| **令牌桶（Token bucket）** | 允许突发流量，随时间填充 | 大多数 API |
+| **滑动窗口（Sliding window）** | 平滑分布 | 严格限制 |
+| **固定窗口（Fixed window）** | 每个窗口的简单计数器 | 基本需求 |
 
-## 响应头 (Response Headers)
+## 响应头（Response Headers）
 
 ```
 要在响应头中包含:
-├── X-RateLimit-Limit (最大请求数)
-├── X-RateLimit-Remaining (剩余请求数)
-├── X-RateLimit-Reset (重置时间)
+├── X-RateLimit-Limit（最大请求数）
+├── X-RateLimit-Remaining（剩余请求数）
+├── X-RateLimit-Reset（重置时间）
 └── 超出限制时返回 429
 ```
