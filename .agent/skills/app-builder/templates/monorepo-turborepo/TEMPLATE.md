@@ -1,35 +1,35 @@
 ---
 name: monorepo-turborepo
-description: Turborepo monorepo 模版原则。pnpm workspaces（工作区）、共享包。
+description: Turborepo monorepo 模板原则。pnpm workspaces（工作区）、共享包。
 ---
 
-# Turborepo Monorepo 模版（单仓多包）
+# Turborepo Monorepo Template（单仓多包）
 
-## 技术栈
+## Tech Stack（技术栈）
 
-| 组件 | 技术 |
-| ---- | ---- |
-| 构建系统 | Turborepo |
-| 包管理器 | pnpm |
-| 应用 | Next.js, Express |
-| 包 | 共享 UI、配置、类型 |
-| 语言 | TypeScript |
+| Component | Technology |
+| --- | --- |
+| Build System（构建系统） | Turborepo |
+| Package Manager（包管理器） | pnpm |
+| Apps（应用） | Next.js, Express |
+| Packages（包） | Shared UI, Config, Types |
+| Language（语言） | TypeScript |
 
 ---
 
-## 目录结构
+## Directory Structure（目录结构）
 
 ```
 project-name/
 ├── apps/
-│   ├── web/             # Next.js 应用
+│   ├── web/             # Next.js app（应用）
 │   ├── api/             # Express API
-│   └── docs/            # 文档
+│   └── docs/            # Documentation（文档）
 ├── packages/
-│   ├── ui/              # 共享组件
+│   ├── ui/              # Shared components（共享组件）
 │   ├── config/          # ESLint、TS、Tailwind
-│   ├── types/           # 共享类型
-│   └── utils/           # 共享实用程序
+│   ├── types/           # Shared types（共享类型）
+│   └── utils/           # Shared utilities（共享工具）
 ├── turbo.json
 ├── pnpm-workspace.yaml
 └── package.json
@@ -37,18 +37,18 @@ project-name/
 
 ---
 
-## 关键概念
+## Key Concepts（关键概念）
 
-| 概念 | 描述 |
-| ---- | ---- |
-| Workspaces（工作区） | pnpm-workspace.yaml |
-| Pipeline（管道） | turbo.json 任务图 |
-| Caching（缓存） | 远程/本地任务缓存 |
-| Dependencies（依赖） | `workspace:*` 协议 |
+| Concept | Description |
+| --- | --- |
+| Workspaces | pnpm-workspace.yaml |
+| Pipeline | turbo.json task graph |
+| Caching | Remote/local task caching |
+| Dependencies | `workspace:*` protocol |
 
 ---
 
-## Turbo 管道（Pipeline）
+## Turbo Pipeline（任务管道）
 
 | 任务 | 依赖于 |
 | ---- | ------ |
@@ -59,9 +59,9 @@ project-name/
 
 ---
 
-## 设置步骤
+## Setup Steps（设置步骤）
 
-1. 创建根目录
+1. Create root directory（创建根目录）
 2. `pnpm init`
 3. 创建 pnpm-workspace.yaml
 4. 创建 turbo.json
@@ -71,20 +71,20 @@ project-name/
 
 ---
 
-## 常用命令
+## Common Commands（常用命令）
 
-| 命令 | 描述 |
-| ---- | ---- |
-| `pnpm dev` | 运行所有应用 |
-| `pnpm build` | 构建所有 |
-| `pnpm --filter @name/web dev` | 运行特定应用 |
-| `pnpm --filter @name/web add axios` | 将依赖添加到应用 |
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Run all apps（运行全部应用） |
+| `pnpm build` | Build all（构建全部） |
+| `pnpm --filter @name/web dev` | Run specific app（运行指定应用） |
+| `pnpm --filter @name/web add axios` | Add dep to app（添加依赖） |
 
 ---
 
-## 最佳实践
+## Best Practices（最佳实践）
 
 - 在 packages/config 中共享配置
 - 在 packages/types 中共享类型
 - 内部包使用 `workspace:*`
-- 使用 Turbo 远程缓存进行 CI（持续集成）
+- 在 CI 中使用 Turbo 远程缓存
