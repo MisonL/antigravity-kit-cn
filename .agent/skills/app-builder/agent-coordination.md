@@ -1,29 +1,29 @@
-# Agent 协同
+# Agent Coordination（Agent 协同）
 
-> App Builder 如何编排各领域专家 Agent。
+> App Builder（应用构建编排器）如何编排各领域专家 Agent。
 
-## Agent 流水线
+## Agent Pipeline（Agent 流水线）
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   APP BUILDER (编排器)                       │
+│                 APP BUILDER（编排器）                        │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                     PROJECT PLANNER                          │
+│                PROJECT PLANNER（项目规划）                   │
 │  • 任务拆解                                                  │
 │  • 依赖图                                                    │
 │  • 文件结构规划                                              │
-│  • 在项目根目录创建 {task-slug}.md (强制性)                   │
+│  • 在项目根目录创建 {task-slug}.md（MANDATORY）              │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                 检查点：计划验证（Plan Verification）         │
-│  🔴 验证：项目根目录是否存在 {task-slug}.md？                   │
-│  🔴 如果 否 → 停止 → 先创建计划文件                            │
-│  🔴 如果 是 → 继续执行专家 Agent                               │
+│      CHECKPOINT: PLAN VERIFICATION（计划验证）               │
+│  🔴 VERIFY（验证）：项目根目录是否存在 {task-slug}.md？        │
+│  🔴 若否 → 停止 → 先创建计划文件                              │
+│  🔴 若是 → 继续执行专家 Agent                                 │
 └─────────────────────────────────────────────────────────────┘
                               │
           ┌───────────────────┼───────────────────┐
@@ -32,18 +32,21 @@
 │ DATABASE        │ │ BACKEND         │ │ FRONTEND        │
 │ ARCHITECT       │ │ SPECIALIST      │ │ SPECIALIST      │
 │                 │ │                 │ │                 │
-│ • Schema 设计   │ │ • API 路由      │ │ • 组件          │
-│ • 数据库迁移    │ │ • 控制器        │ │ • 页面          │
-│ • 种子数据      │ │ • 中间件        │ │ • 样式          │
+│ • Schema design │ │ • API routes    │ │ • Components    │
+│   （模式设计）  │ │   （接口路由）  │ │   （组件）      │
+│ • Migrations    │ │ • Controllers   │ │ • Pages         │
+│   （迁移）      │ │   （控制器）    │ │   （页面）      │
+│ • Seed data     │ │ • Middleware    │ │ • Styling       │
+│   （种子数据）  │ │   （中间件）    │ │   （样式）      │
 └─────────────────┘ └─────────────────┘ └─────────────────┘
           │                   │                   │
           └───────────────────┼───────────────────┘
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                 并行阶段（可选）                             │
-│  • Security Auditor（安全审计） → 漏洞检查                   │
+│           PARALLEL PHASE（并行阶段，可选）                   │
+│  • Security Auditor（安全审计） → 漏洞检查                    │
 │  • Test Engineer（测试工程） → 单元测试                      │
-│  • Performance Optimizer（性能优化） → 包体积分析            │
+│  • Performance Optimizer（性能优化） → 包体分析               │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -55,17 +58,17 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 执行顺序
+## Execution Order（执行顺序）
 
-| 阶段 | Agent（智能体）                             | 是否并行？ | 前置条件           | 检查点                    |
-| ---- | ------------------------------------------ | ---------- | ------------------ | ------------------------- |
-| 0    | 苏格拉底之门（Socratic Gate）               | ❌         | -                  | ✅ 提出 3 个问题          |
-| 1    | Project Planner（项目规划）                 | ❌         | 问题已回答         | ✅ **PLAN.md 已创建**     |
-| 1.5  | **计划验证（Plan Verification）**           | ❌         | PLAN.md 存在       | ✅ **根目录存在计划文件** |
-| 2    | Database Architect（数据库架构）            | ❌         | 计划就绪           | Schema 已定义             |
-| 3    | Backend Specialist（后端专家）              | ❌         | Schema 就绪        | API 路由已创建            |
-| 4    | Frontend Specialist（前端专家）             | ✅         | API 就绪（部分）   | UI 组件就绪               |
-| 5    | Security Auditor（安全审计）、Test Engineer（测试工程） | ✅ | 代码就绪 | 测试与审计通过 |
-| 6    | DevOps Engineer（运维工程）                 | ❌         | 所有代码就绪       | 部署就绪                  |
+| 阶段（Phase） | Agent(s) | 是否并行（Parallel?） | 前置条件（Prerequisite） | 检查点（CHECKPOINT） |
+| --- | --- | --- | --- | --- |
+| 0 | Socratic Gate（苏格拉底之门） | ❌ | - | ✅ Ask 3 questions（先问 3 个问题） |
+| 1 | Project Planner（项目规划） | ❌ | Questions answered（问题已回答） | ✅ **PLAN.md created（已创建）** |
+| 1.5 | **PLAN VERIFICATION（计划验证）** | ❌ | PLAN.md exists（已存在） | ✅ **File exists in root（根目录存在）** |
+| 2 | Database Architect（数据库架构） | ❌ | Plan ready（计划就绪） | Schema defined（模式已定义） |
+| 3 | Backend Specialist（后端专家） | ❌ | Schema ready（模式就绪） | API routes created（路由已创建） |
+| 4 | Frontend Specialist（前端专家） | ✅ | API ready (partial)（接口部分就绪） | UI components ready（组件就绪） |
+| 5 | Security Auditor, Test Engineer | ✅ | Code ready（代码就绪） | Tests & audit pass（测试与审计通过） |
+| 6 | DevOps Engineer | ❌ | All code ready（代码就绪） | Deployment ready（部署就绪） |
 
-> 🔴 **关键：** 阶段 1.5 是强制性的。没有 PLAN.md 验证，任何专家 Agent 不得进行后续操作。
+> 🔴 **CRITICAL（关键）：** Phase 1.5 is MANDATORY。没有 PLAN.md 验证，任何专家 Agent 不得进行后续操作。
