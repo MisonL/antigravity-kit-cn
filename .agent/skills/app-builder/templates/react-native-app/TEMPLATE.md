@@ -1,27 +1,27 @@
 ---
 name: react-native-app
-description: React Native 移动应用模版原则。Expo、TypeScript、导航。
+description: React Native 移动应用模板原则。Expo、TypeScript、导航。
 ---
 
-# React Native 应用模版（2026 版）
+# React Native App Template（2026 版）
 
-现代移动应用模版，针对新架构和 React 19 进行了优化。
+现代移动应用模板，针对新架构与 React 19 优化。
 
-## 技术栈
+## Tech Stack（技术栈）
 
-| 组件 | 技术 | 版本 / 备注 |
-| ---- | ---- | ----------- |
-| 核心 | React Native + Expo | SDK 52+（启用新架构） |
-| 语言 | TypeScript | v5+（严格模式） |
-| UI 逻辑 | React | v19（React Compiler（编译器），自动记忆化） |
-| 导航 | Expo Router | v4+（基于文件，通用链接） |
-| 样式 | NativeWind | v4.0（Tailwind v4，CSS 优先配置） |
-| 状态 | Zustand + React Query | v5+（异步状态管理） |
-| 存储 | Expo SecureStore | 加密本地存储 |
+| Component | Technology | Version / Notes |
+| --- | --- | --- |
+| Core（核心） | React Native + Expo | SDK 52+（启用新架构） |
+| Language（语言） | TypeScript | v5+（Strict Mode / 严格模式） |
+| UI Logic（UI 逻辑） | React | v19（React Compiler / 编译器，自动记忆化） |
+| Navigation（导航） | Expo Router | v4+（File-based / 基于文件，Universal Links / 通用链接） |
+| Styling（样式） | NativeWind | v4.0（Tailwind v4，CSS-first / CSS 优先） |
+| State（状态） | Zustand + React Query | v5+（异步状态管理） |
+| Storage（存储） | Expo SecureStore | 加密本地存储 |
 
 ---
 
-## 目录结构
+## Directory Structure（目录结构）
 
 Expo Router 和 NativeWind v4 的标准化结构。
 
@@ -54,7 +54,7 @@ project-name/
 
 ---
 
-## 导航模式（Expo Router）
+## Navigation Patterns（Expo Router）
 
 | 模式 | 描述 | 实现 |
 | ---- | ---- | ---- |
@@ -65,7 +65,7 @@ project-name/
 
 ---
 
-## 关键包与目的
+## Key Packages & Purpose（关键包与用途）
 
 | 包 | 目的 |
 | -- | ---- |
@@ -78,13 +78,13 @@ project-name/
 
 ---
 
-## 设置步骤（2026 标准）
+## Setup Steps（2026 标准）
 
 1. 初始化项目：
 
     ```bash
-    npx create-expo-app@latest <项目名> --template default
-    cd <项目名>
+    npx create-expo-app@latest my-app --template default
+    cd my-app
     ```
 
 2. 安装核心依赖：
@@ -113,11 +113,11 @@ project-name/
 
 ---
 
-## 最佳实践（已更新）
+## Best Practices（已更新）
 
 - **新架构**：确保 `app.json` 中 `newArchEnabled: true` 以利用 TurboModules（新模块体系）和 Fabric Renderer（渲染器）。
-- **类型化路由**：使用 Expo Router 的 “Typed Routes” 特性进行类型安全路由（例如 `router.push('/path')`）。
-- **React 19**：减少使用 `useMemo` 或 `useCallback`，感谢 React Compiler（如果已启用）。
+- **类型化路由**：使用 Expo Router 的 “Typed Routes（类型化路由）” 特性进行类型安全路由（例如 `router.push('/path')`）。
+- **React 19**：减少使用 `useMemo` 或 `useCallback`，得益于 React Compiler（编译器）（如果已启用）。
 - **组件**：使用 NativeWind `className` 构建 UI 原语（Box, Text）以实现可重用性。
 - **资产**：使用 `expo-image` 代替默认 `<Image />` 以获得更好的缓存和性能。
 - **API**：始终使用 TanStack Query（数据请求库）包装 API 调用，避免在 `useEffect` 中直接调用。
