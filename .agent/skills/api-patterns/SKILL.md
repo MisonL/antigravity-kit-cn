@@ -1,6 +1,6 @@
 ---
 name: api-patterns
-description: API 设计原则与决策逻辑。包含 REST vs GraphQL vs tRPC 选择、响应格式、版本控制及分页。
+description: API 设计原则与决策逻辑。包含 REST vs GraphQL vs tRPC 选择、响应格式、版本控制与分页（pagination）。
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
@@ -20,15 +20,15 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 | 文件 | 描述 | 阅读时机 |
 | ---- | ---- | -------- |
 | `api-style.md` | REST vs GraphQL vs tRPC 决策树 | 选择 API 类型时 |
-| `rest.md` | 资源命名、HTTP 方法、状态码 | 设计 REST API 时 |
-| `response.md` | 信封模式（Envelope pattern）、错误格式、分页 | 确定响应结构时 |
+| `rest.md` | 资源命名、HTTP（超文本传输协议）方法、状态码 | 设计 REST API 时 |
+| `response.md` | 信封模式（Envelope pattern）、错误格式、分页（pagination） | 确定响应结构时 |
 | `graphql.md` | Schema（模式）设计、使用场景、安全性 | 考虑使用 GraphQL 时 |
-| `trpc.md` | TypeScript monorepo 架构、类型全栈安全 | 处理 TS 全栈项目时 |
-| `versioning.md` | URI/Header/Query 版本控制方案 | 规划 API 演进时 |
-| `auth.md` | JWT、OAuth、Passkey、API Keys | 选择认证模式时 |
-| `rate-limiting.md` | 令牌桶、滑动窗口算法 | 设计 API 保护机制时 |
-| `documentation.md` | OpenAPI/Swagger 最佳实践 | 编写 API 文档时 |
-| `security-testing.md` | OWASP API Top 10、认证/授权测试 | 进行安全审计时 |
+| `trpc.md` | TypeScript（TS） monorepo（单仓）架构、类型安全（type safety） | 处理 TS 全栈项目时 |
+| `versioning.md` | URI（路径）/Header（请求头）/Query（查询参数）版本控制方案 | 规划 API 演进时 |
+| `auth.md` | JWT（JSON Web Token）、OAuth（授权协议）、Passkey（通行密钥）、API Keys（API 密钥） | 选择认证模式时 |
+| `rate-limiting.md` | Token bucket（令牌桶）、Sliding window（滑动窗口）算法 | 设计 API 保护机制时 |
+| `documentation.md` | OpenAPI/Swagger（API 文档规范）最佳实践 | 编写 API 文档时 |
+| `security-testing.md` | OWASP API Top 10（十大风险）、认证（authn）/授权（authz）测试 | 进行安全审计时 |
 
 ---
 
