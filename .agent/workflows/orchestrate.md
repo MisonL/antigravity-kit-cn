@@ -1,183 +1,179 @@
 ---
-description: 协调多 Agent 处理复杂任务。适用于多视角分析、综合评审、或需要跨领域协作的任务。
+description: 协调多 Agent 处理复杂任务。适用于多视角分析、综合评审或需要跨领域协作的任务。
 ---
 
-# 多 Agent 编排 (Multi-Agent Orchestration)
+# 多 Agent（智能体）编排
 
-你现在处于 **ORCHESTRATION MODE**。任务目标：协调专家 Agent 解决复杂问题。
+你现在处于 **ORCHESTRATION MODE（编排模式）**。你的任务：协调专业 Agent（智能体）解决这个复杂问题。
 
-## 待编排任务 (Task to Orchestrate)
-
+## 待编排任务
 $ARGUMENTS
 
 ---
 
-## 🔴 关键要求：最少 Agent 数量
+## 🔴 关键：最少 Agent 数量要求
 
-> ⚠️ **ORCHESTRATION = 至少 3 个不同 Agent**
+> ⚠️ **ORCHESTRATION（编排）= 至少 3 个不同 Agent（智能体）**
 >
-> 少于 3 个 Agent 不叫编排，只是委派。
+> 如果使用少于 3 个 Agent，你就不是在编排，而是在委派。
 >
 > **完成前校验：**
->
 > - 统计已调用 Agent 数
 > - 若 `agent_count < 3` → 停止并继续调用 Agent
 > - 单 Agent = 编排失败
 
-### Agent 选择矩阵 (Agent Selection Matrix)
+### Agent 选择矩阵
 
-| Task Type      | REQUIRED Agents (minimum)                                                 |
-| -------------- | ------------------------------------------------------------------------- |
-| **Web App**    | frontend-specialist, backend-specialist, test-engineer                    |
-| **API**        | backend-specialist, security-auditor, test-engineer                       |
-| **UI/Design**  | frontend-specialist, seo-specialist, performance-optimizer                |
-| **Database**   | database-architect, backend-specialist, security-auditor                  |
-| **Full Stack** | project-planner, frontend-specialist, backend-specialist, devops-engineer |
-| **Debug**      | debugger, explorer-agent, test-engineer                                   |
-| **Security**   | security-auditor, penetration-tester, devops-engineer                     |
-
----
-
-## 起飞前检查：模式确认 (Pre-Flight Mode Check)
-
-| Current Mode | Task Type          | Action                                                  |
-| ------------ | ------------------ | ------------------------------------------------------- |
-| **plan**     | Any                | ✅ 按规划优先流程继续                                   |
-| **edit**     | Simple execution   | ✅ 直接执行                                             |
-| **edit**     | Complex/multi-file | ⚠️ 询问："该任务需要先规划，是否切换到 plan mode？"     |
-| **ask**      | Any                | ⚠️ 询问："可以开始编排，是否切换到 edit 或 plan mode？" |
+| 任务类型 | 必需 Agent（最少） |
+| --- | --- |
+| **Web App（Web 应用）** | frontend-specialist, backend-specialist, test-engineer |
+| **API** | backend-specialist, security-auditor, test-engineer |
+| **UI/Design（界面/设计）** | frontend-specialist, seo-specialist, performance-optimizer |
+| **Database（数据库）** | database-architect, backend-specialist, security-auditor |
+| **Full Stack（全栈）** | project-planner, frontend-specialist, backend-specialist, devops-engineer |
+| **Debug（调试）** | debugger, explorer-agent, test-engineer |
+| **Security（安全）** | security-auditor, penetration-tester, devops-engineer |
 
 ---
 
-## 🔴 严格两阶段编排 (STRICT 2-PHASE ORCHESTRATION)
+## 起飞前：模式确认
 
-### PHASE 1：规划阶段（串行，禁止并行 Agent）
+| 当前模式 | 任务类型 | 动作 |
+| --- | --- | --- |
+| **plan** | 任意 | ✅ 继续遵循“先规划”流程 |
+| **edit** | 简单执行 | ✅ 直接执行 |
+| **edit** | 复杂/多文件 | ⚠️ 询问：“该任务需要先规划，是否切换到 plan mode（计划模式）？” |
+| **ask** | 任意 | ⚠️ 询问：“已准备编排，是否切换到 edit 或 plan mode（计划模式）？” |
 
-| Step | Agent                    | Action                  |
-| ---- | ------------------------ | ----------------------- |
-| 1    | `project-planner`        | 生成 `./{task-slug}.md` |
-| 2    | （可选）`explorer-agent` | 如有需要先做代码库探查  |
+---
+
+## 🔴 严格两阶段编排
+
+### PHASE 1：PLANNING（规划）（串行，禁止并行 Agent）
+
+| 步骤 | Agent | 动作 |
+| --- | --- | --- |
+| 1 | `project-planner` | 创建 docs/PLAN.md |
+| 2 | （可选）`explorer-agent` | 如有需要先做代码库探查 |
 
 > 🔴 **规划阶段禁止其他 Agent！** 仅允许 project-planner 与 explorer-agent。
 
-### ⏸️ 检查点：用户批准 (User Approval)
+### ⏸️ 检查点：用户批准
 
 ```
 PLAN.md 完成后，必须询问：
 
-"✅ 已生成计划：./{task-slug}.md
+"✅ 已生成计划：docs/PLAN.md
 
 是否批准？(Y/N)
 - Y: 开始实现
 - N: 我会先修订计划"
 ```
 
-> 🔴 **未获得用户明确批准，不得进入 Phase 2。**
+> 🔴 **未获得用户明确批准，不得进入 Phase 2（第二阶段）。**
 
-### PHASE 2：实现阶段（批准后可并行）
+### PHASE 2：IMPLEMENTATION（实现）（批准后可并行）
 
-| Parallel Group | Agents                                      |
-| -------------- | ------------------------------------------- |
-| Foundation     | `database-architect`, `security-auditor`    |
-| Core           | `backend-specialist`, `frontend-specialist` |
-| Polish         | `test-engineer`, `devops-engineer`          |
+| 并行分组 | Agents |
+| --- | --- |
+| Foundation（基础） | `database-architect`, `security-auditor` |
+| Core（核心） | `backend-specialist`, `frontend-specialist` |
+| Polish（收尾） | `test-engineer`, `devops-engineer` |
 
 > ✅ 用户批准后，可并行调用多个 Agent。
 
 ## 可用 Agent（共 17 个）
 
-| Agent                   | Domain    | Use When                      |
-| ----------------------- | --------- | ----------------------------- |
-| `project-planner`       | Planning  | 任务拆解、生成 {task-slug}.md |
-| `explorer-agent`        | Discovery | 代码库映射与发现              |
-| `frontend-specialist`   | UI/UX     | React、Vue、CSS、HTML         |
-| `backend-specialist`    | Server    | API、Node.js、Python          |
-| `database-architect`    | Data      | SQL、NoSQL、Schema            |
-| `security-auditor`      | Security  | 漏洞、安全设计、鉴权          |
-| `penetration-tester`    | Security  | 主动攻防测试                  |
-| `test-engineer`         | Testing   | 单测、E2E、覆盖率             |
-| `devops-engineer`       | Ops       | CI/CD、Docker、部署           |
-| `mobile-developer`      | Mobile    | React Native、Flutter         |
-| `performance-optimizer` | Speed     | Lighthouse、Profiling         |
-| `seo-specialist`        | SEO       | Meta、Schema、排名            |
-| `documentation-writer`  | Docs      | README、API 文档              |
-| `debugger`              | Debug     | 错误分析与排障                |
-| `game-developer`        | Games     | Unity、Godot                  |
-| `orchestrator`          | Meta      | 跨 Agent 协调                 |
+| Agent | 领域 | 使用场景 |
+| --- | --- | --- |
+| `project-planner` | 规划 | 任务拆解、生成 PLAN.md |
+| `explorer-agent` | 发现 | 代码库映射与发现 |
+| `frontend-specialist` | UI/UX | React、Vue、CSS、HTML |
+| `backend-specialist` | 后端 | API、Node.js、Python |
+| `database-architect` | 数据 | SQL、NoSQL、Schema |
+| `security-auditor` | 安全 | 漏洞、鉴权 |
+| `penetration-tester` | 安全 | 主动测试 |
+| `test-engineer` | 测试 | Unit、E2E、Coverage |
+| `devops-engineer` | 运维 | CI/CD、Docker、Deploy |
+| `mobile-developer` | 移动端 | React Native、Flutter |
+| `performance-optimizer` | 性能 | Lighthouse、Profiling |
+| `seo-specialist` | SEO | Meta、Schema、Rankings |
+| `documentation-writer` | 文档 | README、API 文档 |
+| `debugger` | 调试 | 错误分析 |
+| `game-developer` | 游戏 | Unity、Godot |
+| `orchestrator` | 协调 | 跨 Agent 协调 |
 
 ---
 
-## 编排协议 (Orchestration Protocol)
+## 编排协议
 
-### Step 1：分析任务领域 (Analyze Task Domains)
+### Step 1：分析任务领域
 
 识别该任务涉及的全部领域：
 
 ```
-□ Security     → security-auditor, penetration-tester
-□ Backend/API  → backend-specialist
-□ Frontend/UI  → frontend-specialist
-□ Database     → database-architect
-□ Testing      → test-engineer
-□ DevOps       → devops-engineer
-□ Mobile       → mobile-developer
-□ Performance  → performance-optimizer
-□ SEO          → seo-specialist
-□ Planning     → project-planner
+□ Security（安全）     → security-auditor, penetration-tester
+□ Backend/API（后端/API）  → backend-specialist
+□ Frontend/UI（前端/UI）  → frontend-specialist
+□ Database（数据库）     → database-architect
+□ Testing（测试）        → test-engineer
+□ DevOps（运维）         → devops-engineer
+□ Mobile（移动端）       → mobile-developer
+□ Performance（性能）    → performance-optimizer
+□ SEO                   → seo-specialist
+□ Planning（规划）       → project-planner
 ```
 
-### Step 2：识别阶段 (Phase Detection)
+### Step 2：识别阶段
 
-| If Plan Exists                         | Action                   |
-| -------------------------------------- | ------------------------ |
-| NO `./{task-slug}.md`                  | → 进入 PHASE 1（仅规划） |
-| YES `./{task-slug}.md` + user approved | → 进入 PHASE 2（实现）   |
+| 计划是否存在 | 动作 |
+| --- | --- |
+| 否 `docs/PLAN.md` | → 进入 PHASE 1（仅规划） |
+| 是 `docs/PLAN.md` + 已获用户批准 | → 进入 PHASE 2（实现） |
 
-### Step 3：按阶段执行 (Execute Based on Phase)
+### Step 3：按阶段执行
 
 **PHASE 1（规划）：**
-
 ```
-调用 project-planner 生成 {task-slug}.md
+使用 project-planner Agent 创建 PLAN.md
 → 计划完成后立即停止
 → 请求用户批准
 ```
 
 **PHASE 2（实现，批准后）：**
-
 ```
 并行调用 Agent：
-Use the frontend-specialist agent to [task]
-Use the backend-specialist agent to [task]
-Use the test-engineer agent to [task]
+使用 frontend-specialist Agent 处理 [task]
+使用 backend-specialist Agent 处理 [task]
+使用 test-engineer Agent 处理 [task]
 ```
 
-**🔴 关键：上下文传递（强制）(Context Passing)**
+**🔴 关键：上下文传递（强制）**
 
 调用任何子 Agent 时，必须携带：
 
-1. **Original User Request：** 用户原始需求全文
-2. **Decisions Made：** 用户对苏格拉底式问题的所有回答
-3. **Previous Agent Work：** 前序 Agent 工作摘要
-4. **Current Plan State：** 若工作区存在计划文件，必须附带
+1. **Original User Request（用户原始需求）：** 用户需求全文
+2. **Decisions Made（已确定决策）：** 用户对苏格拉底式问题的所有回答
+3. **Previous Agent Work（前序 Agent 工作）：** 之前 Agent 的工作摘要
+4. **Current Plan State（当前计划状态）：** 若工作区存在计划文件，必须附带
 
 **完整上下文示例：**
 
 ```
-Use the project-planner agent to create {task-slug}.md:
+使用 project-planner Agent 创建 PLAN.md：
 
-**CONTEXT:**
-- User Request: "A social platform for students, using mock data"
-- Decisions: Tech=Vue 3, Layout=Grid Widgets, Auth=Mock, Design=Youthful & dynamic
-- Previous Work: Orchestrator asked 6 questions, user chose all options
-- Current Plan: playful-roaming-dream.md exists in workspace with initial structure
+**上下文：**
+- 用户需求："面向学生的社交平台，使用 mock 数据"
+- 已确定决策：Tech=Vue 3, Layout=Grid Widgets（网格组件）, Auth=Mock（模拟）, Design=青春且动感
+- 前序工作：Orchestrator 提了 6 个问题，用户选择了所有选项
+- 当前计划：playful-roaming-dream.md 已存在于工作区并包含初始结构
 
-**TASK:** Create detailed {task-slug}.md based on ABOVE decisions. Do NOT infer from folder name.
+**任务：** 基于以上决策生成详细 PLAN.md。不要根据文件夹名称推断。
 ```
 
-> ⚠️ **违规：** 调用子 Agent 不带完整上下文，会导致错误假设。
+> ⚠️ **违规：** 调用子 Agent 不带完整上下文，将导致错误假设。
 
-### Step 4：验证（强制）(Verification)
+### Step 4：验证（强制）
 
 最后一个 Agent 必须执行合适的验证脚本：
 
@@ -186,68 +182,61 @@ python .agent/skills/vulnerability-scanner/scripts/security_scan.py .
 python .agent/skills/lint-and-validate/scripts/lint_runner.py .
 ```
 
-### Step 5：结果综合 (Synthesize Results)
+### Step 5：结果综合
 
 将所有 Agent 输出汇总为统一报告。
 
 ---
 
-## 输出格式 (Output Format)
+## 输出格式
 
 ```markdown
-## 🎼 Orchestration Report
+## 🎼 Orchestration Report（编排报告）
 
-### Task
+### 任务
+[原始任务摘要]
 
-[Original task summary]
+### 模式
+[当前 Antigravity Agent 模式：plan/edit/ask]
 
-### Mode
+### 已调用 Agent（最少 3 个）
+| # | Agent | 关注领域 | 状态 |
+|---|-------|----------|------|
+| 1 | project-planner | 任务拆解 | ✅ |
+| 2 | frontend-specialist | UI 实现 | ✅ |
+| 3 | test-engineer | 验证脚本 | ✅ |
 
-[Current Antigravity Agent mode: plan/edit/ask]
+### 已执行的验证脚本
+- [x] security_scan.py → 通过/失败
+- [x] lint_runner.py → 通过/失败
 
-### Agents Invoked (MINIMUM 3)
+### 关键发现
+1. **[Agent 1]**: 发现
+2. **[Agent 2]**: 发现
+3. **[Agent 3]**: 发现
 
-| #   | Agent               | Focus Area           | Status |
-| --- | ------------------- | -------------------- | ------ |
-| 1   | project-planner     | Task breakdown       | ✅     |
-| 2   | frontend-specialist | UI implementation    | ✅     |
-| 3   | test-engineer       | Verification scripts | ✅     |
+### 交付物
+- [ ] 已创建 PLAN.md
+- [ ] 已实现代码
+- [ ] 测试通过
+- [ ] 脚本已验证
 
-### Verification Scripts Executed
-
-- [x] security_scan.py → Pass/Fail
-- [x] lint_runner.py → Pass/Fail
-
-### Key Findings
-
-1. **[Agent 1]**: Finding
-2. **[Agent 2]**: Finding
-3. **[Agent 3]**: Finding
-
-### Deliverables
-
-- [ ] {task-slug}.md created
-- [ ] Code implemented
-- [ ] Tests passing
-- [ ] Scripts verified
-
-### Summary
-
-[One paragraph synthesis of all agent work]
+### 总结
+[对所有 Agent 工作的单段综合摘要]
 ```
 
 ---
 
-## 🔴 退出闸门 (EXIT GATE)
+## 🔴 退出门槛
 
-结束编排前，必须确认：
+在完成编排之前，确认：
 
-1. ✅ **Agent Count:** `invoked_agents >= 3`
-2. ✅ **Scripts Executed:** 至少执行过 `security_scan.py`
-3. ✅ **Report Generated:** 已生成含全部 Agent 的 Orchestration Report
+1. ✅ **Agent 数量：** `invoked_agents >= 3`
+2. ✅ **脚本已执行：** 至少运行 `security_scan.py`
+3. ✅ **报告已生成：** Orchestration Report（编排报告）中列出全部 Agent
 
-> **任一项失败 → 不得标记编排完成。必须补调用 Agent 或补跑脚本。**
+> **如果任一检查失败 → 不得标记编排完成。继续调用 Agent 或运行脚本。**
 
 ---
 
-**现在开始编排：选择 3+ Agent，按阶段执行，运行验证脚本，输出综合结果。**
+**立即开始编排。选择 3 个以上 Agent，顺序执行，运行验证脚本，并综合结果。**
