@@ -1,37 +1,37 @@
-# 迁移原则（Migration Principles）
+# 迁移原则
 
 > 面向零停机变更的安全迁移策略。
 
-## 安全迁移策略（Safe Migration Strategy）
+## 安全迁移策略
 
 ```
 零停机变更建议：
 │
-├── 新增列（Adding column）
+├── 新增列（adding column）
 │   └── 先设为 nullable（可为空） → 回填数据 → 再加 NOT NULL
 │
-├── 删除列（Removing column）
+├── 删除列（removing column）
 │   └── 先停止使用 → 部署过渡版本 → 再删除列
 │
-├── 新增索引（Adding index）
+├── 新增索引（adding index）
 │   └── `CREATE INDEX CONCURRENTLY`（非阻塞）
 │
-└── 重命名列（Renaming column）
+└── 重命名列（renaming column）
     └── 新增新列 → 迁移数据 → 部署 → 删除旧列
 ```
 
-## 迁移哲学（Migration Philosophy）
+## 迁移哲学
 
 - 不要一步到位做破坏性变更
 - 先在数据副本上验证迁移
 - 预先准备回滚方案
 - 在可行场景下使用事务包裹
 
-## Serverless 数据库（Serverless Databases）
+## Serverless 数据库
 
 ### Neon（Serverless PostgreSQL）
 
-| 特性（Feature） | 价值（Benefit） |
+| 特性 | 价值 |
 | -------------- | -------------- |
 | Scale to zero（零实例） | 节省成本 |
 | Instant branching（即时分支） | 开发/预览环境方便 |
@@ -40,7 +40,7 @@
 
 ### Turso（Edge SQLite）
 
-| 特性（Feature） | 价值（Benefit） |
+| 特性 | 价值 |
 | -------------- | -------------- |
 | Edge locations（边缘节点） | 超低延迟 |
 | SQLite compatible（兼容 SQLite） | 使用简单 |
