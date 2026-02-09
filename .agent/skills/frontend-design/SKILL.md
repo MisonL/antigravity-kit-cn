@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Web UI 的设计思维与决策。用于设计组件、布局、配色、字体或打造美观界面。教授原则而非固定值。
+description: Web UI（网页界面）的设计思维与决策。用于设计组件、布局、配色、字体或打造美观界面。教授原则而非固定值。
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
@@ -13,7 +13,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ## 🎯 选择性阅读规则（强制）
 
-**必须阅读 REQUIRED 文件，OPTIONAL 仅在需要时阅读：**
+**必须阅读必读文件，可选文件仅在需要时阅读：**
 
 | 文件 | 状态 | 何时阅读 |
 |------|------|----------|
@@ -35,7 +35,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 脚本 | 用途 | 用法 |
 |------|------|------|
-| `scripts/ux_audit.py` | UX 心理与无障碍审计 | `python scripts/ux_audit.py <project_path>` |
+| `scripts/ux_audit.py` | UX 心理与无障碍审计 | `python scripts/ux_audit.py <项目路径>` |
 
 ---
 
@@ -87,12 +87,12 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 受众 | 设计要点 |
 |------|---------|
-| **Gen Z** | 大胆、快速、移动优先、真实 |
-| **Millennials** | 干净、极简、价值导向 |
-| **Gen X** | 熟悉、可信、清晰 |
-| **Boomers** | 易读、高对比、简单 |
-| **B2B** | 专业、数据导向、信任感 |
-| **Luxury** | 克制优雅、留白充足 |
+| **Gen Z（Z 世代）** | 大胆、快速、移动优先、真实 |
+| **Millennials（千禧一代）** | 干净、极简、价值导向 |
+| **Gen X（X 世代）** | 熟悉、可信、清晰 |
+| **Boomers（婴儿潮一代）** | 易读、高对比、简单 |
+| **B2B（企业服务）** | 专业、数据导向、信任感 |
+| **Luxury（奢华）** | 克制优雅、留白充足 |
 
 ---
 
@@ -102,11 +102,11 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 定律 | 原则 | 应用 |
 |------|------|------|
-| **Hick's Law** | 选择越多 = 决策越慢 | 限制选项，渐进披露 |
-| **Fitts' Law** | 更大更近 = 更易点击 | 合理设置 CTA 尺寸 |
-| **Miller's Law** | 工作记忆约 7 项 | 内容分组组织 |
-| **Von Restorff** | 差异 = 更易记忆 | CTA 视觉突出 |
-| **Serial Position** | 首尾最易记住 | 关键信息放首尾 |
+| **Hick's Law（希克定律）** | 选择越多 = 决策越慢 | 限制选项，渐进披露 |
+| **Fitts' Law（菲茨定律）** | 更大更近 = 更易点击 | 合理设置 CTA（行动号召）尺寸 |
+| **Miller's Law（米勒定律）** | 工作记忆约 7 项 | 内容分组组织 |
+| **Von Restorff（冯·雷斯托夫效应）** | 差异 = 更易记忆 | CTA（行动号召）视觉突出 |
+| **Serial Position（首因-近因效应）** | 首尾最易记住 | 关键信息放首尾 |
 
 ### 情感设计层级
 
@@ -168,7 +168,7 @@ REFLECTIVE（反思）→ 使用后：“我喜欢它传达的价值”
 ```
 60% → 主色/背景（稳定、中性基底）
 30% → 次级色（支撑区域）
-10% → 点缀色（CTA、高亮、注意力）
+10% → 点缀色（CTA（行动号召）、高亮、注意力）
 ```
 
 ### 色彩心理（用于决策）
@@ -201,7 +201,7 @@ REFLECTIVE（反思）→ 使用后：“我喜欢它传达的价值”
 | 密集型 UI | 1.125-1.2 | 紧凑、高效 |
 | 通用 Web | 1.25 | 平衡（最常见） |
 | 编辑排版 | 1.333 | 易读、宽松 |
-| Hero/展示 | 1.5-1.618 | 强烈冲击 |
+| Hero（首屏展示）/展示 | 1.5-1.618 | 强烈冲击 |
 
 ### 搭配概念
 
@@ -216,7 +216,7 @@ REFLECTIVE（反思）→ 使用后：“我喜欢它传达的价值”
 
 - **行长**：45-75 字符最佳
 - **行高**：正文 1.4-1.6
-- **对比**：检查 WCAG 要求
+- **对比**：检查 WCAG（无障碍标准）要求
 - **字号**：Web 正文字号 16px+
 
 详细字体见：[typography-system.md](typography-system.md)
@@ -225,7 +225,7 @@ REFLECTIVE（反思）→ 使用后：“我喜欢它传达的价值”
 
 ## 6. 视觉效果原则
 
-### 玻璃拟态（适用时）
+### 玻璃拟态（Glassmorphism，适用时）
 
 ```
 关键属性：
@@ -276,22 +276,22 @@ REFLECTIVE（反思）→ 使用后：“我喜欢它传达的价值”
 
 | 动作 | 缓动 | 原因 |
 |------|------|------|
-| 进入 | Ease-out | 减速并稳定 |
-| 离开 | Ease-in | 加速离场 |
-| 强调 | Ease-in-out | 平滑、克制 |
-| 活泼 | Bounce | 有趣、活力 |
+| 进入 | Ease-out（缓出） | 减速并稳定 |
+| 离开 | Ease-in（缓入） | 加速离场 |
+| 强调 | Ease-in-out（缓入缓出） | 平滑、克制 |
+| 活泼 | Bounce（弹跳） | 有趣、活力 |
 
 ### 性能
 
 - 只动画 transform 和 opacity
-- 尊重 reduced-motion 偏好
+- 尊重 reduced-motion（减少动画）偏好
 - 在低端设备上测试
 
 动画模式见：[animation-guide.md](animation-guide.md)，进阶见：[motion-graphics.md](motion-graphics.md)
 
 ---
 
-## 8. “Wow Factor” 检查清单
+## 8. “Wow Factor（惊艳度）”检查清单
 
 ### 高级感指标
 
@@ -334,7 +334,7 @@ REFLECTIVE（反思）→ 使用后：“我喜欢它传达的价值”
 
 - **每个项目都用同一套颜色**
 - **深色 + 霓虹默认化**
-- **紫色/紫罗兰泛滥（PURPLE BAN ✅）**
+- **紫色/紫罗兰泛滥（PURPLE BAN ✅，禁紫提醒）**
 - **简单落地页硬套 Bento 网格**
 - **Mesh 渐变与发光效果**
 - **同样的布局结构 / Vercel 仿制**
@@ -405,14 +405,14 @@ REFLECTIVE（反思）→ 使用后：“我喜欢它传达的价值”
 实现设计后，运行审计：
 
 ```
-1. DESIGN   → 阅读 frontend-design 原则 ← 你在这里
-2. CODE     → 实现设计
-3. AUDIT    → 运行 web-design-guidelines 复审
-4. FIX      → 修复审计发现
+1. DESIGN（设计） → 阅读 frontend-design 原则 ← 你在这里
+2. CODE（编码）   → 实现设计
+3. AUDIT（审计）  → 运行 web-design-guidelines 复审
+4. FIX（修复）    → 修复审计发现
 ```
 
 > **下一步：** 编码后使用 `web-design-guidelines` 技能审计无障碍、焦点状态、动画与性能问题。
 
 ---
 
-> **记住：** 设计是思考，不是抄写。每个项目都应基于其独特的上下文与用户重新做决定。**远离现代 SaaS 的安全港！**
+> **记住：** 设计是思考，不是抄写。每个项目都应基于其独特的上下文与用户重新做决定。**远离现代 SaaS（软件即服务）的安全港！**
