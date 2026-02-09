@@ -1,4 +1,4 @@
-# API 文档编写原则 (API Documentation Principles)
+# API 文档编写原则（API Documentation Principles）
 
 > 好的文档 = 快乐的开发者 = API 被广泛采用。
 
@@ -6,8 +6,8 @@
 
 ```
 应包含:
-├── 所有端点 (Endpoints) 及其示例
-├── 请求/响应 Schema
+├── 所有端点（Endpoints）及其示例
+├── 请求/响应 Schema（模式）
 ├── 认证要求
 ├── 错误响应格式
 └── 速率限制信息
@@ -21,6 +21,6 @@
 ├── 认证指南
 ├── 完整的 API 参考手册
 ├── 错误处理指南
-├── 代码示例 (多种语言)
-└── 更新日志 (Changelog)
+├── 代码示例（多种语言）
+└── 更新日志（Changelog）
 ```
