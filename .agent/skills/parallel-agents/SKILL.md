@@ -1,22 +1,22 @@
 ---
 name: parallel-agents
-description: 多智能体 (Multi-agent) 编排模式。当多个独立任务需要不同领域的专业知识，或需要多视角的综合分析时使用。
+description: 多智能体（Multi-agent）编排模式。当多个独立任务需要不同领域的专业知识，或需要多视角的综合分析时使用。
 allowed-tools: Read, Glob, Grep
 ---
 
-# 原生并行智能体 (Native Parallel Agents)
+# 原生并行智能体（Native Parallel Agents）
 
-> 通过 Antigravity 内置的智能体工具实现编排 (Orchestration)。
-
----
-
-## 概览 (Overview)
-
-本技能旨在通过 Antigravity 的原生智能体系统协调多个专业化 Agent。与外部脚本不同，这种方法将所有编排逻辑完全置于 Antigravity 的控制之下。
+> 通过 Antigravity 内置的智能体工具实现编排（Orchestration）。
 
 ---
 
-## 何时使用编排 (When to Use Orchestration)
+## 概览（Overview）
+
+本技能旨在通过 Antigravity 的原生智能体系统协调多个专业化 Agent（智能体）。与外部脚本不同，这种方法将所有编排逻辑完全置于 Antigravity 的控制之下。
+
+---
+
+## 何时使用编排（When to Use Orchestration）
 
 ✅ **适用场景：**
 
@@ -33,7 +33,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 原生 Agent 调用 (Native Agent Invocation)
+## 原生 Agent 调用（Native Agent Invocation）
 
 ### 调用单个 Agent
 
@@ -41,7 +41,7 @@ allowed-tools: Read, Glob, Grep
 请使用 security-auditor 智能体来审阅身份认证逻辑。
 ```
 
-### 顺序链式调用 (Sequential Chain)
+### 顺序链式调用（Sequential Chain）
 
 ```
 首先，使用 explorer-agent 探索项目结构。
@@ -64,22 +64,22 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 编排模式 (Orchestration Patterns)
+## 编排模式（Orchestration Patterns）
 
-### 模式 1：全面分析 (Comprehensive Analysis)
+### 模式 1：全面分析（Comprehensive Analysis）
 
 ```
-智能体流：explorer-agent → [领域专家级 Agents] → 综合汇总 (Synthesis)
+智能体流：explorer-agent → [领域专家级 Agents] → 综合汇总（Synthesis）
 
 1. explorer-agent：绘制代码库结构图。
 2. security-auditor：评估安全态势。
 3. backend-specialist：评估 API 质量。
-4. frontend-specialist：评估 UI/UX 模式。
+4. frontend-specialist：评估 UI/UX（界面/体验）模式。
 5. test-engineer：评估测试覆盖率。
 6. 综合汇总所有发现。
 ```
 
-### 模式 2：功能评审 (Feature Review)
+### 模式 2：功能评审（Feature Review）
 
 ```
 智能体流：[受影响领域的 Agents] → test-engineer
@@ -90,7 +90,7 @@ allowed-tools: Read, Glob, Grep
 4. 综合汇总改进建议。
 ```
 
-### 模式 3：安全审计 (Security Audit)
+### 模式 3：安全审计（Security Audit）
 
 ```
 智能体流：security-auditor → penetration-tester → 综合汇总
@@ -102,50 +102,50 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 可用智能体清单 (Available Agents)
+## 可用智能体清单（Available Agents）
 
-| 智能体 (Agent)          | 专业领域   | 触发词/场景                              |
-| ----------------------- | ---------- | ---------------------------------------- |
-| `orchestrator`          | 全局协调   | "全面的", "多维度的", "综合的"           |
-| `security-auditor`      | 安全审计   | "安全", "认证", "漏洞"                   |
-| `penetration-tester`    | 渗透测试   | "渗透测试", "红队", "exploit"            |
-| `backend-specialist`    | 后端开发   | "API", "服务器", "Node.js", "Express"    |
-| `frontend-specialist`   | 前端开发   | "React", "UI", "组件", "Next.js"         |
-| `test-engineer`         | 测试工程   | "测试", "覆盖率", "TDD"                  |
-| `devops-engineer`       | 运维开发   | "部署", "CI/CD", "基础设施"              |
-| `database-architect`    | 数据库架构 | "模式 (Schema)", "Prisma", "迁移"        |
-| `mobile-developer`      | 移动端开发 | "React Native", "Flutter", "移动端"      |
-| `api-designer`          | API 设计   | "REST", "GraphQL", "OpenAPI"             |
-| `debugger`              | 调试专家   | "Bug", "错误", "不工作"                  |
-| `explorer-agent`        | 探索发现   | "探索", "映射", "结构"                   |
-| `documentation-writer`  | 文档编写   | "写文档", "创建 README", "生成 API 文档" |
-| `performance-optimizer` | 性能优化   | "慢", "优化", "分析 (Profiling)"         |
-| `project-planner`       | 项目策划   | "计划", "路线图", "里程碑"               |
-| `seo-specialist`        | SEO 专家   | "SEO", "Meta 标签", "搜索排名"           |
-| `game-developer`        | 游戏开发   | "游戏", "Unity", "Godot", "Phaser"       |
+| 智能体（Agent） | 专业领域 | 触发词/场景 |
+| -------------- | -------- | ---------- |
+| `orchestrator` | 全局协调 | "全面的", "多维度的", "综合的" |
+| `security-auditor` | 安全审计 | "安全", "认证", "漏洞" |
+| `penetration-tester` | 渗透测试 | "渗透测试", "红队", "exploit（利用）" |
+| `backend-specialist` | 后端开发 | "API（接口）", "服务器", "Node.js", "Express" |
+| `frontend-specialist` | 前端开发 | "React", "UI（界面）", "组件", "Next.js" |
+| `test-engineer` | 测试工程 | "测试", "覆盖率", "TDD（测试驱动开发）" |
+| `devops-engineer` | 运维开发 | "部署", "CI/CD（持续集成/交付）", "基础设施" |
+| `database-architect` | 数据库架构 | "模式（Schema）", "Prisma", "迁移" |
+| `mobile-developer` | 移动端开发 | "React Native", "Flutter", "移动端" |
+| `api-designer` | API 设计 | "REST（表述性状态转移）", "GraphQL（图查询语言）", "OpenAPI（开放 API 规范）" |
+| `debugger` | 调试专家 | "Bug（缺陷）", "错误", "不工作" |
+| `explorer-agent` | 探索发现 | "探索", "映射", "结构" |
+| `documentation-writer` | 文档编写 | "写文档", "创建 README（说明文档）", "生成 API 文档" |
+| `performance-optimizer` | 性能优化 | "慢", "优化", "分析（Profiling）" |
+| `project-planner` | 项目策划 | "计划", "路线图", "里程碑" |
+| `seo-specialist` | SEO 专家 | "SEO", "Meta（元）标签", "搜索排名" |
+| `game-developer` | 游戏开发 | "游戏", "Unity", "Godot", "Phaser" |
 
 ---
 
-## Antigravity 内置智能体 (Built-in Agents)
+## Antigravity 内置智能体（Built-in Agents）
 
 这些智能体与自定义 Agent 协同工作：
 
-| 智能体               | 模型 (Model) | 用途                     |
-| -------------------- | ------------ | ------------------------ |
-| **Explore**          | Haiku        | 快速的只读代码库搜索     |
-| **Plan**             | Sonnet       | 计划模式下的调研工作     |
-| **通用型 (General)** | Sonnet       | 复杂的、跨步骤的代码修改 |
+| 智能体 | 模型（Model） | 用途 |
+| ------ | ------------ | ---- |
+| **Explore** | Haiku | 快速的只读代码库搜索 |
+| **Plan** | Sonnet | 计划模式下的调研工作 |
+| **通用型（General）** | Sonnet | 复杂的、跨步骤的代码修改 |
 
 针对快速搜索，请使用 **Explore**；针对特定领域知识，请使用**自定义智能体**。
 
 ---
 
-## 综合汇总协议 (Synthesis Protocol)
+## 综合汇总协议（Synthesis Protocol）
 
 当所有 Agent 完成工作后，进行综合汇总：
 
 ```markdown
-## 编排综合报告 (Orchestration Synthesis)
+## 编排综合报告（Orchestration Synthesis）
 
 ### 任务总结
 
@@ -153,18 +153,18 @@ allowed-tools: Read, Glob, Grep
 
 ### 各智能体贡献
 
-| 智能体             | 主要发现          |
-| ------------------ | ----------------- |
-| security-auditor   | 发现了 X 安全缺陷 |
-| backend-specialist | 识别了 Y 优化点   |
+| 智能体 | 主要发现 |
+| ------ | -------- |
+| security-auditor | 发现了 X 安全缺陷 |
+| backend-specialist | 识别了 Y 优化点 |
 
 ### 整合建议
 
-1. **紧急 (Critical)**: [来自 Agent A 的问题]
-2. **重要 (Important)**: [来自 Agent B 的问题]
-3. **建议 (Nice-to-have)**: [来自 Agent C 的改进点]
+1. **紧急（Critical）**: [来自 Agent A 的问题]
+2. **重要（Important）**: [来自 Agent B 的问题]
+3. **建议（Nice-to-have）**: [来自 Agent C 的改进点]
 
-### 待办动作 (Action Items)
+### 待办动作（Action Items）
 
 - [ ] 修复紧急安全问题
 - [ ] 重构 API 端点
@@ -173,7 +173,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 最佳实践 (Best Practices)
+## 最佳实践（Best Practices）
 
 1. **Agent 多样性** —— 共有 17 个专业 Agent 可供编排调用。
 2. **逻辑顺序** —— 遵循“探索 → 分析 → 实现 → 测试”的链路。
@@ -183,7 +183,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 核心优势 (Key Benefits)
+## 核心优势（Key Benefits）
 
 - ✅ **单次会话** —— 所有 Agent 共享上下文。
 - ✅ **AI 自控** —— Claude 自主进行编排协调。
@@ -192,4 +192,3 @@ allowed-tools: Read, Glob, Grep
 - ✅ **上下文流转** —— 发现结果在 Agent 之间顺畅传递。
 
 ---
-
