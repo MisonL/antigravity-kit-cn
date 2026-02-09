@@ -1,4 +1,4 @@
-# API 安全测试（API Security Testing）
+# API 安全测试
 
 > API（接口）安全测试原则。OWASP API Top 10、认证与授权测试。
 
@@ -21,7 +21,7 @@
 
 ---
 
-## 认证测试（Authentication Testing）
+## 认证测试
 
 ### JWT（JSON Web Token）测试
 
@@ -43,7 +43,7 @@
 
 ---
 
-## 授权测试（Authorization Testing）
+## 授权测试
 
 | 测试类型 | 方法 |
 | :------- | :--- |
@@ -85,7 +85,7 @@
 
 ---
 
-## GraphQL 安全（GraphQL Security）
+## GraphQL 安全
 
 | 测试 | 重点 |
 | :--- | :--- |
