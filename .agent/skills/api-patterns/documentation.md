@@ -1,4 +1,4 @@
-# API 文档编写原则（API Documentation Principles）
+# API 文档编写原则
 
 > 好的文档 = 快乐的开发者 = API 被广泛采用。
 
