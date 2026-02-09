@@ -1,22 +1,22 @@
 ---
-description: 调试命令。激活 DEBUG 模式并系统化排查问题。
+description: 调试命令。激活 DEBUG（调试）模式并进行系统化问题排查。
 ---
 
-# /debug - 系统化问题排查 (Systematic Problem Investigation)
+# /debug - 系统化问题排查
 
 $ARGUMENTS
 
 ---
 
-## 目的 (Purpose)
+## 目的
 
-该命令用于激活 DEBUG 模式，以系统化调查异常、报错或非预期行为。
+该命令用于激活 DEBUG（调试）模式，以系统化调查异常、报错或非预期行为。
 
 ---
 
-## 行为 (Behavior)
+## 行为
 
-触发 `/debug` 后：
+当 `/debug` 被触发时：
 
 1. **收集信息**
    - 错误信息
@@ -24,7 +24,7 @@ $ARGUMENTS
    - 预期行为 vs 实际行为
    - 最近代码变更
 
-2. **提出假设**
+2. **形成假设**
    - 列出可能原因
    - 按概率排序
 
@@ -40,36 +40,36 @@ $ARGUMENTS
 
 ---
 
-## 输出格式 (Output Format)
+## 输出格式
 
 ```markdown
-## 🔍 Debug: [Issue]
+## 🔍 Debug（调试）：[问题]
 
-### 1. Symptom
-[What's happening]
+### 1. 症状
+[发生了什么]
 
-### 2. Information Gathered
-- Error: `[error message]`
-- File: `[filepath]`
-- Line: [line number]
+### 2. 已收集信息
+- 错误：`[错误信息]`
+- 文件：`[文件路径]`
+- 行号：[行号]
 
-### 3. Hypotheses
-1. ❓ [Most likely cause]
-2. ❓ [Second possibility]
-3. ❓ [Less likely cause]
+### 3. 假设
+1. ❓ [最可能的原因]
+2. ❓ [第二可能性]
+3. ❓ [较低可能性]
 
-### 4. Investigation
+### 4. 调查
 
-**Testing hypothesis 1:**
-[What I checked] → [Result]
+**验证假设 1：**
+[检查内容] → [结果]
 
-**Testing hypothesis 2:**
-[What I checked] → [Result]
+**验证假设 2：**
+[检查内容] → [结果]
 
-### 5. Root Cause
-🎯 **[Explanation of why this happened]**
+### 5. 根因
+🎯 **[为何会发生的解释]**
 
-### 6. Fix
+### 6. 修复
 ```[language]
 // Before
 [broken code]
@@ -78,26 +78,26 @@ $ARGUMENTS
 [fixed code]
 ```
 
-### 7. Prevention
-🛡️ [How to prevent this in the future]
+### 7. 预防
+🛡️ [如何避免再次发生]
 ```
 
 ---
 
-## 示例 (Examples)
+## 示例
 
 ```
-/debug login not working
-/debug API returns 500
-/debug form doesn't submit
-/debug data not saving
+/debug 登录无法使用
+/debug API（接口）返回 500
+/debug 表单无法提交
+/debug 数据未保存
 ```
 
 ---
 
-## 关键原则 (Key Principles)
+## 核心原则
 
-- **先问再判** - 先拿到完整错误上下文
-- **验证假设** - 不要凭感觉乱改
-- **解释原因** - 不只说“怎么修”，还要说“为何坏”
-- **防止复发** - 补上测试与校验策略
+- **先问再判** —— 先拿到完整错误上下文
+- **验证假设** —— 不要凭感觉乱改
+- **解释原因** —— 不只说“怎么修”，还要说“为何坏”
+- **防止复发** —— 补上测试与校验策略
