@@ -1,4 +1,4 @@
-# 移动端调试指南 (Mobile Debugging Guide)
+# 移动端调试指南（Mobile Debugging Guide）
 
 > **停止只靠 console.log() 调试！**  
 > 移动应用存在复杂原生层，文本日志远远不够。  
@@ -6,79 +6,79 @@
 
 ---
 
-## 🧠 移动端调试思维 (MOBILE DEBUGGING MINDSET)
+## 🧠 移动端调试思维（Mobile Debugging Mindset）
 
 ```
-Web Debugging:      Mobile Debugging:
+Web 调试（Web Debugging）:      移动端调试（Mobile Debugging）:
 ┌──────────────┐    ┌──────────────┐
-│  Browser     │    │  JS Bridge   │
-│  DevTools    │    │  Native UI   │
-│  Network Tab │    │  GPU/Memory  │
-└──────────────┘    │  Threads     │
+│  浏览器（Browser） │    │  JS Bridge（JS 桥） │
+│  DevTools（开发者工具） │    │  原生 UI（Native UI） │
+│  Network（网络）  │    │  GPU/内存（GPU/Memory） │
+└──────────────┘    │  线程（Threads） │
                     └──────────────┘
 ```
 
 **关键差异：**
-1. **原生层问题：** JS 看起来正常但应用崩溃，通常是原生层（Java/Obj-C）问题。
-2. **部署特性：** 不能像 Web 一样随意刷新，状态可能丢失或卡死。
-3. **网络调试：** SSL Pinning、代理配置更复杂。
-4. **设备日志：** `adb logcat` 与 `Console.app` 才是最终真相。
+1. **原生层问题：** JS（JavaScript）看起来正常但应用崩溃，通常是原生层（Java/Obj-C）问题。
+2. **部署特性：** 不能像 Web（网页）一样随意刷新，状态可能丢失或卡死。
+3. **网络调试：** SSL Pinning（证书锁定）、代理配置更复杂。
+4. **设备日志：** `adb logcat` 与 `Console.app`（控制台）才是最终真相。
 
 ---
 
-## 🚫 AI 调试反模式 (AI DEBUGGING ANTI-PATTERNS)
+## 🚫 AI 调试反模式（AI Debugging Anti-Patterns）
 
-| ❌ Default | ✅ Mobile-Correct |
-|------------|-------------------|
-| "Add console.logs" | 使用 Flipper / Reactotron |
-| "Check network tab" | 使用 Charles Proxy / Proxyman |
-| "It works on simulator" | **必须真机测试**（硬件相关 bug） |
-| "Reinstall node_modules" | **清理原生构建缓存**（Gradle/Pod） |
-| Ignored native logs | 读取 `logcat` / Xcode logs |
+| ❌ 默认做法（Default） | ✅ 移动端正确做法（Mobile-Correct） |
+|-----------------------|-----------------------------------|
+| 只会加 console.log（Add console.logs） | 使用 Flipper / Reactotron |
+| 只看 Network Tab（Check network tab） | 使用 Charles Proxy / Proxyman |
+| 只在模拟器可用（It works on simulator） | **必须真机测试**（硬件相关 bug） |
+| 只重装 node_modules（Reinstall node_modules） | **清理原生构建缓存**（Gradle/Pod） |
+| 忽视原生日志（Ignored native logs） | 读取 `logcat` / Xcode logs |
 
 ---
 
-## 1. 工具集 (The Toolset)
+## 1. 工具集（The Toolset）
 
 ### ⚡ React Native & Expo
 
-| Tool | Purpose | Best For |
-|------|---------|----------|
+| 工具（Tool） | 用途（Purpose） | 适用场景（Best For） |
+|-------------|---------------|---------------------|
 | **Reactotron** | 状态/API/Redux 观测 | JS 侧调试 |
 | **Flipper** | 布局/网络/数据库 | 原生 + JS Bridge 调试 |
 | **Expo Tools** | 元素检查器 | 快速 UI 核查 |
 
 ### 🛠️ 原生层（深度排查）
 
-| Tool | Platform | Command | Why Use? |
-|------|----------|---------|----------|
+| 工具（Tool） | 平台（Platform） | 命令（Command） | 用途（Why Use?） |
+|-------------|-----------------|----------------|----------------|
 | **Logcat** | Android | `adb logcat` | 原生崩溃、ANR |
-| **Console** | iOS | via Xcode | 原生异常、内存问题 |
-| **Layout Insp.** | Android | Android Studio | UI 层级错误 |
-| **View Insp.** | iOS | Xcode | UI 层级错误 |
+| **Console（控制台）** | iOS | via Xcode | 原生异常、内存问题 |
+| **Layout Inspector（布局检查）** | Android | Android Studio | UI 层级错误 |
+| **View Inspector（视图检查）** | iOS | Xcode | UI 层级错误 |
 
 ---
 
-## 2. 常见调试工作流 (Common Debugging Workflows)
+## 2. 常见调试工作流（Common Debugging Workflows）
 
-### 🕵️ “应用崩了” (Red Screen vs Crash to Home)
+### 🕵️ “应用崩了”（Red Screen vs Crash to Home）
 
-**场景 A：Red Screen（JS 错误）**
+**场景 A：红屏（Red Screen，JS 错误）**
 - **原因：** `undefined is not an object`、导入错误等。
 - **处理：** 直接看屏幕堆栈，通常定位清晰。
 
-**场景 B：闪退回桌面（原生崩溃）**
+**场景 B：闪退回桌面（Crash to Home，原生崩溃）**
 - **原因：** 原生模块失败、内存 OOM、权限声明缺失等。
 - **工具：**
-    - **Android:** `adb logcat *:E`（只看 Error）
-    - **iOS:** Xcode → Window → Devices → View Device Logs
+    - **Android：** `adb logcat *:E`（只看 Error（错误））
+    - **iOS：** Xcode → Window → Devices → View Device Logs（设备日志）
 
 > **💡 提示：** 应用启动即崩，通常 100% 与原生配置有关（Info.plist、AndroidManifest.xml）。
 
-### 🌐 “API 请求失败” (Network)
+### 🌐 “API 请求失败”（Network）
 
-**Web：** 打开 Chrome DevTools → Network。  
-**Mobile：** 通常没这么直接。
+**Web（网页端）：** 打开 Chrome DevTools（开发者工具）→ Network（网络）。  
+**移动端：** 通常没这么直接。
 
 **方案 1：Reactotron / Flipper**
 - 在监控面板中查看网络请求。
@@ -87,18 +87,18 @@ Web Debugging:      Mobile Debugging:
 - **复杂但强大。** 可观察原生 SDK 流量。
 - 需要在设备安装 SSL 证书。
 
-### 🐢 “UI 很卡” (Performance)
+### 🐢 “UI 很卡”（Performance）
 
 **不要猜，要测。**
-- **React Native：** Performance Monitor（摇一摇菜单）。
-- **Android：** 开发者选项中的 “Profile GPU Rendering”。
+- **React Native：** Performance Monitor（性能监视器，摇一摇菜单）。
+- **Android：** 开发者选项中的 “Profile GPU Rendering（GPU 渲染分析）”。
 - **常见问题：**
-    - **JS FPS 下降：** JS 线程计算过重。
+    - **JS FPS 下降：** JS 线程计算过重（FPS 为帧率）。
     - **UI FPS 下降：** 视图层级过深、图片过重、布局复杂。
 
 ---
 
-## 3. 平台特有噩梦 (Platform-Specific Nightmares)
+## 3. 平台特有噩梦（Platform-Specific Nightmares）
 
 ### Android
 - **Gradle Sync 失败：** 多见于 Java 版本冲突或重复类。
@@ -112,9 +112,9 @@ Web Debugging:      Mobile Debugging:
 
 ---
 
-## 📝 调试检查清单 (DEBUGGING CHECKLIST)
+## 📝 调试检查清单（Debugging Checklist）
 
-- [ ] **这是 JS 崩溃还是原生崩溃？**（红屏还是退桌面）
+- [ ] **这是 JS（JavaScript）崩溃还是原生崩溃？**（红屏还是退桌面）
 - [ ] **你清理过构建缓存吗？**（原生缓存很“顽固”）
 - [ ] **你在真机上测过吗？**（模拟器会掩盖并发问题）
 - [ ] **你看过原生日志吗？**（不仅是终端输出）
