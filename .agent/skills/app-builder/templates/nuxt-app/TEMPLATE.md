@@ -1,33 +1,33 @@
 ---
 name: nuxt-app
-description: Nuxt 4 全栈模版。Vue 3（Vapor 模式）、Pinia、Tailwind v4、Prisma。
+description: Nuxt 4 全栈模板。Vue 3（Vapor 模式）、Pinia、Tailwind v4、Prisma。
 ---
 
-# Nuxt 4 全栈模版（2026 版）
+# Nuxt 4 Full-Stack Template（2026 版）
 
-Nuxt 4 的现代全栈模版，使用 Vue 的 Vapor Mode（Vapor 模式）和 Tailwind v4 优化性能。
+Nuxt 4 的现代全栈模板，使用 Vue Vapor Mode（蒸汽模式）与 Tailwind v4 优化性能。
 
-## 技术栈
+## Tech Stack（技术栈）
 
-| 组件 | 技术 | 版本 / 备注 |
-| ---- | ---- | ----------- |
-| 框架 | Nuxt | v4.0+（App 目录结构） |
-| UI 引擎 | Vue | v3.6+（启用 Vapor 模式） |
-| 语言 | TypeScript | v5+（严格模式） |
-| 状态 | Pinia | v3+（Store 语法） |
-| 数据库 | PostgreSQL | Prisma ORM（对象关系映射） |
-| 样式 | Tailwind CSS | v4.0（Vite 插件，零配置） |
-| UI 库 | Nuxt UI | v3（Tailwind v4 原生） |
-| 验证 | Zod | Schema（模式）验证 |
+| Component | Technology | Version / Notes |
+| --- | --- | --- |
+| Framework（框架） | Nuxt | v4.0+（App Directory structure） |
+| UI Engine（UI 引擎） | Vue | v3.6+（Vapor Mode enabled） |
+| Language（语言） | TypeScript | v5+（Strict Mode） |
+| State（状态） | Pinia | v3+（Store 语法） |
+| Database（数据库） | PostgreSQL | Prisma ORM（对象关系映射） |
+| Styling（样式） | Tailwind CSS | v4.0（Vite 插件，零配置） |
+| UI Lib（组件库） | Nuxt UI | v3（Tailwind v4 原生） |
+| Validation（验证） | Zod | Schema validation（模式验证） |
 
 ---
 
-## 目录结构（Nuxt 4 标准）
+## Directory Structure（Nuxt 4 Standard）
 
 使用 `app/` 结构保持根目录整洁。
 
 ```
-<项目名>/
+project-name/
 ├── app/                  # 应用源码
 │   ├── assets/
 │   │   └── css/
@@ -51,19 +51,19 @@ Nuxt 4 的现代全栈模版，使用 Vue 的 Vapor Mode（Vapor 模式）和 Ta
 
 ---
 
-## 关键概念（2026）
+## Key Concepts（2026）
 
-| 概念 | 描述 | 未来更新 |
+| Concept | Description | Future Update |
 | ---- | ---- | -------- |
-| **App Directory（App 目录）** | `app/` | 分离应用源码和根配置文件。 |
+| **App Directory（App 目录）** | `app/` | 分离应用源码与根配置文件。 |
 | **Vapor Mode（Vapor 模式）** | 性能优先 | 无需虚拟 DOM 渲染（类似 SolidJS）。在 `nuxt.config` 中启用。 |
-| **Server Functions（服务端函数）** | RPC 风格调用 | 从客户端直接调用服务端函数（逐渐取代手动 API 路由）。 |
-| **Tailwind v4** | CSS 优先 | 直接在 CSS 中配置主题，无需 `tailwind.config.js`。 |
-| **Nuxt Islands（岛屿组件）** | 服务端组件 | 在服务端隔离渲染组件（`<NuxtIsland name="..." />`）。 |
+| **Server Functions（服务端函数）** | RPC 风格调用 | 从客户端直接调用服务端函数（逐渐替代手写 API routes）。 |
+| **Tailwind v4** | CSS-first（CSS 优先） | 主题直接在 CSS 中配置，无需 `tailwind.config.js`。 |
+| **Nuxt Islands（岛屿组件）** | Server Components | 在服务端隔离渲染组件（`<NuxtIsland name="..." />`）。 |
 
 ---
 
-## 环境变量
+## Environment Variables（环境变量）
 
 | 变量 | 目的 |
 | ---- | ---- |
@@ -73,23 +73,23 @@ Nuxt 4 的现代全栈模版，使用 Vue 的 Vapor Mode（Vapor 模式）和 Ta
 
 ---
 
-## 设置步骤
+## Setup Steps（设置步骤）
 
-1. 初始化项目：
+1. Initialize Project（初始化项目）:
 
     ```bash
-    npx nuxi@latest init <项目名>
+    npx nuxi@latest init my-app
     # 如果提示，选择 "Nuxt 4 structure（Nuxt 4 结构）"
     ```
 
-2. 安装核心依赖：
+2. Install Core Deps（安装核心依赖）:
 
     ```bash
     npm install @pinia/nuxt @prisma/client zod
     npm install -D prisma
     ```
 
-3. 设置 Tailwind v4：
+3. Setup Tailwind v4（设置 Tailwind v4）：
    安装 Vite 插件（新标准）：
 
     ```bash
@@ -108,7 +108,7 @@ Nuxt 4 的现代全栈模版，使用 Vue 的 Vapor Mode（Vapor 模式）和 Ta
     });
     ```
 
-4. 配置 CSS：
+4. Configure CSS（配置 CSS）：
    在 `app/assets/css/main.css` 中：
 
     ```css
@@ -118,7 +118,7 @@ Nuxt 4 的现代全栈模版，使用 Vue 的 Vapor Mode（Vapor 模式）和 Ta
     }
     ```
 
-5. 运行开发：
+5. Run Development（开发运行）:
 
     ```bash
     npm run dev
@@ -127,7 +127,7 @@ Nuxt 4 的现代全栈模版，使用 Vue 的 Vapor Mode（Vapor 模式）和 Ta
 
 ---
 
-## 最佳实践
+## Best Practices（最佳实践）
 
 - **Vapor Mode（Vapor 模式）**：为渲染密集型组件启用：
     ```ts
@@ -137,4 +137,4 @@ Nuxt 4 的现代全栈模版，使用 Vue 的 Vapor Mode（Vapor 模式）和 Ta
     ```
 - **Data Fetching（数据获取）**：对仅客户端任务使用 `server: false` 的 `useFetch`，或使用 Server Functions（服务端函数）以获得更好的类型安全。
 - **State（状态管理）**：使用 `defineStore`（Pinia）用于全局状态，Nuxt 的 `useState` 用于服务端/客户端共享的简单状态。
-- **Type Safety（类型安全）**：自动为 API 路由生成类型（`$fetch` 自动类型化）。
+- **Type Safety（类型安全）**：自动为 API routes 生成类型（`$fetch` 自动类型化）。
