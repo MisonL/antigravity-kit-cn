@@ -4,14 +4,14 @@ description: 生产环境部署原则与决策。包含安全部署工作流、�
 allowed-tools: Read, Glob, Grep, Bash
 ---
 
-# 部署规程（Deployment Procedures）
+# 部署规程
 
 > 旨在确保生产环境发布安全性的部署原则与决策逻辑。
 > **学习如何思考（THINK），而非死记硬背脚本模式。**
 
 ---
 
-## ⚠️ 如何使用此技能（How to Use This Skill）
+## ⚠️ 如何使用此技能
 
 此技能传授的是**部署原则**，而不是可以盲目复制的 Bash 脚本。
 
@@ -21,9 +21,9 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 1. 平台选择（Platform Selection）
+## 1. 平台选择
 
-### 决策树（Decision Tree）
+### 决策树
 
 ```
 您正在部署什么？
@@ -32,14 +32,14 @@ allowed-tools: Read, Glob, Grep, Bash
 │   └── Vercel, Netlify, Cloudflare Pages
 │
 ├── 简单 Web 应用
-│   ├── 托管服务（Managed） → Railway, Render, Fly.io
-│   └── 自主控制（Control） → VPS + PM2/Docker
+│   ├── 托管服务（managed） → Railway, Render, Fly.io
+│   └── 自主控制（control） → VPS + PM2/Docker
 │
-├── 微服务（Microservices）
-│   └── 容器编排（Container orchestration）
+├── 微服务（microservices）
+│   └── 容器编排（container orchestration）
 │
-└── 无服务器（Serverless）
-    └── Edge functions（边缘函数）, Lambda
+└── 无服务器（serverless）
+    └── 边缘函数（edge functions）, Lambda
 ```
 
 ### 不同平台具有不同的规程
@@ -54,18 +54,18 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 2. 部署前原则（Pre-Deployment Principles）
+## 2. 部署前原则
 
-### 四大验证类别（The 4 Verification Categories）
+### 四大验证类别
 
 | 类别 | 检查项 |
 | ---- | ------ |
 | **代码质量** | 测试通过、Lint（规范检查）清理完成、已通过评审 |
-| **构建（Build）** | 生产环境构建成功，无告警 |
-| **环境** | 环境变量已设置，凭据（Secrets）已更新 |
+| **构建（build）** | 生产环境构建成功，无告警 |
+| **环境** | 环境变量已设置，凭据（secrets）已更新 |
 | **安全性** | 已完成备份，回滚计划已就绪 |
 
-### 部署前检查清单（Pre-Deployment Checklist）
+### 部署前检查清单
 
 - [ ] 所有测试均已通过。
 - [ ] 代码已通过评审并获得批准。
@@ -78,9 +78,9 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 3. 部署工作流原则（Deployment Workflow Principles）
+## 3. 部署工作流原则
 
-### 5 阶段流程（The 5-Phase Process）
+### 5 阶段流程
 
 ```
 1. 准备（PREPARE）
@@ -99,7 +99,7 @@ allowed-tools: Read, Glob, Grep, Bash
    └── 一切正常？确认。有问题？回滚。
 ```
 
-### 阶段原则（Phase Principles）
+### 阶段原则
 
 | 阶段 | 原则 |
 | ---- | ---- |
@@ -111,13 +111,13 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 4. 部署后验证（Post-Deployment Verification）
+## 4. 部署后验证
 
 ### 验证内容
 
 | 检查项 | 为什么要查 |
 | ------ | ---------- |
-| **健康端点（Health）** | 确保服务正在运行 |
+| **健康端点（health）** | 确保服务正在运行 |
 | **错误日志** | 确认没有出现新的报错 |
 | **核心业务流** | 确保关键功能正常运行 |
 | **性能** | 响应时间在可接受范围内 |
@@ -131,25 +131,25 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 5. 回滚原则（Rollback Principles）
+## 5. 回滚原则
 
-### 何时回滚（When to Rollback）
+### 何时回滚
 
 | 现象 | 行动建议 |
 | ---- | -------- |
-| 服务宕机（Down） | 立即回滚 |
+| 服务宕机（down） | 立即回滚 |
 | 出现严重错误 | 回滚 |
 | 性能下降超过 50% | 考虑回滚 |
-| 细微问题 | 如果能快速修复，则进行“向前修复（Fix forward）” |
+| 细微问题 | 如果能快速修复，则进行“向前修复（fix forward）” |
 
 ### 不同平台的回滚策略
 
 | 平台 | 回滚方式 |
 | ---- | -------- |
-| **Vercel/Netlify** | 重新部署之前的提交记录（Commit） |
+| **Vercel/Netlify** | 重新部署之前的提交记录（commit） |
 | **Railway/Render** | 在控制面板中执行回滚 |
 | **VPS + PM2** | 还原备份并重启 |
-| **Docker** | 使用之前的镜像标签（Tag） |
+| **Docker** | 使用之前的镜像标签（tag） |
 | **K8s** | 执行 kubectl rollout undo |
 
 ### 回滚原则
@@ -161,15 +161,15 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 6. 零停机部署（Zero-Downtime Deployment）
+## 6. 零停机部署
 
 ### 核心策略
 
 | 策略 | 工作原理 |
 | ---- | -------- |
-| **滚动更新（Rolling）** | 逐个替换实例 |
-| **蓝绿部署（Blue-Green）** | 在不同环境间切换流量 |
-| **金丝雀发布（Canary）** | 逐渐转移流量 |
+| **滚动更新（rolling）** | 逐个替换实例 |
+| **蓝绿部署（blue-green）** | 在不同环境间切换流量 |
+| **金丝雀发布（canary）** | 逐渐转移流量 |
 
 ### 选择原则
 
@@ -181,11 +181,11 @@ allowed-tools: Read, Glob, Grep, Bash
 
 ---
 
-## 7. 应急响应程序（Emergency Procedures）
+## 7. 应急响应程序
 
 ### 服务宕机优先级
 
-1. **评估（Assess）**：现象是什么？
+1. **评估（assess）**：现象是什么？
 2. **快速修复**：如果不明确原因，先试着重启。
 3. **回滚**：如果重启无效，立即回滚。
 4. **调查**：在系统稳定后进行深入分析。
