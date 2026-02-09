@@ -1,7 +1,3 @@
----
-description: Antigravity Skills 创建与使用指南
----
-
 # Antigravity Skills（技能）
 
 > **Antigravity Kit 技能创建与使用指南**
@@ -12,7 +8,7 @@ description: Antigravity Skills 创建与使用指南
 
 虽然 Antigravity 的基础模型（如 Gemini）是强大的通用模型，但它们不知道你具体的项目上下文或团队标准。将每一条规则或工具都加载到 Agent（智能体）的上下文窗口会导致“工具膨胀”，增加成本、延迟并导致混乱。
 
-**Antigravity Skills** 是一种开放标准（open standard），通过**渐进式披露（Progressive Disclosure）**解决了这个问题。技能是一个专门的知识包，在需要之前处于休眠状态。只有当你的具体请求与技能的描述相匹配时，这些信息才会加载到 Agent 的上下文中。
+**Antigravity Skills** 是一种开放标准（open standard），通过**渐进式披露（progressive disclosure）**解决了这个问题。技能是一个专门的知识包，在需要之前处于休眠状态。只有当你的具体请求与技能的描述相匹配时，这些信息才会加载到 Agent（智能体）的上下文中。
 
 ---
 
@@ -23,15 +19,12 @@ description: Antigravity Skills 创建与使用指南
 | 范围 | 路径 | 描述 |
 | :--- | :--- | :--- |
 | **工作空间（Workspace）** | `<workspace-root>/.agent/skills/` | 仅在特定项目中可用 |
-| **全局（Global）** | `~/.gemini/antigravity/skills/` | 对所有工作区可用 |
-
-> 说明：工作空间技能适合项目/团队专用规范；全局技能适合个人通用工具与跨项目复用。
 
 ### 技能文件夹结构
 
 ```
 my-skill/
-├── SKILL.md      # （必选）元数据和说明指令
+├── SKILL.md      # （必选）元数据与指令
 ├── scripts/      # （可选）Python 或 Bash 脚本
 ├── references/   # （可选）文本、文档、模版
 └── assets/       # （可选）图片或 Logo
@@ -54,7 +47,7 @@ mkdir -p ~/.gemini/antigravity/skills/code-review
 ```markdown
 ---
 name: code-review
-description: 审查代码变更中的 Bug（缺陷）、风格问题和最佳实践。在 Review PR（审查 PR）或检查代码质量时使用。
+description: 审查代码变更中的 Bug（缺陷）、风格问题和最佳实践。在审查 PR（Pull Request）或检查代码质量时使用。
 ---
 
 # 代码审查（Code Review）
@@ -63,10 +56,10 @@ description: 审查代码变更中的 Bug（缺陷）、风格问题和最佳实
 
 ## 审查清单
 
-1.  **正确性（Correctness）**: 代码是否完成了它应该做的事？
-2.  **边缘情况（Edge cases）**: 是否处理了错误条件？
-3.  **风格（Style）**: 是否遵循项目规范？
-4.  **性能（Performance）**: 是否有明显的低效之处？
+1.  **正确性**：代码是否完成了它应该做的事？
+2.  **边缘情况（edge cases）**：是否处理了错误条件？
+3.  **风格**：是否遵循项目规范？
+4.  **性能**：是否有明显的低效之处？
 
 ## 如何提供反馈
 
@@ -75,7 +68,7 @@ description: 审查代码变更中的 Bug（缺陷）、风格问题和最佳实
 - 尽可能提供替代方案
 ```
 
-> **注意：** `SKILL.md` 文件顶部包含元数据（name, description），随后是指令。Agent 只会读取元数据，仅在需要时加载指令。
+> **注意：** `SKILL.md` 文件顶部包含元数据（name, description），随后是指令。Agent（智能体）只会读取元数据，仅在需要时加载指令。
 
 ### 试一试
 
@@ -115,7 +108,7 @@ if __name__ == "__main__":
 
 **提示词**：`审查 @demo_bad_code.py 文件`
 
-Agent 将自动识别 `code-review` 技能，加载信息并按照指令执行。
+Agent（智能体）将自动识别 `code-review` 技能，加载信息并按照指令执行。
 
 ---
 
@@ -168,7 +161,7 @@ description: 为新源文件添加标准的企业许可证头。
 
 **提示词**：`创建一个名为 data_processor.py 的 Python 脚本，打印 '你好，世界'。`
 
-Agent 将读取模版，按 Python 风格转换注释，并自动添加到文件开头。
+Agent（智能体）将读取模版，按 Python 风格转换注释，并自动添加到文件开头。
 
 ---
 
@@ -179,6 +172,6 @@ Agent 将读取模版，按 Python 风格转换注释，并自动添加到文件
 - ✅ 系统化最佳实践
 - ✅ 遵循代码审查规则
 - ✅ 自动添加 License 头
-- ✅ Agent 自动知道如何与你的团队协作
+- ✅ Agent（智能体）自动知道如何与你的团队协作
 
-现在，Agent 会自动执行这些操作，而不需要你每次都提醒它！
+现在，Agent（智能体）会自动执行这些操作，而不需要你每次都提醒它。
