@@ -3,51 +3,51 @@ name: astro-static
 description: Astro 静态站点模板原则。用于内容型网站、博客与文档。
 ---
 
-# Astro Static Site Template（静态站点模板）
+# Astro 静态站点模板
 
-## Tech Stack（技术栈）
+## 技术栈
 
-| Component | Technology |
+| 组件 | 技术 |
 | --- | --- |
-| Framework（框架） | Astro 4.x |
-| Content（内容） | MDX + Content Collections |
-| Styling（样式） | Tailwind CSS |
-| Integrations（集成） | Sitemap, RSS, SEO |
-| Output（输出） | Static / SSG |
+| 框架 | Astro 4.x |
+| 内容 | MDX + Content Collections |
+| 样式 | Tailwind CSS |
+| 集成 | Sitemap、RSS、SEO |
+| 输出 | Static/SSG |
 
 ---
 
-## Directory Structure（目录结构）
+## 目录结构
 
 ```
 project-name/
 ├── src/
-│   ├── components/      # .astro components
-│   ├── content/         # MDX content
+│   ├── components/      # .astro 组件
+│   ├── content/         # MDX 内容
 │   │   ├── blog/
-│   │   └── config.ts    # Collection schemas
-│   ├── layouts/         # Page layouts
-│   ├── pages/           # File-based routing
+│   │   └── config.ts    # 内容集合 Schema
+│   ├── layouts/         # 页面布局
+│   ├── pages/           # 基于文件的路由
 │   └── styles/
-├── public/              # Static assets
+├── public/              # 静态资源
 ├── astro.config.mjs
 └── package.json
 ```
 
 ---
 
-## Key Concepts（关键概念）
+## 关键概念
 
-| Concept | Description |
+| 概念 | 说明 |
 | --- | --- |
-| Content Collections（内容集合） | 使用 Zod schemas 的类型安全内容 |
-| Islands Architecture（群岛架构） | 仅对交互部分进行局部水合 |
-| Zero JS by default（默认零 JS） | 非必要不引入 JS |
-| MDX Support（MDX 支持） | 带组件的 Markdown |
+| 内容集合（Content Collections） | 使用 Zod Schema 的类型安全内容 |
+| 群岛架构（Islands Architecture） | 仅对交互部分进行局部水合 |
+| 默认零 JS（Zero JS by default） | 除非需要，否则输出静态 HTML |
+| MDX 支持（MDX Support） | 带组件的 Markdown |
 
 ---
 
-## Setup Steps（设置步骤）
+## 设置步骤
 
 1. `npm create astro@latest {{name}}`
 2. 添加集成：`npx astro add mdx tailwind sitemap`
@@ -57,20 +57,20 @@ project-name/
 
 ---
 
-## Deployment（部署）
+## 部署
 
-| Platform | Method |
+| 平台 | 方式 |
 | --- | --- |
-| Vercel | Auto-detected |
-| Netlify | Auto-detected |
-| Cloudflare Pages | Auto-detected |
-| GitHub Pages | Build + deploy action |
+| Vercel | 自动检测 |
+| Netlify | 自动检测 |
+| Cloudflare Pages | 自动检测 |
+| GitHub Pages | 构建 + 部署 Action（工作流） |
 
 ---
 
-## Best Practices（最佳实践）
+## 最佳实践
 
 - 使用 Content Collections 保证类型安全
-- 尽量使用静态生成
-- 仅在需要时添加 islands
+- 优先使用静态生成
+- 仅在需要时添加 Islands
 - 使用 Astro Image 优化图片
