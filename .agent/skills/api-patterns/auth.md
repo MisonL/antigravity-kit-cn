@@ -1,4 +1,4 @@
-# 认证模式（Authentication Patterns）
+# 认证模式
 
 > 根据用例选择认证模式。
 
