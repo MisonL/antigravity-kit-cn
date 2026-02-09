@@ -1,14 +1,14 @@
-# 版本控制策略（Versioning Strategies）
+# 版本控制策略
 
 > 从第一天起就规划 API 的演进。
 
 ## 决策因素
 
-| 策略 | 实现方式 | 权衡（Trade-offs） |
+| 策略 | 实现方式 | 权衡 |
 | :--- | :------- | :---------------- |
-| **URI** | /v1/users | 清晰，易于缓存 |
-| **Header** | Accept-Version: 1 | URL 更整洁，但版本发现较难 |
-| **Query** | ?version=1 | 易于添加，但显得凌乱 |
+| **URI（路径）** | /v1/users | 清晰，易于缓存 |
+| **Header（请求头）** | Accept-Version: 1 | URL 更整洁，但版本发现较难 |
+| **Query（查询参数）** | ?version=1 | 易于添加，但显得凌乱 |
 | **无（None）** | 小心演进 | 适合内部使用，对公共 API 风险高 |
 
 ## 版本哲学
