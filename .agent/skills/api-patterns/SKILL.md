@@ -4,18 +4,18 @@ description: API 设计原则与决策逻辑。包含 REST vs GraphQL vs tRPC �
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
-# API 模式（API Patterns）
+# API 模式
 
 > 针对 2025 年的 API 设计原则与决策逻辑。
 > **学习如何思考（THINK），而非机械复制固定模式。**
 
-## 🎯 选择性阅读规则（Selective Reading Rule）
+## 🎯 选择性阅读规则
 
 **仅阅读与当前请求相关的文件！** 请查阅内容地图，找到你所需的章节。
 
 ---
 
-## 📑 内容地图（Content Map）
+## 📑 内容地图
 
 | 文件 | 描述 | 阅读时机 |
 | ---- | ---- | -------- |
@@ -32,9 +32,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 🔗 相关技能（Related Skills）
+## 🔗 相关技能
 
-| 需求 | 技能（Skill） |
+| 需求 | 技能 |
 | ---- | ------------ |
 | API 落地实现 | `@[skills/backend-development]` |
 | 数据库结构设计 | `@[skills/database-design]` |
@@ -42,7 +42,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## ✅ 决策检查清单（Decision Checklist）
+## ✅ 决策检查清单
 
 在设计 API 之前：
 
@@ -56,9 +56,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## ❌ 反模式（Anti-Patterns）
+## ❌ 反模式
 
-**不要（Don't）：**
+**不要：**
 
 - 任何场景都默认使用 REST。
 - 在 REST 端点中使用动词（例如 `/getUsers`）。
@@ -66,7 +66,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 - 向客户端暴露内部代码错误。
 - 忽略频率限制。
 
-**推荐做法（Do）：**
+**推荐做法：**
 
 - 根据上下文选择 API 风格。
 - 询问客户端的具体需求。
@@ -75,7 +75,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 运行脚本（Script）
+## 运行脚本
 
 | 脚本 | 用途 | 命令 |
 | ---- | ---- | ---- |
