@@ -8,7 +8,7 @@ description: AI 驱动的设计智能系统，包含 50+ 风格、95+ 配色，�
 
 # ui-ux-pro-max
 
-面向 Web 与移动应用的综合设计指南。包含 50+ 风格、97 套配色、57 组字体搭配、99 条 UX 指南，以及跨 9 类技术栈的 25 种图表类型。提供可检索数据库与基于优先级的推荐。
+面向 Web 与移动应用的综合设计指南。包含 50+ 风格、95+ 配色、57 组字体搭配、99 条 UX 指南，以及跨 9 类技术栈的 25 种图表类型。提供可检索数据库与基于优先级的推荐。
 
 ## 前置条件
 
@@ -120,7 +120,6 @@ python3 .agent/.shared/ui-ux-pro-max/scripts/search.py "<keyword>" --stack html-
 ```
 
 可选栈：`html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`, `react-native`, `flutter`, `shadcn`, `jetpack-compose`
-, `jetpack-compose`
 ---
 
 ## 搜索参考
