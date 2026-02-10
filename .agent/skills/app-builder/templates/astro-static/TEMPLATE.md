@@ -1,76 +1,76 @@
 ---
 name: astro-static
-description: Astro 静态站点模板原则。用于内容型网站、博客与文档。
+description: Astro static site template principles（静态站点模板原则）。Content-focused websites（内容型网站）、blogs（博客）、documentation（文档）。
 ---
 
-# Astro 静态站点模板
+# Astro Static Site Template（静态站点模板）
 
-## 技术栈
+## Tech Stack（技术栈）
 
-| 组件 | 技术 |
+| Component（组件） | Technology（技术） |
 | --- | --- |
-| 框架 | Astro 4.x |
-| 内容 | MDX + Content Collections |
-| 样式 | Tailwind CSS |
-| 集成 | Sitemap、RSS、SEO |
-| 输出 | Static/SSG |
+| Framework（框架） | Astro 4.x |
+| Content（内容） | MDX + Content Collections |
+| Styling（样式） | Tailwind CSS |
+| Integrations（集成） | Sitemap（站点地图）、RSS、SEO |
+| Output（输出） | Static/SSG（静态/SSG） |
 
 ---
 
-## 目录结构
+## Directory Structure（目录结构）
 
 ```
 project-name/
 ├── src/
-│   ├── components/      # .astro 组件
-│   ├── content/         # MDX 内容
+│   ├── components/      # .astro components（.astro 组件）
+│   ├── content/         # MDX content（MDX 内容）
 │   │   ├── blog/
-│   │   └── config.ts    # 内容集合 Schema
-│   ├── layouts/         # 页面布局
-│   ├── pages/           # 基于文件的路由
+│   │   └── config.ts    # Collection schemas（内容集合 Schema）
+│   ├── layouts/         # Page layouts（页面布局）
+│   ├── pages/           # File-based routing（基于文件的路由）
 │   └── styles/
-├── public/              # 静态资源
+├── public/              # Static assets（静态资源）
 ├── astro.config.mjs
 └── package.json
 ```
 
 ---
 
-## 关键概念
+## Key Concepts（关键概念）
 
-| 概念 | 说明 |
+| Concept（概念） | Description（说明） |
 | --- | --- |
-| 内容集合（Content Collections） | 使用 Zod Schema 的类型安全内容 |
-| 群岛架构（Islands Architecture） | 仅对交互部分进行局部水合 |
-| 默认零 JS（Zero JS by default） | 除非需要，否则输出静态 HTML |
-| MDX 支持（MDX Support） | 带组件的 Markdown |
+| Content Collections（内容集合） | Type-safe content with Zod schemas（使用 Zod Schema 的类型安全内容） |
+| Islands Architecture（群岛架构） | Partial hydration for interactivity（仅对交互部分局部水合） |
+| Zero JS by default（默认零 JS） | Static HTML unless needed（除非需要，否则输出静态 HTML） |
+| MDX Support（MDX 支持） | Markdown with components（带组件的 Markdown） |
 
 ---
 
-## 设置步骤
+## Setup Steps（设置步骤）
 
 1. `npm create astro@latest {{name}}`
-2. 添加集成：`npx astro add mdx tailwind sitemap`
-3. 配置 `astro.config.mjs`
-4. 创建内容集合
+2. Add integrations（添加集成）：`npx astro add mdx tailwind sitemap`
+3. Configure `astro.config.mjs`（配置）
+4. Create content collections（创建内容集合）
 5. `npm run dev`
 
 ---
 
-## 部署
+## Deployment（部署）
 
-| 平台 | 方式 |
+| Platform（平台） | Method（方式） |
 | --- | --- |
-| Vercel | 自动检测 |
-| Netlify | 自动检测 |
-| Cloudflare Pages | 自动检测 |
-| GitHub Pages | 构建 + 部署 Action（工作流） |
+| Vercel | Auto-detected（自动检测） |
+| Netlify | Auto-detected（自动检测） |
+| Cloudflare Pages | Auto-detected（自动检测） |
+| GitHub Pages | Build + deploy action（构建 + 部署工作流） |
 
 ---
 
-## 最佳实践
+## Best Practices（最佳实践）
 
-- 使用 Content Collections 保证类型安全
-- 优先使用静态生成
-- 仅在需要时添加 Islands
-- 使用 Astro Image 优化图片
+- Use Content Collections for type safety（保证类型安全）
+- Leverage static generation（优先使用静态生成）
+- Add islands only where needed（仅在需要时添加 Islands）
+- Optimize images with Astro Image（使用 Astro Image 优化图片）
