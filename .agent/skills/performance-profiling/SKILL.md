@@ -16,7 +16,7 @@ allowed-tools: Read, Glob, Grep, Bash
 
 | 脚本                          | 用途                | 执行命令                                                 |
 | ----------------------------- | ------------------- | -------------------------------------------------------- |
-| `scripts/lighthouse_audit.py` | Lighthouse 性能审计 | `python scripts/lighthouse_audit.py https://example.com` |
+| `scripts/lighthouse_audit.py` | Lighthouse（性能审计工具）审计 | `python scripts/lighthouse_audit.py https://example.com` |
 
 ---
 
@@ -37,7 +37,7 @@ allowed-tools: Read, Glob, Grep, Bash
 | 阶段                   | 工具选择                                |
 | ---------------------- | --------------------------------------- |
 | 开发环境（Development） | 本地 Lighthouse                          |
-| CI/CD 流程              | Lighthouse CI                            |
+| CI/CD 流程              | Lighthouse CI（持续集成）                 |
 | 生产环境（Production）   | RUM（真实用户监控，Real User Monitoring） |
 
 ---
@@ -59,9 +59,9 @@ allowed-tools: Read, Glob, Grep, Bash
 | ---------------------- | ------------------------- |
 | 页面加载速度              | Lighthouse                          |
 | 打包体积（Bundle size）   | Bundle analyzer（包分析器）         |
-| 运行时性能                | DevTools（开发者工具）Performance 面板 |
-| 内存占用                  | DevTools（开发者工具）Memory 面板      |
-| 网络请求                  | DevTools（开发者工具）Network 面板     |
+| 运行时性能                | DevTools（开发者工具）Performance（性能）面板 |
+| 内存占用                  | DevTools（开发者工具）Memory（内存）面板      |
+| 网络请求                  | DevTools（开发者工具）Network（网络）面板     |
 
 ---
 
@@ -96,7 +96,7 @@ allowed-tools: Read, Glob, Grep, Bash
 | 长任务（Long tasks > 50ms） | 会导致 UI 阻塞                    |
 | 密集的小任务               | 可能存在批处理（Batching）的机会 |
 | 布局/绘制（Layout/paint）  | 渲染层的瓶颈                      |
-| 脚本执行（Script）         | JavaScript 执行开销过高           |
+| 脚本执行（Script）         | JavaScript（脚本语言）执行开销过高 |
 
 ### Memory 面板分析
 
@@ -104,7 +104,7 @@ allowed-tools: Read, Glob, Grep, Bash
 | ------------------------------- | ---------------- |
 | 堆内存持续增长（Growing heap）   | 可能存在内存泄漏 |
 | 被持有的对象过多（Retained）     | 检查引用关系     |
-| 脱离文档树的 DOM（Detached DOM） | 未被正确清理     |
+| Detached DOM（脱离文档树的 DOM，Document Object Model） | 未被正确清理     |
 
 ---
 
@@ -125,7 +125,7 @@ allowed-tools: Read, Glob, Grep, Bash
 
 | 优先级 | 动作                        | 预期影响 |
 | ------ | -------------------------- | ----------------- |
-| 1      | 开启资源压缩（Gzip/Brotli） | **高**            |
+| 1      | 开启资源压缩（Gzip/Brotli，压缩算法） | **高**            |
 | 2      | 图片懒加载（Lazy load）     | **高**            |
 | 3      | 路由层级的代码分割         | **高**            |
 | 4      | 配置静态资源缓存           | 中                |
@@ -137,8 +137,8 @@ allowed-tools: Read, Glob, Grep, Bash
 
 | ❌ 禁止（Don't）                 | ✅ 推荐（Do）                     |
 | ------------------------------- | -------------------------------- |
-| 凭空猜测性能问题                | 优先进行性能分析（Profile first） |
-| 进行微比例优化（Micro-optimize） | 优先修复最大的性能卡点           |
+| 凭空猜测性能问题                | 优先进行性能分析（Profile first，先分析） |
+| 进行微比例优化（Micro-optimize） | 优先修复最大的性能卡点            |
 | 过早优化                        | 在真正需要的时候再优化           |
 | 忽视真实用户的体验              | 参考 RUM 数据                    |
 
