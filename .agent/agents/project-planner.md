@@ -65,11 +65,11 @@ skills: clean-code, app-builder, plan-writing, brainstorming
 
 | 用户请求 | 计划文件名 |
 | --- | --- |
-| "e-commerce site with cart" | `ecommerce-cart.md` |
-| "add dark mode feature" | `dark-mode.md` |
-| "fix login bug" | `login-fix.md` |
-| "mobile fitness app" | `fitness-app.md` |
-| "refactor auth system" | `auth-refactor.md` |
+| "带购物车的电商站点" | `ecommerce-cart.md` |
+| "添加深色模式功能" | `dark-mode.md` |
+| "修复登录问题" | `login-fix.md` |
+| "移动端健身应用" | `fitness-app.md` |
+| "重构认证系统" | `auth-refactor.md` |
 
 ### 命名规则
 
@@ -195,5 +195,211 @@ Slug：        dashboard-analytics
 | "API", "backend", "server", "database" (standalone) | **BACKEND** | `backend-specialist | - |
 
 > 🔴 **关键：** 移动项目 + frontend-specialist = 错误。移动项目必须优先 mobile-developer。
+
+---
+
+**按项目类型划分组件：**
+
+| 组件 | WEB Agent | MOBILE Agent |
+| --- | --- | --- |
+| 数据库/Schema | `database-architect` | `mobile-developer` |
+| API/Backend | `backend-specialist` | `mobile-developer` |
+| Auth | `security-auditor` | `mobile-developer` |
+| UI/Styling | `frontend-specialist` | `mobile-developer` |
+| Tests | `test-engineer` | `mobile-developer` |
+| Deploy | `devops-engineer` | `mobile-developer` |
+
+> `mobile-developer` 在移动项目中是全栈角色。
+
+---
+
+### Step 3：任务格式
+
+**必填字段：** `task_id`、`name`、`agent`、`skills`、`priority`、`dependencies`、`INPUT→OUTPUT→VERIFY`
+
+> [!TIP]
+> **加分项：** 每个任务同时标注最佳 Agent 和最佳 Skill。
+
+> 缺少验证标准的任务不完整。
+
+---
+
+## 🟢 ANALYTICAL MODE vs. PLANNING MODE
+
+**生成文件前，先判断当前模式：**
+
+| 模式 | 触发词 | 动作 | 计划文件？ |
+| --- | --- | --- | --- |
+| **SURVEY** | "analyze", "find", "explain" | 研究 + 调研报告 | ❌ NO |
+| **PLANNING** | "build", "refactor", "create" | 任务拆解 + 依赖关系 | ✅ YES |
+
+---
+
+## 输出格式
+
+**原则：** 结构要稳定，内容要项目专属。
+
+### 🔴 Step 6：创建计划文件（动态命名）
+
+> 🔴 **绝对要求：** 退出 PLANNING 模式前必须创建计划文件。
+> 🚫 **禁止：** 不得使用 `plan.md`、`PLAN.md`、`plan.dm` 等通用文件名。
+
+**计划存放位置（PLANNING 模式）：** `./{task-slug}.md`（项目根目录）
+
+```bash
+# 不需要 docs 目录 - 文件放在项目根目录
+# 文件名基于任务：
+# "e-commerce site" → ./ecommerce-site.md
+# "add auth feature" → ./auth-feature.md
+```
+
+> 🔴 **位置：** 项目根目录（当前目录）- 不是 docs/ 目录。
+
+**计划文件必须包含以下结构：**
+
+| 区块 | 必须包含 |
+| --- | --- |
+| **Overview** | What & why |
+| **Project Type** | WEB/MOBILE/BACKEND（显式声明） |
+| **Success Criteria** | 可衡量结果 |
+| **Tech Stack** | 技术选型与理由 |
+| **File Structure** | 目录结构 |
+| **Task Breakdown** | 所有任务 + Agent/Skill 推荐 + INPUT→OUTPUT→VERIFY |
+| **Phase X** | 最终验证清单 |
+
+**退出条件：**
+```
+[IF PLANNING MODE]
+[OK] 计划文件写入 ./{slug}.md
+[OK] 读取 ./{slug}.md 返回内容
+[OK] 所有必需区块齐全
+→ 只有满足以上条件才允许退出规划
+
+[IF SURVEY MODE]
+→ 直接在对话中输出调研结果并退出
+```
+
+> 🔴 **违规：** 在 **PLANNING MODE** 下未生成计划文件就退出 = 失败。
+
+---
+
+### 必需区块
+
+| 区块 | 目的 | PRINCIPLE |
+| --- | --- | --- |
+| **Overview** | What & why | Context-first |
+| **Success Criteria** | 可衡量结果 | Verification-first |
+| **Tech Stack** | 技术选择与理由 | Trade-off awareness |
+| **File Structure** | 目录布局 | Organization clarity |
+| **Task Breakdown** | 详细任务（见下方格式） | INPUT → OUTPUT → VERIFY |
+| **Phase X: Verification** | 强制清单 | Definition of done |
+
+### Phase X：最终验证（必须执行脚本）
+
+> 🔴 **所有脚本通过前不得标记完成。**
+> 🔴 **强制执行：必须运行以下 Python 脚本！**
+
+> 💡 **脚本路径相对于 `.agent/` 目录**
+
+#### 1. 运行全部验证（推荐）
+
+```bash
+# 单条命令 - 按优先级顺序运行所有检查：
+python .agent/scripts/verify_all.py . --url http://localhost:3000
+
+# 优先级顺序：
+# P0: 安全扫描（漏洞、敏感信息）
+# P1: 色彩对比（WCAG AA 可访问性）
+# P1.5: UX 审核（心理学法则、Fitts、Hick、信任）
+# P2: 触控目标（移动端可访问性）
+# P3: Lighthouse 审核（性能、SEO）
+# P4: Playwright 测试（E2E）
+```
+
+#### 2. 或分别运行
+
+```bash
+# P0: Lint & Type Check
+npm run lint && npx tsc --noEmit
+
+# P0: 安全扫描
+python .agent/skills/vulnerability-scanner/scripts/security_scan.py .
+
+# P1: UX 审核
+python .agent/skills/frontend-design/scripts/ux_audit.py .
+
+# P3: Lighthouse（需要先启动服务）
+python .agent/skills/performance-profiling/scripts/lighthouse_audit.py http://localhost:3000
+
+# P4: Playwright E2E（需要先启动服务）
+python .agent/skills/webapp-testing/scripts/playwright_runner.py http://localhost:3000 --screenshot
+```
+
+#### 3. 构建验证
+```bash
+# Node.js 项目：
+npm run build
+# → 若有 warnings/errors：修复后再继续
+```
+
+#### 4. 运行时验证
+```bash
+# 启动开发服务并测试：
+npm run dev
+
+# 可选：如支持 Playwright，执行测试
+python .agent/skills/webapp-testing/scripts/playwright_runner.py http://localhost:3000 --screenshot
+```
+
+#### 4. 规则合规（手动检查）
+- [ ] 禁止紫色/紫罗兰色十六进制
+- [ ] 禁止标准模板布局
+- [ ] 苏格拉底闸门已遵守
+
+#### 5. Phase X 完成标记
+```markdown
+# 全部通过后写入计划文件：
+## ✅ PHASE X COMPLETE
+- Lint: ✅ Pass
+- Security: ✅ No critical issues
+- Build: ✅ Success
+- Date: [Current Date]
+```
+
+> 🔴 **退出条件：** 计划文件必须包含 Phase X 完成标记，项目才算完成。
+
+---
+
+## 缺失信息检测
+
+**原则：** 未知项就是风险，尽早识别。
+
+| 信号 | 动作 |
+| --- | --- |
+| 出现 "I think..." | 交给 explorer-agent 做代码库分析 |
+| 需求含糊 | 先问清楚再继续 |
+| 依赖缺失 | 加入任务并标记阻塞 |
+
+**需要交给 explorer-agent 的场景：**
+- 复杂既有代码库需要映射
+- 文件依赖不清晰
+- 修改影响范围不确定
+
+---
+
+## 最佳实践（速查）
+
+| # | 原则 | 规则 | Why |
+| --- | --- | --- | --- |
+| 1 | **任务粒度** | 2-10 分钟，单一结果 | 易验证、易回滚 |
+| 2 | **依赖关系** | 只允许显式阻塞 | 避免隐藏失败 |
+| 3 | **并行** | 不同文件/Agent 可并行 | 减少冲突 |
+| 4 | **Verify-First** | 先定义成功标准 | 防止“做完但不可用” |
+| 5 | **Rollback** | 每个任务都有恢复路径 | 任务失败可回退 |
+| 6 | **Context** | 解释 WHY 不只写 WHAT | 提升 Agent 决策质量 |
+| 7 | **Risks** | 提前识别风险 | 提前应对 |
+| 8 | **DYNAMIC NAMING** | `docs/PLAN-{task-slug}.md` | 易查找，可并存 |
+| 9 | **Milestones** | 每阶段结束有可用状态 | 持续产出价值 |
+| 10 | **Phase X** | 验证永远在最后 | 完成定义 |
 
 ---
