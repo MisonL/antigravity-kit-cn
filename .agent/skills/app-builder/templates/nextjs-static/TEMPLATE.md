@@ -1,65 +1,65 @@
 ---
 name: nextjs-static
-description: 适用于 Next.js 16、React 19 与 Tailwind v4 的现代模板，针对落地页与作品集优化。
+description: Modern template for Next.js 16, React 19 & Tailwind v4（现代模板）。Optimized for Landing pages（落地页） and Portfolios（作品集）。
 ---
 
-# Next.js 静态站点模板（现代版）
+# Next.js Static Site Template（Modern Edition，现代版）
 
-## 技术栈
+## Tech Stack（技术栈）
 
-| 组件 | 技术 | 说明 |
+| Component（组件） | Technology（技术） | Notes（说明） |
 | --- | --- | --- |
-| 框架 | Next.js 16+ | App Router、Turbopack、静态导出 |
-| 核心 | React 19 | 服务端组件（Server Components）、新 Hooks（New Hooks）、编译器（Compiler） |
-| 语言 | TypeScript | 严格模式（Strict Mode） |
-| 样式 | Tailwind CSS v4 | CSS-first 配置（无 js config）、Oxide Engine |
-| 动画 | Framer Motion | 布局动画与手势 |
-| 图标 | Lucide React | 轻量 SVG 图标 |
-| SEO | Metadata API | 原生 Next.js API（替代 next-seo） |
+| Framework（框架） | Next.js 16+ | App Router（应用路由）、Turbopack、Static Exports（静态导出） |
+| Core（核心） | React 19 | Server Components（服务端组件）、New Hooks（新 Hooks）、Compiler（编译器） |
+| Language（语言） | TypeScript | Strict Mode（严格模式） |
+| Styling（样式） | Tailwind CSS v4 | CSS-first configuration（无 js 配置）、Oxide Engine |
+| Animations（动画） | Framer Motion | 布局动画与手势 |
+| Icons（图标） | Lucide React | 轻量 SVG 图标 |
+| SEO | Metadata API | Native Next.js API（替代 next-seo） |
 
 ---
 
-## 目录结构
+## Directory Structure（目录结构）
 
-得益于 Tailwind v4（主题配置位于 CSS 内部），结构更精简。
+Streamlined structure thanks to Tailwind v4（主题配置位于 CSS 内）。
 
 ```
 project-name/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx    # 包含根级 SEO Metadata
-│   │   ├── page.tsx      # 落地页
-│   │   ├── globals.css   # 导入 Tailwind v4 与 @theme 配置
-│   │   ├── not-found.tsx # 自定义 404 页面
-│   │   └── (routes)/     # 路由组（about, contact...）
+│   │   ├── layout.tsx    # Contains root SEO Metadata（根级 SEO 元数据）
+│   │   ├── page.tsx      # Landing Page（落地页）
+│   │   ├── globals.css   # Import Tailwind v4 & @theme config（导入 Tailwind v4 与 @theme 配置）
+│   │   ├── not-found.tsx # Custom 404 page（自定义 404 页面）
+│   │   └── (routes)/     # Route groups（路由组，about, contact...）
 │   ├── components/
-│   │   ├── layout/       # 页头、页脚
-│   │   ├── sections/     # 主视觉、功能亮点、价格方案、CTA
-│   │   └── ui/           # 原子组件（Button, Card）
+│   │   ├── layout/       # Header, Footer（页头、页脚）
+│   │   ├── sections/     # Hero, Features, Pricing, CTA（主视觉、功能亮点、价格方案、CTA）
+│   │   └── ui/           # Atomic components（Button, Card）
 │   └── lib/
-│       └── utils.ts      # 辅助函数（cn, formatters）
-├── content/              # Markdown/MDX 内容
-├── public/               # 静态资源（images, fonts）
-├── next.config.ts        # Next.js 配置（TypeScript）
+│       └── utils.ts      # Helper functions（cn, formatters）
+├── content/              # Markdown/MDX content（内容）
+├── public/               # Static assets（images, fonts）
+├── next.config.ts        # Next.js Config（TypeScript）
 └── package.json
 ```
 
 ---
 
-## 静态导出配置
+## Static Export Config（静态导出配置）
 
-使用 `next.config.ts` 代替 `.js`，获得更好的类型安全。
+Using `next.config.ts` instead of `.js` for better type safety（更好的类型安全）。
 
 ```typescript
 // next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',        // 静态托管（S3、GitHub Pages）必需
+  output: 'export',        // Required for Static Hosting（S3、GitHub Pages）
   images: { 
-    unoptimized: true      // 不使用 Node.js 服务器图像优化时必需
+    unoptimized: true      // Required if not using Node.js server image optimization（不使用 Node.js 服务器图像优化时必需）
   },
-  trailingSlash: true,     // 推荐用于 SEO 并修复某些主机 404
+  trailingSlash: true,     // Recommended for SEO and fixing 404s on some hosts（推荐用于 SEO 并修复某些主机 404）
   reactStrictMode: true,
 };
 
@@ -68,9 +68,9 @@ export default nextConfig;
 
 ---
 
-## SEO 实现（Metadata API）
+## SEO Implementation（Metadata API）
 
-弃用 next-seo，直接在 layout.tsx 或 page.tsx 中配置。
+Deprecated next-seo. Configure directly in layout.tsx or page.tsx（直接在 layout.tsx 或 page.tsx 中配置）。
 
 ```typescript
 // src/app/layout.tsx
@@ -93,47 +93,47 @@ export const metadata: Metadata = {
 
 ---
 
-## 落地页模块
+## Landing Page Sections（落地页模块）
 
-| 模块 | 作用 | 建议组件 |
+| Section（模块） | Purpose（作用） | Suggested Component（建议组件） |
 | --- | --- | --- |
-| 主视觉（Hero） | 第一印象，H1 与主 CTA | `<HeroSection />` |
-| 功能亮点（Features） | 产品优势（Grid/Bento） | `<FeaturesGrid />` |
-| 社会证明（Social Proof） | 合作伙伴 Logo、用户数量 | `<LogoCloud />` |
-| 客户评价（Testimonials） | 用户评价 | `<TestimonialCarousel />` |
-| 价格方案（Pricing） | 服务计划 | `<PricingCards />` |
-| 常见问题（FAQ） | 问答（利于 SEO） | `<Accordion />` |
-| 转化模块（CTA） | 最终转化 | `<CallToAction />` |
+| Hero（主视觉） | First impression, H1 & Main CTA（第一印象、主 CTA） | `<HeroSection />` |
+| Features（功能亮点） | Product benefits（Grid/Bento 布局） | `<FeaturesGrid />` |
+| Social Proof（社会证明） | Partner logos, User numbers（合作伙伴 Logo、用户数量） | `<LogoCloud />` |
+| Testimonials（客户评价） | Customer reviews（用户评价） | `<TestimonialCarousel />` |
+| Pricing（价格方案） | Service plans（服务计划） | `<PricingCards />` |
+| FAQ（常见问题） | Questions & Answers（利于 SEO） | `<Accordion />` |
+| CTA（转化模块） | Final conversion（最终转化） | `<CallToAction />` |
 
 ---
 
-## 动画模式（Framer Motion）
+## Animation Patterns（Framer Motion）
 
-| 模式 | 用途 | 实现 |
+| Pattern（模式） | Usage（用途） | Implementation（实现） |
 | --- | --- | --- |
-| 淡入上移（Fade Up） | 标题、段落 | `initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}` |
-| 交错入场（Stagger） | 功能/卡片列表 | 使用带有 `staggerChildren` 的 variants |
-| 视差（Parallax） | 背景图像或浮动元素 | `useScroll` & `useTransform` |
-| 微交互（Micro-interactions） | 悬停按钮、点击效果 | `whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}` |
+| Fade Up（淡入上移） | Headlines, paragraphs（标题、段落） | `initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}` |
+| Stagger（交错入场） | Lists of Features/Cards（功能/卡片列表） | Use variants with `staggerChildren`（使用 variants） |
+| Parallax（视差） | Background images or floating elements（背景图像/浮动元素） | `useScroll` & `useTransform` |
+| Micro-interactions（微交互） | Hover buttons, click effects（悬停/点击效果） | `whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}` |
 
 ---
 
-## 设置步骤
+## Setup Steps（设置步骤）
 
-1. 初始化项目：
+1. Initialize Project（初始化项目）：
    ```bash
    npx create-next-app@latest my-site --typescript --tailwind --eslint
-   # 选择 “Yes”（App Router）
-   # 选择 “No”（是否自定义默认导入别名）
+   # Select "Yes" for App Router（选择 Yes 以启用 App Router）
+   # Select "No" for default import alias（选择 No 以保持默认导入别名）
    ```
 
-2. 安装辅助库：
+2. Install Auxiliary Libraries（安装辅助库）：
    ```bash
    npm install framer-motion lucide-react clsx tailwind-merge
-   # clsx 与 tailwind-merge 用于更好地处理动态 class
+   # clsx and tailwind-merge help handle dynamic classes（更好处理动态 class）
    ```
 
-3. 配置 Tailwind v4（位于 `src/app/globals.css`）：
+3. Configure Tailwind v4（位于 `src/app/globals.css`）：
    ```css
    @import "tailwindcss";
 
@@ -143,27 +143,27 @@ export const metadata: Metadata = {
    }
    ```
 
-4. 开发运行：
+4. Development（开发运行）：
    ```bash
    npm run dev --turbopack
    ```
 
 ---
 
-## 部署
+## Deployment（部署）
 
-| 平台 | 方式 | 重要说明 |
+| Platform（平台） | Method（方式） | Important Notes（重要说明） |
 | --- | --- | --- |
-| Vercel | Git Push（Git 推送） | 自动检测 Next.js，性能最佳 |
-| GitHub Pages | GitHub Actions（工作流） | 若非自定义域名，需要在 `next.config.ts` 设置 `basePath` |
-| AWS S3 / CloudFront | 上传 out 文件夹 | 确保错误文档（Error Document）配置为 `404.html` |
-| Netlify | Git Push（Git 推送） | 构建命令设为 `npm run build` |
+| Vercel | Git Push（Git 推送） | Auto-detects Next.js. Best for performance（性能最佳） |
+| GitHub Pages | GitHub Actions（工作流） | If not using a custom domain, set `basePath` in `next.config.ts` |
+| AWS S3 / CloudFront | Upload out folder（上传 out 文件夹） | Ensure Error Document is configured to `404.html` |
+| Netlify | Git Push（Git 推送） | Set build command to `npm run build` |
 
 ---
 
-## 现代最佳实践
+## Best Practices (Modern)（现代最佳实践）
 
-- **React Server Components（RSC）**：默认所有组件为 Server Components（服务端组件）。仅在需要状态（`useState`）或事件监听（`onClick`）时添加 `'use client'`。
-- **图片优化（Image Optimization）**：使用 `<Image />`，静态导出需设置 `unoptimized: true`，或改用外部图片 CDN（Cloudinary/Imgix）。
-- **字体优化（Font Optimization）**：使用 `next/font`（Google Fonts）自动托管字体并避免布局抖动。
-- **响应式（Responsive）**：移动优先，使用 Tailwind 前缀如 `sm:`、`md:`、`lg:`。
+- **React Server Components (RSC)**: Default all components to Server Components（服务端组件）. Only add `'use client'` when you need state (`useState`) or event listeners (`onClick`).
+- **Image Optimization（图片优化）**: Use the `<Image />` component but remember `unoptimized: true` for static export or use an external image CDN（Cloudinary/Imgix）.
+- **Font Optimization（字体优化）**: Use `next/font`（Google Fonts） to automatically host fonts and prevent layout shift.
+- **Responsive（响应式）**: Mobile-first design using Tailwind prefixes like `sm:`, `md:`, `lg:`.
