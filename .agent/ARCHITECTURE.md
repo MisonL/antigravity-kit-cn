@@ -8,9 +8,9 @@
 
 Antigravity Kit 是一个模块化系统，由以下部分组成：
 
-- **20 个专家 Agent** - 基于角色的 AI 人设
-- **36 个 Skills** - 面向领域的知识模块
-- **11 个 Workflows** - Slash 命令流程
+- **20 个专家 Agent（智能体）** - 基于角色的 AI 人设
+- **36 个 Skills（技能）** - 面向领域的知识模块
+- **11 个 Workflows（工作流）** - Slash 命令流程
 
 ---
 
@@ -19,8 +19,8 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 ```plaintext
 .agent/
 ├── ARCHITECTURE.md          # 本文件
-├── agents/                  # 20 个专家 Agent
-├── skills/                  # 36 个 Skills
+├── agents/                  # 20 个专家 Agent（智能体）
+├── skills/                  # 36 个 Skills（技能）
 ├── workflows/               # 11 个 Slash 命令
 ├── rules/                   # 全局规则
 └── scripts/                 # 主验证脚本
@@ -28,11 +28,11 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 
 ---
 
-## 🤖 Agents (20)
+## 🤖 Agents（智能体）(20)
 
 面向不同领域的专家型 AI 人设。
 
-| Agent                    | Focus                | Skills Used                                              |
+| Agent（智能体）           | Focus（侧重）         | Skills Used（使用的 Skills）                              |
 | ------------------------ | -------------------- | -------------------------------------------------------- |
 | `orchestrator`           | 多 Agent 协同        | parallel-agents, behavioral-modes                        |
 | `project-planner`        | 探索、任务规划       | brainstorming, plan-writing, architecture                |
@@ -57,13 +57,13 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 
 ---
 
-## 🧩 Skills (36)
+## 🧩 Skills（技能）(36)
 
 按任务上下文按需加载的模块化知识域。
 
-### Frontend & UI
+### Frontend & UI（前端与 UI）
 
-| Skill                   | Description                                                           |
+| Skill（技能）            | Description（说明）                                                    |
 | ----------------------- | --------------------------------------------------------------------- |
 | `react-best-practices`  | React 与 Next.js 性能优化（Vercel - 57 条规则）                      |
 | `web-design-guidelines` | Web UI 审计 - 100+ 规则（无障碍、UX、性能，Vercel）                  |
@@ -71,39 +71,39 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 | `frontend-design`       | UI/UX 模式与设计系统                                                  |
 | `ui-ux-pro-max`         | 50 种风格、21 套配色、50 组字体                                       |
 
-### Backend & API
+### Backend & API（后端与 API）
 
-| Skill                   | Description                    |
+| Skill（技能）            | Description（说明）             |
 | ----------------------- | ------------------------------ |
 | `api-patterns`          | REST、GraphQL、tRPC            |
 | `nestjs-expert`         | NestJS 模块、DI、装饰器        |
 | `nodejs-best-practices` | Node.js 异步与模块化实践       |
 | `python-patterns`       | Python 规范、FastAPI           |
 
-### Database
+### Database（数据库）
 
-| Skill             | Description                 |
+| Skill（技能）      | Description（说明）          |
 | ----------------- | --------------------------- |
 | `database-design` | Schema 设计、优化           |
 | `prisma-expert`   | Prisma ORM、迁移            |
 
-### TypeScript/JavaScript
+### TypeScript / JavaScript
 
-| Skill               | Description                         |
+| Skill（技能）        | Description（说明）                  |
 | ------------------- | ----------------------------------- |
 | `typescript-expert` | 类型编程与性能优化                  |
 
-### Cloud & Infrastructure
+### Cloud & Infrastructure（云与基础设施）
 
-| Skill                   | Description               |
+| Skill（技能）            | Description（说明）        |
 | ----------------------- | ------------------------- |
 | `docker-expert`         | 容器化与 Compose          |
 | `deployment-procedures` | CI/CD 与部署流程          |
 | `server-management`     | 基础设施管理              |
 
-### Testing & Quality
+### Testing & Quality（测试与质量）
 
-| Skill                   | Description              |
+| Skill（技能）            | Description（说明）       |
 | ----------------------- | ------------------------ |
 | `testing-patterns`      | Jest、Vitest、测试策略   |
 | `webapp-testing`        | E2E、Playwright          |
@@ -111,51 +111,51 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 | `code-review-checklist` | 代码审查标准             |
 | `lint-and-validate`     | Lint 与验证              |
 
-### Security
+### Security（安全）
 
-| Skill                   | Description              |
+| Skill（技能）            | Description（说明）       |
 | ----------------------- | ------------------------ |
 | `vulnerability-scanner` | 安全审计、OWASP          |
 | `red-team-tactics`      | 红队攻防策略             |
 
-### Architecture & Planning
+### Architecture & Planning（架构与规划）
 
-| Skill           | Description                |
+| Skill（技能）    | Description（说明）         |
 | --------------- | -------------------------- |
 | `app-builder`   | 全栈应用脚手架             |
 | `architecture`  | 系统设计模式               |
 | `plan-writing`  | 任务规划与拆解             |
 | `brainstorming` | 苏格拉底式提问             |
 
-### Mobile
+### Mobile（移动端）
 
-| Skill           | Description           |
+| Skill（技能）    | Description（说明）   |
 | --------------- | --------------------- |
 | `mobile-design` | 移动端 UI/UX 模式     |
 
-### Game Development
+### Game Development（游戏开发）
 
-| Skill              | Description           |
+| Skill（技能）       | Description（说明）   |
 | ------------------ | --------------------- |
 | `game-development` | 游戏逻辑与机制        |
 
-### SEO & Growth
+### SEO & Growth（SEO 与增长）
 
-| Skill              | Description                   |
+| Skill（技能）       | Description（说明）            |
 | ------------------ | ----------------------------- |
 | `seo-fundamentals` | SEO、E-E-A-T、Core Web Vitals |
 | `geo-fundamentals` | GenAI 优化                    |
 
-### Shell/CLI
+### Shell / CLI（命令行）
 
-| Skill                | Description               |
+| Skill（技能）         | Description（说明）        |
 | -------------------- | ------------------------- |
 | `bash-linux`         | Linux 命令与脚本          |
 | `powershell-windows` | Windows PowerShell        |
 
-### Other
+### Other（其他）
 
-| Skill                     | Description               |
+| Skill（技能）              | Description（说明）        |
 | ------------------------- | ------------------------- |
 | `clean-code`              | 编码规范（全局）          |
 | `behavioral-modes`        | Agent 行为模式            |
@@ -168,11 +168,11 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 
 ---
 
-## 🔄 Workflows (11)
+## 🔄 Workflows（工作流）(11)
 
 Slash 命令流程。通过 `/command` 调用。
 
-| Command          | Description              |
+| Command（命令）   | Description（说明）       |
 | ---------------- | ------------------------ |
 | `/brainstorm`    | 苏格拉底式需求探索       |
 | `/create`        | 创建新功能               |
@@ -188,7 +188,7 @@ Slash 命令流程。通过 `/command` 调用。
 
 ---
 
-## 🎯 Skill 加载协议
+## 🎯 Skills（技能）加载协议
 
 ```plaintext
 User Request → Skill Description Match → Load SKILL.md
@@ -198,7 +198,7 @@ User Request → Skill Description Match → Load SKILL.md
                                     Read scripts/
 ```
 
-### Skill 结构
+### Skills（技能）结构
 
 ```plaintext
 skill-name/
@@ -210,20 +210,20 @@ skill-name/
 
 ### 增强型 Skills（带 scripts/references）
 
-| Skill               | Files | Coverage                            |
+| Skill（技能）        | Files（文件） | Coverage（覆盖范围）                  |
 | ------------------- | ----- | ----------------------------------- |
 | `ui-ux-pro-max`     | 27    | 50 种风格、21 套配色、50 组字体     |
 | `app-builder`       | 20    | 全栈脚手架                          |
 
 ---
 
-## 📜 Scripts (2)
+## 📜 Scripts（脚本）(2)
 
 用于编排各 Skill 级脚本的主验证脚本。
 
 ### 主脚本
 
-| Script          | Purpose                                  | When to Use              |
+| Script（脚本）   | Purpose（用途）                           | When to Use（使用场景）   |
 | --------------- | ---------------------------------------- | ------------------------ |
 | `checklist.py`  | 基于优先级的验证（核心检查）             | 开发阶段、pre-commit     |
 | `verify_all.py` | 全量综合验证（全检查）                   | 部署前、发版前           |
@@ -264,7 +264,7 @@ python .agent/scripts/verify_all.py . --url http://localhost:3000
 
 ## 📊 统计
 
-| Metric              | Value                          |
+| Metric（指标）       | Value（值）                    |
 | ------------------- | ------------------------------ |
 | **Total Agents**    | 20                             |
 | **Total Skills**    | 36                             |
@@ -276,7 +276,7 @@ python .agent/scripts/verify_all.py . --url http://localhost:3000
 
 ## 🔗 快速索引
 
-| Need     | Agent                 | Skills                                |
+| Need（需求） | Agent（智能体）        | Skills（技能）                         |
 | -------- | --------------------- | ------------------------------------- |
 | Web App  | `frontend-specialist` | react-best-practices, frontend-design |
 | API      | `backend-specialist`  | api-patterns, nodejs-best-practices   |
