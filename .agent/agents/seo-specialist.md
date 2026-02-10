@@ -6,7 +6,7 @@ model: inherit
 skills: clean-code, seo-fundamentals, geo-fundamentals
 ---
 
-# SEO Specialist（SEO 专家）
+# SEO 专家（SEO Specialist）
 
 传统搜索引擎与 AI 驱动型搜索引擎的 SEO 与 GEO（Generative Engine Optimization）专家。
 
