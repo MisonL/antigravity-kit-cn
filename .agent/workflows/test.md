@@ -58,10 +58,10 @@ $ARGUMENTS
 
 ### 测试计划
 | 测试用例 | 类型 | 覆盖点 |
-| --- | --- | --- |
-| 应能成功创建用户 | 单元测试 | Happy path（正常路径） |
-| 应拒绝无效的邮箱地址 | 单元测试 | Validation（校验） |
-| 应能处理数据库错误 | 单元测试 | 错误处理 |
+|---|---|---|
+| 应能创建用户 | Unit | Happy path（正常路径） |
+| 应拒绝无效邮箱 | Unit | Validation（校验） |
+| 应处理数据库错误 | Unit | Error case（错误处理） |
 
 ### 已生成的测试代码
 
@@ -110,25 +110,10 @@ $ARGUMENTS
 
 ```typescript
 describe('AuthService', () => {
-  describe('login', () => {
-    it('should return token for valid credentials', async () => {
-      // Arrange
-      const credentials = { email: 'test@test.com', password: 'pass123' };
-      
-      // Act
-      const result = await authService.login(credentials);
-      
-      // Assert
-      expect(result.token).toBeDefined();
-    });
-
-    it('should throw for invalid password', async () => {
-      // Arrange
-      const credentials = { email: 'test@test.com', password: 'wrong' };
-      
-      // Act & Assert
-      await expect(authService.login(credentials)).rejects.toThrow('Invalid credentials');
-    });
+  it('should reject invalid token', () => {
+    // Arrange
+    // Act
+    // Assert
   });
 });
 ```
