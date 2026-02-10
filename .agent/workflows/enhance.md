@@ -16,7 +16,7 @@ $ARGUMENTS
 
 1. **了解当前状态**
    - 使用 `python .agent/scripts/session_manager.py info` 加载项目状态
-   - 理解现有功能与 Tech stack（技术栈）
+   - 理解现有功能与技术栈
 
 2. **规划变更**
    - 确定需要新增/变更的内容
