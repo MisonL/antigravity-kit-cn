@@ -1,6 +1,6 @@
 # 动态提问生成
 
-> **PRINCIPLE（原则）：** 提问的目的不是为了收集数据，而是为了**揭示架构层面的后果**。
+> **原则：** 提问的目的不是为了收集数据，而是为了**揭示架构层面的后果**。
 >
 > 每一个提问都必须关联到一个具体的实现决策，且该决策会影响成本、复杂度或时间线。
 
@@ -13,14 +13,15 @@
 一个好的问题不是问“您想要什么颜色？”，而是：
 
 ```markdown
-❌ BAD: "What authentication method?"
-✅ GOOD: "Should users sign up with email/password or social login?
+❌ 错误提问: "您想要哪种认证方式？"
+✅ 正确提问: "用户应该通过 邮箱/密码 还是 社交登录 进行注册？"
 
-   Impact:
-   - Email/Pass → Need password reset, hashing, 2FA infrastructure
-   - Social → OAuth providers, user profile mapping, less control
+影响:
 
-   Trade-off: Security vs. Development time vs. User friction"
+- 邮箱/密码 → 需要密码重置逻辑、哈希加密存储、2FA（双因素认证）基础设施
+- 社交登录 → 涉及 OAuth（授权协议）提供商、用户资料映射，但自主控制力较弱
+
+权衡: 安全性 vs 开发时间 vs 用户流失率
 ```
 
 ### 2. 背景先行
@@ -29,23 +30,23 @@
 
 | 背景 | 提问焦点 |
 | ---- | -------- |
-| **Greenfield（新项目）** | 基础设施决策：技术栈、托管方式、规模规划 |
-| **Feature Addition（功能新增）** | 集成点、现有模式、破坏性变更的可能性 |
-| **Refactor（重构）** | 为何重构？性能？可维护性？现有什么问题？ |
-| **Debug（调试）** | 现象 → 根本原因 → 复现路径 |
+| **新项目（Greenfield）** | 基础设施决策：技术栈、托管方式、规模规划 |
+| **功能新增** | 集成点、现有模式、破坏性变更的可能性 |
+| **重构（Refactor）** | 为何重构？性能？可维护性？现有什么问题？ |
+| **调试** | 现象 → 根本原因 → 复现路径 |
 
 ### 3. 最小可行提问
 
 **原则：** 每个问题都必须能消除实现路径上的一个分叉。
 
 ```
-Before Question:
-├── Path A: Do X (5 min)
-├── Path B: Do Y (15 min)
-└── Path C: Do Z (1 hour)
+提问前:
+├── 路径 A: 执行 X (5 分钟)
+├── 路径 B: 执行 Y (15 分钟)
+└── 路径 C: 执行 Z (1 小时)
 
-After Question:
-└── Path Confirmed: Do X (5 min)
+提问后:
+└── 路径已确认: 执行 X (5 分钟)
 ```
 
 如果一个提问不能减少实现路径的选择范围 → **请删掉它**。
@@ -53,12 +54,12 @@ After Question:
 ### 4. 生成数据而非假设
 
 ```markdown
-❌ ASSUMPTION: "User probably wants Stripe for payments"
-✅ QUESTION: "Which payment provider fits your needs?
+❌ 错误假设: "用户可能想用 Stripe 处理支付"
+✅ 正确提问: "哪种支付服务商符合您的需求？"
 
-   Stripe → Best documentation, 2.9% + $0.30, US-centric
-   LemonSqueezy → Merchant of Record, 5% + $0.50, global taxes
-   Paddle → Complex pricing, handles EU VAT, enterprise focus"
+Stripe → 文档最全, 2.9% + $0.30, 核心市场在欧美
+LemonSqueezy → 代收代缴全球税费, 5% + $0.50, 全球化支持好
+Paddle → 价格较复杂, 处理欧盟增值税, 偏向企业级
 ```
 
 ---
@@ -66,109 +67,112 @@ After Question:
 ## 📋 提问生成算法
 
 ```
-INPUT: User request + Context (greenfield/feature/refactor/debug)
+输入: 用户请求 + 背景（新项目/功能/重构/调试）
 │
-├── STEP 1: Parse Request
-│   ├── Extract domain (ecommerce, auth, realtime, cms, etc.)
-│   ├── Extract features (explicit and implied)
-│   └── Extract scale indicators (users, data volume, frequency)
+├── 步骤 1: 解析请求
+│   ├── 提取领域（电商, 认证, 实时通讯, CMS（内容管理系统）等）
+│   ├── 提取功能（显式的和隐喻的）
+│   └── 提取规模指标（用户量, 数据量, 频率）
 │
-├── STEP 2: Identify Decision Points
-│   ├── What MUST be decided before coding? (blocking)
-│   ├── What COULD be decided later? (deferable)
-│   └── What has ARCHITECTURAL impact? (high-leverage)
+├── 步骤 2: 识别决策点
+│   ├── 编写代码前“必须”决定什么？（阻塞性决策）
+│   ├── 哪些决策可以延后？（可延迟决策）
+│   └── 哪些具有“架构性”影响？（高杠杆决策）
 │
-├── STEP 3: Generate Questions (Priority Order)
-│   ├── P0: Blocking decisions (cannot proceed without answer)
-│   ├── P1: High-leverage (affects >30% of implementation)
-│   ├── P2: Medium-leverage (affects specific features)
-│   └── P3: Nice-to-have (edge cases, optimization)
+├── 步骤 3: 生成问题（按优先级排序）
+│   ├── P0: 阻塞性决策（不回答则无法继续）
+│   ├── P1: 高杠杆决策（影响 >30% 的实现工作）
+│   ├── P2: 中等杠杆（影响特定功能）
+│   └── P3: 可选（边缘情况, 优化项）
 │
-└── STEP 4: Format Each Question
-    ├── What: Clear question
-    ├── Why: Impact on implementation
-    ├── Options: Trade-offs (not just A vs B)
-    └── Default: What happens if user doesn't answer
+└── 步骤 4: 格式化每个提问
+    ├── 内容: 清晰的问题
+    ├── 理由: 对实现的影响
+    ├── 选项: 权衡方案（不只是 A vs B）
+    └── 默认值: 如果用户不回答，我们会怎么做
 ```
 
 ---
 
 ## 🎯 特定领域问题库
 
-### E-Commerce（电子商务）
+### 电子商务
 
 | 提问 | 为什么这很重要 | 权衡方案 |
 | ---- | -------------- | -------- |
 | **是单商户还是多商户？** | 多商户 → 需要分佣逻辑、卖家工作台、分账支付 | +收入, -开发复杂度 |
 | **是否需要库存跟踪？** | 需要库存表、预留逻辑、低库存警报 | +准确度, -开发时间 |
-| **是数字产品还是实物产品？** | 数字 → 涉及下载链接, 无物流 | 实物 → 涉及物流 API（应用程序接口）, 快递跟踪 |
+| **是数字产品还是实物产品？** | 数字 → 涉及下载链接, 无物流 | 实物 → 涉及物流 API（接口）, 快递跟踪 |
 | **订阅制还是单次购买？** | 订阅 → 涉及循环计费、催收、按比例退款逻辑 | +长期收入, -开发复杂度 |
 
-### Authentication（身份验证）
+### 身份验证
 
 | 提问 | 为什么这很重要 | 权衡方案 |
 | ---- | -------------- | -------- |
 | **是否需要社交登录？** | 引入 OAuth（授权协议）提供商 vs 编写密码重置等基础设施 | +UX（用户体验）, -自主控制权 |
-| **是否需要 RBAC（基于角色的访问控制）权限？** | 需要 RBAC 表、策略执行逻辑、管理员 UI（界面） | +安全性, -开发时间 |
-| **是否需要 2FA（双因素认证）？** | 涉及 TOTP（一次性口令）/SMS（短信）基础设施、备份验证码、恢复流程 | +安全性, -用户注册损耗 |
+| **是否需要基于角色的权限（RBAC）？** | 需要 RBAC 表、策略执行逻辑、管理员 UI | +安全性, -开发时间 |
+| **是否需要双因素认证（2FA）？** | 涉及 TOTP/SMS（一次性口令/短信）基础设施、备份验证码、恢复流程 | +安全性, -用户注册损耗 |
 | **是否需要邮件验证？** | 涉及验证令牌、邮件服务、重发逻辑 | +安全性, -注册流失率 |
 
-### Real-time（实时）
+### 实时通讯
 
 | 提问 | 为什么这很重要 | 权衡方案 |
 | ---- | -------------- | -------- |
-| **采用 WebSocket（长连接）还是 Polling（轮询）？** | WebSocket → 涉及服务器扩展、连接管理 | Polling → 更简单，但延迟高 |
+| **采用 WebSocket 还是轮询（Polling）？** | WebSocket → 涉及服务器扩展、连接管理 | 轮询 → 更简单，但延迟高 |
 | **预期并发用户数？** | <100 → 单机即可, >1000 → 需要 Redis（内存数据库）发布/订阅, >10k → 需要专用基础架构 | +可扩展性, -开发复杂度 |
 | **消息是否需要持久化？** | 涉及历史消息表、存储成本、分页查询 | +用户体验, -存储成本 |
 | **是瞬时消息还是持久消息？** | 瞬时 → 仅存储于内存, 持久 → 发送前先入库 | +可靠性, -延迟增加 |
 
-### Content/CMS（内容管理系统）
+### 内容管理
 
 | 提问 | 为什么这很重要 | 权衡方案 |
 | ---- | -------------- | -------- |
-| **采用 Rich Text（富文本）还是 Markdown（标记语言）？** | Rich Text → 涉及内容清洗、XSS 风险 | Markdown → 简单，无 WYSIWYG（所见即所得） |
-| **是否需要 Draft/Publish Workflow（草稿/发布工作流）？** | 涉及状态字段、定时任务、版本控制 | +内容管控, -开发复杂度 |
+| **采用富文本还是 Markdown？** | 富文本 → 涉及内容清洗、XSS 风险 | Markdown → 简单，无所见即所得（WYSIWYG） |
+| **是否需要 草稿/发布 工作流？** | 涉及状态字段、定时任务、版本控制 | +内容管控, -开发复杂度 |
 | **如何处理媒体文件？** | 涉及上传端点、存储、内容优化（裁剪/压缩） | +功能丰富, -开发时间 |
-| **是否需要 Multi-language（多语言）？** | 涉及 i18n（国际化）表、翻译 UI、回退逻辑 | +触达范围, -开发复杂度 |
+| **是否需要多语言（Multi-language）？** | 涉及 i18n（国际化）表、翻译 UI、回退逻辑 | +触达范围, -开发复杂度 |
 
 ---
 
 ## 📐 动态提问模板
 
 ```markdown
-Based on your request for [DOMAIN] [FEATURE]:
+基于您对 [领域] [功能] 的需求：
 
-## 🔴 CRITICAL (Blocking Decisions)
+## 🔴 关键决策（阻塞性决策）
 
-### 1. **[DECISION POINT]**
+### 1. **[决策点]**
 
-**Question:** [Clear, specific question]
+**提问:** [清晰、具体的提问]
 
-**Why This Matters:**
-- [Explain architectural consequence]
-- [Affects: cost / complexity / timeline / scale]
+**为什么这很重要:**
 
-**Options:**
-| Option | Pros | Cons | Best For |
+- [解释架构层面的后果]
+- [影响: 成本 / 复杂度 / 时间线 / 规模]
+
+**候选项:**
+| 选项 | 优点 | 缺点 | 最适用场景 |
 |--------|------|------|----------|
-| A | [Advantage] | [Disadvantage] | [Use case] |
-| B | [Advantage] | [Disadvantage] | [Use case] |
+| A | [优势] | [劣势] | [用例] |
+| B | [优势] | [劣势] | [用例] |
 
-**If Not Specified:** [Default choice + rationale]
-
----
-
-## 🟡 HIGH-LEVERAGE (Affects Implementation)
-
-### 2. **[DECISION POINT]**
-[Same format]
+**如果不指定:** [默认选择 + 理由]
 
 ---
 
-## 🟢 NICE-TO-HAVE (Edge Cases)
+## 🟡 高杠杆决策（影响实现工作）
 
-### 3. **[DECISION POINT]**
-[Same format]
+### 2. **[决策点]**
+
+[同上格式]
+
+---
+
+## 🟢 可选决策（边缘情况）
+
+### 3. **[决策点]**
+
+[同上格式]
 ```
 
 ---
@@ -198,35 +202,35 @@ Based on your request for [DOMAIN] [FEATURE]:
 ## 🎭 示例：全流程提问生成
 
 ```
-USER REQUEST: "Build an Instagram clone"
+用户请求: "做一个 Instagram 克隆版"
 
-STEP 1: Parse
-├── Domain: Social Media
-├── Features: Photo sharing, engagement (likes/comments), user profiles
-├── Implied: Feed, following, authentication
-└── Scale: Potentially high (social apps go viral)
+步骤 1: 解析
+├── 领域: 社交媒体
+├── 功能: 照片分享, 互动 (点赞/评论), 用户资料
+├── 隐含需求: 动态流（Feed）, 关注功能, 身份验证
+└── 规模: 潜在的高并发 (社交应用易病毒式传播)
 
-STEP 2: Decision Points
-├── Blocking: Storage strategy, authentication method, feed type
-├── High-leverage: Real-time notifications, data model complexity
-└── Deferable: Analytics, advanced search, reels/video
+步骤 2: 决策点
+├── 阻塞性: 存储策略, 认证方式, 动态流类型
+├── 高杠杆: 实时通知, 数据模型复杂度
+└── 可延迟: 数据分析, 高级搜索, 短视频
 
-STEP 3: Generate Questions (Priority)
+步骤 3: 生成提问 (优先级)
 
-P0 (Blocking):
-1. Storage Strategy → Affects architecture, cost, speed
-2. Feed Algorithm → Affects database queries, complexity
-3. Auth Method → Affects dev time, UX, security
+P0 (阻塞):
+1. 存储策略 → 影响架构、成本、速度
+2. 动态流算法 → 影响数据库查询、复杂度
+3. 认证方式 → 影响开发时间、体验、安全
 
-P1 (High-leverage):
-4. Real-time Notifications → WebSocket vs polling
-5. Media Processing → Client-side vs server-side optimization
+P1 (高杠杆):
+4. 实时通知 → WebSocket vs 轮询
+5. 媒体处理 → 客户端 vs 服务端优化
 
-P2 (Deferable):
-6. Story/Reels → Major feature creep, defer to v2
-7. DM/Chat → Separate subsystem, defer to v2
+P2 (可延迟):
+6. 故事/短视频 → 功能蔓延严重，延至 v2（第二版）
+7. 私信/聊天 → 独立的子系统，延至 v2（第二版）
 
-STEP 4: Format Output
+步骤 4: 格式化输出
 ```
 
 ---
@@ -234,113 +238,113 @@ STEP 4: Format Output
 ## 📊 生成的输出示例
 
 ```
-Based on your Instagram clone request:
+针对您的 Instagram 克隆版需求：
 
-## 🔴 CRITICAL DECISIONS (Cannot Proceed Without Answers)
+## 🔴 关键决策（不回答则无法继续）
 
-### 1. **Photo Storage Strategy**
+### 1. **照片存储策略**
 
-**Question:** Where will user photos be stored and served?
+**提问:** 用户照片将存储并托管在何处？
 
-**Why This Matters:**
-- Affects: Monthly hosting costs, page load speed, CDN complexity
-- High-volume social apps: 1000 users × 10 photos × 2MB = 20GB storage
+**为什么这很重要:**
+- 影响: 每月托管成本、页面加载速度、CDN（内容分发网络）复杂度
+- 高流量社交应用示例: 1000 用户 × 10 张图 × 2MB = 20GB 存储需求
 
-**Options:**
-| Option | Cost | Speed | Complexity | Best For |
+**候选项:**
+| 选项 | 成本 | 速度 | 复杂度 | 最适用场景 |
 |--------|------|-------|------------|----------|
-| **Cloudinary** | $89/mo (25GB) | Fast (CDN) | Low | MVP, rapid launch |
-| **AWS S3 + CloudFront** | $0.023/GB | Fast (CDN) | Medium | Production, cost-optimized |
-| **Supabase Storage** | Free tier 1GB | Medium | Low | Small scale, simple |
-| **Local Storage** | Server cost | Slow | Low | Development only |
+| **Cloudinary** | $89/月 (25GB) | 极快 (自带 CDN（内容分发网络）) | 低 | MVP（最小可行产品）, 快速上线 |
+| **AWS S3 + CloudFront** | $0.023/GB | 极快 (CDN（内容分发网络）) | 中 | 生产环境, 成本优化 |
+| **Supabase Storage** | 免费额度 1GB | 中等 | 低 | 小规模, 简单应用 |
+| **本地存储** | 仅服务器成本 | 慢 | 低 | 仅限开发调试 |
 
-**If Not Specified:** Cloudinary (balanced for MVP)
+**如果不指定:** 默认选择 Cloudinary (均衡了 MVP（最小可行产品）开发效率)
 
 ---
 
-### 2. **Feed Algorithm Choice**
+### 2. **动态流（Feed）算法选择**
 
-**Question:** How should the main feed work?
+**提问:** 主动态流应如何运作？
 
-**Why This Matters:**
-- Affects: Database query complexity, caching strategy, development time
-- Algorithmic feeds require ML infrastructure, ranking signals
+**为什么这很重要:**
+- 影响: 数据库查询复杂度、缓存策略、开发时间
+- 算法推荐流需要机器学习基础架构和排序信号支持
 
-**Options:**
-| Option | Complexity | Database Impact | Best For |
+**候选项:**
+| 选项 | 复杂度 | 数据库影响 | 最适用场景 |
 |--------|------------|-----------------|----------|
-| **Chronological** | Low | Simple query | Early stage, transparency |
-| **Follow-Only** | Medium | JOIN with pagination | Most social apps |
-| **Algorithmic** | High | Pre-computed feed tables | Instagram competitor |
+| **时间轴（倒序）** | 低 | 简单查询 | 早期阶段, 信息透明 |
+| **仅关注者可见** | 中 | 关联查询 + 分页 | 大多数社交应用的基础 |
+| **算法推荐** | 高 | 预计算动态流表 | 专业的 Instagram 竞品 |
 
-**If Not Specified:** Follow-Only (balanced for social app)
+**如果不指定:** 默认选择 “仅关注者可见” (社交应用的平衡选择)
 
 ---
 
-### 3. **Authentication Approach**
+### 3. **身份验证方案**
 
-**Question:** How do users sign up and login?
+**提问:** 用户如何注册和登录？
 
-**Why This Matters:**
-- Affects: Development time (2-5 hours), security posture, UX friction
+**为什么这很重要:**
+- 影响: 开发时间 (2-5 小时), 安全等级, 用户体验摩擦力
 
-**Options:**
-| Option | Dev Time | Security | UX | Best For |
+**候选项:**
+| 选项 | 开发耗时 | 安全性 | 用户体验 | 最适用场景 |
 |--------|----------|----------|-----|----------|
-| **Email/Password** | 4-5 hrs | High (if 2FA) | Medium | Full control needed |
-| **Social Only** | 1-2 hrs | Provider-dependent | Smooth | B2C, rapid launch |
-| **Magic Link** | 2-3 hrs | Medium | Very smooth | Security-focused |
-| **Clerk/Auth0** | 1 hr | High | Smooth | Fastest to market |
+| **邮箱/密码** | 4-5 小时 | 高 (若加 2FA) | 中 | 需要完全自主控制 |
+| **仅限社交登录** | 1-2 小时 | 取决于提供商 | 极佳 | B2C 应用, 快速获客 |
+| **魔术链接（Email/邮箱）** | 2-3 小时 | 中 | 较好 | 关注安全, 无需密码 |
+| **Clerk/Auth0** | 1 小时 | 极高 | 极佳 | 追求最快上线速度 |
 
-**If Not Specified:** Clerk (fastest for MVP)
+**如果不指定:** 默认选择 Clerk (对 MVP（最小可行产品）而言最快)
 
 ---
 
-## 🟡 HIGH-LEVERAGE (Affects Architecture)
+## 🟡 高杠杆决策（影响架构）
 
-### 4. **Real-time Notifications**
+### 4. **实时通知**
 
-**Question:** Do users need instant notifications for likes/comments?
+**提问:** 用户在获得点赞/评论时是否需要“即时”通知？
 
-**Why This Matters:**
-- WebSocket adds infrastructure complexity (Redis pub/sub for scaling)
-- Polling is simpler but higher latency
+**为什么这很重要:**
+- WebSocket（长连接）会增加基础设施复杂度 (扩展时需要 Redis（内存数据库）发布/订阅)
+- 轮询更简单但延迟较高
 
-**Options:**
-| Option | Complexity | Scale Cost | Best For |
+**候选项:**
+| 选项 | 复杂度 | 扩展成本 | 最适用场景 |
 |--------|------------|------------|----------|
-| **WebSocket + Redis** | High | $10+/mo | >1000 concurrent users |
-| **Polling (30s)** | Low | DB queries | <1000 users |
-| **No Real-time** | None | None | MVP, validate first |
+| **WebSocket（长连接） + Redis（内存数据库）** | 高 | $10+/月 | >1000 并发用户 |
+| **长轮询 (30s)** | 低 | 数据库查询开销 | <1000 用户 |
+| **无实时需求** | 无 | 无 | MVP（最小可行产品）阶段, 先行验证 |
 
-**If Not Specified:** Polling for MVP (defer WebSocket until validated)
-
----
-
-## 🟢 NICE-TO-HAVE (Defer to v2)
-
-### 5. **Video/Reels Support**
-- Major complexity (video processing, streaming infrastructure)
-- Recommendation: Launch with photos only, add video after validation
-
-### 6. **Direct Messaging**
-- Separate subsystem (chat infrastructure different from feed)
-- Recommendation: Use Pusher/Stream for real-time or defer entirely
+**如果不指定:** 默认选择 “长轮询” (在验证需求前保持简单)
 
 ---
 
-## 📋 Summary
+## 🟢 优化/次要决策（可延至 v2（第二版））
 
-| Decision | Recommendation | If Changed |
+### 5. **视频/短视频支持**
+- 复杂度极高 (涉及视频转码、流媒体分发、基础设施)
+- **建议**: 首发仅限照片，验证完核心模式后再增加视频支持。
+
+### 6. **私信/即时聊天**
+- 独立的子系统 (聊天架构与动态流架构完全不同)
+- **建议**: 使用 Pusher/Stream 等第三方服务，或首发版本先行略过。
+
+---
+
+## 📋 总结建议
+
+| 决策点 | 推荐方案 | 如果更换方案的影响 |
 |----------|----------------|------------|
-| Storage | Cloudinary | +3 hrs setup |
-| Feed | Follow-only | +2 hrs query optimization |
-| Auth | Clerk | -3 hrs dev time |
-| Real-time | Polling | +5 hrs WebSocket setup |
-| Video | Defer to v2 | N/A |
-| DM | Defer to v2 | N/A |
+| 存储策略 | Cloudinary | +3 小时配置时间 |
+| 动态流 | 仅关注者可见 | +2 小时查询优化 |
+| 认证方式 | Clerk | -3 小时开发时间 |
+| 实时通知 | 长轮询 | +5 小时 WebSocket 开发 |
+| 视频支持 | 延至 v2（第二版） | N/A（不适用） |
+| 私信功能 | 延至 v2（第二版） | N/A（不适用） |
 
-**Total Estimated MVP Time:** 15-20 hours with recommendations above
+**预计 MVP（最小可行产品）开发总耗时:** 按上述推荐约 15-20 小时。
 ```
 
 ---
@@ -349,7 +353,8 @@ Based on your Instagram clone request:
 
 1. **每一个提问 = 一个架构决策** → 提问不是为了填表格。
 2. **展示权衡方案** → 让用户理解决策的后果。
-3. **阻塞性决策优先** → 没有答案就无法继续。
-4. **提供默认值** → 用户未回答时也能继续推进。
+3. **阻塞性决策优先** → 保证项目能够立即启动。
+4. **提供默认值** → 即使用户暂无想法，我们也能依据最佳实践推进。
 5. **领域感知** → 电商类提问 ≠ 认证类提问 ≠ 实时通讯类提问。
-6. **迭代式演进** → 随着实现过程中模式的显现，追加更细致的提问。
+6. **迭代式演进** → 随着实现过程中模式的显现，再追加更细致的提问。
+7. **与调试关联**: 当问题聚焦故障排查时，可把动态提问作为 `/debug` 的前置澄清步骤。
