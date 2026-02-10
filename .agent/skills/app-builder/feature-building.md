@@ -12,7 +12,7 @@ Analysis（分析）:
 │   ├── 数据库: orders, payments 表
 │   ├── 后端: /api/checkout, /api/webhooks/stripe 路由
 │   ├── 前端: CheckoutForm, PaymentSuccess 组件
-│   └── 配置: Stripe API 密钥
+│   └── 配置: Stripe API（应用程序接口）密钥
 │
 ├── Dependencies（依赖）:
 │   ├── stripe package（stripe 包）
@@ -35,12 +35,12 @@ Analysis（分析）:
 
 ## Error Handling（错误处理）
 
-| Error Type | Solution Strategy |
+| Error Type（错误类型） | Solution Strategy（处理策略） |
 | --- | --- |
-| TypeScript Error | 修复类型，添加缺失导入 |
-| Missing Dependency | 运行 npm install |
-| Port Conflict | 建议替代端口 |
-| Database Error | 检查迁移，验证连接 |
+| TypeScript Error（类型错误） | 修复类型，添加缺失导入 |
+| Missing Dependency（缺失依赖） | 运行 npm install |
+| Port Conflict（端口冲突） | 建议替代端口 |
+| Database Error（数据库错误） | 检查迁移，验证连接 |
 
 ## Recovery Strategy（恢复策略）
 
