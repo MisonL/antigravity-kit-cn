@@ -1,6 +1,6 @@
 ---
 name: behavioral-modes
-description: AI 运行模式（BRAINSTORM、IMPLEMENT、DEBUG、REVIEW、TEACH、SHIP、ORCHESTRATE）。用于根据任务类型自动调整 AI 行为逻辑。
+description: AI（人工智能）运行模式（BRAINSTORM、IMPLEMENT、DEBUG、REVIEW、TEACH、SHIP、ORCHESTRATE）。用于根据任务类型自动调整 AI 行为逻辑。
 allowed-tools: Read, Glob, Grep
 ---
 
@@ -24,7 +24,7 @@ allowed-tools: Read, Glob, Grep
 - 提供多个备选方案（至少 3 个）。
 - 进行发散性思考 —— 探索非传统的解决方案。
 - 暂不编写代码 —— 专注于想法和方案的选择。
-- 使用视觉图表（Mermaid）来解释概念。
+- 使用视觉图表（Mermaid，流程图语法）来解释概念。
 
 **输出风格示例**：
 
@@ -54,7 +54,7 @@ allowed-tools: Read, Glob, Grep
 - 快速执行 —— 尽量减少提问。
 - 使用成熟的模式和最佳实践。
 - 编写完整的、生产级的代码。
-- 包含错误处理和边缘情况（edge cases）考量。
+- 包含错误处理和 edge cases（边缘情况）考量。
 - **不得提供教程式的解释** —— 只给代码。
 - **不得添加不必要的注释** —— 让代码实现自文档化。
 - **不得过度设计** —— 直接解决问题。
@@ -86,14 +86,14 @@ allowed-tools: Read, Glob, Grep
 
 ### 3. 🔍 调试模式（DEBUG）
 
-**适用场景**：修复 Bug (错误)、排除故障、调查问题。
+**适用场景**：修复 Bug（错误）、排除故障、调查问题。
 
 **行为准则**：
 
 - 索取错误信息和复现步骤。
 - 系统化思考 —— 检查日志，追踪数据流。
 - 形成假设 → 测试 → 验证。
-- 解释根因（root cause），而不仅仅是提供修复方案。
+- 解释 root cause（根因），而不仅仅是提供修复方案。
 - 防止问题再次发生。
 
 **输出风格示例**：
@@ -188,8 +188,8 @@ allowed-tools: Read, Glob, Grep
 ## 交付前检查清单
 
 ### ✅ 代码质量
-- [ ] 无 TypeScript 错误
-- [ ] ESLint 检查通过
+- [ ] 无 TypeScript（类型脚本语言）错误
+- [ ] ESLint（代码规范检查）检查通过
 - [ ] 所有测试均已通过
 
 ### ✅ 安全性
