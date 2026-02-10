@@ -1,40 +1,40 @@
 # 技术栈选择（2026）
 
-> Web 应用的默认与备选技术方案。
+> Web App（Web 应用）的默认与备选技术方案。
 
 ## 默认技术栈（Web App - 2026）
 
 ```yaml
-前端（Frontend）:
-  框架（Framework）: Next.js 16（Stable）
-  语言（Language）: TypeScript 5.7+
-  样式（Styling）: Tailwind CSS v4
-  状态（State）: React 19 Actions / Server Components
-  构建工具（Bundler）: Turbopack（开发稳定 / Stable for Dev）
+Frontend（前端）:
+  framework（框架）: Next.js 16 (Stable)
+  language（语言）: TypeScript 5.7+
+  styling（样式）: Tailwind CSS v4
+  state（状态）: React 19 Actions / Server Components
+  bundler（构建工具）: Turbopack（Stable for Dev，开发稳定）
 
-后端（Backend）:
-  运行时（Runtime）: Node.js 23
-  框架（Framework）: Next.js API Routes / Hono（Edge / 边缘）
-  校验（Validation）: Zod / TypeBox
+Backend（后端）:
+  runtime（运行时）: Node.js 23
+  framework（框架）: Next.js API Routes / Hono（Edge，边缘）
+  validation（校验）: Zod / TypeBox
 
-数据库（Database）:
-  主选（Primary）: PostgreSQL
-  ORM: Prisma / Drizzle
-  托管（Hosting）: Supabase / Neon
+Database（数据库）:
+  primary（主选）: PostgreSQL
+  orm: Prisma / Drizzle
+  hosting（托管）: Supabase / Neon
 
-身份认证（Auth）:
-  提供商（Provider）: Auth.js（v5） / Clerk
+Auth（身份认证）:
+  provider（提供商）: Auth.js（v5） / Clerk
 
-Monorepo:
-  工具（Tool）: Turborepo 2.0
+Monorepo（多仓）:
+  tool（工具）: Turborepo 2.0
 ```
 
 ## 替代选项
 
-| 需求 | 默认 | 替代方案 |
+| Need（需求） | Default（默认） | Alternative（替代方案） |
 | --- | --- | --- |
-| 实时（Real-time） | - | Supabase Realtime, Socket.io |
-| 文件存储（File storage） | - | Cloudinary, S3 |
-| 支付（Payment） | Stripe | LemonSqueezy, Paddle |
-| 邮件（Email） | - | Resend, SendGrid |
-| 搜索（Search） | - | Algolia, Typesense |
+| Real-time（实时） | - | Supabase Realtime, Socket.io |
+| File storage（文件存储） | - | Cloudinary, S3 |
+| Payment（支付） | Stripe | LemonSqueezy, Paddle |
+| Email（邮件） | - | Resend, SendGrid |
+| Search（搜索） | - | Algolia, Typesense |
