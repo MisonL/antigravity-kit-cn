@@ -1,69 +1,69 @@
 ---
 name: express-api
-description: Express.js REST API 模板原则。TypeScript、Prisma、JWT。
+description: Express.js REST API 模板原则。TypeScript（类型系统）、Prisma（ORM）、JWT（身份验证）。
 ---
 
-# Express.js API 模板
+# Express.js API Template（API 模板）
 
-## 技术栈
+## Tech Stack（技术栈）
 
-| 组件 | 技术 |
+| Component（组件） | Technology（技术） |
 | --- | --- |
-| 运行时 | Node.js 20+ |
-| 框架 | Express.js |
-| 语言 | TypeScript |
-| 数据库 | PostgreSQL + Prisma |
-| 校验 | Zod |
-| 认证 | JWT + bcrypt |
+| Runtime（运行时） | Node.js 20+ |
+| Framework（框架） | Express.js |
+| Language（语言） | TypeScript |
+| Database（数据库） | PostgreSQL + Prisma |
+| Validation（校验） | Zod |
+| Auth（认证） | JWT + bcrypt |
 
 ---
 
-## 目录结构
+## Directory Structure（目录结构）
 
 ```
 project-name/
 ├── prisma/
 │   └── schema.prisma
 ├── src/
-│   ├── app.ts           # Express 启动入口
-│   ├── config/          # 环境配置
-│   ├── routes/          # 路由处理
-│   ├── controllers/     # 业务逻辑
-│   ├── services/        # 数据访问
+│   ├── app.ts           # Express setup（Express 启动入口）
+│   ├── config/          # Environment（环境配置）
+│   ├── routes/          # Route handlers（路由处理）
+│   ├── controllers/     # Business logic（业务逻辑）
+│   ├── services/        # Data access（数据访问）
 │   ├── middleware/
-│   │   ├── auth.ts      # JWT 鉴权
-│   │   ├── error.ts     # 错误处理
-│   │   └── validate.ts  # Zod 校验
-│   ├── schemas/         # Zod 模式
+│   │   ├── auth.ts      # JWT verify（JWT 鉴权）
+│   │   ├── error.ts     # Error handler（错误处理）
+│   │   └── validate.ts  # Zod validation（Zod 校验）
+│   ├── schemas/         # Zod schemas（Zod 模式）
 │   └── utils/
 └── package.json
 ```
 
 ---
 
-## 中间件栈
+## Middleware Stack（中间件栈）
 
-| 顺序 | 中间件 |
+| Order（顺序） | Middleware（中间件） |
 | --- | --- |
 | 1 | helmet（安全） |
 | 2 | cors |
 | 3 | morgan（日志） |
-| 4 | 请求体解析（body parsing） |
-| 5 | routes |
-| 6 | 错误处理（error handler） |
+| 4 | body parsing（请求体解析） |
+| 5 | routes（路由） |
+| 6 | error handler（错误处理） |
 
 ---
 
-## API 响应格式
+## API Response Format（API 响应格式）
 
-| 类型 | 结构 |
+| Type（类型） | Structure（结构） |
 | --- | --- |
 | 成功 | `{ success: true, data: {...} }` |
 | 错误 | `{ error: "message", details: [...] }` |
 
 ---
 
-## 设置步骤
+## Setup Steps（设置步骤）
 
 1. 创建项目目录
 2. `npm init -y`
@@ -74,10 +74,10 @@ project-name/
 
 ---
 
-## 最佳实践
+## Best Practices（最佳实践）
 
 - 分层架构（routes → controllers → services）
-- 使用 Zod 验证所有输入
+- 使用 Zod（校验）验证所有输入
 - 集中式错误处理
 - 基于环境的配置
-- 使用 Prisma 进行类型安全的数据库访问
+- 使用 Prisma（ORM）进行类型安全的数据库访问
