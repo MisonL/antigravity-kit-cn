@@ -1,10 +1,10 @@
 ---
 name: app-builder
-description: 应用构建主编排器。根据自然语言需求创建全栈应用，识别项目类型、选择技术栈并协调代理。
+description: 应用构建主编排器。根据自然语言请求创建全栈应用，确定项目类型、选择技术栈并协调代理。
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 ---
 
-# App Builder（应用构建编排器）
+# App Builder - 应用构建编排器
 
 > 分析用户请求，确定技术栈，规划结构，并协调代理执行。
 
@@ -14,7 +14,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 
 | 文件 | 描述 | 阅读时机 |
 | --- | --- | --- |
-| `project-detection.md` | 关键词矩阵、项目类型检测 | 开始新项目时 |
+| `project-detection.md` | 关键词矩阵、项目类型检测 | 开始新项目 |
 | `tech-stack.md` | 2026 默认技术栈及替代方案 | 选择技术时 |
 | `agent-coordination.md` | 代理流水线、执行顺序 | 协调多代理协作时 |
 | `scaffolding.md` | 目录结构、核心文件 | 创建项目结构时 |
@@ -27,7 +27,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 
 用于新项目快速脚手架搭建。**只读取匹配模板！**
 
-| 模板 | 技术栈（Tech Stack） | 适用场景 |
+| 模板 | 技术栈 | 适用场景 |
 | --- | --- | --- |
 | [nextjs-fullstack](templates/nextjs-fullstack/TEMPLATE.md) | Next.js + Prisma | 全栈 Web 应用 |
 | [nextjs-saas](templates/nextjs-saas/TEMPLATE.md) | Next.js + Stripe | SaaS 产品 |
@@ -39,7 +39,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 | [flutter-app](templates/flutter-app/TEMPLATE.md) | Flutter + Riverpod | 跨平台移动端 |
 | [electron-desktop](templates/electron-desktop/TEMPLATE.md) | Electron + React | 桌面端应用 |
 | [chrome-extension](templates/chrome-extension/TEMPLATE.md) | Chrome MV3 | 浏览器扩展 |
-| [cli-tool](templates/cli-tool/TEMPLATE.md) | Node.js + Commander | CLI 工具 |
+| [cli-tool](templates/cli-tool/TEMPLATE.md) | Node.js + Commander | CLI 应用 |
 | [monorepo-turborepo](templates/monorepo-turborepo/TEMPLATE.md) | Turborepo + pnpm | Monorepo（单仓多包） |
 
 ---
@@ -49,27 +49,27 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 | Agent | 角色 |
 | --- | --- |
 | `project-planner` | 任务拆解、依赖图构建 |
-| `frontend-specialist` | UI 组件、页面开发 |
-| `backend-specialist` | API 开发、业务逻辑 |
-| `database-architect` | 数据库模式、迁移 |
-| `devops-engineer` | 部署、预览环境 |
+| `frontend-specialist` | UI 组件、页面 |
+| `backend-specialist` | API、业务逻辑 |
+| `database-architect` | 数据结构（Schema）、迁移 |
+| `devops-engineer` | 部署、预览 |
 
 ---
 
 ## 使用示例
 
 ```
-用户: “做一个带照片分享和点赞功能的 Instagram 克隆”
+用户：“做一个带照片分享和点赞功能的 Instagram 克隆”
 
-App Builder 流程：
-1. 项目类型（Project type）：社交媒体应用
-2. 技术栈（Tech stack）：Next.js + Prisma + Cloudinary + Clerk
-3. 创建计划（Create plan）：
+App Builder 过程：
+1. 项目类型：社交媒体应用（Social Media App）
+2. 技术栈：Next.js + Prisma + Cloudinary + Clerk
+3. 创建计划：
    ├─ 数据库结构（Database schema）：users, posts, likes, follows
-   ├─ API 路由（API routes）：12 endpoints
+   ├─ API 路由（API routes）：12 个 endpoints（端点）
    ├─ 页面（Pages）：feed, profile, upload
    └─ 组件（Components）：PostCard, Feed, LikeButton
-4. 协调代理（Coordinate agents）
-5. 汇报进度（Report progress）
-6. 启动预览（Start preview）
+4. 协调代理
+5. 汇报进度
+6. 启动预览
 ```
