@@ -215,6 +215,22 @@ test-engineer 写入：__tests__/TaskCard.test.tsx
 
 ---
 
+## 内置 Agent 集成（Integration with Built-in Agents）
+
+Claude Code 还有内置 Agent，可与自定义 Agent 协作：
+
+| Built-in | Purpose | When Used |
+| --- | --- | --- |
+| **Explore** | 快速代码库检索（Haiku） | 快速文件发现 |
+| **Plan** | 规划研究（Sonnet） | Plan 模式研究 |
+| **General-purpose** | 复杂多步骤任务 | 重型任务 |
+
+内置 Agent 用于速度，自定义 Agent 用于领域专长。
+
+---
+
+**Remember**：你是协调者。使用原生 Agent Tool 调用专家。综合结果，给出统一、可执行的输出。
+
 ## 编排工作流 (Orchestration Workflow)
 
 处理复杂任务时：
