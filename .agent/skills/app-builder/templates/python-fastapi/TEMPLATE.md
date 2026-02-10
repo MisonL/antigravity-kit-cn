@@ -3,34 +3,34 @@ name: python-fastapi
 description: FastAPI REST API 模板原则。SQLAlchemy、Pydantic、Alembic。
 ---
 
-# FastAPI API Template（模板）
+# FastAPI API 模板
 
-## Tech Stack（技术栈）
+## 技术栈
 
-| Component | Technology |
+| 组件 | 技术 |
 | --- | --- |
-| Framework（框架） | FastAPI |
-| Language（语言） | Python 3.11+ |
+| 框架 | FastAPI |
+| 语言 | Python 3.11+ |
 | ORM | SQLAlchemy 2.0 |
-| Validation（验证） | Pydantic v2 |
-| Migrations（迁移） | Alembic |
-| Auth（认证） | JWT + passlib |
+| 校验 | Pydantic v2 |
+| 迁移 | Alembic |
+| 认证 | JWT + passlib |
 
 ---
 
-## Directory Structure（目录结构）
+## 目录结构
 
 ```
 project-name/
-├── alembic/             # Migrations（迁移）
+├── alembic/             # 迁移
 ├── app/
-│   ├── main.py          # FastAPI app（应用）
-│   ├── config.py        # Settings（配置）
-│   ├── database.py      # DB connection（数据库连接）
-│   ├── models/          # SQLAlchemy models（模型）
-│   ├── schemas/         # Pydantic schemas（模式）
-│   ├── routers/         # API routes（路由）
-│   ├── services/        # Business logic（业务逻辑）
+│   ├── main.py          # FastAPI 应用
+│   ├── config.py        # 配置
+│   ├── database.py      # 数据库连接
+│   ├── models/          # SQLAlchemy 模型
+│   ├── schemas/         # Pydantic 模式
+│   ├── routers/         # API 路由
+│   ├── services/        # 业务逻辑
 │   ├── dependencies/    # DI（依赖注入）
 │   └── utils/
 ├── tests/
@@ -40,44 +40,44 @@ project-name/
 
 ---
 
-## Key Concepts（关键概念）
+## 关键概念
 
-| Concept | Description |
+| 概念 | 说明 |
 | --- | --- |
-| Async | 全程 async/await |
-| Dependency Injection | FastAPI Depends |
-| Pydantic v2 | Validation + serialization（验证与序列化） |
-| SQLAlchemy 2.0 | Async sessions（异步会话） |
+| Async（异步） | 全程 async/await |
+| Dependency Injection（依赖注入） | FastAPI Depends |
+| Pydantic v2 | 验证 + 序列化 |
+| SQLAlchemy 2.0 | 异步会话 |
 
 ---
 
-## API Structure（结构）
+## API 结构
 
-| Layer | Responsibility |
+| 层 | 职责 |
 | --- | --- |
-| Routers | HTTP handling（HTTP 处理） |
-| Dependencies | Auth, validation（认证与验证） |
-| Services | Business logic（业务逻辑） |
-| Models | Database entities（数据库实体） |
-| Schemas | Request/response（请求/响应） |
+| Routers（路由层） | HTTP 处理 |
+| Dependencies（依赖层） | 认证、校验 |
+| Services（服务层） | 业务逻辑 |
+| Models（模型层） | 数据库实体 |
+| Schemas（模式层） | 请求/响应 |
 
 ---
 
-## Setup Steps（设置步骤）
+## 设置步骤
 
 1. `python -m venv venv`
 2. `source venv/bin/activate`
 3. `pip install fastapi uvicorn sqlalchemy alembic pydantic`
-4. Create `.env`（创建环境文件）
+4. 创建 `.env`
 5. `alembic upgrade head`
 6. `uvicorn app.main:app --reload`
 
 ---
 
-## Best Practices（最佳实践）
+## 最佳实践
 
-- Use async everywhere（全程 async）
-- Pydantic v2 for validation（用于验证）
-- SQLAlchemy 2.0 async sessions（异步会话）
-- Alembic for migrations（迁移工具）
-- pytest-asyncio for tests（异步测试）
+- 全程使用 async
+- 使用 Pydantic v2 进行验证
+- 使用 SQLAlchemy 2.0 异步会话
+- 使用 Alembic 做迁移
+- 使用 pytest-asyncio 做测试
