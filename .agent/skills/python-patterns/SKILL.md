@@ -1,6 +1,6 @@
 ---
 name: python-patterns
-description: Python 开发原则与决策方法。覆盖框架选型、异步模式、类型标注与项目结构。强调思考而非照抄。
+description: Python（编程语言）开发原则与决策方法。覆盖框架选型、异步模式、类型标注与项目结构。强调思考而非照抄。
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
@@ -15,8 +15,10 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 本技能强调**决策原则**，不是固定代码模板。
 
+常见框架包括 FastAPI（异步 Web 框架）、Django（全栈框架）、Flask（微框架）。
+
 - 需求不明确时，先询问用户框架偏好
-- 根据上下文（Context）决定 async 或 sync
+- 根据上下文（Context）决定 async（异步）或 sync（同步）
 - 不要每次都默认同一框架
 
 ---
@@ -50,7 +52,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 |------|---------|--------|-------|
 | **适用场景** | API、微服务 | 全栈、CMS | 简单项目、学习 |
 | **异步支持** | 原生支持 | Django 5.0+ | 依赖扩展 |
-| **管理后台** | 手动构建 | 内置 Admin | 依赖扩展 |
+| **管理后台** | 手动构建 | 内置 Admin（管理后台） | 依赖扩展 |
 | **ORM（对象关系映射）** | 自由选择 | Django ORM | 自由选择 |
 | **学习曲线** | 低 | 中 | 低 |
 
@@ -72,7 +74,7 @@ async def（异步函数）更适合：
 ├── 大量并发连接
 ├── 实时交互场景
 ├── 微服务通信
-└── FastAPI/Starlette/Django ASGI
+└── FastAPI/Starlette/Django ASGI（异步服务器网关接口）
 
 def（同步函数）更适合：
 ├── CPU 密集操作
@@ -100,7 +102,7 @@ CPU bound（CPU 密集）→ sync + multiprocessing（本地计算）
 |------|--------|
 | HTTP 客户端 | httpx |
 | PostgreSQL | asyncpg |
-| Redis | aioredis / redis-py async |
+| Redis（内存数据库） | aioredis / redis-py async |
 | 文件 I/O | aiofiles |
 | 数据库 ORM | SQLAlchemy 2.0 async, Tortoise |
 
@@ -144,7 +146,7 @@ from typing import Callable
 def apply(fn: Callable[[int], str]) -> str: ...
 ```
 
-### 用 Pydantic 做校验
+### 用 Pydantic（数据校验库）做校验
 
 ```
 适用场景：
@@ -155,7 +157,7 @@ def apply(fn: Callable[[int], str]) -> str: ...
 
 收益：
 ├── 运行时校验
-├── 自动生成 JSON Schema
+├── 自动生成 JSON Schema（JSON 模式）
 ├── 与 FastAPI 原生协同
 └── 清晰错误提示
 ```
@@ -247,7 +249,7 @@ Django 中适合 async（异步）的场景：
 视图选择：
 ├── 复杂 CRUD 用类视图（class-based views）
 ├── 简单接口用函数视图（function-based views）
-├── DRF 场景可用 viewsets（视图集）
+├── DRF（Django REST Framework）场景可用 viewsets（视图集）
 
 查询优化：
 ├── 外键用 select_related()
@@ -433,7 +435,7 @@ async def test_endpoint():
 - 基于上下文选框架
 - 先确认 async 需求
 - 用 Pydantic 做数据校验
-- 分层解耦（routes → services → repos）
+- 分层解耦（routes → services → repos（仓储层））
 - 覆盖关键路径测试
 
 ---
