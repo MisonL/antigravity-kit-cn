@@ -1,57 +1,57 @@
 ---
 name: nextjs-fullstack
-description: Next.js 全栈模板原则。App Router、Prisma、Tailwind v4。
+description: Next.js Full-Stack template（全栈模板）原则。App Router、Prisma、Tailwind v4。
 ---
 
-# Next.js 全栈模板（2026 版）
+# Next.js Full-Stack Template（全栈模板，2026 版）
 
-## 技术栈
+## Tech Stack（技术栈）
 
-| 组件 | 技术 | 版本/说明 |
+| Component（组件） | Technology（技术） | Version / Notes（版本/说明） |
 | --- | --- | --- |
-| 框架 | Next.js | v16+（App Router、Turbopack） |
-| 语言 | TypeScript | v5+（Strict Mode，严格模式） |
-| 数据库 | PostgreSQL | Prisma ORM（Serverless 友好） |
-| 样式 | Tailwind CSS | v4.0（零配置，CSS-first） |
-| 认证 | Clerk / Better Auth | 中间件保护路由 |
-| UI 逻辑 | React 19 | Server Actions、useActionState |
-| 验证 | Zod | Schema 校验（API & Forms） |
+| Framework（框架） | Next.js | v16+（App Router、Turbopack） |
+| Language（语言） | TypeScript | v5+（Strict Mode，严格模式） |
+| Database（数据库） | PostgreSQL | Prisma ORM（Serverless-friendly，适配 Serverless） |
+| Styling（样式） | Tailwind CSS | v4.0（零配置，CSS-first） |
+| Auth（认证） | Clerk / Better Auth | 中间件保护路由 |
+| UI Logic（UI 逻辑） | React 19 | Server Actions、useActionState |
+| Validation（验证） | Zod | Schema 校验（API & Forms） |
 
 ---
 
-## 目录结构
+## Directory Structure（目录结构）
 
 ```
 project-name/
 ├── prisma/
-│   └── schema.prisma       # 数据库 Schema
+│   └── schema.prisma       # Database schema（数据库结构）
 ├── src/
 │   ├── app/
 │   │   ├── (auth)/         # 登录/注册路由组
 │   │   ├── (dashboard)/    # 受保护路由
-│   │   ├── api/            # 路由处理（仅用于 Webhooks/外部集成）
-│   │   ├── layout.tsx      # 根布局（Metadata, Providers）
-│   │   ├── page.tsx        # 落地页
+│   │   ├── api/            # Route Handlers（仅用于 Webhooks/外部集成）
+│   │   ├── layout.tsx      # Root Layout（Metadata, Providers）
+│   │   ├── page.tsx        # Landing Page（落地页）
 │   │   └── globals.css     # Tailwind v4 配置（@theme 在此）
 │   ├── components/
 │   │   ├── ui/             # 可复用 UI（Button, Input）
-│   │   └── forms/          # 客户端表单（useActionState）
+│   │   └── forms/          # Client forms（useActionState）
 │   ├── lib/
-│   │   ├── db.ts           # Prisma 单例客户端
-│   │   ├── utils.ts        # 辅助函数
-│   │   └── dal.ts          # 数据访问层（仅服务端）
+│   │   ├── db.ts           # Prisma singleton client（单例客户端）
+│   │   ├── utils.ts        # Helper functions（辅助函数）
+│   │   └── dal.ts          # Data Access Layer（仅服务端）
 │   ├── actions/            # Server Actions（变更）
-│   └── types/              # 全局 TS 类型
+│   └── types/              # Global TS Types（类型）
 ├── public/
-├── next.config.ts          # TypeScript 配置
+├── next.config.ts          # TypeScript Config（配置）
 └── package.json
 ```
 
 ---
 
-## 关键概念（更新）
+## Key Concepts（更新）
 
-| 概念 | 说明 |
+| Concept（概念） | Description（说明） |
 | --- | --- |
 | Server Components（服务端组件） | 在服务端渲染（默认）。无需 API 即可直接访问 Prisma。 |
 | Server Actions（服务端动作） | 处理表单变更，替代传统 API Routes。用于 `action={}`。 |
@@ -61,33 +61,33 @@ project-name/
 
 ---
 
-## 环境变量
+## Environment Variables（环境变量）
 
-| 变量 | 用途 |
+| Variable（变量） | Purpose（用途） |
 | --- | --- |
-| DATABASE_URL | PostgreSQL 连接字符串（Prisma） |
-| NEXT_PUBLIC_APP_URL | 公共应用 URL |
-| NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY | 认证（使用 Clerk 时） |
-| CLERK_SECRET_KEY | 认证密钥（仅服务端） |
+| DATABASE_URL | PostgreSQL connection string（Prisma） |
+| NEXT_PUBLIC_APP_URL | Public application URL（公共应用 URL） |
+| NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY | Auth（使用 Clerk 时） |
+| CLERK_SECRET_KEY | Auth secret（仅服务端） |
 
 ---
 
-## 设置步骤
+## Setup Steps（设置步骤）
 
-1. 初始化项目：
+1. Initialize Project（初始化项目）：
    ```bash
    npx create-next-app@latest my-app --typescript --tailwind --eslint
    # 选择 Yes（App Router）
    # 选择 No（src 目录）（可选，本模板使用 src）
    ```
 
-2. 安装数据库与校验：
+2. Install DB & Validation（安装数据库与校验）：
    ```bash
    npm install prisma @prisma/client zod
    npm install -D ts-node # 用于运行 seed 脚本
    ```
 
-3. 配置 Tailwind v4（如缺失）：
+3. Configure Tailwind v4（如缺失）：
    确保 `src/app/globals.css` 使用新的导入语法，而不是配置文件：
    ```css
    @import "tailwindcss";
@@ -98,7 +98,7 @@ project-name/
    }
    ```
 
-4. 初始化数据库：
+4. Initialize Database（初始化数据库）：
    ```bash
    npx prisma init
    # 更新 schema.prisma
