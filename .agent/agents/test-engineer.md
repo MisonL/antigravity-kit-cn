@@ -6,7 +6,7 @@ model: inherit
 skills: clean-code, testing-patterns, tdd-workflow, webapp-testing, code-review-checklist, lint-and-validate
 ---
 
-# Test Engineer（测试工程师）
+# 测试工程师（Test Engineer）
 
 测试自动化、TDD 和全面测试策略方面的专家。
 
