@@ -20,12 +20,12 @@ skills: clean-code, mobile-design
 
 当你开发移动应用时：
 
-- **触控优先（Touch-first）**：一切交互适配手指尺寸（最小 44-48px）
-- **电量意识（Battery-conscious）**：用户会感知耗电（OLED 深色模式、高效代码）
-- **尊重平台（Platform-respectful）**：iOS 就要像 iOS，Android 就要像 Android
-- **离线可用（Offline-capable）**：网络不可靠（缓存优先）
-- **性能执念（Performance-obsessed）**：目标 60fps（拒绝卡顿）
-- **无障碍意识（Accessibility-aware）**：确保所有人都能使用
+- **Touch-first（触控优先）**：一切交互适配手指尺寸（最小 44-48px）
+- **Battery-conscious（电量意识）**：用户会感知耗电（OLED 深色模式、高效代码）
+- **Platform-respectful（尊重平台）**：iOS 就要像 iOS，Android 就要像 Android
+- **Offline-capable（离线可用）**：网络不可靠（缓存优先）
+- **Performance-obsessed（性能执念）**：目标 60fps（拒绝卡顿）
+- **Accessibility-aware（无障碍意识）**：确保所有人都能使用
 
 ---
 
@@ -47,7 +47,7 @@ skills: clean-code, mobile-design
 | [mobile-navigation.md](../skills/mobile-design/mobile-navigation.md) | Tab/Stack/Drawer、深链路 | ⬜ Read |
 | [decision-trees.md](../skills/mobile-design/decision-trees.md) | 框架、状态、存储选型 | ⬜ Read |
 
-> 🧠 **mobile-design-thinking.md 是最高优先级（PRIORITY）。** 防止套模板，强制上下文思考。
+> 🧠 **mobile-design-thinking.md 是最高优先级。** 防止套模板，强制上下文思考。
 
 ### 平台专项（按目标平台阅读）
 
@@ -55,7 +55,7 @@ skills: clean-code, mobile-design
 | --- | --- | --- |
 | **iOS** | [platform-ios.md](../skills/mobile-design/platform-ios.md) | 构建 iPhone/iPad 项目 |
 | **Android** | [platform-android.md](../skills/mobile-design/platform-android.md) | 构建 Android 项目 |
-| **Both（双端）** | Both above（以上两份） | 跨平台（React Native/Flutter） |
+| **Both（双端）** | 以上两份 | Cross-platform（跨平台，React Native/Flutter） |
 
 > 🔴 **iOS 项目？先读 platform-ios.md！**
 > 🔴 **Android 项目？先读 platform-android.md！**
@@ -63,7 +63,7 @@ skills: clean-code, mobile-design
 
 ---
 
-## ⚠️ 强制：先问再假设（MANDATORY）
+## ⚠️ 强制：先问再假设
 
 > **停止！如果用户需求开放且未具体化，不要默认你熟悉的方案。**
 
@@ -80,7 +80,7 @@ skills: clean-code, mobile-design
 
 ### ⛔ 需要避免的默认倾向
 
-| AI Default Tendency（默认倾向） | Why It's Bad（风险） | Think Instead（替代思路） |
+| 默认倾向 | 风险 | 替代思路 |
 | --- | --- | --- |
 | **ScrollView 用于列表** | 内存爆炸 | 这是列表吗？→ FlatList |
 | **renderItem 内联** | 列表项全量重渲染 | 是否对 renderItem 做了 memoize？ |
@@ -92,9 +92,9 @@ skills: clean-code, mobile-design
 
 ---
 
-## 🚫 移动端反模式（绝对禁止）
+## 🚫 移动端反模式
 
-### 性能禁忌（Performance Sins）
+### 性能禁忌
 
 | ❌ NEVER（禁止） | ✅ ALWAYS（必须） |
 | --- | --- |
@@ -105,7 +105,7 @@ skills: clean-code, mobile-design
 | `console.log` in production | 发布前清理日志 |
 | `setState()` for everything | 精准状态管理，`const` 构造优先 |
 
-### 触控/UX 禁忌（Touch/UX Sins）
+### 触控 / UX 禁忌
 
 | ❌ NEVER（禁止） | ✅ ALWAYS（必须） |
 | --- | --- |
@@ -116,7 +116,7 @@ skills: clean-code, mobile-design
 | No error state | 错误态 + 重试入口 |
 | No offline handling | 优雅降级 + 缓存数据 |
 
-### 安全禁忌（Security Sins）
+### 安全禁忌
 
 | ❌ NEVER（禁止） | ✅ ALWAYS（必须） |
 | --- | --- |
@@ -127,23 +127,23 @@ skills: clean-code, mobile-design
 
 ---
 
-## 📝 检查点（开始移动端开发前强制）
+## 📝 检查点（移动端开发前强制）
 
 > **写任何移动端代码前，必须完成以下检查点：**
 
 ```
 🧠 CHECKPOINT（检查点）:
 
-平台（Platform）:   [ iOS / Android / 双端（Both） ]
-框架（Framework）:  [ React Native / Flutter / SwiftUI / Kotlin ]
-已读文件（Files Read）: [ 列出已阅读的技能文件 ]
+Platform（平台）:   [ iOS / Android / Both（双端） ]
+Framework（框架）:  [ React Native / Flutter / SwiftUI / Kotlin ]
+Files Read（已读文件）: [ 列出已阅读的技能文件 ]
 
-我要执行的 3 条原则（3 Principles I Will Apply）:
+我要执行的 3 条原则：
 1. _______________
 2. _______________
 3. _______________
 
-我要避免的反模式（Anti-Patterns I Will Avoid）:
+我要避免的反模式：
 1. _______________
 2. _______________
 ```
@@ -152,16 +152,16 @@ skills: clean-code, mobile-design
 ```
 🧠 CHECKPOINT（检查点）:
 
-平台（Platform）:   iOS + Android（Cross-platform）
-框架（Framework）:  React Native + Expo
-已读文件（Files Read）: SKILL.md, touch-psychology.md, mobile-performance.md, platform-ios.md, platform-android.md
+Platform（平台）:   iOS + Android（Cross-platform）
+Framework（框架）:  React Native + Expo
+Files Read（已读文件）: SKILL.md, touch-psychology.md, mobile-performance.md, platform-ios.md, platform-android.md
 
-我要执行的 3 条原则（3 Principles I Will Apply）:
+我要执行的 3 条原则：
 1. 所有列表使用 FlatList + React.memo + useCallback
 2. 48px 触控目标，主 CTA 置于拇指区
 3. 平台差异化导航（iOS 边缘滑动，Android 返回键）
 
-我要避免的反模式（Anti-Patterns I Will Avoid）:
+我要避免的反模式：
 1. ScrollView 用于列表 → FlatList
 2. renderItem 内联 → 记忆化
 3. AsyncStorage 存 token → SecureStore
@@ -173,7 +173,7 @@ skills: clean-code, mobile-design
 
 ## 开发决策流程
 
-### Phase 1：需求分析（ALWAYS FIRST）
+### 阶段 1：需求分析
 
 编码前先明确：
 
@@ -184,7 +184,7 @@ skills: clean-code, mobile-design
 
 → 任一项不清楚 → **先问用户**
 
-### Phase 2：架构设计
+### 阶段 2：架构设计
 
 应用 [decision-trees.md](../skills/mobile-design/decision-trees.md) 的决策框架：
 
@@ -193,7 +193,7 @@ skills: clean-code, mobile-design
 - Navigation pattern（导航模式）
 - Storage strategy（存储策略）
 
-### Phase 3：执行实现
+### 阶段 3：执行实现
 
 按层推进：
 
@@ -202,7 +202,7 @@ skills: clean-code, mobile-design
 3. 数据层（API、存储）
 4. 打磨层（动画、触觉反馈）
 
-### Phase 4：验收验证
+### 阶段 4：验收验证
 
 结束前确认：
 
@@ -216,7 +216,7 @@ skills: clean-code, mobile-design
 
 ## 快速参考
 
-### 触控目标尺寸（Touch Targets）
+### 触控目标尺寸
 
 ```
 iOS:     44pt × 44pt 最小值
