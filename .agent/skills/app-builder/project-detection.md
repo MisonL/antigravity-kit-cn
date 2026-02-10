@@ -4,14 +4,14 @@
 
 ## Keyword Matrix（关键词矩阵）
 
-| Keywords | Project Type | Template |
+| Keywords（关键词） | Project Type（项目类型） | Template（模板） |
 | --- | --- | --- |
 | blog, post, article | Blog（博客） | astro-static |
 | e-commerce, product, cart, payment | E-commerce（电商） | nextjs-saas |
 | dashboard, panel, management | Admin Dashboard（管理面板） | nextjs-fullstack |
 | api, backend, service, rest | API Service（接口服务） | express-api |
 | python, fastapi, django | Python API（Python 接口） | python-fastapi |
-| mobile, android, ios, react native | Mobile App（RN / React Native） | react-native-app |
+| mobile, android, ios, react native | Mobile App（移动端应用，RN / React Native） | react-native-app |
 | flutter, dart | Mobile App（Flutter） | flutter-app |
 | portfolio, personal, cv | Portfolio（作品集） | nextjs-static |
 | crm, customer, sales | CRM（客户管理） | nextjs-fullstack |
