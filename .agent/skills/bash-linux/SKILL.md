@@ -1,124 +1,124 @@
 ---
 name: bash-linux
-description: Bash/Linux 终端模式。包含核心命令、管道（piping）、错误处理及脚本编写。适用于 macOS 或 Linux 系统。
+description: Bash/Linux terminal patterns（终端模式）。Critical commands, piping, error handling, scripting（核心命令/管道/错误处理/脚本编写）。Use when working on macOS or Linux systems（适用于 macOS 或 Linux 系统）。
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-# Bash/Linux 实践模式
+# Bash Linux Patterns（Bash/Linux 实践模式）
 
-> 适用于 Linux/macOS 的 Bash 核心模式。
+> Essential patterns for Bash on Linux/macOS（适用于 Linux/macOS 的 Bash 核心模式）。
 
 ---
 
-## 1. 操作符语法
+## 1. Operator Syntax（操作符语法）
 
-### 链式命令
+### Chaining Commands（链式命令）
 
-| 操作符 | 含义 | 示例 |
+| Operator（操作符） | Meaning（含义） | Example（示例） |
 | ------ | ---- | ---- |
-| `;` | 顺序执行 | `cmd1; cmd2` |
-| `&&` | 前一命令成功后执行 | `npm install && npm run dev` |
-| `||` | 前一命令失败后执行 | `npm test || echo "测试执行失败"` |
-| `|` | 管道输出 | `ls | grep ".js"` |
+| `;` | Run sequentially（顺序执行） | `cmd1; cmd2` |
+| `&&` | Run if previous succeeded（前一命令成功后执行） | `npm install && npm run dev` |
+| `||` | Run if previous failed（前一命令失败后执行） | `npm test || echo "Tests failed"` |
+| `|` | Pipe output（管道输出） | `ls | grep ".js"` |
 
 ---
 
-## 2. 文件操作
+## 2. File Operations（文件操作）
 
-### 核心命令
+### Essential Commands（核心命令）
 
-| 任务 | 命令 |
+| Task（任务） | Command（命令） |
 | ---- | ---- |
-| 列出所有文件 | `ls -la` |
-| 查找文件 | `find . -name "*.js" -type f` |
-| 查看文件内容 | `cat 文件.txt` |
-| 查看前 N 行 | `head -n 20 文件.txt` |
-| 查看后 N 行 | `tail -n 20 文件.txt` |
-| 跟踪日志 | `tail -f 日志.txt` |
-| 在文件中搜索 | `grep -r "关键词" --include="*.js"` |
-| 查看文件大小 | `du -sh *` |
-| 查看磁盘占用 | `df -h` |
+| List all（列出所有） | `ls -la` |
+| Find files（查找文件） | `find . -name "*.js" -type f` |
+| File content（查看内容） | `cat file.txt` |
+| First N lines（前 N 行） | `head -n 20 file.txt` |
+| Last N lines（后 N 行） | `tail -n 20 file.txt` |
+| Follow log（跟踪日志） | `tail -f log.txt` |
+| Search in files（文件内搜索） | `grep -r "pattern" --include="*.js"` |
+| File size（文件大小） | `du -sh *` |
+| Disk usage（磁盘占用） | `df -h` |
 
 ---
 
-## 3. 进程管理
+## 3. Process Management（进程管理）
 
-| 任务 | 命令 |
+| Task（任务） | Command（命令） |
 | ---- | ---- |
-| 列出所有进程 | `ps aux` |
-| 按名称查找进程 | `ps aux | grep node` |
-| 按 PID 杀掉进程 | `kill -9 <进程ID>` |
-| 查找占用端口的程序 | `lsof -i :3000` |
-| 关掉端口占用 | `kill -9 $(lsof -t -i :3000)` |
-| 后台运行 | `npm run dev &` |
-| 查看作业 | `jobs -l` |
-| 将任务调回前台 | `fg %1` |
+| List processes（列出进程） | `ps aux` |
+| Find by name（按名查找） | `ps aux | grep node` |
+| Kill by PID（按 PID 终止） | `kill -9 <PID>` |
+| Find port user（查占用端口） | `lsof -i :3000` |
+| Kill port（释放端口） | `kill -9 $(lsof -t -i :3000)` |
+| Background（后台运行） | `npm run dev &` |
+| Jobs（作业列表） | `jobs -l` |
+| Bring to front（切回前台） | `fg %1` |
 
 ---
 
-## 4. 文本处理
+## 4. Text Processing（文本处理）
 
-### 核心工具
+### Core Tools（核心工具）
 
-| 工具 | 用途 | 示例 |
+| Tool（工具） | Purpose（用途） | Example（示例） |
 | ---- | ---- | ---- |
-| `grep` | 搜索 | `grep -rn "TODO" src/` |
-| `sed` | 替换 | `sed -i 's/旧/新/g' 文件.txt` |
-| `awk` | 列提取 | `awk '{print $1}' 文件.txt` |
-| `cut` | 字段切割 | `cut -d',' -f1 data.csv` |
-| `sort` | 排序 | `sort -u 文件.txt` |
-| `uniq` | 去重/统计 | `sort 文件.txt | uniq -c` |
-| `wc` | 计数 | `wc -l 文件.txt` |
+| `grep` | Search（搜索） | `grep -rn "TODO" src/` |
+| `sed` | Replace（替换） | `sed -i 's/old/new/g' file.txt` |
+| `awk` | Extract columns（列提取） | `awk '{print $1}' file.txt` |
+| `cut` | Cut fields（字段切割） | `cut -d',' -f1 data.csv` |
+| `sort` | Sort lines（排序） | `sort -u file.txt` |
+| `uniq` | Unique lines（去重） | `sort file.txt | uniq -c` |
+| `wc` | Count（计数） | `wc -l file.txt` |
 
 ---
 
-## 5. 环境变量
+## 5. Environment Variables（环境变量）
 
-| 任务 | 命令 |
+| Task（任务） | Command（命令） |
 | ---- | ---- |
-| 查看所有环境变量 | `env` 或 `printenv` |
-| 查看特定变量 | `echo $PATH` |
-| 设置临时变量 | `export VAR="值"` |
-| 在命令中设置 | `VAR="值" 命令` |
-| 添加到 PATH | `export PATH="$PATH:/new/path"` |
+| View all（查看全部） | `env` or `printenv` |
+| View one（查看单个） | `echo $PATH` |
+| Set temporary（临时设置） | `export VAR="value"` |
+| Set in script（命令内设置） | `VAR="value" command` |
+| Add to PATH（追加 PATH） | `export PATH="$PATH:/new/path"` |
 
 ---
 
-## 6. 网络操作
+## 6. Network（网络操作）
 
-| 任务 | 命令 |
+| Task（任务） | Command（命令） |
 | ---- | ---- |
-| 下载文件 | `curl -O https://example.com/file` |
-| 发起 API 请求 | `curl -X GET https://api.example.com` |
-| 发送 POST JSON | `curl -X POST -H "Content-Type: application/json" -d '{"字段":"值"}' https://api.example.com` |
-| 检查端口 | `nc -zv localhost 3000` |
-| 查看网络信息 | `ifconfig` 或 `ip addr` |
+| Download（下载） | `curl -O https://example.com/file` |
+| API request（API 请求） | `curl -X GET https://api.example.com` |
+| POST JSON（发送 JSON） | `curl -X POST -H "Content-Type: application/json" -d '{"key":"value"}' URL` |
+| Check port（检查端口） | `nc -zv localhost 3000` |
+| Network info（网络信息） | `ifconfig` or `ip addr` |
 
 ---
 
-## 7. 脚本模板
+## 7. Script Template（脚本模板）
 
 ```bash
 #!/bin/bash
-set -euo pipefail  # 报错即退出、禁用未定义变量、管道错误传播
+set -euo pipefail  # Exit on error, undefined var, pipe fail（报错即退出、禁用未定义变量、管道错误传播）
 
-# 配色选项（可选）
+# Colors (optional)（配色选项）
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-# 脚本所在目录
+# Script directory（脚本所在目录）
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# 日志函数
+# Functions（日志函数）
 log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1" >&2; }
 
-# 主逻辑
+# Main（主逻辑）
 main() {
-    log_info "正在启动……"
-    # 此处编写逻辑
-    log_info "已完成！"
+    log_info "Starting..."
+    # Your logic here
+    log_info "Done!"
 }
 
 main "$@"
@@ -126,69 +126,69 @@ main "$@"
 
 ---
 
-## 8. 通用模式
+## 8. Common Patterns（通用模式）
 
-### 检查命令是否存在
+### Check if command exists（检查命令是否存在）
 
 ```bash
 if command -v node &> /dev/null; then
-    echo "Node 已安装"
+    echo "Node is installed"
 fi
 ```
 
-### 变量默认值
+### Default variable value（变量默认值）
 
 ```bash
-NAME=${1:-"默认值"}
+NAME=${1:-"default_value"}
 ```
 
-### 逐行读取文件
+### Read file line by line（逐行读取文件）
 
 ```bash
 while IFS= read -r line; do
     echo "$line"
-done < 文件.txt
+done < file.txt
 ```
 
-### 循环处理文件
+### Loop over files（循环处理文件）
 
 ```bash
 for file in *.js; do
-    echo "正在处理 $file"
+    echo "Processing $file"
 done
 ```
 
 ---
 
-## 9. 与 PowerShell 的差异
+## 9. Differences from PowerShell（与 PowerShell 的差异）
 
-| 任务 | PowerShell | Bash |
+| Task（任务） | PowerShell | Bash |
 | ---- | ---------- | ---- |
-| 列出文件 | `Get-ChildItem` | `ls -la` |
-| 查找文件 | `Get-ChildItem -Recurse` | `find . -type f` |
-| 环境变量 | `$env:VAR` | `$VAR` |
-| 字符串拼接 | `"$a$b"` | `"$a$b"`（相同） |
-| 空值检查 | `if ($x)` | `if [ -n "$x" ]` |
-| 管道 | 基于对象 | 基于文本 |
+| List files（列出文件） | `Get-ChildItem` | `ls -la` |
+| Find files（查找文件） | `Get-ChildItem -Recurse` | `find . -type f` |
+| Environment（环境变量） | `$env:VAR` | `$VAR` |
+| String concat（字符串拼接） | `"$a$b"` | `"$a$b"` (same) |
+| Null check（空值检查） | `if ($x)` | `if [ -n "$x" ]` |
+| Pipeline（管道） | Object-based（对象） | Text-based（文本） |
 
 ---
 
-## 10. 错误处理
+## 10. Error Handling（错误处理）
 
-### 设置选项
+### Set options（设置选项）
 
 ```bash
-set -e          # 遇到错误即退出
-set -u          # 遇到未定义变量即退出
-set -o pipefail # 管道中任一命令失败即报错退出
-set -x          # 调试模式：打印执行的命令
+set -e          # Exit on error（遇错退出）
+set -u          # Exit on undefined variable（未定义变量即退出）
+set -o pipefail # Exit on pipe failure（管道失败即退出）
+set -x          # Debug: print commands（调试模式）
 ```
 
-### 资源清理（trap）
+### Trap for cleanup（资源清理）
 
 ```bash
 cleanup() {
-    echo "正在清理临时文件……"
+    echo "Cleaning up..."
     rm -f /tmp/tempfile
 }
 trap cleanup EXIT
@@ -196,6 +196,6 @@ trap cleanup EXIT
 
 ---
 
-> **谨记：** Bash 是基于文本处理的。使用 `&&` 进行链式成功调用，使用 `set -e` 保证脚本安全，并确保始终对变量加引号！
+> **Remember:** Bash is text-based. Use `&&` for success chains, `set -e` for safety, and quote your variables!（Bash 基于文本处理，使用 `&&` 做成功链式调用，使用 `set -e` 保证安全，并始终对变量加引号。）
 
 ---
