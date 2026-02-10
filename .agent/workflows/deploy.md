@@ -31,7 +31,7 @@ $ARGUMENTS
 在任何部署开始之前：
 
 ```markdown
-## 🚀 Pre-Deploy（部署前）检查清单
+## 🚀 Pre-Deploy Checklist
 
 ### 代码质量
 - [ ] 无 TypeScript 错误 (`npx tsc --noEmit`)
@@ -48,10 +48,10 @@ $ARGUMENTS
 - [ ] 移除所有 console.log 语句
 - [ ] 图片资源已优化
 
-### 文档更新
+### 文档
 - [ ] README 已更新
 - [ ] CHANGELOG 已更新
-- [ ] API（接口）文档为最新状态
+- [ ] API 文档为最新状态
 
 ### 是否部署？（y/n）
 ```
@@ -62,7 +62,7 @@ $ARGUMENTS
 
 ```
 ┌─────────────────┐
-│  /deploy        │
+│  开始部署        │
 └────────┬────────┘
          │
          ▼
@@ -106,7 +106,7 @@ $ARGUMENTS
 ### 部署成功
 
 ```markdown
-## 🚀 部署完成
+## 🚀 Deployment Complete
 
 ### 摘要
 - **版本：** v1.2.3
@@ -132,7 +132,7 @@ $ARGUMENTS
 ### 部署失败
 
 ```markdown
-## ❌ 部署失败
+## ❌ Deployment Failed
 
 ### 错误摘要
 构建过程在以下步骤失败：TypeScript 编译
@@ -171,6 +171,6 @@ error TS2345: Argument of type 'string' is not assignable...
 /deploy
 /deploy check
 /deploy preview
-/deploy production --skip-tests
+/deploy production
 /deploy rollback
 ```
