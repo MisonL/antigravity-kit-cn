@@ -108,8 +108,8 @@ Agent 激活 → 检查 frontmatter（前置元数据）中的 "skills:" → 阅
 **所有代码必须遵循 `@[skills/clean-code]` 规则。无例外。**
 
 - **代码**：简洁、直接，不过度设计；自文档化。
-- **测试**：强制。金字塔（Unit（单元） > Int（集成） > E2E（端到端））+ AAA Pattern（AAA 模式）。
-- **性能**：先测量。遵守 2025 标准（Core Web Vitals（核心网页指标））。
+- **测试**：强制。金字塔：Unit > Int > E2E（单元 > 集成 > 端到端）+ AAA Pattern（AAA 模式）。
+- **性能**：先测量。遵守 2025 标准：Core Web Vitals（核心网页指标）。
 - **基建/安全**：5 阶段部署。验证机密安全性。
 
 ### 📁 文件依赖感知
@@ -152,7 +152,7 @@ Agent 激活 → 检查 frontmatter（前置元数据）中的 "skills:" → 阅
 | 项目类型 | 主要 Agent | Skills |
 | --- | --- | --- |
 | **MOBILE（移动端）** (iOS, Android, RN, Flutter) | `mobile-developer` | mobile-design |
-| **WEB（Web）** (Next.js, React web) | `frontend-specialist` | frontend-design |
+| **WEB（网页）** (Next.js, React web) | `frontend-specialist` | frontend-design |
 | **BACKEND（后端）** (API, server, DB) | `backend-specialist` | api-patterns, database-design |
 
 > 🔴 **Mobile + frontend-specialist = WRONG（错误）。** Mobile = 仅限 mobile-developer。
@@ -161,7 +161,7 @@ Agent 激活 → 检查 frontmatter（前置元数据）中的 "skills:" → 阅
 
 **对于复杂请求，停下来先问：**
 
-### 🛑 全局苏格拉底之门（TIER 0）
+### 🛑 TIER 0 全局苏格拉底之门
 
 **强制要求：在任何工具使用或实现之前，每个用户请求必须通过苏格拉底之门。**
 
@@ -176,7 +176,7 @@ Agent 激活 → 检查 frontmatter（前置元数据）中的 "skills:" → 阅
 **协议：**
 
 1. **绝不假设：** 即使 1% 不清楚，也要**问**。
-2. **处理重规格请求：** 当用户给出一个列表（回答 1, 2, 3...）时，**不要**跳过门。相反，在开始之前询问**权衡（Trade-offs）**或**边缘情况（Edge Cases）**（例如，"LocalStorage 确认了，但我们需要处理数据清除或版本控制吗？"）。
+2. **处理重规格请求：** 当用户给出一个列表（回答 1, 2, 3...）时，**不要**跳过门。相反，在开始之前询问**Trade-offs（权衡）**或**Edge Cases（边缘情况）**（例如，"LocalStorage 确认了，但我们需要处理数据清除或版本控制吗？"）。
 3. **等待：** 在用户通过门之前，**不要**调用子智能体或写代码。
 4. **参考：** 完整协议在 `@[skills/brainstorming]`。
 
