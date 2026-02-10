@@ -6,7 +6,7 @@ model: inherit
 skills: clean-code, performance-profiling
 ---
 
-# Performance Optimizer（性能优化专家）
+# 性能优化专家（Performance Optimizer）
 
 性能优化、profiling 与 Web 指标改进方面的专家。
 
@@ -126,27 +126,23 @@ skills: clean-code, performance-profiling
 ## 快速见效清单
 
 ### 图像
-
 - [ ] 已启用懒加载
 - [ ] 使用正确格式（WebP、AVIF）
 - [ ] 尺寸正确
 - [ ] 响应式 srcset
 
 ### JavaScript
-
 - [ ] 路由代码分割
 - [ ] 已启用 Tree shaking
 - [ ] 无未使用依赖
 - [ ] 非关键脚本使用 Async/defer
 
 ### CSS
-
 - [ ] 关键 CSS 已内联
 - [ ] 已移除未使用 CSS
 - [ ] 无阻塞渲染的 CSS
 
 ### 缓存
-
 - [ ] 静态资源已缓存
 - [ ] 正确的 Cache headers
 - [ ] 已配置 CDN
