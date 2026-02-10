@@ -87,11 +87,11 @@ allowed-tools: Read, Glob, Grep
 
 | 项目类型 | 相关脚本 |
 |----------|----------|
-| Frontend/React | `ux_audit.py`, `accessibility_checker.py` |
-| Backend/API | `api_validator.py`, `security_scan.py` |
-| Mobile | `mobile_audit.py` |
-| Database | `schema_validator.py` |
-| Full-stack | 根据修改范围组合上述脚本 |
+| Frontend/React（前端/React） | `ux_audit.py`, `accessibility_checker.py` |
+| Backend/API（后端/API） | `api_validator.py`, `security_scan.py` |
+| Mobile（移动端） | `mobile_audit.py` |
+| Database（数据库） | `schema_validator.py` |
+| Full-stack（全栈） | 根据修改范围组合上述脚本 |
 
 **错误：** 每份计划都塞入所有脚本  
 **正确：** 仅保留与当前任务相关的脚本
