@@ -29,13 +29,13 @@ allowed-tools: Read, Glob, Grep
 - [ ] **N+1 问题**：是否存在数据库 N+1 查询问题？
 - [ ] **循环优化**：是否存在不必要的循环逻辑？
 - [ ] **缓存策略**：是否使用了适当的缓存机制？
-- [ ] **包体积**：是否考虑了对打包体积（bundle size）的影响？
+- [ ] **包体积**：是否考虑了对 bundle size（包体积）的影响？
 
 ### 代码质量
 
 - [ ] **命名清晰**：变量及函数命名是否意图明确？
-- [ ] **DRY 原则**：是否遵循了“不要重复自己”原则，无冗余代码？
-- [ ] **SOLID 原则**：是否遵循了面向对象设计的 SOLID 原则？
+- [ ] **DRY（不要重复自己）**：是否遵循 DRY 原则，无冗余代码？
+- [ ] **SOLID（面向对象设计原则）**：是否遵循 SOLID 原则？
 - [ ] **抽象层次**：抽象层级是否恰当？
 
 ### 测试
@@ -52,11 +52,11 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## AI/LLM 审查模式（2025）
+## AI/LLM（大语言模型）审查模式（2025）
 
 ### 逻辑与幻觉
 
-- [ ] **思维链（chain of thought）**：其逻辑推理路径是否可验证？
+- [ ] **思维链（Chain of Thought）**：其逻辑推理路径是否可验证？
 - [ ] **边缘情况**：AI 是否考虑了空状态、超时及部分失败的情况？
 - [ ] **外部状态**：代码对于文件系统或网络的假设是否安全？
 
@@ -68,9 +68,9 @@ const response = await ai.generate(userInput);
 
 // ✅ 结构化且安全的提示词
 const response = await ai.generate({
-system: "您是一个专业的解析器……",
-input: sanitize(userInput),
-schema: ResponseSchema
+  system: "您是一个专业的解析器……",
+  input: sanitize(userInput),
+  schema: ResponseSchema
 });
 ```
 
@@ -118,8 +118,8 @@ const data: UserData = ...
 // 🟢 细节修饰 (Nits)：对于不可变变量，优先使用 const
 🟢 NIT（细节）: 对于不可变变量，建议优先使用 const 而非 let
 
-// ❓ 疑问确认：如果此处用户 (User) 为空会怎样？
-❓ QUESTION（疑问）: 如果此处 User 为 null 会发生什么情况？
+// ❓ 疑问确认：如果此处用户（User）为空会怎样？
+❓ QUESTION（疑问）: 如果此处 User（用户）为 null 会发生什么情况？
 ```
 
 ---
