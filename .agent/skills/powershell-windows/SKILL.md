@@ -19,11 +19,11 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 | `if (Test-Path "a" -or Test-Path "b")` | `if ((Test-Path "a") -or (Test-Path "b"))` |
 | `if (Get-Item $x -and $y -eq 5)`       | `if ((Get-Item $x) -and ($y -eq 5))`       |
 
-**准则：** 在使用逻辑运算符时，每一个 Cmdlet 的调用**必须**封装在圆括号内。
+**准则：** 在使用逻辑运算符时，每一个 Cmdlet（命令）的调用**必须**封装在圆括号内。
 
 ---
 
-## 2. Unicode/Emoji 限制
+## 2. Unicode（统一码）/Emoji（表情符号）限制
 
 ### 关键：脚本中严禁使用 Unicode
 
@@ -35,7 +35,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 | 信息 | ℹ️ 🔵       | [i] [INFO]  |
 | 进度 | ⏳          | [...]       |
 
-**准则：** 在 PowerShell 脚本中仅使用 ASCII 字符。
+**准则：** 在 PowerShell 脚本中仅使用 ASCII（ASCII 码）字符。
 
 ---
 
@@ -65,7 +65,7 @@ Write-Output "Value: $value"
 
 ## 5. 错误处理
 
-### ErrorActionPreference 配置
+### ErrorActionPreference（错误处理偏好）配置
 
 | 取值             | 使用场景             |
 | ---------------- | -------------------- |
@@ -73,7 +73,7 @@ Write-Output "Value: $value"
 | Continue         | 生产环境脚本         |
 | SilentlyContinue | 预期可能会发生错误时 |
 
-### Try/Catch 最佳实践
+### Try/Catch（错误捕获）最佳实践
 
 - 不要在 try 块内部直接返回。
 - 始终使用 finally 块进行资源清理。
@@ -107,7 +107,7 @@ Write-Output "Value: $value"
 
 ---
 
-## 8. JSON 操作
+## 8. JSON（数据交换格式）操作
 
 ### 关键：深度参数（Depth Parameter）
 
