@@ -1,57 +1,57 @@
 ---
 name: architecture
-description: 架构决策框架。包含需求分析、权衡评估（trade-off evaluation）及 ADR（Architecture Decision Record）文档编写。在进行架构决策或分析系统设计时使用。
+description: Architectural decision-making framework（架构决策框架）。Requirements analysis（需求分析）、trade-off evaluation（权衡评估）、ADR documentation（架构决策记录）。Use when making architecture decisions or analyzing system design（用于架构决策与系统设计分析）。
 allowed-tools: Read, Glob, Grep
 ---
 
-# 架构决策框架
+# Architecture Decision Framework（架构决策框架）
 
-> “需求驱动架构。权衡决定结论。ADR 记录依据。”
+> "Requirements drive architecture. Trade-offs inform decisions. ADRs capture rationale."（需求驱动架构，权衡决定结论，ADR 记录依据。）
 
-## 🎯 选择性阅读规则
+## 🎯 Selective Reading Rule（选择性阅读规则）
 
-**仅阅读与请求相关的文档！** 查阅内容地图，找到你需要的信息。
+**Read ONLY files relevant to the request（仅阅读与请求相关的文档）！** Check the content map, find what you need（查阅内容地图，找到所需信息）。
 
-| 文件 | 描述 | 阅读时机 |
+| File（文件） | Description（描述） | When to Read（阅读时机） |
 | ---- | ---- | -------- |
-| `context-discovery.md` | 提问列表、项目分类 | 开始架构设计时 |
-| `trade-off-analysis.md` | ADR 模板、权衡分析框架 | 记录决策时 |
-| `pattern-selection.md` | 决策树、反模式 | 选择模式时 |
-| `examples.md` | MVP（最小可行产品）、SaaS（软件即服务）、企业级应用示例 | 参考实现方案时 |
-| `patterns-reference.md` | 模式快速查阅 | 模式对比时 |
+| `context-discovery.md` | Questions to ask, project classification（提问列表、项目分类） | Starting architecture design（开始架构设计） |
+| `trade-off-analysis.md` | ADR templates, trade-off framework（ADR 模板、权衡分析框架） | Documenting decisions（记录决策） |
+| `pattern-selection.md` | Decision trees, anti-patterns（决策树、反模式） | Choosing patterns（选择模式） |
+| `examples.md` | MVP, SaaS, Enterprise examples（示例） | Reference implementations（参考实现） |
+| `patterns-reference.md` | Quick lookup for patterns（模式速查） | Pattern comparison（模式对比） |
 
 ---
 
-## 🔗 相关技能
+## 🔗 Related Skills（相关技能）
 
-| 技能 | 用途 |
+| Skill（技能） | Use For（用途） |
 | ------------ | ---- |
-| `@[skills/database-design]` | 数据库模式设计 |
-| `@[skills/api-patterns]` | API 设计模式 |
-| `@[skills/deployment-procedures]` | 部署架构 |
+| `@[skills/database-design]` | Database schema design（数据库模式设计） |
+| `@[skills/api-patterns]` | API design patterns（API 设计模式） |
+| `@[skills/deployment-procedures]` | Deployment architecture（部署架构） |
 
 ---
 
-## 核心原则
+## Core Principle（核心原则）
 
-**“至简即至繁。”**
+**"Simplicity is the ultimate sophistication."（至简即至繁）**
 
-- 从简单开始。
-- **仅**在证明必要时才增加复杂性。
-- 你以后随时可以添加新的架构模式。
-- 移除复杂性远比增加复杂性要困难得多。
+- Start simple（从简单开始）。
+- Add complexity ONLY when proven necessary（仅在必要时增加复杂性）。
+- You can always add patterns later（随时可补充模式）。
+- Removing complexity is MUCH harder than adding it（移除复杂性远比增加难）。
 
 ---
 
-## 验证检查清单
+## Validation Checklist（验证检查清单）
 
-在最终确定架构之前：
+Before finalizing architecture（最终确定架构之前）：
 
-- [ ] **需求已清晰理解。**
-- [ ] **约束条件已明确。**
-- [ ] **每项决策均有权衡（Trade-off）分析。**
-- [ ] **已考虑更简单的替代方案。**
-- [ ] **重大决策均已编写架构决策记录（ADR，Architecture Decision Record）。**
-- [ ] **团队技能水平与所选模式相匹配。**
+- [ ] **Requirements clearly understood（需求已清晰理解）。**
+- [ ] **Constraints identified（约束条件已明确）。**
+- [ ] **Each decision has trade-off analysis（每项决策有权衡分析）。**
+- [ ] **Simpler alternatives considered（已考虑更简单替代方案）。**
+- [ ] **ADRs written for significant decisions（重大决策已编写 ADR）。**
+- [ ] **Team expertise matches chosen patterns（团队能力与模式匹配）。**
 
 ---
