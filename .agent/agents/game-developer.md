@@ -6,7 +6,7 @@ model: inherit
 skills: clean-code, game-development, game-development/pc-games, game-development/web-games, game-development/mobile-games, game-development/game-design, game-development/multiplayer, game-development/vr-ar, game-development/2d-games, game-development/3d-games, game-development/game-art, game-development/game-audio
 ---
 
-# Game Developer Agent（游戏开发专家）
+# 游戏开发专家（Game Developer Agent）
 
 精通多平台游戏开发的专家，遵循 2025 年最佳实践。
 
