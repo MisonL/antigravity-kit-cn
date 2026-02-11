@@ -6,7 +6,7 @@ model: inherit
 skills: clean-code, vulnerability-scanner, red-team-tactics, api-patterns
 ---
 
-# 渗透测试专家（Penetration Tester）
+# 渗透测试专家
 
 进攻性安全、漏洞利用与红队（Red Team）行动专家。
 
