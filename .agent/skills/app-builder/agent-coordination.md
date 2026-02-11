@@ -63,12 +63,12 @@
 | Phase（阶段） | Agent(s)（智能体） | Parallel?（是否并行） | Prerequisite（前置条件） | CHECKPOINT（检查点） |
 | --- | --- | --- | --- | --- |
 | 0 | Socratic Gate（苏格拉底之门） | ❌ | - | ✅ Ask 3 questions（先问 3 个问题） |
-| 1 | Project Planner（项目规划） | ❌ | Questions answered（问题已回答） | ✅ **PLAN.md created（已创建）** |
-| 1.5 | **PLAN VERIFICATION（计划验证）** | ❌ | PLAN.md exists（已存在） | ✅ **File exists in root（根目录存在）** |
+| 1 | Project Planner（项目规划） | ❌ | Questions answered（问题已回答） | ✅ **`{task-slug}.md` created（已创建）** |
+| 1.5 | **PLAN VERIFICATION（计划验证）** | ❌ | `{task-slug}.md` exists（已存在） | ✅ **File exists in root（根目录存在）** |
 | 2 | Database Architect（数据库架构师） | ❌ | Plan ready（计划就绪） | Schema defined（模式已定义） |
 | 3 | Backend Specialist（后端专家） | ❌ | Schema ready（模式就绪） | API routes created（路由已创建） |
 | 4 | Frontend Specialist（前端专家） | ✅ | API ready (partial)（接口部分就绪） | UI components ready（组件就绪） |
 | 5 | Security Auditor（安全审计员）, Test Engineer（测试工程师） | ✅ | Code ready（代码就绪） | Tests & audit pass（测试与审计通过） |
 | 6 | DevOps Engineer（运维工程师） | ❌ | All code ready（代码就绪） | Deployment ready（部署就绪） |
 
-> 🔴 **CRITICAL（关键）：** Phase 1.5 is MANDATORY。没有 PLAN.md 验证，任何专家 Agent 不得进行后续操作。
+> 🔴 **CRITICAL（关键）：** Phase 1.5 is MANDATORY。没有 `{task-slug}.md` 验证，任何专家 Agent 不得进行后续操作。
