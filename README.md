@@ -1,6 +1,6 @@
 # Antigravity Kit CN
 
-> 包含 Agent（智能体）、Skill（技能）与 Workflow（工作流）的 AI Agent 模板
+> 包含 Skills（技能）、Agents（智能体）与 Workflows（工作流）的 AI Agent 模板
 >
 > [!NOTE]
 > 本仓库基于上游 vudovn/antigravity-kit 同步更新并进行中文化，同时提供 Codex（代码智能体环境）适配。
@@ -31,11 +31,11 @@ node bin/ag-kit.js init --target codex --path /path/to/your-project
 
 这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .agents`），并把 Codex 托管规则注入工作区 `AGENTS.md` 与 `antigravity.rules`。
 
-### 关于 `.gitignore` 的重要说明
+### ⚠️ 关于 `.gitignore` 的重要说明
 
-如果你正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/`、`.agents/` 添加到 `.gitignore` 可能会阻止 IDE 索引工作流，导致斜杠命令（如 `/plan`, `/debug`）无法出现在对话建议中。
+如果你正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/`、`.agents/` 添加到 `.gitignore` 可能会阻止 IDE 索引工作流，导致斜杠命令（如 `/plan`、`/debug`）无法出现在对话建议中。
 
-推荐方案：
+**推荐方案：**
 1. 确保 `.agent/`、`.agents/` **不要** 出现在项目的 `.gitignore` 中。
 2. 作为替代方案，将其加入本地排除文件：`.git/info/exclude`。
 
@@ -44,14 +44,14 @@ node bin/ag-kit.js init --target codex --path /path/to/your-project
 | 组件 | 数量 | 描述 |
 | --- | --- | --- |
 | Agents（智能体） | 20 | 专家级 AI 人设（前端、后端、安全、产品、QA 等） |
-| Skills（技能） | 38 | 特定领域的知识模块 |
+| Skills（技能） | 37 | 特定领域的知识模块 |
 | Workflows（工作流） | 11 | 斜杠命令流程 |
 
 ## 使用方法
 
 ### 使用智能体
 
-无需显式提及 Agent（智能体），系统会自动检测并应用合适专家：
+**无需显式提及智能体！** 系统会自动检测并应用合适专家：
 
 ```
 你："添加 JWT 认证"
@@ -64,14 +64,16 @@ AI：🤖 正在使用 @frontend-specialist...
 AI：🤖 正在使用 @debugger 进行系统化分析...
 ```
 
-工作原理：
+**工作原理：**
+
 - 静默分析请求
 - 自动检测领域（前端、后端、安全等）
 - 选择最佳专家
 - 告知你正在应用哪方面的专业知识
 - 无需了解系统架构即可获得专家级响应
 
-优势：
+**优势：**
+
 - ✅ 零学习曲线：描述需求即可
 - ✅ 始终获得专家响应
 - ✅ 透明：显示正在使用的智能体
