@@ -4,7 +4,7 @@ description: 多智能体（Multi-agent）编排模式。当多个独立任务�
 allowed-tools: Read, Glob, Grep
 ---
 
-# 原生并行智能体（Native Parallel Agents）
+# 原生并行智能体
 
 > 通过 Antigravity 内置的智能体工具实现编排（Orchestration）。
 
@@ -16,7 +16,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 何时使用编排（When to Use Orchestration）
+## 何时使用编排
 
 ✅ **适用场景：**
 
@@ -33,7 +33,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 原生 Agent 调用（Native Agent Invocation）
+## 原生 Agent 调用
 
 ### 调用单个 Agent
 
@@ -41,7 +41,7 @@ allowed-tools: Read, Glob, Grep
 请使用 security-auditor 智能体来审阅身份认证逻辑。
 ```
 
-### 顺序链式调用（Sequential Chain）
+### 顺序链式调用
 
 ```
 首先，使用 explorer-agent 探索项目结构。
@@ -64,9 +64,9 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 编排模式（Orchestration Patterns）
+## 编排模式
 
-### 模式 1：全面分析（Comprehensive Analysis）
+### 模式 1：全面分析
 
 ```
 智能体流：explorer-agent → [领域专家级 Agents] → 综合汇总（Synthesis）
@@ -79,7 +79,7 @@ allowed-tools: Read, Glob, Grep
 6. 综合汇总所有发现。
 ```
 
-### 模式 2：功能评审（Feature Review）
+### 模式 2：功能评审
 
 ```
 智能体流：[受影响领域的 Agents] → test-engineer
@@ -90,7 +90,7 @@ allowed-tools: Read, Glob, Grep
 4. 综合汇总改进建议。
 ```
 
-### 模式 3：安全审计（Security Audit）
+### 模式 3：安全审计
 
 ```
 智能体流：security-auditor → penetration-tester → 综合汇总
@@ -102,7 +102,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 可用智能体清单（Available Agents）
+## 可用智能体清单
 
 | 智能体（Agent） | 专业领域 | 触发词/场景 |
 | -------------- | -------- | ---------- |
@@ -126,7 +126,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## Antigravity 内置智能体（Built-in Agents）
+## Antigravity 内置智能体
 
 这些智能体与自定义 Agent 协同工作：
 
@@ -140,12 +140,12 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 综合汇总协议（Synthesis Protocol）
+## 综合汇总协议
 
 当所有 Agent 完成工作后，进行综合汇总：
 
 ```markdown
-## 编排综合报告（Orchestration Synthesis）
+## 编排综合报告
 
 ### 任务总结
 
@@ -164,7 +164,7 @@ allowed-tools: Read, Glob, Grep
 2. **重要（Important）**: [来自 Agent B 的问题]
 3. **建议（Nice-to-have）**: [来自 Agent C 的改进点]
 
-### 待办动作（Action Items）
+### 待办动作
 
 - [ ] 修复紧急安全问题
 - [ ] 重构 API 端点
@@ -173,7 +173,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 最佳实践（Best Practices）
+## 最佳实践
 
 1. **Agent 多样性** —— 共有 17 个专业 Agent 可供编排调用。
 2. **逻辑顺序** —— 遵循“探索 → 分析 → 实现 → 测试”的链路。
@@ -183,7 +183,7 @@ allowed-tools: Read, Glob, Grep
 
 ---
 
-## 核心优势（Key Benefits）
+## 核心优势
 
 - ✅ **单次会话** —— 所有 Agent 共享上下文。
 - ✅ **AI 自控** —— Claude 自主进行编排协调。
