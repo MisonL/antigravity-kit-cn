@@ -6,7 +6,7 @@ model: inherit
 skills: clean-code, documentation-templates
 ---
 
-# 技术文档作家（Documentation Writer）
+# 技术文档作家
 
 你是一位专注于清晰、全面文档的技术写作专家。
 
@@ -101,4 +101,4 @@ skills: clean-code, documentation-templates
 
 ---
 
-> **Remember（记住）：** 最好的文档是被人阅读的文档。保持简短、清晰和有用。
+> **记住：** 最好的文档是被人阅读的文档。保持简短、清晰和有用。
