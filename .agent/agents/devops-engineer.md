@@ -47,15 +47,15 @@ skills: clean-code, deployment-procedures, server-management, powershell-windows
 │   └── Vercel Functions, Cloudflare Workers, AWS Lambda
 │
 └── 完全控制 / 遗留系统
-    └── VPS with PM2 or systemd
+    └── VPS + PM2 或 systemd
 ```
 
 ### 平台比较
 
 | 平台 | 最适合 | 权衡（Trade-offs） |
 | --- | --- | --- |
-| **Vercel** | Next.js, 静态 | 后端控制有限 |
-| **Railway** | 快速部署，包含 DB | 规模化后成本增加 |
+| **Vercel** | Next.js、静态站点 | 后端控制有限 |
+| **Railway** | 快速部署，包含数据库 | 规模化后成本增加 |
 | **Fly.io** | 边缘、全球 | 学习曲线 |
 | **VPS + PM2** | 完全控制 | 手动管理 |
 | **Docker** | 一致性、隔离 | 复杂性 |
@@ -69,10 +69,10 @@ skills: clean-code, deployment-procedures, server-management, powershell-windows
 
 ```
 1. PREPARE
-   └── Tests 通过？Build 正常？Env vars 已设置？
+   └── Tests（测试）通过？Build（构建）正常？Env vars（环境变量）已设置？
 
 2. BACKUP
-   └── 当前版本已保存？需要的话 DB 备份？
+   └── 当前版本已保存？需要的话 DB（数据库）备份？
 
 3. DEPLOY
    └── 执行部署，准备好监控
@@ -120,9 +120,9 @@ skills: clean-code, deployment-procedures, server-management, powershell-windows
 | 方法 | 何时使用 |
 | --- | --- |
 | **Git revert** | 代码问题，快速 |
-| **Previous deploy** | 大多数平台支持此功能 |
-| **Container rollback** | 上一个镜像标签 |
-| **Blue-green switch** | 如果已设置 |
+| **Previous deploy（上次部署）** | 大多数平台支持此功能 |
+| **Container rollback（容器回滚）** | 上一个镜像标签 |
+| **Blue-green switch（蓝绿切换）** | 如果已设置 |
 
 ---
 
@@ -132,18 +132,18 @@ skills: clean-code, deployment-procedures, server-management, powershell-windows
 
 | 类别 | 关键指标 |
 | --- | --- |
-| **Availability（可用性）** | Uptime, health checks |
-| **Performance（性能）** | Response time, throughput |
-| **Errors（错误）** | Error rate, types |
-| **Resources（资源）** | CPU, memory, disk |
+| **Availability（可用性）** | Uptime（在线率）、health checks（健康检查） |
+| **Performance（性能）** | Response time（响应时间）、throughput（吞吐量） |
+| **Errors（错误）** | Error rate（错误率）、types（类型） |
+| **Resources（资源）** | CPU、memory（内存）、disk（磁盘） |
 
 ### 告警策略
 
 | 严重性 | 响应 |
 | --- | --- |
-| **Critical** | 立即行动（page） |
-| **Warning** | 尽快调查 |
-| **Info** | 每日检查中审查 |
+| **Critical（严重）** | 立即行动（page/呼叫） |
+| **Warning（警告）** | 尽快调查 |
+| **Info（信息）** | 每日检查中审查 |
 
 ---
 
@@ -196,10 +196,10 @@ skills: clean-code, deployment-procedures, server-management, powershell-windows
 | --- | --- |
 | 周五部署 | 周初部署 |
 | 匆忙进行生产变更 | 花时间，遵循流程 |
-| 跳过预发布 | 始终先在 staging 测试 |
+| 跳过预发布 | 始终先在 staging（预发布）测试 |
 | 无备份部署 | 始终先备份 |
 | 忽略监控 | 部署后观察指标 |
-| 强制推送到 main | 使用正确的合并流程 |
+| 强制推送到 main（主分支） | 使用正确的合并流程 |
 
 ---
 
