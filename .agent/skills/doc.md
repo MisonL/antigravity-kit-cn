@@ -1,84 +1,84 @@
-# Antigravity Skills（技能）
+# Antigravity 技能
 
-> **Antigravity Kit 技能创建与使用指南**
+> **Antigravity Kit 中 Skills（技能）的创建与使用指南**
 
 ---
 
-## 📋 简介
+## 📋 介绍
 
-虽然 Antigravity 的基础模型（如 Gemini）是强大的通用模型，但它们不知道你具体的项目上下文或团队标准。将每一条规则或工具都加载到 Agent（智能体）的上下文窗口会导致“工具膨胀”，增加成本、延迟并导致混乱。
+虽然 Antigravity 的基础模型（如 Gemini）是强大的通用模型，但它们并不了解你的项目上下文或团队标准。把所有规则或工具都加载到智能体上下文会导致“工具膨胀”，成本上升、延迟增加并引发混淆。
 
-**Antigravity Skills** 是一种开放标准（open standard），通过**渐进式披露（progressive disclosure）**解决了这个问题。技能是一个专门的知识包，在需要之前处于休眠状态。只有当你的具体请求与技能的描述相匹配时，这些信息才会加载到 Agent（智能体）的上下文中。
+**Antigravity Skills（技能）** 通过 **Progressive Disclosure（渐进式披露）** 解决这一问题。技能是专门的知识包，默认处于非激活状态，只有在你的具体请求与技能描述匹配时，相关信息才会加载进智能体上下文。
 
 ---
 
 ## 📁 结构与范围
 
-技能是基于文件夹的包。你可以根据需求定义范围：
+技能以目录为单位组织，你可以按需求定义范围：
 
-| 范围 | 路径 | 描述 |
-| :--- | :--- | :--- |
-| **工作空间（Workspace）** | `<workspace-root>/.agent/skills/` | 仅在特定项目中可用 |
+| 范围 | 路径 | 说明 |
+|---------|-----------|-------|
+| **Workspace（工作区）** | `<workspace-root>/.agent/skills/` | 仅作用于当前项目 |
 
-### 技能文件夹结构
+### 技能目录结构
 
 ```
 my-skill/
-├── SKILL.md      # （必选）元数据与指令
-├── scripts/      # （可选）Python 或 Bash 脚本
-├── references/   # （可选）文本、文档、模版
-└── assets/       # （可选）图片或 Logo
+├── SKILL.md      # (Required) Metadata & instructions
+├── scripts/      # (Optional) Python or Bash scripts
+├── references/   # (Optional) Text, documentation, templates
+└── assets/       # (Optional) Images or logos
 ```
 
 ---
 
 ## 🔍 示例 1：代码审查技能（Code Review Skill）
 
-这是一个仅包含指令（instruction-only）的技能，只需创建一个 `SKILL.md` 文件。
+这是一个仅包含指令的技能，只需要创建 `SKILL.md`。
 
-### 第一步：创建目录
+### 步骤 1：创建目录
 
 ```bash
 mkdir -p ~/.gemini/antigravity/skills/code-review
 ```
 
-### 第二步：创建 SKILL.md
+### 步骤 2：创建 SKILL.md
 
 ```markdown
 ---
 name: code-review
-description: 审查代码变更中的 Bug（缺陷）、风格问题和最佳实践。在审查 PR（Pull Request）或检查代码质量时使用。
+description: Reviews code changes for bugs, style issues, and best practices. Use when reviewing PRs or checking code quality.
 ---
 
-# 代码审查（Code Review）
+# Code Review Skill
 
-在审查代码时，请遵循以下步骤：
+When reviewing code, follow these steps:
 
-## 审查清单
+## Review checklist
 
-1.  **正确性**：代码是否完成了它应该做的事？
-2.  **边缘情况（edge cases）**：是否处理了错误条件？
-3.  **风格**：是否遵循项目规范？
-4.  **性能**：是否有明显的低效之处？
+1. **Correctness**: Does the code do what it's supposed to?
+2. **Edge cases**: Are error conditions handled?
+3. **Style**: Does it follow project conventions?
+4. **Performance**: Are there obvious inefficiencies?
 
-## 如何提供反馈
+## How to provide feedback
 
-- 具体指出需要修改的地方
-- 解释“为什么”，而不仅仅是“是什么”
-- 尽可能提供替代方案
+- Be specific about what needs to change
+- Explain why, not just what
+- Suggest alternatives when possible
 ```
 
-> **注意：** `SKILL.md` 文件顶部包含元数据（name, description），随后是指令。Agent（智能体）只会读取元数据，仅在需要时加载指令。
+> **注意：** `SKILL.md` 顶部包含元数据（name、description），其后是指令内容。Agent（智能体）只会先读元数据，只有需要时才加载完整指令。
 
-### 试一试
+### 试用
 
-创建一个 `demo_bad_code.py`：
+创建文件 `demo_bad_code.py`：
 
 ```python
 import time
 
 def get_user_data(users, id):
-    # 按 ID 查找用户
+    # Find user by ID
     for u in users:
         if u['id'] == id:
             return u
@@ -87,42 +87,42 @@ def get_user_data(users, id):
 def process_payments(items):
     total = 0
     for i in items:
-        # 计算税费
+        # Calculate tax
         tax = i['price'] * 0.1
         total = total + i['price'] + tax
-        time.sleep(0.1)  # 模拟慢速网络调用
+        time.sleep(0.1)  # Simulate slow network call
     return total
 
 def run_batch():
     users = [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}]
     items = [{'price': 10}, {'price': 20}, {'price': 100}]
-
+    
     u = get_user_data(users, 3)
-    print("用户：" + u['name'])  # 若为 None 会崩溃
-
-    print("总计：" + str(process_payments(items)))
+    print("User found: " + u['name'])  # Will crash if None
+    
+    print("Total: " + str(process_payments(items)))
 
 if __name__ == "__main__":
     run_batch()
 ```
 
-**提示词**：`审查 @demo_bad_code.py 文件`
+**提示词（Prompt）**：`审查 @demo_bad_code.py 文件`
 
-Agent（智能体）将自动识别 `code-review` 技能，加载信息并按照指令执行。
+Agent（智能体）会自动识别 `code-review` 技能，加载信息并按指令执行。
 
 ---
 
 ## 📄 示例 2：许可证头技能（License Header Skill）
 
-此技能使用 `resources/` 目录中的参考文件。
+此技能使用 `resources/` 目录下的参考文件。
 
-### 第一步：创建目录
+### 步骤 1：创建目录
 
 ```bash
 mkdir -p .agent/skills/license-header-adder/resources
 ```
 
-### 第二步：创建模版文件
+### 步骤 2：创建模板文件
 
 **`.agent/skills/license-header-adder/resources/HEADER.txt`**：
 
@@ -134,44 +134,44 @@ mkdir -p .agent/skills/license-header-adder/resources
  */
 ```
 
-### 第三步：创建 SKILL.md
+### 步骤 3：创建 SKILL.md
 
 **`.agent/skills/license-header-adder/SKILL.md`**：
 
 ```markdown
 ---
 name: license-header-adder
-description: 为新源文件添加标准的企业许可证头。
+description: Adds the standard corporate license header to new source files.
 ---
 
-# 添加许可证头（License Header Adder）
+# License Header Adder
 
-此技能确保所有新源文件都具有正确的版权头。
+This skill ensures that all new source files have the correct copyright header.
 
-## 指令
+## Instructions
 
-1.  **读取模版**: 读取 `resources/HEADER.txt` 的内容。
-2.  **应用到文件**: 创建新文件时，将此确切内容添加到开头。
-3.  **适配语法**:
-    - 对于 C 风格语言（Java, TS（TypeScript）），保留 `/* */` 块。
-    - 对于 Python/Shell，转换为 `#` 注释。
+1. **Read the Template**: Read the content of `resources/HEADER.txt`.
+2. **Apply to File**: When creating a new file, prepend this exact content.
+3. **Adapt Syntax**: 
+   - For C-style languages (Java, TS), keep the `/* */` block.
+   - For Python/Shell, convert to `#` comments.
 ```
 
-### 试一试
+### 试用
 
-**提示词**：`创建一个名为 data_processor.py 的 Python 脚本，打印 '你好，世界'。`
+**提示词（Prompt）**：`创建一个名为 data_processor.py 的 Python 脚本，输出 'Hello World'.`
 
-Agent（智能体）将读取模版，按 Python 风格转换注释，并自动添加到文件开头。
+Agent（智能体）将读取模板，将注释转换为 Python 格式，并自动添加到文件头部。
 
 ---
 
-## 🎯 总结
+## 🎯 结论
 
-通过创建 Skills，你已经将通用 AI 模型转变为项目的专家：
+通过创建 Skills（技能），你已经把通用 AI 模型变成了面向项目的专家：
 
-- ✅ 系统化最佳实践
-- ✅ 遵循代码审查规则
-- ✅ 自动添加 License 头
-- ✅ Agent（智能体）自动知道如何与你的团队协作
+- ✅ 体系化最佳实践（best practices）
+- ✅ 遵循代码评审规则
+- ✅ 自动添加许可证头
+- ✅ Agent（智能体）自动了解团队工作方式
 
-现在，Agent（智能体）会自动执行这些操作，而不需要你每次都提醒它。
+无需反复提醒 AI “记得加 license” 或 “修正提交格式”，现在 Agent 会自动执行。
