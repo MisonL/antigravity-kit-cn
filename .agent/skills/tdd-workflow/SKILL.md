@@ -56,7 +56,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 原则         | 含义                                        |
 | ------------ | ------------------------------------------- |
-| **YAGNI**    | You Aren't Gonna Need It（你以后才不需要它） |
+| **YAGNI**    | You Aren't Gonna Need It（你不会需要它） |
 | **最简方案** | 编写能让测试通过的最少代码                  |
 | **暂不优化** | 此时只求“跑通”，不求“精炼”                  |
 
@@ -89,9 +89,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ## 6. AAA 模式
 
-AAA（Arrange-Act-Assert，准备-执行-断言）用于规范测试结构。
-
-每个测试用例均应遵循：
+每个测试均应遵循 AAA（Arrange-Act-Assert，准备-执行-断言）：
 
 | 步骤               | 目的                 |
 | ------------------ | -------------------- |
@@ -115,10 +113,12 @@ AAA（Arrange-Act-Assert，准备-执行-断言）用于规范测试结构。
 
 ## 8. 测试优先级
 
-1. **Happy Path（正常路径）**：最基本的功能流程。
-2. **错误处理**：预期的错误反馈。
-3. **Edge Cases（边缘情况）**：极端的输入条件。
-4. **性能评估**：在大负载下的表现。
+| 优先级 | 测试类型 |
+|----------|-----------|
+| 1 | Happy path（正常路径） |
+| 2 | Error cases（错误处理） |
+| 3 | Edge cases（边界情况） |
+| 4 | Performance（性能） |
 
 ---
 
@@ -138,8 +138,12 @@ AAA（Arrange-Act-Assert，准备-执行-断言）用于规范测试结构。
 
 ### Multi-Agent（多智能体）编排视角
 
-- **Agent（智能体） A**：编写失败的测试（RED）。
-- **Agent（智能体） B**：编写实现代码以通过测试（GREEN）。
-- **Agent（智能体） C**：对代码进行专家级调优（REFACTOR）。
+| Agent | 角色 |
+|-------|------|
+| Agent A | 编写失败测试（RED） |
+| Agent B | 编写实现使其通过（GREEN） |
+| Agent C | 进行优化（REFACTOR） |
 
 ---
+
+> **记住：** 测试就是规格。如果你写不出测试，说明你还没有真正理解需求。
