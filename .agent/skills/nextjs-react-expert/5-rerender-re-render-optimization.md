@@ -1,26 +1,26 @@
-# 5. Re-render Optimization
+# 5. 重渲染优化 (Re-render Optimization)
 
-> **Impact:** MEDIUM
-> **Focus:** Reducing unnecessary re-renders minimizes wasted computation and improves UI responsiveness.
-
----
-
-## Overview
-
-This section contains **12 rules** focused on re-render optimization.
+> **影响:** 中 (MEDIUM)
+> **重点:** 减少不必要的重渲染，降低无效计算并提升 UI 响应性。
 
 ---
 
-## Rule 5.1: Calculate Derived State During Rendering
+## 概览
 
-**Impact:** MEDIUM  
-**Tags:** rerender, derived-state, useEffect, state  
+本节包含 **12 条规则**，聚焦重渲染优化。
 
-## Calculate Derived State During Rendering
+---
 
-If a value can be computed from current props/state, do not store it in state or update it in an effect. Derive it during render to avoid extra renders and state drift. Do not set state in effects solely in response to prop changes; prefer derived values or keyed resets instead.
+## 规则 5.1：在渲染阶段计算派生状态
 
-**Incorrect (redundant state and effect):**
+**影响:** 中 (MEDIUM)  
+**标签:** rerender, derived-state, useEffect, state  
+
+## 在渲染阶段计算派生状态
+
+如果一个值可以由当前 props/state 直接计算得到，就不要再把它存进 state，或通过 effect 去更新它。应在渲染阶段直接派生，避免额外渲染和状态漂移。不要仅因为 prop 变化就在 effect 里 setState；优先使用派生值或基于 key 的重置。
+
+**错误示例（冗余 state + effect）：**
 
 ```tsx
 function Form() {
@@ -36,7 +36,7 @@ function Form() {
 }
 ```
 
-**Correct (derive during render):**
+**正确示例（渲染时直接派生）：**
 
 ```tsx
 function Form() {
@@ -48,20 +48,20 @@ function Form() {
 }
 ```
 
-References: [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)
+参考： [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)
 
 ---
 
-## Rule 5.2: Defer State Reads to Usage Point
+## 规则 5.2：将状态读取延后到实际使用点
 
-**Impact:** MEDIUM  
-**Tags:** rerender, searchParams, localStorage, optimization  
+**影响:** 中 (MEDIUM)  
+**标签:** rerender, searchParams, localStorage, optimization  
 
-## Defer State Reads to Usage Point
+## 将状态读取延后到实际使用点
 
-Don't subscribe to dynamic state (searchParams, localStorage) if you only read it inside callbacks.
+如果你只在回调里读取动态状态（如 searchParams、localStorage），就不要为其建立订阅。
 
-**Incorrect (subscribes to all searchParams changes):**
+**错误示例（会订阅所有 searchParams 变化）：**
 
 ```tsx
 function ShareButton({ chatId }: { chatId: string }) {
@@ -76,7 +76,7 @@ function ShareButton({ chatId }: { chatId: string }) {
 }
 ```
 
-**Correct (reads on demand, no subscription):**
+**正确示例（按需读取，不订阅）：**
 
 ```tsx
 function ShareButton({ chatId }: { chatId: string }) {
@@ -92,17 +92,16 @@ function ShareButton({ chatId }: { chatId: string }) {
 
 ---
 
-## Rule 5.3: Do not wrap a simple expression with a primitive result type in useMemo
+## 规则 5.3：简单原始类型表达式不要用 useMemo 包裹
 
-**Impact:** LOW-MEDIUM  
-**Tags:** rerender, useMemo, optimization  
+**影响:** 低到中 (LOW-MEDIUM)  
+**标签:** rerender, useMemo, optimization  
 
-## Do not wrap a simple expression with a primitive result type in useMemo
+## 简单原始类型表达式不要用 useMemo 包裹
 
-When an expression is simple (few logical or arithmetical operators) and has a primitive result type (boolean, number, string), do not wrap it in `useMemo`.
-Calling `useMemo` and comparing hook dependencies may consume more resources than the expression itself.
+当表达式本身很简单（仅少量逻辑或算术运算），且返回原始类型（boolean、number、string）时，不要用 `useMemo` 包裹。调用 `useMemo` 及比较依赖项的开销，可能比表达式本身更高。
 
-**Incorrect:**
+**错误示例：**
 
 ```tsx
 function Header({ user, notifications }: Props) {
@@ -115,7 +114,7 @@ function Header({ user, notifications }: Props) {
 }
 ```
 
-**Correct:**
+**正确示例：**
 
 ```tsx
 function Header({ user, notifications }: Props) {
@@ -128,18 +127,18 @@ function Header({ user, notifications }: Props) {
 
 ---
 
-## Rule 5.4: Extract Default Non-primitive Parameter Value from Memoized Component to Constant
+## 规则 5.4：将 memo 组件中的非原始默认参数提取为常量
 
-**Impact:** MEDIUM  
-**Tags:** rerender, memo, optimization  
+**影响:** 中 (MEDIUM)  
+**标签:** rerender, memo, optimization  
 
-## Extract Default Non-primitive Parameter Value from Memoized Component to Constant
+## 将 memo 组件中的非原始默认参数提取为常量
 
-When memoized component has a default value for some non-primitive optional parameter, such as an array, function, or object, calling the component without that parameter results in broken memoization. This is because new value instances are created on every rerender, and they do not pass strict equality comparison in `memo()`.
+当 memo 组件的可选参数默认值是非原始类型（数组、函数、对象）时，若调用组件时省略该参数，可能导致 memo 失效。原因是每次重渲染都会创建新实例，无法通过 `memo()` 的严格相等比较。
 
-To address this issue, extract the default value into a constant.
+解决方式是把默认值提取到组件外的常量中。
 
-**Incorrect (`onClick` has different values on every rerender):**
+**错误示例（`onClick` 每次重渲染值都不同）：**
 
 ```tsx
 const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: () => void }) {
@@ -150,7 +149,7 @@ const UserAvatar = memo(function UserAvatar({ onClick = () => {} }: { onClick?: 
 <UserAvatar />
 ```
 
-**Correct (stable default value):**
+**正确示例（稳定默认值）：**
 
 ```tsx
 const NOOP = () => {};
@@ -165,16 +164,16 @@ const UserAvatar = memo(function UserAvatar({ onClick = NOOP }: { onClick?: () =
 
 ---
 
-## Rule 5.5: Extract to Memoized Components
+## 规则 5.5：将重计算逻辑提取到 memo 组件
 
-**Impact:** MEDIUM  
-**Tags:** rerender, memo, useMemo, optimization  
+**影响:** 中 (MEDIUM)  
+**标签:** rerender, memo, useMemo, optimization  
 
-## Extract to Memoized Components
+## 将重计算逻辑提取到 memo 组件
 
-Extract expensive work into memoized components to enable early returns before computation.
+把开销较大的计算提取到 memo 组件中，便于在计算前提前返回。
 
-**Incorrect (computes avatar even when loading):**
+**错误示例（即使 loading 也计算 avatar）：**
 
 ```tsx
 function Profile({ user, loading }: Props) {
@@ -188,7 +187,7 @@ function Profile({ user, loading }: Props) {
 }
 ```
 
-**Correct (skips computation when loading):**
+**正确示例（loading 时跳过计算）：**
 
 ```tsx
 const UserAvatar = memo(function UserAvatar({ user }: { user: User }) {
@@ -206,20 +205,20 @@ function Profile({ user, loading }: Props) {
 }
 ```
 
-**Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, manual memoization with `memo()` and `useMemo()` is not necessary. The compiler automatically optimizes re-renders.
+**说明：** 若项目启用 [React Compiler](https://react.dev/learn/react-compiler)，通常无需手写 `memo()` 与 `useMemo()`；编译器会自动优化重渲染。
 
 ---
 
-## Rule 5.6: Narrow Effect Dependencies
+## 规则 5.6：收窄 Effect 依赖
 
-**Impact:** LOW  
-**Tags:** rerender, useEffect, dependencies, optimization  
+**影响:** 低 (LOW)  
+**标签:** rerender, useEffect, dependencies, optimization  
 
-## Narrow Effect Dependencies
+## 收窄 Effect 依赖
 
-Specify primitive dependencies instead of objects to minimize effect re-runs.
+优先依赖原始值，而非对象整体，以减少 effect 的重复执行。
 
-**Incorrect (re-runs on any user field change):**
+**错误示例（user 任意字段变化都会重跑）：**
 
 ```tsx
 useEffect(() => {
@@ -227,7 +226,7 @@ useEffect(() => {
 }, [user])
 ```
 
-**Correct (re-runs only when id changes):**
+**正确示例（仅 id 变化时重跑）：**
 
 ```tsx
 useEffect(() => {
@@ -235,17 +234,17 @@ useEffect(() => {
 }, [user.id])
 ```
 
-**For derived state, compute outside effect:**
+**派生状态应在 effect 外计算：**
 
 ```tsx
-// Incorrect: runs on width=767, 766, 765...
+// 错误示例：width=767、766、765...都会运行
 useEffect(() => {
   if (width < 768) {
     enableMobileMode()
   }
 }, [width])
 
-// Correct: runs only on boolean transition
+// 正确示例：仅在布尔值切换时运行
 const isMobile = width < 768
 useEffect(() => {
   if (isMobile) {
@@ -256,16 +255,16 @@ useEffect(() => {
 
 ---
 
-## Rule 5.7: Put Interaction Logic in Event Handlers
+## 规则 5.7：交互逻辑应放在事件处理器中
 
-**Impact:** MEDIUM  
-**Tags:** rerender, useEffect, events, side-effects, dependencies  
+**影响:** 中 (MEDIUM)  
+**标签:** rerender, useEffect, events, side-effects, dependencies  
 
-## Put Interaction Logic in Event Handlers
+## 交互逻辑应放在事件处理器中
 
-If a side effect is triggered by a specific user action (submit, click, drag), run it in that event handler. Do not model the action as state + effect; it makes effects re-run on unrelated changes and can duplicate the action.
+如果副作用由明确的用户操作触发（提交、点击、拖拽），就应放在对应事件处理器里执行。不要建模成“state + effect”，这会让 effect 因无关变化重跑，甚至重复触发动作。
 
-**Incorrect (event modeled as state + effect):**
+**错误示例（把事件建模成 state + effect）：**
 
 ```tsx
 function Form() {
@@ -283,7 +282,7 @@ function Form() {
 }
 ```
 
-**Correct (do it in the handler):**
+**正确示例（在 handler 中直接执行）：**
 
 ```tsx
 function Form() {
@@ -298,20 +297,20 @@ function Form() {
 }
 ```
 
-Reference: [Should this code move to an event handler?](https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler)
+参考： [Should this code move to an event handler?](https://react.dev/learn/removing-effect-dependencies#should-this-code-move-to-an-event-handler)
 
 ---
 
-## Rule 5.8: Subscribe to Derived State
+## 规则 5.8：订阅派生状态而非连续值
 
-**Impact:** MEDIUM  
-**Tags:** rerender, derived-state, media-query, optimization  
+**影响:** 中 (MEDIUM)  
+**标签:** rerender, derived-state, media-query, optimization  
 
-## Subscribe to Derived State
+## 订阅派生状态而非连续值
 
-Subscribe to derived boolean state instead of continuous values to reduce re-render frequency.
+用派生布尔状态替代连续值订阅，可以降低重渲染频率。
 
-**Incorrect (re-renders on every pixel change):**
+**错误示例（每个像素变化都会重渲染）：**
 
 ```tsx
 function Sidebar() {
@@ -321,7 +320,7 @@ function Sidebar() {
 }
 ```
 
-**Correct (re-renders only when boolean changes):**
+**正确示例（仅布尔值切换时重渲染）：**
 
 ```tsx
 function Sidebar() {
@@ -332,104 +331,104 @@ function Sidebar() {
 
 ---
 
-## Rule 5.9: Use Functional setState Updates
+## 规则 5.9：使用函数式 setState 更新
 
-**Impact:** MEDIUM  
-**Tags:** react, hooks, useState, useCallback, callbacks, closures  
+**影响:** 中 (MEDIUM)  
+**标签:** react, hooks, useState, useCallback, callbacks, closures  
 
-## Use Functional setState Updates
+## 使用函数式 setState 更新
 
-When updating state based on the current state value, use the functional update form of setState instead of directly referencing the state variable. This prevents stale closures, eliminates unnecessary dependencies, and creates stable callback references.
+当状态更新依赖当前状态值时，应使用 setState 的函数式写法，而不是直接引用外层状态变量。这样可以避免过期闭包、减少不必要依赖，并让回调引用更稳定。
 
-**Incorrect (requires state as dependency):**
+**错误示例（必须把 state 放进依赖）：**
 
 ```tsx
 function TodoList() {
   const [items, setItems] = useState(initialItems)
   
-  // Callback must depend on items, recreated on every items change
+  // 回调必须依赖 items，items 每次变化都会重建
   const addItems = useCallback((newItems: Item[]) => {
     setItems([...items, ...newItems])
-  }, [items])  // ❌ items dependency causes recreations
+  }, [items])  // ❌ 依赖 items 会导致频繁重建
   
-  // Risk of stale closure if dependency is forgotten
+  // 若漏掉依赖会有过期闭包风险
   const removeItem = useCallback((id: string) => {
     setItems(items.filter(item => item.id !== id))
-  }, [])  // ❌ Missing items dependency - will use stale items!
+  }, [])  // ❌ 缺少 items 依赖，会读取过期 items
   
   return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />
 }
 ```
 
-The first callback is recreated every time `items` changes, which can cause child components to re-render unnecessarily. The second callback has a stale closure bug—it will always reference the initial `items` value.
+第一个回调会在 `items` 每次变化时重建，可能导致子组件不必要重渲染。第二个回调存在过期闭包缺陷，会始终引用初始 `items` 值。
 
-**Correct (stable callbacks, no stale closures):**
+**正确示例（回调稳定、无过期闭包）：**
 
 ```tsx
 function TodoList() {
   const [items, setItems] = useState(initialItems)
   
-  // Stable callback, never recreated
+  // 稳定回调，不会被重建
   const addItems = useCallback((newItems: Item[]) => {
     setItems(curr => [...curr, ...newItems])
-  }, [])  // ✅ No dependencies needed
+  }, [])  // ✅ 无需依赖
   
-  // Always uses latest state, no stale closure risk
+  // 总能读取最新状态，无过期闭包风险
   const removeItem = useCallback((id: string) => {
     setItems(curr => curr.filter(item => item.id !== id))
-  }, [])  // ✅ Safe and stable
+  }, [])  // ✅ 安全且稳定
   
   return <ItemsEditor items={items} onAdd={addItems} onRemove={removeItem} />
 }
 ```
 
-**Benefits:**
+**收益：**
 
-1. **Stable callback references** - Callbacks don't need to be recreated when state changes
-2. **No stale closures** - Always operates on the latest state value
-3. **Fewer dependencies** - Simplifies dependency arrays and reduces memory leaks
-4. **Prevents bugs** - Eliminates the most common source of React closure bugs
+1. **回调引用稳定**：state 变化时不必重建回调
+2. **避免过期闭包**：始终基于最新状态计算
+3. **减少依赖复杂度**：依赖数组更简洁，降低隐性问题
+4. **减少 Bug**：规避常见 React 闭包问题来源
 
-**When to use functional updates:**
+**适用场景：**
 
-- Any setState that depends on the current state value
-- Inside useCallback/useMemo when state is needed
-- Event handlers that reference state
-- Async operations that update state
+- 任何依赖当前 state 的 setState 更新
+- 在 useCallback/useMemo 中需要读取 state
+- 事件处理器内引用 state
+- 异步流程里更新 state
 
-**When direct updates are fine:**
+**可直接赋值的场景：**
 
-- Setting state to a static value: `setCount(0)`
-- Setting state from props/arguments only: `setName(newName)`
-- State doesn't depend on previous value
+- 设置静态值：`setCount(0)`
+- 仅由 props/参数得出：`setName(newName)`
+- 更新不依赖前值
 
-**Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, the compiler can automatically optimize some cases, but functional updates are still recommended for correctness and to prevent stale closure bugs.
+**说明：** 即使启用 [React Compiler](https://react.dev/learn/react-compiler) 可自动优化部分场景，函数式更新仍推荐用于保证正确性并避免过期闭包。
 
 ---
 
-## Rule 5.10: Use Lazy State Initialization
+## 规则 5.10：使用惰性状态初始化
 
-**Impact:** MEDIUM  
-**Tags:** react, hooks, useState, performance, initialization  
+**影响:** 中 (MEDIUM)  
+**标签:** react, hooks, useState, performance, initialization  
 
-## Use Lazy State Initialization
+## 使用惰性状态初始化
 
-Pass a function to `useState` for expensive initial values. Without the function form, the initializer runs on every render even though the value is only used once.
+对于初始化开销较大的 state，应向 `useState` 传函数。若直接传表达式，初始化逻辑会在每次渲染时执行，尽管初始化值只会被用一次。
 
-**Incorrect (runs on every render):**
+**错误示例（每次渲染都会运行）：**
 
 ```tsx
 function FilteredList({ items }: { items: Item[] }) {
-  // buildSearchIndex() runs on EVERY render, even after initialization
+  // buildSearchIndex() 每次渲染都会执行，即使初始化早已完成
   const [searchIndex, setSearchIndex] = useState(buildSearchIndex(items))
   const [query, setQuery] = useState('')
   
-  // When query changes, buildSearchIndex runs again unnecessarily
+  // query 变化时，buildSearchIndex 仍会被不必要地再次执行
   return <SearchResults index={searchIndex} query={query} />
 }
 
 function UserProfile() {
-  // JSON.parse runs on every render
+  // JSON.parse 每次渲染都会执行
   const [settings, setSettings] = useState(
     JSON.parse(localStorage.getItem('settings') || '{}')
   )
@@ -438,11 +437,11 @@ function UserProfile() {
 }
 ```
 
-**Correct (runs only once):**
+**正确示例（只执行一次）：**
 
 ```tsx
 function FilteredList({ items }: { items: Item[] }) {
-  // buildSearchIndex() runs ONLY on initial render
+  // buildSearchIndex() 仅在首次渲染执行
   const [searchIndex, setSearchIndex] = useState(() => buildSearchIndex(items))
   const [query, setQuery] = useState('')
   
@@ -450,7 +449,7 @@ function FilteredList({ items }: { items: Item[] }) {
 }
 
 function UserProfile() {
-  // JSON.parse runs only on initial render
+  // JSON.parse 仅在首次渲染执行
   const [settings, setSettings] = useState(() => {
     const stored = localStorage.getItem('settings')
     return stored ? JSON.parse(stored) : {}
@@ -460,22 +459,22 @@ function UserProfile() {
 }
 ```
 
-Use lazy initialization when computing initial values from localStorage/sessionStorage, building data structures (indexes, maps), reading from the DOM, or performing heavy transformations.
+当初始值来自 localStorage/sessionStorage、需要构建索引/映射等数据结构、读取 DOM 或做重计算转换时，优先用惰性初始化。
 
-For simple primitives (`useState(0)`), direct references (`useState(props.value)`), or cheap literals (`useState({})`), the function form is unnecessary.
+对于简单原始值（`useState(0)`）、直接引用（`useState(props.value)`）或廉价字面量（`useState({})`），无需函数形式。
 
 ---
 
-## Rule 5.11: Use Transitions for Non-Urgent Updates
+## 规则 5.11：对非紧急更新使用 Transition
 
-**Impact:** MEDIUM  
-**Tags:** rerender, transitions, startTransition, performance  
+**影响:** 中 (MEDIUM)  
+**标签:** rerender, transitions, startTransition, performance  
 
-## Use Transitions for Non-Urgent Updates
+## 对非紧急更新使用 Transition
 
-Mark frequent, non-urgent state updates as transitions to maintain UI responsiveness.
+将高频但非紧急的状态更新标记为 transition，保持界面响应流畅。
 
-**Incorrect (blocks UI on every scroll):**
+**错误示例（每次滚动都阻塞 UI）：**
 
 ```tsx
 function ScrollTracker() {
@@ -488,7 +487,7 @@ function ScrollTracker() {
 }
 ```
 
-**Correct (non-blocking updates):**
+**正确示例（非阻塞更新）：**
 
 ```tsx
 import { startTransition } from 'react'
@@ -507,16 +506,16 @@ function ScrollTracker() {
 
 ---
 
-## Rule 5.12: Use useRef for Transient Values
+## 规则 5.12：临时值使用 useRef
 
-**Impact:** MEDIUM  
-**Tags:** rerender, useref, state, performance  
+**影响:** 中 (MEDIUM)  
+**标签:** rerender, useref, state, performance  
 
-## Use useRef for Transient Values
+## 临时值使用 useRef
 
-When a value changes frequently and you don't want a re-render on every update (e.g., mouse trackers, intervals, transient flags), store it in `useRef` instead of `useState`. Keep component state for UI; use refs for temporary DOM-adjacent values. Updating a ref does not trigger a re-render.
+当某个值变化频繁，且你不希望每次变化都触发重渲染（例如鼠标追踪、定时器、瞬时标记）时，应使用 `useRef`，而不是 `useState`。组件 state 用于驱动 UI，ref 用于临时、贴近 DOM 的值。更新 ref 不会触发重渲染。
 
-**Incorrect (renders every update):**
+**错误示例（每次更新都重渲染）：**
 
 ```tsx
 function Tracker() {
@@ -543,7 +542,9 @@ function Tracker() {
 }
 ```
 
-**Correct (no re-render for tracking):**
+
+
+**正确示例（追踪更新不触发重渲染）：**
 
 ```tsx
 function Tracker() {
@@ -578,4 +579,3 @@ function Tracker() {
   )
 }
 ```
-
