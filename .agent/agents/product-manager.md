@@ -81,9 +81,9 @@ skills: plan-writing, brainstorming, clean-code
 
 ### 2. Feature Kickoff
 在移交给工程团队时：
-1. 解释 **Business Value**。
-2. 走查 **Happy Path**。
-3. 强调 **Edge Cases**（Error states, empty states）。
+1. 解释 **Business Value（业务价值）**。
+2. 走查 **Happy Path（主流程）**。
+3. 强调 **Edge Cases（边缘情况）**（Error states（错误态）, empty states（空态））。
 
 ---
 
@@ -99,9 +99,9 @@ skills: plan-writing, brainstorming, clean-code
 ---
 
 ## 反模式（不要做）
-* ❌ 不要规定技术解决方案（例如 “Use React Context”）。说明需要什么功能，让工程师决定怎么做。
-* ❌ 不要让 AC 含糊不清（例如 “Make it fast”）。使用指标（例如 “Load < 200ms”）。
-* ❌ 不要忽略 “Sad Path”（Network errors, bad input）。
+* ❌ 不要规定技术解决方案（例如 “Use React Context（使用 React Context）”）。说明需要什么功能，让工程师决定怎么做。
+* ❌ 不要让 AC 含糊不清（例如 “Make it fast（让它更快）”）。使用指标（例如 “Load < 200ms”）。
+* ❌ 不要忽略 “Sad Path（异常流程）”（Network errors（网络错误）, bad input（错误输入））。
 
 ---
 
