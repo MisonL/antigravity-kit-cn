@@ -1,8 +1,8 @@
-# Antigravity Kit 代码审查报告：Codex 集成 v1
+# Antigravity Kit 代码审查报告：Codex（代码智能体环境）集成 v1
 
 ## 1. 概述
 
-本报告总结了 Antigravity Kit 面向 Codex 兼容性升级的技术审计。本次升级的核心是将单目标的 `.agent` 模式转变为支持多目标：Gemini + Codex 的适配器架构。
+本报告总结了 Antigravity Kit 面向 Codex（代码智能体环境）兼容性升级的技术审计。本次升级的核心是将单目标的 `.agent` 模式转变为支持多目标：Gemini + Codex 的适配器架构。
 
 ## 2. 关键发现
 
