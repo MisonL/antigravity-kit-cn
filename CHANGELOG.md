@@ -7,6 +7,7 @@
 
 ## [Unreleased]
 
+
 ## [2.0.2] - 2026-02-04
 
 - **新技能**:
@@ -14,22 +15,23 @@
 - **Agent 工作流**:
     - 更新 `orchestrate.md`，修复土耳其语输出问题
 
+
 ## [2.0.1] - 2026-01-26
 
 ### 新增
 
-- **Agent Flow（智能体流程）文档**: 新的完整工作流文档
+- **Agent Flow 文档**: 新的完整工作流文档
     - 添加 `.agent/AGENT_FLOW.md` - 完整的智能体流程架构指南
     - 记录 Agent Routing Checklist（智能体路由检查清单，代码/设计前的强制步骤）
     - 记录 Socratic Gate Protocol（苏格拉底门禁协议，用于需求澄清）
-    - 添加跨 Skill（技能）引用模式文档
+    - 添加 Cross-Skill References（跨技能引用）模式文档
 - **新技能**:
     - `react-best-practices` - 整合 Next.js 与 React 专业知识
     - `web-design-guidelines` - 专业 Web 设计标准与模式
 
 ### 变更
 
-- **技能整合**: 将 `nextjs-best-practices` 与 `react-patterns` 合并为统一的 `react-best-practices` Skill（技能）
+- **技能整合**: 将 `nextjs-best-practices` 与 `react-patterns` 合并为统一的 `react-best-practices` 技能
 - **架构更新**:
     - 增强 `.agent/ARCHITECTURE.md` 的流程图
     - 更新 `.agent/rules/GEMINI.md`，加入 Agent Routing Checklist（智能体路由检查清单）
@@ -40,14 +42,14 @@
 
 ### 移除
 
-- 废弃 `nextjs-best-practices` Skill（并入 `react-best-practices`）
-- 废弃 `react-patterns` Skill（并入 `react-best-practices`）
+- 废弃 `nextjs-best-practices` 技能（并入 `react-best-practices`）
+- 废弃 `react-patterns` 技能（并入 `react-best-practices`）
 
 ### 修复
 
-- **Agent Flow（智能体流程）准确性**: 修正 AGENT_FLOW.md 中误导性术语
-    - 将 "Parallel Execution" 改为 "Sequential Multi-Domain Execution"（顺序多领域执行）
-    - 将 "Integration Layer" 改为 "Code Coherence"（代码一致性）并补充准确说明
+- **Agent Flow 准确性**: 修正 AGENT_FLOW.md 中误导性术语
+    - 将 "Parallel Execution" 改为 "Sequential Multi-Domain Execution"
+    - 将 "Integration Layer" 改为 "Code Coherence" 并补充准确说明
     - 添加 AI 顺序处理与模拟多智能体行为的现实说明
     - 澄清脚本需要用户批准（不会自动执行）
 
