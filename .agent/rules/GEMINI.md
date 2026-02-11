@@ -197,3 +197,77 @@ trigger: always_on
 
 - **完成条件：** `checklist.py` 返回成功才视为完成。
 - **报告原则：** 失败时先修复 Critical 阻塞项（Security/Lint）。
+
+**可用脚本（共 12 个）：**
+
+| Script | Skill | 使用时机 |
+| -------------------------- | --------------------- | ------------------- |
+| `security_scan.py` | vulnerability-scanner | 部署前必跑 |
+| `dependency_analyzer.py` | vulnerability-scanner | 每周 / 部署前 |
+| `lint_runner.py` | lint-and-validate | 每次代码变更后 |
+| `test_runner.py` | testing-patterns | 逻辑变更后 |
+| `schema_validator.py` | database-design | 数据库变更后 |
+| `ux_audit.py` | frontend-design | UI 变更后 |
+| `accessibility_checker.py` | frontend-design | UI 变更后 |
+| `seo_checker.py` | seo-fundamentals | 页面变更后 |
+| `bundle_analyzer.py` | performance-profiling | 部署前 |
+| `mobile_audit.py` | mobile-design | 移动端变更后 |
+| `lighthouse_audit.py` | performance-profiling | 部署前 |
+| `playwright_runner.py` | webapp-testing | 部署前 |
+
+> 🔴 **Agents 与 Skills 可调用任意脚本：** `python .agent/skills/<skill>/scripts/<script>.py`
+
+### 🎭 Gemini 模式映射
+
+| Mode | Agent | 行为 |
+| -------- | ----------------- | -------------------------------------------- |
+| **plan** | `project-planner` | 使用 4 阶段方法；Phase 4 前禁止写代码 |
+| **ask** | - | 聚焦理解，先提问 |
+| **edit** | `orchestrator` | 执行模式，先检查 `{task-slug}.md` |
+
+**Plan Mode（4 阶段）**
+
+1. ANALYSIS → 研究与提问
+2. PLANNING → 生成 `{task-slug}.md` 与任务拆解
+3. SOLUTIONING → 架构与设计（禁止写代码）
+4. IMPLEMENTATION → 编码与测试
+
+> 🔴 **Edit 模式规则：** 多文件或结构性变更先建议创建 `{task-slug}.md`；单文件修复可直接执行。
+
+---
+
+## TIER 2：设计规则（参考）
+
+> **设计规则在专用智能体中，不在本文件。**
+
+| 任务 | 读取 |
+| ------------ | ------------------------------- |
+| Web UI/UX | `.agent/frontend-specialist.md` |
+| Mobile UI/UX | `.agent/mobile-developer.md` |
+
+**上述智能体文件包含：**
+
+- Purple Ban（禁止紫色/紫罗兰色）
+- Template Ban（禁止标准模板布局）
+- Anti-cliché 规则（反陈词滥调）
+- Deep Design Thinking 协议（深度设计思考）
+
+> 🔴 **设计任务必须执行：** 打开并阅读对应智能体文件，按规则落地。
+
+---
+
+## 📁 快速参考
+
+### Agents 与 Skills
+
+- **Masters：** `orchestrator`、`project-planner`、`security-auditor`（网络安全/审计）、`backend-specialist`（API/数据库）、`frontend-specialist`（UI/UX）、`mobile-developer`、`debugger`、`game-developer`
+- **关键 Skills：** `clean-code`、`brainstorming`、`app-builder`、`frontend-design`、`mobile-design`、`plan-writing`、`behavioral-modes`
+
+### Key Scripts
+
+- **Verify：** `.agent/scripts/verify_all.py`、`.agent/scripts/checklist.py`
+- **Scanners：** `security_scan.py`、`dependency_analyzer.py`
+- **Audits：** `ux_audit.py`、`mobile_audit.py`、`lighthouse_audit.py`、`seo_checker.py`
+- **Test：** `playwright_runner.py`、`test_runner.py`
+
+---
