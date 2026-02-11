@@ -8,9 +8,9 @@
 
 Antigravity Kit 是一个模块化系统，由以下部分组成：
 
-- **20 个专家 Agent（智能体）** - 基于角色的 AI 人设
-- **36 个 Skills（技能）** - 面向领域的知识模块
-- **11 个 Workflows（工作流）** - Slash 命令流程
+- **20 个专家智能体（Agent）** - 基于角色的 AI 人设
+- **36 个技能（Skill）** - 领域知识模块
+- **11 个工作流（Workflow）** - 斜杠命令流程
 
 ---
 
@@ -18,92 +18,92 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 
 ```plaintext
 .agent/
-├── ARCHITECTURE.md          # 本文件
-├── agents/                  # 20 个专家 Agent（智能体）
-├── skills/                  # 36 个 Skills（技能）
-├── workflows/               # 11 个 Slash 命令
-├── rules/                   # 全局规则
-└── scripts/                 # 主验证脚本
+├── ARCHITECTURE.md          # This file
+├── agents/                  # 20 Specialist Agents
+├── skills/                  # 36 Skills
+├── workflows/               # 11 Slash Commands
+├── rules/                   # Global Rules
+└── scripts/                 # Master Validation Scripts
 ```
 
 ---
 
-## 🤖 Agents（智能体）(20)
+## 🤖 智能体（Agents）(20)
 
 面向不同领域的专家型 AI 人设。
 
-| Agent（智能体）           | Focus（侧重）         | Skills Used（使用的 Skills）                              |
+| 智能体 | 侧重 | 使用技能 |
 | ------------------------ | -------------------- | -------------------------------------------------------- |
-| `orchestrator`           | 多 Agent 协同        | parallel-agents, behavioral-modes                        |
-| `project-planner`        | 探索、任务规划       | brainstorming, plan-writing, architecture                |
-| `frontend-specialist`    | Web UI/UX            | frontend-design, react-best-practices, tailwind-patterns |
-| `backend-specialist`     | API、业务逻辑        | api-patterns, nodejs-best-practices, database-design     |
-| `database-architect`     | Schema、SQL          | database-design, prisma-expert                           |
-| `mobile-developer`       | iOS、Android、RN     | mobile-design                                            |
-| `game-developer`         | 游戏逻辑、机制       | game-development                                         |
-| `devops-engineer`        | CI/CD、Docker        | deployment-procedures, docker-expert                     |
-| `security-auditor`       | 安全合规             | vulnerability-scanner, red-team-tactics                  |
-| `penetration-tester`     | 攻击面安全测试       | red-team-tactics                                         |
-| `test-engineer`          | 测试策略             | testing-patterns, tdd-workflow, webapp-testing           |
-| `debugger`               | 根因分析             | systematic-debugging                                     |
-| `performance-optimizer`  | 性能、Web Vitals     | performance-profiling                                    |
-| `seo-specialist`         | 排名、可见性         | seo-fundamentals, geo-fundamentals                       |
-| `documentation-writer`   | 手册、文档           | documentation-templates                                  |
-| `product-manager`        | 需求、用户故事       | plan-writing, brainstorming                              |
-| `product-owner`          | 策略、Backlog、MVP   | plan-writing, brainstorming                              |
-| `qa-automation-engineer` | E2E 测试、CI 流水线  | webapp-testing, testing-patterns                         |
-| `code-archaeologist`     | 遗留代码、重构       | clean-code, code-review-checklist                        |
-| `explorer-agent`         | 代码库分析           | -                                                        |
+| `orchestrator`           | 多智能体协同 | parallel-agents, behavioral-modes                        |
+| `project-planner`        | 需求探索、任务规划 | brainstorming, plan-writing, architecture                |
+| `frontend-specialist`    | Web UI/UX | frontend-design, react-best-practices, tailwind-patterns |
+| `backend-specialist`     | API、业务逻辑 | api-patterns, nodejs-best-practices, database-design     |
+| `database-architect`     | Schema（模式）、SQL | database-design, prisma-expert                           |
+| `mobile-developer`       | iOS、Android、RN | mobile-design                                            |
+| `game-developer`         | 游戏逻辑、机制 | game-development                                         |
+| `devops-engineer`        | CI/CD、Docker | deployment-procedures, docker-expert                     |
+| `security-auditor`       | 安全合规 | vulnerability-scanner, red-team-tactics                  |
+| `penetration-tester`     | 攻击性安全 | red-team-tactics                                         |
+| `test-engineer`          | 测试策略 | testing-patterns, tdd-workflow, webapp-testing           |
+| `debugger`               | 根因分析 | systematic-debugging                                     |
+| `performance-optimizer`  | 性能、Web Vitals（核心指标） | performance-profiling                                    |
+| `seo-specialist`         | 排名、可见性 | seo-fundamentals, geo-fundamentals                       |
+| `documentation-writer`   | 手册、文档 | documentation-templates                                  |
+| `product-manager`        | 需求、用户故事 | plan-writing, brainstorming                              |
+| `product-owner`          | 策略、Backlog（待办）、MVP | plan-writing, brainstorming                              |
+| `qa-automation-engineer` | E2E 测试、CI 流水线 | webapp-testing, testing-patterns                         |
+| `code-archaeologist`     | 遗留代码、重构 | clean-code, code-review-checklist                        |
+| `explorer-agent`         | 代码库分析 | -                                                        |
 
 ---
 
-## 🧩 Skills（技能）(36)
+## 🧩 技能（Skills）(36)
 
 按任务上下文按需加载的模块化知识域。
 
-### Frontend & UI（前端与 UI）
+### 前端与 UI
 
-| Skill（技能）            | Description（说明）                                                    |
+| 技能 | 说明 |
 | ----------------------- | --------------------------------------------------------------------- |
-| `react-best-practices`  | React 与 Next.js 性能优化（Vercel - 57 条规则）                      |
-| `web-design-guidelines` | Web UI 审计 - 100+ 规则（无障碍、UX、性能，Vercel）                  |
-| `tailwind-patterns`     | Tailwind CSS v4 工具集                                                |
-| `frontend-design`       | UI/UX 模式与设计系统                                                  |
-| `ui-ux-pro-max`         | 50 种风格、21 套配色、50 组字体                                       |
+| `react-best-practices`  | React 与 Next.js 性能优化（Vercel 57 条规则）                          |
+| `web-design-guidelines` | Web UI 审计（无障碍、UX、性能，Vercel 100+ 条规则）                     |
+| `tailwind-patterns`     | Tailwind CSS v4 工具集                                                 |
+| `frontend-design`       | UI/UX 模式与设计系统                                                   |
+| `ui-ux-pro-max`         | 50 种风格、21 套配色、50 组字体                                        |
 
-### Backend & API（后端与 API）
+### 后端与 API
 
-| Skill（技能）            | Description（说明）             |
+| 技能 | 说明 |
 | ----------------------- | ------------------------------ |
 | `api-patterns`          | REST、GraphQL、tRPC            |
 | `nestjs-expert`         | NestJS 模块、DI、装饰器        |
 | `nodejs-best-practices` | Node.js 异步与模块化实践       |
 | `python-patterns`       | Python 规范、FastAPI           |
 
-### Database（数据库）
+### 数据库
 
-| Skill（技能）      | Description（说明）          |
+| 技能 | 说明 |
 | ----------------- | --------------------------- |
-| `database-design` | Schema 设计、优化           |
-| `prisma-expert`   | Prisma ORM、迁移            |
+| `database-design` | 模式设计与优化               |
+| `prisma-expert`   | Prisma ORM、迁移             |
 
-### TypeScript / JavaScript
+### TypeScript 与 JavaScript
 
-| Skill（技能）        | Description（说明）                  |
+| 技能 | 说明 |
 | ------------------- | ----------------------------------- |
-| `typescript-expert` | 类型编程与性能优化                  |
+| `typescript-expert` | 类型级编程与性能优化                |
 
-### Cloud & Infrastructure（云与基础设施）
+### 云与基础设施
 
-| Skill（技能）            | Description（说明）        |
+| 技能 | 说明 |
 | ----------------------- | ------------------------- |
 | `docker-expert`         | 容器化与 Compose          |
 | `deployment-procedures` | CI/CD 与部署流程          |
 | `server-management`     | 基础设施管理              |
 
-### Testing & Quality（测试与质量）
+### 测试与质量
 
-| Skill（技能）            | Description（说明）       |
+| 技能 | 说明 |
 | ----------------------- | ------------------------ |
 | `testing-patterns`      | Jest、Vitest、测试策略   |
 | `webapp-testing`        | E2E、Playwright          |
@@ -111,84 +111,84 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 | `code-review-checklist` | 代码审查标准             |
 | `lint-and-validate`     | Lint 与验证              |
 
-### Security（安全）
+### 安全
 
-| Skill（技能）            | Description（说明）       |
+| 技能 | 说明 |
 | ----------------------- | ------------------------ |
 | `vulnerability-scanner` | 安全审计、OWASP          |
 | `red-team-tactics`      | 红队攻防策略             |
 
-### Architecture & Planning（架构与规划）
+### 架构与规划
 
-| Skill（技能）    | Description（说明）         |
+| 技能 | 说明 |
 | --------------- | -------------------------- |
 | `app-builder`   | 全栈应用脚手架             |
 | `architecture`  | 系统设计模式               |
 | `plan-writing`  | 任务规划与拆解             |
 | `brainstorming` | 苏格拉底式提问             |
 
-### Mobile（移动端）
+### 移动端
 
-| Skill（技能）    | Description（说明）   |
+| 技能 | 说明 |
 | --------------- | --------------------- |
 | `mobile-design` | 移动端 UI/UX 模式     |
 
-### Game Development（游戏开发）
+### 游戏开发
 
-| Skill（技能）       | Description（说明）   |
+| 技能 | 说明 |
 | ------------------ | --------------------- |
 | `game-development` | 游戏逻辑与机制        |
 
-### SEO & Growth（SEO 与增长）
+### SEO 与增长
 
-| Skill（技能）       | Description（说明）            |
+| 技能 | 说明 |
 | ------------------ | ----------------------------- |
-| `seo-fundamentals` | SEO、E-E-A-T、Core Web Vitals |
+| `seo-fundamentals` | SEO、E-E-A-T、Core Web Vitals（核心指标） |
 | `geo-fundamentals` | GenAI 优化                    |
 
-### Shell / CLI（命令行）
+### 命令行
 
-| Skill（技能）         | Description（说明）        |
+| 技能 | 说明 |
 | -------------------- | ------------------------- |
 | `bash-linux`         | Linux 命令与脚本          |
 | `powershell-windows` | Windows PowerShell        |
 
-### Other（其他）
+### 其他
 
-| Skill（技能）              | Description（说明）        |
+| 技能 | 说明 |
 | ------------------------- | ------------------------- |
 | `clean-code`              | 编码规范（全局）          |
-| `behavioral-modes`        | Agent 行为模式            |
-| `parallel-agents`         | 多 Agent 协作模式         |
-| `mcp-builder`             | Model Context Protocol    |
+| `behavioral-modes`        | 智能体行为模式            |
+| `parallel-agents`         | 多智能体协作模式          |
+| `mcp-builder`             | 模型上下文协议（MCP）     |
 | `documentation-templates` | 文档模板                  |
 | `i18n-localization`       | 国际化                    |
-| `performance-profiling`   | Web Vitals、性能优化      |
+| `performance-profiling`   | Web Vitals（核心指标）、性能优化 |
 | `systematic-debugging`    | 系统化排障                |
 
 ---
 
-## 🔄 Workflows（工作流）(11)
+## 🔄 工作流（Workflows）(11)
 
-Slash 命令流程。通过 `/command` 调用。
+斜杠命令（Slash command）流程，通过 `/command` 调用。
 
-| Command（命令）   | Description（说明）       |
+| 命令 | 说明 |
 | ---------------- | ------------------------ |
-| `/brainstorm`    | 苏格拉底式需求探索       |
+| `/brainstorm`    | 苏格拉底式探索           |
 | `/create`        | 创建新功能               |
-| `/debug`         | 问题排查                 |
+| `/debug`         | 调试问题                 |
 | `/deploy`        | 应用部署                 |
 | `/enhance`       | 改进现有代码             |
-| `/orchestrate`   | 多 Agent 协同            |
+| `/orchestrate`   | 多智能体协同             |
 | `/plan`          | 任务拆解                 |
 | `/preview`       | 预览变更                 |
 | `/status`        | 查看项目状态             |
 | `/test`          | 运行测试                 |
-| `/ui-ux-pro-max` | 基于 50 种风格做设计     |
+| `/ui-ux-pro-max` | 使用 50 种风格进行设计    |
 
 ---
 
-## 🎯 Skills（技能）加载协议
+## 🎯 技能加载协议
 
 ```plaintext
 User Request → Skill Description Match → Load SKILL.md
@@ -198,91 +198,42 @@ User Request → Skill Description Match → Load SKILL.md
                                     Read scripts/
 ```
 
-### Skills（技能）结构
+### 技能结构
 
 ```plaintext
 skill-name/
-├── SKILL.md           # （必需）元数据与指令
-├── scripts/           # （可选）Python/Bash 脚本
-├── references/        # （可选）模板、文档
-└── assets/            # （可选）图片、Logo
+├── SKILL.md           # (Required) Metadata & instructions
+├── scripts/           # (Optional) Python/Bash scripts
+├── references/        # (Optional) Templates, docs
+└── assets/            # (Optional) Images, logos
 ```
 
-### 增强型 Skills（带 scripts/references）
+### 增强型技能（含 scripts/references）
 
-| Skill（技能）        | Files（文件） | Coverage（覆盖范围）                  |
+| 技能 | 文件（Files） | 覆盖范围（Coverage）                  |
 | ------------------- | ----- | ----------------------------------- |
-| `ui-ux-pro-max`     | 27    | 50 种风格、21 套配色、50 组字体     |
+| `ui-ux-pro-max`     | 27    | 50 种风格、21 套配色、50 组字体      |
 | `app-builder`       | 20    | 全栈脚手架                          |
 
 ---
 
-## 📜 Scripts（脚本）(2)
+## 📜 脚本（Scripts）(2)
 
-用于编排各 Skill 级脚本的主验证脚本。
+用于编排各技能脚本的主验证脚本。
 
 ### 主脚本
 
-| Script（脚本）   | Purpose（用途）                           | When to Use（使用场景）   |
-| --------------- | ---------------------------------------- | ------------------------ |
+| 脚本（Script） | 用途（Purpose） | 使用场景（When to Use） |
+| --------------- | --------------------------------------- | ------------------------ |
 | `checklist.py`  | 基于优先级的验证（核心检查）             | 开发阶段、pre-commit     |
 | `verify_all.py` | 全量综合验证（全检查）                   | 部署前、发版前           |
 
 ### 使用方式
 
 ```bash
-# 开发阶段的快速验证
+# Quick validation during development
 python .agent/scripts/checklist.py .
 
-# 部署前的完整验证
+# Full verification before deployment
 python .agent/scripts/verify_all.py . --url http://localhost:3000
 ```
-
-### 它们检查什么
-
-**checklist.py**（核心检查）：
-
-- Security（漏洞、密钥）
-- Code Quality（lint、types）
-- Schema Validation
-- Test Suite
-- UX Audit
-- SEO Check
-
-**verify_all.py**（完整套件）：
-
-- 包含 checklist.py 全部检查，另外增加：
-- Lighthouse（Core Web Vitals）
-- Playwright E2E
-- Bundle Analysis
-- Mobile Audit
-- i18n Check
-
-详细说明见 [scripts/README.md](scripts/README.md)
-
----
-
-## 📊 统计
-
-| Metric（指标）       | Value（值）                    |
-| ------------------- | ------------------------------ |
-| **Total Agents**    | 20                             |
-| **Total Skills**    | 36                             |
-| **Total Workflows** | 11                             |
-| **Total Scripts**   | 2（master）+ 18（skill-level） |
-| **Coverage**        | 约 90% web/mobile 开发场景     |
-
----
-
-## 🔗 快速索引
-
-| Need（需求） | Agent（智能体）        | Skills（技能）                         |
-| -------- | --------------------- | ------------------------------------- |
-| Web App  | `frontend-specialist` | react-best-practices, frontend-design |
-| API      | `backend-specialist`  | api-patterns, nodejs-best-practices   |
-| Mobile   | `mobile-developer`    | mobile-design                         |
-| Database | `database-architect`  | database-design, prisma-expert        |
-| Security | `security-auditor`    | vulnerability-scanner                 |
-| Testing  | `test-engineer`       | testing-patterns, webapp-testing      |
-| Debug    | `debugger`            | systematic-debugging                  |
-| Plan     | `project-planner`     | brainstorming, plan-writing           |
