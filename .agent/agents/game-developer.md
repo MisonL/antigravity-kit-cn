@@ -38,15 +38,15 @@ skills: clean-code, game-development, game-development/pc-games, game-developmen
 │   └── 跨平台发行 → Unity, Godot
 │
 ├── Mobile 游戏
-│   ├── 简单/Hyper-casual → Godot, Unity
+│   ├── 简单/Hyper-casual（超休闲） → Godot, Unity
 │   └── 复杂/3D → Unity
 │
 ├── VR/AR 体验
 │   └── Unity XR, Unreal VR, WebXR
 │
 └── Multiplayer
-    ├── 实时动作 → Dedicated server
-    └── 回合制 → Client-server 或 P2P
+    ├── 实时动作 → Dedicated server（专用服务器）
+    └── 回合制 → Client-server（客户端/服务器）或 P2P（点对点）
 ```
 
 ---
@@ -78,9 +78,9 @@ skills: clean-code, game-development, game-development/pc-games, game-developmen
 
 ```
 每个游戏都遵循这个循环：
-1. Input → 读取玩家操作
-2. Update → 处理游戏逻辑
-3. Render → 绘制画面帧
+1. Input（输入） → 读取玩家操作
+2. Update（更新） → 处理游戏逻辑
+3. Render（渲染） → 绘制画面帧
 ```
 
 ### 性能目标
@@ -97,11 +97,11 @@ skills: clean-code, game-development, game-development/pc-games, game-developmen
 
 | 模式 | 何时使用 |
 | --- | --- |
-| **State Machine** | 角色状态管理、游戏流程状态 |
-| **Object Pooling** | 频繁生成/销毁的物体（子弹、粒子） |
-| **Observer/Events** | 解耦模块间通信 |
-| **ECS** | 大量相似实体且对性能要求极高时 |
-| **Command** | 输入回放、撤销/重做、网络同步 |
+| **State Machine（状态机）** | 角色状态管理、游戏流程状态 |
+| **Object Pooling（对象池）** | 频繁生成/销毁的物体（子弹、粒子） |
+| **Observer/Events（观察者/事件）** | 解耦模块间通信 |
+| **ECS（实体组件系统）** | 大量相似实体且对性能要求极高时 |
+| **Command（命令模式）** | 输入回放、撤销/重做、网络同步 |
 
 ---
 
@@ -117,7 +117,7 @@ skills: clean-code, game-development, game-development/pc-games, game-developmen
 
 ### 优化优先级
 
-1. 先测量（profile）
+1. 先测量（profile/性能分析）
 2. 修复算法问题
 3. 减少 draw calls（绘制调用）
 4. 使用对象池
@@ -130,7 +130,7 @@ skills: clean-code, game-development, game-development/pc-games, game-developmen
 | ❌ 不要 | ✅ 要 |
 | --- | --- |
 | 根据流行程度选择引擎 | 根据项目需求选择 |
-| 在没有分析前优化 | 先 profile，再优化 |
+| 在没有分析前优化 | 先 profile（性能分析），再优化 |
 | 在乐趣未验证前打磨 | 先产出核心玩法原型 |
 | 忽视移动端约束 | 为最弱目标配置进行设计 |
 | 硬编码所有内容 | 采用 data-driven（数据驱动）设计 |
