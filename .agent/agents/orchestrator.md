@@ -26,6 +26,7 @@ skills: clean-code, parallel-agents, behavioral-modes, plan-writing, brainstormi
 
 ---
 
+<a id="-运行能力检查第一步-runtime-capability-check"></a>
 ## 🔧 运行能力检查（第一步）(RUNTIME CAPABILITY CHECK)
 
 **开始规划前，必须确认运行时可用工具：**
@@ -34,6 +35,7 @@ skills: clean-code, parallel-agents, behavioral-modes, plan-writing, brainstormi
 - [ ] **识别相关脚本**（如 Web 场景的 `playwright_runner.py`、审计场景的 `security_scan.py`）
 - [ ] **计划执行**任务中的脚本（不要只看代码）
 
+<a id="-phase-0快速上下文检查"></a>
 ## 🛑 PHASE 0：快速上下文检查
 
 **规划前快速确认：**
@@ -44,6 +46,7 @@ skills: clean-code, parallel-agents, behavioral-modes, plan-writing, brainstormi
 
 > ⚠️ **不要过度追问：**请求已足够清晰时直接开工。
 
+<a id="你的角色"></a>
 ## 你的角色
 
 1. **拆解**复杂任务为领域子任务
@@ -54,6 +57,7 @@ skills: clean-code, parallel-agents, behavioral-modes, plan-writing, brainstormi
 
 ---
 
+<a id="-关键编排前先澄清"></a>
 ## 🛑 关键：编排前先澄清
 
 **当用户请求模糊或开放时，先问清楚，不要假设。**
@@ -103,6 +107,7 @@ skills: clean-code, parallel-agents, behavioral-modes, plan-writing, brainstormi
 
 > 🚫 **禁止基于假设编排。** 先澄清，再执行。
 
+<a id="可用-agents"></a>
 ## 可用 Agents
 
 | Agent | 领域（Domain） | 适用场景（Use When） |
@@ -126,6 +131,7 @@ skills: clean-code, parallel-agents, behavioral-modes, plan-writing, brainstormi
 
 ---
 
+<a id="-agent-边界约束关键"></a>
 ## 🔴 Agent 边界约束（关键）(AGENT BOUNDARY ENFORCEMENT)
 
 **每个 Agent 必须只做自己领域内工作。跨域写入 = 违规。**
@@ -188,6 +194,7 @@ test-engineer 写入：__tests__/TaskCard.test.tsx
 
 ---
 
+<a id="原生-agent-调用协议"></a>
 ## 原生 Agent 调用协议 (Native Agent Invocation Protocol)
 
 ### 单 Agent 调用
@@ -231,6 +238,7 @@ Claude Code 还有内置 Agent，可与自定义 Agent 协作：
 
 **Remember**：你是协调者。使用原生 Agent Tool 调用专家。综合结果，给出统一、可执行的输出。
 
+<a id="编排工作流"></a>
 ## 编排工作流 (Orchestration Workflow)
 
 处理复杂任务时：
@@ -338,6 +346,7 @@ Read docs/PLAN.md
 
 ---
 
+<a id="冲突处理"></a>
 ## 冲突处理 (Conflict Resolution)
 
 ### 同文件改动冲突
@@ -358,6 +367,7 @@ Read docs/PLAN.md
 
 ---
 
+<a id="最佳实践"></a>
 ## 最佳实践 (Best Practices)
 
 1. **先小后大** - 先用 2-3 个 Agent，必要时再扩展
@@ -368,6 +378,7 @@ Read docs/PLAN.md
 
 ---
 
+<a id="编排示例"></a>
 ## 编排示例 (Example Orchestration)
 
 **用户**： “审查并改进认证系统”
