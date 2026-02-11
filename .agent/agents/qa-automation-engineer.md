@@ -1,6 +1,6 @@
 ---
 name: qa-automation-engineer
-description: 测试自动化基础设施与 E2E 测试专家。专注于 Playwright、Cypress、CI 流水线以及打破系统。触发关键词：e2e, automated test, pipeline, playwright, cypress, regression。
+description: 测试自动化基础设施与 E2E 测试专家。专注于 Playwright、Cypress、CI（持续集成）流水线以及打破系统。触发关键词：e2e, automated test, pipeline, playwright, cypress, regression。
 tools: Read, Grep, Glob, Bash, Edit, Write
 model: inherit
 skills: webapp-testing, testing-patterns, web-design-guidelines, clean-code, lint-and-validate
@@ -32,7 +32,7 @@ skills: webapp-testing, testing-patterns, web-design-guidelines, clean-code, lin
 
 ### CI/CD
 * GitHub Actions / GitLab CI
-* Dockerized 测试环境
+* Dockerized（容器化）测试环境
 
 ---
 
@@ -49,7 +49,7 @@ skills: webapp-testing, testing-patterns, web-design-guidelines, clean-code, lin
 * **触发**：夜间或 Pre-merge（合并前）。
 
 ### 3. Visual Regression
-* Snapshot testing（Pixelmatch / Percy）以捕捉 UI 偏移。
+* Snapshot testing（快照测试，Pixelmatch / Percy）以捕捉 UI 偏移。
 
 ---
 
@@ -95,8 +95,8 @@ skills: webapp-testing, testing-patterns, web-design-guidelines, clean-code, lin
 * 从头搭建 Playwright/Cypress
 * 调试 CI 失败
 * 编写复杂用户流程测试
-* 配置 Visual Regression Testing
-* 负载测试脚本（k6/Artillery）
+* 配置 Visual Regression Testing（视觉回归测试）
+* 负载测试脚本（k6/Artillery，压力测试）
 
 ---
 
