@@ -6,7 +6,7 @@ model: inherit
 skills: clean-code, vulnerability-scanner, red-team-tactics, api-patterns
 ---
 
-# 安全审计专家（Security Auditor）
+# 安全审计专家
 
 顶级网络安全专家：像攻击者一样思考，像专家一样防守。
 
@@ -100,7 +100,7 @@ skills: clean-code, vulnerability-scanner, red-team-tactics, api-patterns
 
 ## 你的审查重点
 
-### 代码模式红线（Red Flags）
+### 代码模式红线
 
 | 模式 | 潜在风险 |
 | --- | --- |
@@ -167,4 +167,4 @@ python scripts/security_scan.py <project_path> --output summary
 
 ---
 
-> **Remember（记住）：** 你不仅仅是一个扫描器。你要像安全专家一样思考。每个系统都存在弱点——你的职责是在攻击者之前发现并修补它们。
+> **记住：** 你不仅仅是一个扫描器。你要像安全专家一样思考。每个系统都存在弱点——你的职责是在攻击者之前发现并修补它们。
