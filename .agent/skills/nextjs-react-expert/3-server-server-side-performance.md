@@ -1,30 +1,30 @@
-# 3. Server-Side Performance
+# 3. 服务端性能 (Server-Side Performance)
 
-> **Impact:** HIGH
-> **Focus:** Optimizing server-side rendering and data fetching eliminates server-side waterfalls and reduces response times.
-
----
-
-## Overview
-
-This section contains **7 rules** focused on server-side performance.
+> **影响:** 高 (HIGH)
+> **重点:** 通过优化服务端渲染与数据获取，消除服务端瀑布流并降低响应时间。
 
 ---
 
-## Rule 3.1: Authenticate Server Actions Like API Routes
+## 概览
 
-**Impact:** CRITICAL  
-**Tags:** server, server-actions, authentication, security, authorization  
+本节包含 **7 条规则**，聚焦服务端性能。
 
-## Authenticate Server Actions Like API Routes
+---
 
-**Impact: CRITICAL (prevents unauthorized access to server mutations)**
+## 规则 3.1：像 API 路由一样认证 Server Actions
 
-Server Actions (functions with `"use server"`) are exposed as public endpoints, just like API routes. Always verify authentication and authorization **inside** each Server Action—do not rely solely on middleware, layout guards, or page-level checks, as Server Actions can be invoked directly.
+**影响:** 严重 (CRITICAL)  
+**标签:** server, server-actions, authentication, security, authorization  
 
-Next.js documentation explicitly states: "Treat Server Actions with the same security considerations as public-facing API endpoints, and verify if the user is allowed to perform a mutation."
+## 像 API 路由一样认证 Server Actions
 
-**Incorrect (no authentication check):**
+**影响：严重 (防止未授权访问服务端变更操作)**
+
+Server Actions（带有 `"use server"` 的函数）和 API 路由一样，都是对外公开端点。必须在每个 Server Action **内部**做认证与鉴权。不要只依赖中间件、布局守卫或页面级检查，因为 Server Actions 可以被直接调用。
+
+Next.js 文档明确指出：“要将 Server Actions 按公开 API 端点同等安全级别对待，并验证用户是否有权限执行该变更。”
+
+**错误示例（未做认证检查）：**
 
 ```typescript
 'use server'
@@ -36,7 +36,7 @@ export async function deleteUser(userId: string) {
 }
 ```
 
-**Correct (authentication inside the action):**
+**正确示例（在 Action 内部做认证）：**
 
 ```typescript
 'use server'
@@ -62,7 +62,7 @@ export async function deleteUser(userId: string) {
 }
 ```
 
-**With input validation:**
+**结合输入校验：**
 
 ```typescript
 'use server'
@@ -104,29 +104,29 @@ export async function updateProfile(data: unknown) {
 }
 ```
 
-Reference: [https://nextjs.org/docs/app/guides/authentication](https://nextjs.org/docs/app/guides/authentication)
+参考： [https://nextjs.org/docs/app/guides/authentication](https://nextjs.org/docs/app/guides/authentication)
 
 ---
 
-## Rule 3.2: Avoid Duplicate Serialization in RSC Props
+## 规则 3.2：避免在 RSC Props 中重复序列化
 
-**Impact:** LOW  
-**Tags:** server, rsc, serialization, props, client-components  
+**影响:** 低 (LOW)  
+**标签:** server, rsc, serialization, props, client-components  
 
-## Avoid Duplicate Serialization in RSC Props
+## 避免在 RSC Props 中重复序列化
 
-**Impact: LOW (reduces network payload by avoiding duplicate serialization)**
+**影响：低 (通过避免重复序列化来减少网络负载)**
 
-RSC→client serialization deduplicates by object reference, not value. Same reference = serialized once; new reference = serialized again. Do transformations (`.toSorted()`, `.filter()`, `.map()`) in client, not server.
+RSC 到客户端的序列化是按对象引用去重，不是按值去重。相同引用只会序列化一次；新引用会再次序列化。像 `.toSorted()`、`.filter()`、`.map()` 这类转换应尽量放在客户端，而不是服务端。
 
-**Incorrect (duplicates array):**
+**错误示例（数组被重复序列化）：**
 
 ```tsx
 // RSC: sends 6 strings (2 arrays × 3 items)
 <ClientList usernames={usernames} usernamesOrdered={usernames.toSorted()} />
 ```
 
-**Correct (sends 3 strings):**
+**正确示例（只发送 3 个字符串）：**
 
 ```tsx
 // RSC: send once
@@ -137,12 +137,12 @@ RSC→client serialization deduplicates by object reference, not value. Same ref
 const sorted = useMemo(() => [...usernames].sort(), [usernames])
 ```
 
-**Nested deduplication behavior:**
+**嵌套去重行为：**
 
-Deduplication works recursively. Impact varies by data type:
+去重会递归生效，不同数据类型的收益不同：
 
-- `string[]`, `number[]`, `boolean[]`: **HIGH impact** - array + all primitives fully duplicated
-- `object[]`: **LOW impact** - array duplicated, but nested objects deduplicated by reference
+- `string[]`、`number[]`、`boolean[]`：**高影响**，数组和其中的原始值都会完整重复
+- `object[]`：**低影响**，数组结构会重复，但内部对象会按引用去重
 
 ```tsx
 // string[] - duplicates everything
@@ -152,12 +152,12 @@ usernames={['a','b']} sorted={usernames.toSorted()} // sends 4 strings
 users={[{id:1},{id:2}]} sorted={users.toSorted()} // sends 2 arrays + 2 unique objects (not 4)
 ```
 
-**Operations breaking deduplication (create new references):**
+**会破坏去重的操作（会创建新引用）：**
 
-- Arrays: `.toSorted()`, `.filter()`, `.map()`, `.slice()`, `[...arr]`
-- Objects: `{...obj}`, `Object.assign()`, `structuredClone()`, `JSON.parse(JSON.stringify())`
+- 数组：`.toSorted()`、`.filter()`、`.map()`、`.slice()`、`[...arr]`
+- 对象：`{...obj}`、`Object.assign()`、`structuredClone()`、`JSON.parse(JSON.stringify())`
 
-**More examples:**
+**更多示例：**
 
 ```tsx
 // ❌ Bad
@@ -170,20 +170,20 @@ users={[{id:1},{id:2}]} sorted={users.toSorted()} // sends 2 arrays + 2 unique o
 // Do filtering/destructuring in client
 ```
 
-**Exception:** Pass derived data when transformation is expensive or client doesn't need original.
+**例外：** 如果转换计算成本较高，或客户端不需要原始数据，可直接传递派生数据。
 
 ---
 
-## Rule 3.3: Cross-Request LRU Caching
+## 规则 3.3：跨请求 LRU 缓存
 
-**Impact:** HIGH  
-**Tags:** server, cache, lru, cross-request  
+**影响:** 高 (HIGH)  
+**标签:** server, cache, lru, cross-request  
 
-## Cross-Request LRU Caching
+## 跨请求 LRU 缓存
 
-`React.cache()` only works within one request. For data shared across sequential requests (user clicks button A then button B), use an LRU cache.
+`React.cache()` 仅在单次请求内生效。对于跨连续请求共享的数据（例如用户先点按钮 A 再点按钮 B），应使用 LRU 缓存。
 
-**Implementation:**
+**实现：**
 
 ```typescript
 import { LRUCache } from 'lru-cache'
@@ -206,26 +206,26 @@ export async function getUser(id: string) {
 // Request 2: cache hit, no DB query
 ```
 
-Use when sequential user actions hit multiple endpoints needing the same data within seconds.
+当用户在几秒内触发的连续操作会命中多个、且需要相同数据的端点时，优先使用这一模式。
 
-**With Vercel's [Fluid Compute](https://vercel.com/docs/fluid-compute):** LRU caching is especially effective because multiple concurrent requests can share the same function instance and cache. This means the cache persists across requests without needing external storage like Redis.
+**结合 Vercel 的 [Fluid Compute](https://vercel.com/docs/fluid-compute)：** 多个并发请求可共享同一函数实例与缓存，LRU 缓存会更有效，不一定需要 Redis 这类外部存储。
 
-**In traditional serverless:** Each invocation runs in isolation, so consider Redis for cross-process caching.
+**传统 serverless 场景：** 每次调用相互隔离，跨进程缓存通常需要 Redis。
 
-Reference: [https://github.com/isaacs/node-lru-cache](https://github.com/isaacs/node-lru-cache)
+参考： [https://github.com/isaacs/node-lru-cache](https://github.com/isaacs/node-lru-cache)
 
 ---
 
-## Rule 3.4: Minimize Serialization at RSC Boundaries
+## 规则 3.4：最小化 RSC 边界的序列化开销
 
-**Impact:** HIGH  
-**Tags:** server, rsc, serialization, props  
+**影响:** 高 (HIGH)  
+**标签:** server, rsc, serialization, props  
 
-## Minimize Serialization at RSC Boundaries
+## 最小化 RSC 边界的序列化开销
 
-The React Server/Client boundary serializes all object properties into strings and embeds them in the HTML response and subsequent RSC requests. This serialized data directly impacts page weight and load time, so **size matters a lot**. Only pass fields that the client actually uses.
+React 的服务端/客户端边界会把对象属性序列化为字符串，并注入到 HTML 响应与后续 RSC 请求中。该数据会直接影响页面体积与加载时间，所以 **体积非常关键**。只传客户端真正需要的字段。
 
-**Incorrect (serializes all 50 fields):**
+**错误示例（序列化了全部 50 个字段）：**
 
 ```tsx
 async function Page() {
@@ -239,7 +239,7 @@ function Profile({ user }: { user: User }) {
 }
 ```
 
-**Correct (serializes only 1 field):**
+**正确示例（只序列化 1 个字段）：**
 
 ```tsx
 async function Page() {
@@ -255,16 +255,16 @@ function Profile({ name }: { name: string }) {
 
 ---
 
-## Rule 3.5: Parallel Data Fetching with Component Composition
+## 规则 3.5：通过组件组合并行获取数据
 
-**Impact:** CRITICAL  
-**Tags:** server, rsc, parallel-fetching, composition  
+**影响:** 严重 (CRITICAL)  
+**标签:** server, rsc, parallel-fetching, composition  
 
-## Parallel Data Fetching with Component Composition
+## 通过组件组合并行获取数据
 
-React Server Components execute sequentially within a tree. Restructure with composition to parallelize data fetching.
+React Server Components 在组件树内默认按顺序执行。通过重新组织组件结构，可以让数据获取并行进行。
 
-**Incorrect (Sidebar waits for Page's fetch to complete):**
+**错误示例（Sidebar 需等待 Page 的 fetch 完成）：**
 
 ```tsx
 export default async function Page() {
@@ -283,7 +283,7 @@ async function Sidebar() {
 }
 ```
 
-**Correct (both fetch simultaneously):**
+**正确示例（两个 fetch 同时执行）：**
 
 ```tsx
 async function Header() {
@@ -306,7 +306,7 @@ export default function Page() {
 }
 ```
 
-**Alternative with children prop:**
+**使用 `children` 的另一种写法：**
 
 ```tsx
 async function Header() {
@@ -339,16 +339,16 @@ export default function Page() {
 
 ---
 
-## Rule 3.6: Per-Request Deduplication with React.cache()
+## 规则 3.6：使用 React.cache() 做单请求去重
 
-**Impact:** MEDIUM  
-**Tags:** server, cache, react-cache, deduplication  
+**影响:** 中 (MEDIUM)  
+**标签:** server, cache, react-cache, deduplication  
 
-## Per-Request Deduplication with React.cache()
+## 使用 React.cache() 做单请求去重
 
-Use `React.cache()` for server-side request deduplication. Authentication and database queries benefit most.
+使用 `React.cache()` 对服务端请求去重。认证检查和数据库查询通常收益最大。
 
-**Usage:**
+**用法：**
 
 ```typescript
 import { cache } from 'react'
@@ -362,13 +362,13 @@ export const getCurrentUser = cache(async () => {
 })
 ```
 
-Within a single request, multiple calls to `getCurrentUser()` execute the query only once.
+在同一次请求内，多次调用 `getCurrentUser()` 只会执行一次查询。
 
-**Avoid inline objects as arguments:**
+**避免以内联对象作为参数：**
 
-`React.cache()` uses shallow equality (`Object.is`) to determine cache hits. Inline objects create new references each call, preventing cache hits.
+`React.cache()` 用浅比较（`Object.is`）判断命中。内联对象每次都会创建新引用，导致无法命中缓存。
 
-**Incorrect (always cache miss):**
+**错误示例（始终缓存未命中）：**
 
 ```typescript
 const getUser = cache(async (params: { uid: number }) => {
@@ -380,7 +380,7 @@ getUser({ uid: 1 })
 getUser({ uid: 1 })  // Cache miss, runs query again
 ```
 
-**Correct (cache hit):**
+**正确示例（缓存命中）：**
 
 ```typescript
 const getUser = cache(async (uid: number) => {
@@ -392,7 +392,7 @@ getUser(1)
 getUser(1)  // Cache hit, returns cached result
 ```
 
-If you must pass objects, pass the same reference:
+如果必须传对象，请复用同一个引用：
 
 ```typescript
 const params = { uid: 1 }
@@ -400,32 +400,32 @@ getUser(params)  // Query runs
 getUser(params)  // Cache hit (same reference)
 ```
 
-**Next.js-Specific Note:**
+**Next.js 特别说明：**
 
-In Next.js, the `fetch` API is automatically extended with request memoization. Requests with the same URL and options are automatically deduplicated within a single request, so you don't need `React.cache()` for `fetch` calls. However, `React.cache()` is still essential for other async tasks:
+在 Next.js 中，`fetch` 已扩展了请求级 memoization。同一个请求内，URL 和选项相同的 `fetch` 会自动去重，因此 `fetch` 场景通常不需要 `React.cache()`。但对于其他异步任务，`React.cache()` 仍然很关键：
 
-- Database queries (Prisma, Drizzle, etc.)
-- Heavy computations
-- Authentication checks
-- File system operations
-- Any non-fetch async work
+- 数据库查询（Prisma、Drizzle 等）
+- 重计算任务
+- 认证检查
+- 文件系统操作
+- 非 fetch 的异步工作
 
-Use `React.cache()` to deduplicate these operations across your component tree.
+可用 `React.cache()` 在组件树中对这些操作做去重。
 
-Reference: [React.cache documentation](https://react.dev/reference/react/cache)
+参考： [React.cache 文档](https://react.dev/reference/react/cache)
 
 ---
 
-## Rule 3.7: Use after() for Non-Blocking Operations
+## 规则 3.7：使用 `after()` 执行非阻塞操作
 
-**Impact:** MEDIUM  
-**Tags:** server, async, logging, analytics, side-effects  
+**影响:** 中 (MEDIUM)  
+**标签:** server, async, logging, analytics, side-effects  
 
-## Use after() for Non-Blocking Operations
+## 使用 `after()` 执行非阻塞操作
 
-Use Next.js's `after()` to schedule work that should execute after a response is sent. This prevents logging, analytics, and other side effects from blocking the response.
+使用 Next.js 的 `after()` 安排“响应发送后再执行”的任务。这样日志、埋点和其他副作用就不会阻塞响应返回。
 
-**Incorrect (blocks response):**
+**错误示例（阻塞响应）：**
 
 ```tsx
 import { logUserAction } from '@/app/utils'
@@ -445,7 +445,7 @@ export async function POST(request: Request) {
 }
 ```
 
-**Correct (non-blocking):**
+**正确示例（非阻塞）：**
 
 ```tsx
 import { after } from 'next/server'
@@ -471,20 +471,19 @@ export async function POST(request: Request) {
 }
 ```
 
-The response is sent immediately while logging happens in the background.
+响应会先立即返回，日志在后台异步执行。
 
-**Common use cases:**
+**常见场景：**
 
-- Analytics tracking
-- Audit logging
-- Sending notifications
-- Cache invalidation
-- Cleanup tasks
+- 分析埋点
+- 审计日志
+- 发送通知
+- 缓存失效
+- 清理任务
 
-**Important notes:**
+**重要说明：**
 
-- `after()` runs even if the response fails or redirects
-- Works in Server Actions, Route Handlers, and Server Components
+- 即使响应失败或重定向，`after()` 也会执行
+- 适用于 Server Actions、Route Handlers、Server Components
 
-Reference: [https://nextjs.org/docs/app/api-reference/functions/after](https://nextjs.org/docs/app/api-reference/functions/after)
-
+参考： [https://nextjs.org/docs/app/api-reference/functions/after](https://nextjs.org/docs/app/api-reference/functions/after)
