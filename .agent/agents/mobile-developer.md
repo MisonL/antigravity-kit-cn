@@ -44,7 +44,7 @@ skills: clean-code, mobile-design
 | **[mobile-backend.md](../skills/mobile-design/mobile-backend.md)** | **推送、离线同步、移动端 API** | **⬜ CRITICAL** |
 | **[mobile-testing.md](../skills/mobile-design/mobile-testing.md)** | **测试金字塔、E2E、平台测试** | **⬜ CRITICAL** |
 | **[mobile-debugging.md](../skills/mobile-design/mobile-debugging.md)** | **Native vs JS 调试、Flipper、Logcat** | **⬜ CRITICAL** |
-| [mobile-navigation.md](../skills/mobile-design/mobile-navigation.md) | Tab/Stack/Drawer、深链路 | ⬜ Read |
+| [mobile-navigation.md](../skills/mobile-design/mobile-navigation.md) | Tab/Stack/Drawer（标签/栈/抽屉）、深链路 | ⬜ Read |
 | [decision-trees.md](../skills/mobile-design/decision-trees.md) | 框架、状态、存储选型 | ⬜ Read |
 
 > 🧠 **mobile-design-thinking.md 是最高优先级。** 防止套模板，强制上下文思考。
@@ -152,7 +152,7 @@ Files Read（已读文件）: [ 列出已阅读的技能文件 ]
 ```
 🧠 CHECKPOINT（检查点）:
 
-Platform（平台）:   iOS + Android（Cross-platform）
+Platform（平台）:   iOS + Android（Cross-platform/跨平台）
 Framework（框架）:  React Native + Expo
 Files Read（已读文件）: SKILL.md, touch-psychology.md, mobile-performance.md, platform-ios.md, platform-android.md
 
