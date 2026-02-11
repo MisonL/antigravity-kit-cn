@@ -1,37 +1,35 @@
-# Antigravity Kit CN
+# Antigravity Kit
 
-> 包含 Agent（智能体）、Skill（技能）与 Workflow（工作流）的 AI Agent 能力模板（中文增强版，含 Codex 适配）
+> 包含 Skills（技能）、Agents（智能体）与 Workflows（工作流）的 AI Agent 模板
+
+<div  align="center">
+    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit?theme=dark" alt="Antigravity Kit - Nổi bật trên Unikorn.vn" style="width: 210px; height: 54px;" width="210" height="54" /></a>
+    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit/rank?theme=dark&type=daily" alt="Antigravity Kit - Hàng ngày" style="width: 250px; height: 64px;" width="250" height="64" /></a>
+    <a href="https://launch.j2team.dev/products/antigravity-kit" target="_blank"><img src="https://launch.j2team.dev/badge/antigravity-kit/dark" alt="Antigravity Kit on J2TEAM Launch" width="250" height="54" /></a>
+</div>
 
 ## 快速安装
 
 ```bash
-git clone https://github.com/MisonL/antigravity-kit-cn.git
-cd antigravity-kit-cn
-npm install -g .
+npx @vudovn/ag-kit init
 ```
 
-在目标项目中初始化：
+或全局安装：
 
 ```bash
-cd /path/to/your-project
-ag-kit init --target gemini
-ag-kit init --target codex
+npm install -g @vudovn/ag-kit
+ag-kit init
 ```
 
-说明：
+这会把包含全部模板的 `.agent` 目录安装到你的项目中。
 
-- `gemini` 目标使用 `.agent/`。
-- `codex` 目标使用 `.agents/`，并托管注入 `AGENTS.md` / `antigravity.rules`。
-
-## 使用方式
+## 使用方法
 
 ### 使用智能体
 
-无需手动指定 Agent（智能体），系统会自动路由并声明当前专家。
+**无需显式提及智能体！** 系统会自动检测并应用合适专家：
 
-示例：
-
-```text
+```
 你："添加 JWT 认证"
 AI：🤖 正在应用 @security-auditor + @backend-specialist...
 
@@ -42,80 +40,88 @@ AI：🤖 正在使用 @frontend-specialist...
 AI：🤖 正在使用 @debugger 进行系统化分析...
 ```
 
+**工作原理：**
+
+- 静默分析请求
+- 自动检测领域（前端、后端、安全等）
+- 选择最佳专家
+- 告知你正在应用哪方面的专业知识
+- 无需了解系统架构即可获得专家级响应
+
+**优势：**
+
+- ✅ 零学习曲线：描述需求即可
+- ✅ 始终获得专家响应
+- ✅ 透明：显示正在使用的智能体
+- ✅ 仍可显式提及智能体进行覆盖
+
 ### 使用工作流
 
-| 命令 | 说明 |
-| ---- | ---- |
-| `/brainstorm` | 结构化探索方案 |
-| `/create` | 创建新功能/新应用 |
-| `/debug` | 系统化排查问题 |
-| `/deploy` | 部署发布 |
-| `/enhance` | 增强现有实现 |
-| `/orchestrate` | 多智能体协同 |
-| `/plan` | 任务拆解与排期 |
-| `/preview` | 本地预览与验收 |
-| `/status` | 状态检查 |
-| `/test` | 测试生成与执行 |
-| `/ui-ux-pro-max` | 高质量 UI 设计流程 |
+使用斜杠命令调用工作流：
+
+| 命令 | 描述 |
+| ---------------- | ------------------------------------- |
+| `/brainstorm`    | 在实施前探索方案 |
+| `/create`        | 创建新功能或应用 |
+| `/debug`         | 系统化调试 |
+| `/deploy`        | 部署应用 |
+| `/enhance`       | 改进现有代码 |
+| `/orchestrate`   | 多智能体协同 |
+| `/plan`          | 创建任务拆解 |
+| `/preview`       | 本地预览变更 |
+| `/status`        | 检查项目状态 |
+| `/test`          | 生成并运行测试 |
+| `/ui-ux-pro-max` | 50 种风格的设计 |
 
 示例：
 
-```text
+```
 /brainstorm 认证系统
-/create 带 Hero 的落地页
+/create 带 Hero 部分的着陆页
 /debug 为什么登录失败
 ```
 
 ### 使用技能
 
-Skills（技能）会根据任务上下文自动加载，Agent 会先读 `SKILL.md`，再按需读取 `references/` 与 `scripts/`。
+技能会根据任务上下文自动加载。AI 会阅读技能描述并应用相关知识。
 
-## 命令行参考
+## CLI 工具
 
-CLI（命令行界面）常用命令如下。
+| 命令         | 描述                               |
+| --------------- | ----------------------------------------- |
+| `ag-kit init`   | 安装 `.agent` 目录到你的项目 |
+| `ag-kit update` | 更新到最新版本              |
+| `ag-kit status` | 检查安装状态                 |
 
-| 命令 | 描述 |
-| ---- | ---- |
-| `ag-kit init` | 初始化目标结构：gemini/codex |
-| `ag-kit update` | 更新当前工作区已安装目标 |
-| `ag-kit update-all` | 批量更新索引内工作区 |
-| `ag-kit doctor` | 健康检查，可 `--fix` 自愈 |
-| `ag-kit status` | 查看安装状态 |
-| `ag-kit exclude` | 管理全局索引排除项 |
-
-常用选项：
+### 常用选项
 
 ```bash
-ag-kit init --target codex --force
-ag-kit init --path ./myapp --target gemini
-ag-kit init --branch dev --target codex
-ag-kit init --quiet
-ag-kit init --no-index
-ag-kit update --target codex --dry-run
-ag-kit doctor --target codex --fix
+ag-kit init --force        # 覆盖现有 .agent 目录
+ag-kit init --path ./myapp # 安装到指定目录
+ag-kit init --branch dev   # 使用指定分支
+ag-kit init --quiet        # 静默输出（用于 CI/CD）
+ag-kit init --dry-run      # 预览操作但不执行
 ```
+
+## 文档
+
+- **[Web App Example](https://antigravity-kit.vercel.app//docs/guide/examples/web-app)** - 创建 Web 应用的分步指南
+- **[Online Docs](https://antigravity-kit.vercel.app//docs)** - 在线浏览全部文档
 
 ## 请我喝咖啡
 
-> 本项目由 **Mison** 进行汉化处理与额外功能开发。
+<p align="center">
+  <a href="https://buymeacoffee.com/vudovn">
+    <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee" />
+  </a>
+</p>
 
-<table>
-  <tr>
-    <td align="center" width="50%">
-      <strong>支持 Mison（本仓库维护者）</strong><br />
-      <img src="../image/README/mison-wechat-pay.jpg" alt="Mison 微信赞赏码" width="260" /><br />
-      <sub>微信赞赏码</sub>
-    </td>
-    <td align="center" width="50%">
-      <strong>感谢上游作者 vudovn 创建并维护 Antigravity-Kit</strong><br />
-      <a href="https://buymeacoffee.com/vudovn">
-        <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee" />
-      </a><br />
-      <img src="https://img.vietqr.io/image/mbbank-0779440918-compact.jpg" alt="Upstream donation channel" width="200" />
-    </td>
-  </tr>
-</table>
+<p align="center"> - or - </p>
+
+<p align="center">
+  <img src="https://img.vietqr.io/image/mbbank-0779440918-compact.jpg" alt="Buy me coffee" width="200" />
+</p>
 
 ## 许可证
 
-MIT © Vudovn, Mison
+MIT © Vudovn
