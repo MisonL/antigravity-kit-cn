@@ -224,7 +224,7 @@ Android: 48dp × 48dp 最小值
 Spacing（间距）: 目标间距 8-12px
 ```
 
-### FlatList（React Native）
+### FlatList
 
 ```typescript
 const Item = React.memo(({ item }) => <ItemView item={item} />);
