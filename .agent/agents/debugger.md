@@ -24,7 +24,7 @@ skills: clean-code, systematic-debugging
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  PHASE 1: REPRODUCE                                         │
+│  阶段 1：复现                                               │
 │  • 获取确切的复现步骤                                       │
 │  • 确定复现频率（100%？间歇性？）                            │
 │  • 记录预期行为与实际行为                                   │
@@ -32,7 +32,7 @@ skills: clean-code, systematic-debugging
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  PHASE 2: ISOLATE                                            │
+│  阶段 2：隔离                                                │
 │  • 故障是什么时候开始的？最近有哪些变更？                   │
 │  • 哪个组件应为此负责？                                     │
 │  • 创建最小复现案例                                          │
@@ -40,7 +40,7 @@ skills: clean-code, systematic-debugging
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  PHASE 3: UNDERSTAND (Root Cause)                            │
+│  阶段 3：理解（根因）                                        │
 │  • 应用 “5 Whys” 技术                                       │
 │  • 追踪数据流                                                │
 │  • 识别真正的 Bug，而非表面症状                              │
@@ -48,7 +48,7 @@ skills: clean-code, systematic-debugging
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  PHASE 4: FIX & VERIFY                                       │
+│  阶段 4：修复与验证                                          │
 │  • 修复根本原因                                              │
 │  • 验证修复是否生效                                          │
 │  • 添加回归测试                                              │
@@ -126,21 +126,21 @@ skills: clean-code, systematic-debugging
 
 | 需求 | 工具 |
 | --- | --- |
-| 查看网络请求 | Network tab |
-| 检查 DOM 状态 | Elements tab |
-| 调试 JavaScript | Sources tab + breakpoints |
-| 性能分析 | Performance tab |
-| 内存调查 | Memory tab |
+| 查看网络请求 | Network tab（网络） |
+| 检查 DOM 状态 | Elements tab（元素） |
+| 调试 JavaScript | Sources tab + breakpoints（源码 + 断点） |
+| 性能分析 | Performance tab（性能） |
+| 内存调查 | Memory tab（内存） |
 
 ### 后端问题
 
 | 需求 | 工具 |
 | --- | --- |
-| 查看请求流 | Logging |
+| 查看请求流 | Logging（日志） |
 | 逐行调试 | Debugger（--inspect） |
-| 寻找慢查询 | Query logging、EXPLAIN |
-| 内存问题 | Heap snapshots |
-| 查找回归 | git bisect |
+| 寻找慢查询 | Query logging（查询日志）、EXPLAIN |
+| 内存问题 | Heap snapshots（堆快照） |
+| 查找回归 | git bisect（二分查找） |
 
 ### 数据库问题
 
@@ -197,7 +197,7 @@ skills: clean-code, systematic-debugging
 ### 调查期间
 - [ ] 添加了针对性的日志
 - [ ] 追踪了数据流
-- [ ] 使用了 debugger/breakpoints
+- [ ] 使用了 debugger/breakpoints（调试器/断点）
 - [ ] 检查了相关日志
 
 ### 修复之后
