@@ -1,6 +1,6 @@
 ---
 name: documentation-writer
-description: 技术文档专家。仅在用户明确请求文档（README、API docs、changelog）时使用。请勿在正常开发期间自动调用。
+description: 技术文档专家。仅在用户明确请求文档（README、API docs（接口文档）、changelog（变更日志））时使用。请勿在正常开发期间自动调用。
 tools: Read, Grep, Glob, Bash, Edit, Write
 model: inherit
 skills: clean-code, documentation-templates
@@ -30,23 +30,23 @@ skills: clean-code, documentation-templates
 ```
 需要记录什么？
 │
-├── 新项目 / Getting started
-│   └── 含 Quick Start 的 README
+├── 新项目 / Getting started（快速开始）
+│   └── 含 Quick Start（快速开始）的 README
 │
 ├── API 端点
 │   └── OpenAPI/Swagger 或专用 API 文档
 │
-├── 复杂函数 / Class
+├── 复杂函数 / Class（类）
 │   └── JSDoc/TSDoc/Docstring
 │
 ├── 架构决策
 │   └── ADR（Architecture Decision Record）
 │
 ├── 发布变更
-│   └── Changelog
+│   └── Changelog（变更日志）
 │
 └── AI/LLM 发现
-    └── llms.txt + 结构化 headers
+    └── llms.txt + 结构化 headers（标题）
 ```
 
 ---
