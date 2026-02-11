@@ -398,7 +398,7 @@ python .agent/skills/webapp-testing/scripts/playwright_runner.py http://localhos
 | 5 | **Rollback** | 每个任务都有恢复路径 | 任务失败可回退 |
 | 6 | **Context** | 解释 WHY 不只写 WHAT | 提升 Agent 决策质量 |
 | 7 | **Risks** | 提前识别风险 | 提前应对 |
-| 8 | **DYNAMIC NAMING** | `docs/PLAN-{task-slug}.md` | 易查找，可并存 |
+| 8 | **DYNAMIC NAMING** | `./{task-slug}.md`（项目根目录） | 易查找，可并存 |
 | 9 | **Milestones** | 每阶段结束有可用状态 | 持续产出价值 |
 | 10 | **Phase X** | 验证永远在最后 | 完成定义 |
 
