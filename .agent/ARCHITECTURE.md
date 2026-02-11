@@ -237,3 +237,52 @@ python .agent/scripts/checklist.py .
 # Full verification before deployment
 python .agent/scripts/verify_all.py . --url http://localhost:3000
 ```
+
+### 检查内容
+
+**checklist.py**（核心检查）：
+
+- 安全（漏洞、敏感信息）
+- 代码质量（lint、types）
+- Schema（模式）校验
+- 测试套件
+- UX 审计
+- SEO 检查
+
+**verify_all.py**（全量套件）：
+
+- 包含 checklist.py 的全部内容，并额外包含：
+- Lighthouse（Core Web Vitals）
+- Playwright E2E
+- Bundle 分析
+- 移动端审计
+- i18n 检查
+
+更多细节见 [scripts/README.md](scripts/README.md)
+
+---
+
+## 📊 统计
+
+| 指标 | 数量 |
+| ------------------- | ----------------------------- |
+| **智能体总数** | 20                            |
+| **技能总数** | 36                            |
+| **工作流总数** | 11                            |
+| **脚本总数** | 2（主脚本）+ 18（技能脚本）   |
+| **覆盖范围** | ~90% web/mobile 开发场景      |
+
+---
+
+## 🔗 快速索引
+
+| 需求 | 智能体 | 使用技能 |
+| -------- | --------------------- | ------------------------------------- |
+| Web App  | `frontend-specialist` | react-best-practices, frontend-design |
+| API      | `backend-specialist`  | api-patterns, nodejs-best-practices   |
+| Mobile   | `mobile-developer`    | mobile-design                         |
+| Database | `database-architect`  | database-design, prisma-expert        |
+| Security | `security-auditor`    | vulnerability-scanner                 |
+| Testing  | `test-engineer`       | testing-patterns, webapp-testing      |
+| Debug    | `debugger`            | systematic-debugging                  |
+| Plan     | `project-planner`     | brainstorming, plan-writing           |
