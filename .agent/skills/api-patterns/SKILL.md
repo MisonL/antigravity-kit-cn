@@ -9,13 +9,13 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 > API design principles and decision-making for 2025（2025 年 API 设计原则与决策逻辑）。
 > **Learn to THINK, not copy fixed patterns（学习如何思考，而非机械复制固定模式）。**
 
-## 🎯 Selective Reading Rule（选择性阅读规则）
+## 🎯 选择性阅读规则（Selective Reading Rule）
 
-**Read ONLY files relevant to the request（仅阅读与当前请求相关的文件）！** Check the content map, find what you need（查阅内容地图，找到所需章节）。
+**仅阅读与当前请求相关的文件（Read ONLY files relevant to the request）！** 查阅内容地图并定位所需章节（Check the content map, find what you need）。
 
 ---
 
-## 📑 Content Map（内容地图）
+## 📑 内容地图（Content Map）
 
 | File（文件） | Description（描述） | When to Read（阅读时机） |
 | ---- | ---- | -------- |
@@ -32,7 +32,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## 🔗 Related Skills（相关技能）
+## 🔗 相关技能（Related Skills）
 
 | Need（需求） | Skill（技能） |
 | ---- | ------------ |
@@ -42,9 +42,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 ---
 
-## ✅ Decision Checklist（决策检查清单）
+## ✅ 决策检查清单（Decision Checklist）
 
-Before designing an API（设计 API 之前）：
+设计 API 之前（Before designing an API）：
 
 - [ ] **Asked user about API consumers?（是否询问 API 消费者？）**
 - [ ] **Chosen API style for THIS context?（是否为当前上下文选择 API 风格？）** (REST/GraphQL/tRPC)
@@ -56,26 +56,26 @@ Before designing an API（设计 API 之前）：
 
 ---
 
-## ❌ Anti-Patterns（反模式）
+## ❌ 反模式（Anti-Patterns）
 
-**DON'T（不要）：**
+**不要（DON'T）：**
 
-- Default to REST for everything（任何场景都默认 REST）。
-- Use verbs in REST endpoints (`/getUsers`)（REST 端点使用动词）。
-- Return inconsistent response formats（响应格式不一致）。
-- Expose internal errors to clients（暴露内部错误）。
-- Skip rate limiting（忽略频率限制）。
+- 任何场景都默认 REST（Default to REST for everything）。
+- REST 端点使用动词，如 `/getUsers`（Use verbs in REST endpoints）。
+- 响应格式不一致（Return inconsistent response formats）。
+- 向客户端暴露内部错误（Expose internal errors to clients）。
+- 忽略频率限制（Skip rate limiting）。
 
-**DO（推荐做法）：**
+**推荐做法（DO）：**
 
-- Choose API style based on context（根据上下文选择 API 风格）。
-- Ask about client requirements（询问客户端需求）。
-- Document thoroughly（编写详尽文档）。
-- Use appropriate status codes（使用适当的 HTTP 状态码）。
+- 根据上下文选择 API 风格（Choose API style based on context）。
+- 先询问客户端需求（Ask about client requirements）。
+- 编写详尽文档（Document thoroughly）。
+- 使用合适的 HTTP 状态码（Use appropriate status codes）。
 
 ---
 
-## Script（运行脚本）
+## 运行脚本（Script）
 
 | Script（脚本） | Purpose（用途） | Command（命令） |
 | ---- | ---- | ---- |
