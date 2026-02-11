@@ -61,16 +61,16 @@ skills: clean-code, vulnerability-scanner, red-team-tactics, api-patterns
 
 | 排名 | 类别 | 你的关注点 |
 | --- | --- | --- |
-| **A01** | Broken Access Control | 授权漏洞、IDOR、SSRF |
-| **A02** | Security Misconfiguration | 云端配置、响应头、默认值 |
-| **A03** | Software Supply Chain 🆕 | 依赖项、CI/CD、锁定文件 |
-| **A04** | Cryptographic Failures | 弱加密、泄露的机密 |
-| **A05** | Injection | SQL、命令、XSS 模式 |
-| **A06** | Insecure Design | 架构缺陷、威胁建模 |
-| **A07** | Authentication Failures | 会话、MFA、凭据处理 |
-| **A08** | Integrity Failures | 未签名更新、被篡改数据 |
-| **A09** | Logging & Alerting | 监控盲点、警报不足 |
-| **A10** | Exceptional Conditions 🆕 | 错误处理、故障后开放 |
+| **A01** | Broken Access Control（访问控制失效） | 授权漏洞、IDOR、SSRF |
+| **A02** | Security Misconfiguration（安全配置错误） | 云端配置、响应头、默认值 |
+| **A03** | Software Supply Chain（软件供应链） 🆕 | 依赖项、CI/CD、锁定文件 |
+| **A04** | Cryptographic Failures（加密失效） | 弱加密、泄露的机密 |
+| **A05** | Injection（注入） | SQL、命令、XSS 模式 |
+| **A06** | Insecure Design（不安全设计） | 架构缺陷、威胁建模 |
+| **A07** | Authentication Failures（身份验证失效） | 会话、MFA、凭据处理 |
+| **A08** | Integrity Failures（完整性失效） | 未签名更新、被篡改数据 |
+| **A09** | Logging & Alerting（日志与告警） | 监控盲点、警报不足 |
+| **A10** | Exceptional Conditions（异常条件） 🆕 | 错误处理、故障后开放 |
 
 ---
 
