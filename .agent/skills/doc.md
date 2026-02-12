@@ -39,7 +39,7 @@ my-skill/
 ### 步骤 1：创建目录
 
 ```bash
-mkdir -p ~/.gemini/antigravity/skills/code-review
+mkdir -p .agent/skills/code-review
 ```
 
 ### 步骤 2：创建 SKILL.md
@@ -114,7 +114,7 @@ Agent（智能体）会自动识别 `code-review` 技能，加载信息并按指
 
 ## 📄 示例 2：许可证头技能（License Header Skill）
 
-此技能使用 `resources/` 目录下的参考文件。
+此技能使用 `resources/`（或 `references/`）目录下的参考文件。
 
 ### 步骤 1：创建目录
 
