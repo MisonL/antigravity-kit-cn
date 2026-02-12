@@ -151,18 +151,16 @@ Request Domain → Agent Mapping:
 ┌──────────────────────┬─────────────────────┬──────────────────────────┐
 │ Domain               │ Primary Agent       │ Skills Loaded            │
 ├──────────────────────┼─────────────────────┼──────────────────────────┤
-│ UI/UX Design         │ frontend-specialist │ react-best-practices      │
+│ UI/UX Design         │ frontend-specialist │ nextjs-react-expert       │
 │                      │                     │ frontend-design          │
 │                      │                     │ tailwind-patterns        │
-|                      │                     │ web-design-guidelines    │
-│                      │                     │ frontend-design          │
+│                      │                     │ web-design-guidelines    │
 ├──────────────────────┼─────────────────────┼──────────────────────────┤
 │ API Development      │ backend-specialist  │ api-patterns             │
 │                      │                     │ nodejs-best-practices    │
-│                      │                     │ nestjs-expert            │
+│                      │                     │ rust-pro                 │
 ├──────────────────────┼─────────────────────┼──────────────────────────┤
 │ Database Design      │ database-architect  │ database-design          │
-│                      │                     │ prisma-expert            │
 ├──────────────────────┼─────────────────────┼──────────────────────────┤
 │ Mobile App           │ mobile-developer    │ mobile-design            │
 ├──────────────────────┼─────────────────────┼──────────────────────────┤
@@ -311,6 +309,14 @@ Slash Command Flow:
     3. Break down: Tasks with estimates
     4. Output: Structured plan with milestones
 
+/restore-localize-compat
+    ↓
+    1. Load: i18n-localization + intelligent-routing skills
+    2. Compare: current doc vs reference baseline
+    3. Restore: mechanism structure first
+    4. Localize: semantic Chinese translation only
+    5. Verify: compatibility notes remain minimal
+
 /ui-ux-pro-max
     ↓
     1. Load: ui-ux-pro-max skill
@@ -429,12 +435,12 @@ Skills with Automated Scripts:
 │ lint-and-validate       │ scripts/lint_runner.py           │
 │                         │ scripts/type_coverage.py         │
 │ mobile-design           │ scripts/mobile_audit.py          │
-│ performance-profiling   │ scripts/lighthouse_runner.py     │
-│                         │ scripts/bundle_analyzer.py       │
+│ nextjs-react-expert     │ scripts/react_performance_checker.py │
+│ performance-profiling   │ scripts/lighthouse_audit.py      │
 │ seo-fundamentals        │ scripts/seo_checker.py           │
 │ testing-patterns        │ scripts/test_runner.py           │
-│ vulnerability-scanner   │ scripts/security_scanner.py      │
-│ webapp-testing          │ scripts/e2e_runner.py            │
+│ vulnerability-scanner   │ scripts/security_scan.py         │
+│ webapp-testing          │ scripts/playwright_runner.py     │
 └─────────────────────────┴──────────────────────────────────┘
 ```
 
@@ -462,11 +468,11 @@ User Request: "Build a Next.js dashboard with authentication"
 
 4. AGENT ASSIGNMENT
    ├─ frontend-specialist
-   │   └─ Skills: react-best-practices, tailwind-patterns, frontend-design
+   │   └─ Skills: nextjs-react-expert, tailwind-patterns, frontend-design
    ├─ backend-specialist
    │   └─ Skills: api-patterns, nodejs-best-practices
    ├─ database-architect
-   │   └─ Skills: database-design, prisma-expert
+   │   └─ Skills: database-design
    └─ test-engineer
        └─ Skills: testing-patterns, webapp-testing
 

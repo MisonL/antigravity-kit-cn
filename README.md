@@ -45,7 +45,7 @@ node bin/ag-kit.js init --target codex --path /path/to/your-project
 | --- | --- | --- |
 | Agents（智能体） | 20 | 专家级 AI 人设（前端、后端、安全、产品、QA 等） |
 | Skills（技能） | 37 | 特定领域的知识模块 |
-| Workflows（工作流） | 11 | 斜杠命令流程 |
+| Workflows（工作流） | 12 | 斜杠命令流程 |
 
 ## 使用方法
 
@@ -93,6 +93,7 @@ AI：🤖 正在使用 @debugger 进行系统化分析...
 | `/orchestrate` | 多智能体协同 |
 | `/plan` | 创建任务拆解 |
 | `/preview` | 本地预览变更 |
+| `/restore-localize-compat` | 文档机制对齐与语义汉化流程（维护工作流） |
 | `/status` | 检查项目状态 |
 | `/test` | 生成并运行测试 |
 | `/ui-ux-pro-max` | 50 种风格的设计 |

@@ -9,8 +9,8 @@
 Antigravity Kit 是一个模块化系统，由以下部分组成：
 
 - **20 个专家智能体（Agent）** - 基于角色的 AI 人设
-- **36 个技能（Skill）** - 领域知识模块
-- **11 个工作流（Workflow）** - 斜杠命令流程
+- **37 个技能（Skill）** - 领域知识模块
+- **12 个工作流（Workflow）** - 斜杠命令流程
 
 ---
 
@@ -20,8 +20,8 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 .agent/
 ├── ARCHITECTURE.md          # This file
 ├── agents/                  # 20 Specialist Agents
-├── skills/                  # 36 Skills
-├── workflows/               # 11 Slash Commands
+├── skills/                  # 37 Skills
+├── workflows/               # 12 Slash Commands
 ├── rules/                   # Global Rules
 └── scripts/                 # Master Validation Scripts
 ```
@@ -36,9 +36,9 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 | ------------------------ | -------------------- | -------------------------------------------------------- |
 | `orchestrator`           | 多智能体协同 | parallel-agents, behavioral-modes                        |
 | `project-planner`        | 需求探索、任务规划 | brainstorming, plan-writing, architecture                |
-| `frontend-specialist`    | Web UI/UX | frontend-design, react-best-practices, tailwind-patterns |
+| `frontend-specialist`    | Web UI/UX | frontend-design, nextjs-react-expert, tailwind-patterns |
 | `backend-specialist`     | API、业务逻辑 | api-patterns, nodejs-best-practices, database-design     |
-| `database-architect`     | Schema（模式）、SQL | database-design, prisma-expert                           |
+| `database-architect`     | Schema（模式）、SQL | database-design                                           |
 | `mobile-developer`       | iOS、Android、RN | mobile-design                                            |
 | `game-developer`         | 游戏逻辑、机制 | game-development                                         |
 | `devops-engineer`        | CI/CD、Docker | deployment-procedures, docker-expert                     |
@@ -57,7 +57,7 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 
 ---
 
-## 🧩 技能（Skills）(36)
+## 🧩 技能（Skills）(37)
 
 按任务上下文按需加载的模块化知识域。
 
@@ -65,7 +65,7 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 
 | 技能 | 说明 |
 | ----------------------- | --------------------------------------------------------------------- |
-| `react-best-practices`  | React 与 Next.js 性能优化（Vercel 57 条规则）                          |
+| `nextjs-react-expert`   | Next.js + React 规则与性能实践（多维性能规则集）                        |
 | `web-design-guidelines` | Web UI 审计（无障碍、UX、性能，Vercel 100+ 条规则）                     |
 | `tailwind-patterns`     | Tailwind CSS v4 工具集                                                 |
 | `frontend-design`       | UI/UX 模式与设计系统                                                   |
@@ -76,22 +76,15 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 | 技能 | 说明 |
 | ----------------------- | ------------------------------ |
 | `api-patterns`          | REST、GraphQL、tRPC            |
-| `nestjs-expert`         | NestJS 模块、DI、装饰器        |
 | `nodejs-best-practices` | Node.js 异步与模块化实践       |
 | `python-patterns`       | Python 规范、FastAPI           |
+| `rust-pro`              | Rust 工程化与性能实践          |
 
 ### 数据库
 
 | 技能 | 说明 |
 | ----------------- | --------------------------- |
 | `database-design` | 模式设计与优化               |
-| `prisma-expert`   | Prisma ORM、迁移             |
-
-### TypeScript 与 JavaScript
-
-| 技能 | 说明 |
-| ------------------- | ----------------------------------- |
-| `typescript-expert` | 类型级编程与性能优化                |
 
 ### 云与基础设施
 
@@ -160,6 +153,7 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 | `clean-code`              | 编码规范（全局）          |
 | `behavioral-modes`        | 智能体行为模式            |
 | `parallel-agents`         | 多智能体协作模式          |
+| `intelligent-routing`     | 智能路由与上下文切换策略   |
 | `mcp-builder`             | 模型上下文协议（MCP）     |
 | `documentation-templates` | 文档模板                  |
 | `i18n-localization`       | 国际化                    |
@@ -168,7 +162,7 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 
 ---
 
-## 🔄 工作流（Workflows）(11)
+## 🔄 工作流（Workflows）(12)
 
 斜杠命令（Slash command）流程，通过 `/command` 调用。
 
@@ -182,6 +176,7 @@ Antigravity Kit 是一个模块化系统，由以下部分组成：
 | `/orchestrate`   | 多智能体协同             |
 | `/plan`          | 任务拆解                 |
 | `/preview`       | 预览变更                 |
+| `/restore-localize-compat` | 文档机制对齐与语义汉化流程 |
 | `/status`        | 查看项目状态             |
 | `/test`          | 运行测试                 |
 | `/ui-ux-pro-max` | 使用 50 种风格进行设计    |
@@ -217,7 +212,7 @@ skill-name/
 
 ---
 
-## 📜 脚本（Scripts）(2)
+## 📜 脚本（Scripts）(4)
 
 用于编排各技能脚本的主验证脚本。
 
@@ -227,6 +222,8 @@ skill-name/
 | --------------- | --------------------------------------- | ------------------------ |
 | `checklist.py`  | 基于优先级的验证（核心检查）             | 开发阶段、pre-commit     |
 | `verify_all.py` | 全量综合验证（全检查）                   | 部署前、发版前           |
+| `auto_preview.py` | 预览自动化辅助                         | 本地预览/截图流程        |
+| `session_manager.py` | 会话生命周期管理                    | 多轮调试与排障           |
 
 ### 使用方式
 
@@ -267,9 +264,9 @@ python .agent/scripts/verify_all.py . --url http://localhost:3000
 | 指标 | 数量 |
 | ------------------- | ----------------------------- |
 | **智能体总数** | 20                            |
-| **技能总数** | 36                            |
-| **工作流总数** | 11                            |
-| **脚本总数** | 2（主脚本）+ 18（技能脚本）   |
+| **技能总数** | 37                            |
+| **工作流总数** | 12                            |
+| **脚本总数** | 4（主脚本）+ 16（技能脚本）   |
 | **覆盖范围** | ~90% web/mobile 开发场景      |
 
 ---
@@ -278,10 +275,10 @@ python .agent/scripts/verify_all.py . --url http://localhost:3000
 
 | 需求 | 智能体 | 使用技能 |
 | -------- | --------------------- | ------------------------------------- |
-| Web App  | `frontend-specialist` | react-best-practices, frontend-design |
+| Web App  | `frontend-specialist` | nextjs-react-expert, frontend-design |
 | API      | `backend-specialist`  | api-patterns, nodejs-best-practices   |
 | Mobile   | `mobile-developer`    | mobile-design                         |
-| Database | `database-architect`  | database-design, prisma-expert        |
+| Database | `database-architect`  | database-design                       |
 | Security | `security-auditor`    | vulnerability-scanner                 |
 | Testing  | `test-engineer`       | testing-patterns, webapp-testing      |
 | Debug    | `debugger`            | systematic-debugging                  |

@@ -59,11 +59,11 @@
   - 推荐：`python scripts/search.py "金融 科技 加密" --design-system`
   - 推荐：`python scripts/search.py "为金融科技产品生成设计系统关键词" --design-system`
 
-## 本轮覆盖范围
+## 当前覆盖范围（2026-02）
 
-- `web/src/app/docs/**/page.tsx`
-- `web/src/components/docs/sidebar.tsx`
-- `.agent/rules/GEMINI.md`
-- `docs/operations.md`
+- `.agent/**/*.md`（含 `agents/`、`skills/`、`workflows/`、`ARCHITECTURE.md`）
+- `README.md`
+- `AGENT_FLOW.md`
+- `docs/*.md`
 
-后续新增文档默认遵循本表。
+后续新增文档默认遵循本表；若与上游机制冲突，先按 `reference/antigravity-kit` 对齐结构，再做语义汉化。
