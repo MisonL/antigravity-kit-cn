@@ -21,8 +21,11 @@ function walkDirs(root) {
 }
 
 function collectTokens(content, regex) {
-    const matches = content.match(regex);
-    return new Set(matches || []);
+    const tokens = new Set();
+    for (const match of String(content || "").matchAll(regex)) {
+        tokens.add(match[1] || match[0]);
+    }
+    return tokens;
 }
 
 describe('Standards Compliance', () => {
@@ -48,18 +51,28 @@ describe('Standards Compliance', () => {
             'docs/code-review-report.md',
             'bin/core/generator.js',
         ];
+        const skipped = [];
 
         for (const rel of targets) {
             const abs = path.resolve(rel);
+            if (!fs.existsSync(abs)) {
+                skipped.push(rel);
+                continue;
+            }
             const content = fs.readFileSync(abs, 'utf8');
             assert.ok(!content.includes('Managed resources are synchronized under `.codex/`.'), `${rel} still contains deprecated .codex guidance`);
             assert.ok(!content.includes('Do not edit files under `.codex/` directly.'), `${rel} still contains deprecated .codex guidance`);
+        }
+
+        if (skipped.length > 0) {
+            console.warn(`[standards-compliance] skipped missing optional files: ${skipped.join(', ')}`);
         }
     });
 
     test('critical mechanism tokens should remain aligned with reference snapshot', { skip: !fs.existsSync(path.resolve('reference/antigravity-kit')) }, () => {
         const refRoot = path.resolve('reference/antigravity-kit');
-        const tokenRegex = /(ag-kit|python3?|checklist\.py|verify_all\.py|security_scan\.py|ux_audit\.py|accessibility_checker\.py|schema_validator\.py|lint_runner\.py|type_coverage\.py|playwright_runner\.py|lighthouse_audit\.py|api_validator\.py|mobile_audit\.py|seo_checker\.py|geo_checker\.py|i18n_checker\.py|\.agent\/|\.codex\/|AGENTS\.md|antigravity\.rules|manifest\.json|--target|--targets|--fix|--path|--no-index|--dry-run|--quiet|--force|\/brainstorm|\/create|\/debug|\/deploy|\/enhance|\/orchestrate|\/plan|\/preview|\/status|\/test|\/ui-ux-pro-max)/g;
+        const tokenRegex = /(ag-kit|python3?|checklist\.py|verify_all\.py|security_scan\.py|ux_audit\.py|accessibility_checker\.py|schema_validator\.py|lint_runner\.py|type_coverage\.py|playwright_runner\.py|lighthouse_audit\.py|api_validator\.py|mobile_audit\.py|seo_checker\.py|geo_checker\.py|i18n_checker\.py|\.agent\/|\.codex\/|AGENTS\.md|antigravity\.rules|manifest\.json|--target|--targets|--fix|--path|--no-index|--dry-run|--quiet|--force)/g;
+        const slashCommandRegex = /(?:^|[\s`"'(\[])(\/(?:brainstorm|create|debug|deploy|enhance|orchestrate|plan|preview|status|test|ui-ux-pro-max))(?=$|[\s`"'，。,.:：)\]])/gm;
 
         const markdownFiles = [];
         const stack = [refRoot];
@@ -83,9 +96,18 @@ describe('Standards Compliance', () => {
             const localFile = path.resolve(rel);
             if (!fs.existsSync(localFile)) continue;
 
-            const refTokens = collectTokens(fs.readFileSync(refFile, 'utf8'), tokenRegex);
+            const refContent = fs.readFileSync(refFile, 'utf8');
+            const refTokens = new Set([
+                ...collectTokens(refContent, tokenRegex),
+                ...collectTokens(refContent, slashCommandRegex),
+            ]);
             if (refTokens.size === 0) continue;
-            const localTokens = collectTokens(fs.readFileSync(localFile, 'utf8'), tokenRegex);
+
+            const localContent = fs.readFileSync(localFile, 'utf8');
+            const localTokens = new Set([
+                ...collectTokens(localContent, tokenRegex),
+                ...collectTokens(localContent, slashCommandRegex),
+            ]);
 
             const missing = [...refTokens].filter((token) => !localTokens.has(token));
             if (missing.length > 0) {
@@ -101,6 +123,15 @@ describe('Standards Compliance', () => {
                 .map((item) => `${item.rel} -> ${item.missing.join(', ')}`)
                 .join('\n')}`,
         );
+    });
+
+    test('official codex skills doc should track current .agents skill locations', () => {
+        const file = path.resolve('docs/official/codex/skills.md');
+        const content = fs.readFileSync(file, 'utf8');
+
+        assert.ok(content.includes('$HOME/.agents/skills/'), 'missing global skill path: $HOME/.agents/skills/');
+        assert.ok(content.includes('.agents/skills'), 'missing repo skill path: .agents/skills');
+        assert.ok(!content.includes('.codex/skills/'), 'should not contain deprecated .codex/skills path');
     });
 
     test('.agent script files should stay identical to reference snapshot', { skip: !fs.existsSync(path.resolve('reference/antigravity-kit/.agent')) }, () => {

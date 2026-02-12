@@ -61,8 +61,8 @@ Codex 采用“渐进式加载”：
 
 常见位置：
 
-- 全局：`~/.codex/skills/`
-- 项目：`<repo>/.codex/skills/`（按实际环境/客户端能力）
+- 全局：`$HOME/.agents/skills/`
+- 项目：从当前工作目录开始，向上到仓库根目录，按链路扫描 `.agents/skills/`
 
 实践建议：
 

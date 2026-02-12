@@ -17,9 +17,12 @@
 ├── .agents-backup/       # Codex 自动备份目录（发生漂移覆盖时生成）
 ├── .codex/               # Legacy 历史目录（更新/doctor 时自动迁移清理）
 ├── AGENTS.md             # 工作区主入口（保留用户内容 + 托管区块注入）
-├── antigravity.rules     # 工作区风险规则（保留用户内容 + 托管区块注入）
+├── antigravity.rules     # 工作区托管说明（保留用户内容 + 托管区块注入）
 └── .gitignore            # 自动管理的忽略规则
 ```
+
+> 说明：`antigravity.rules` 是本项目的托管说明文件，不等同于 Codex 官方 `.rules` 审批策略文件。  
+> Codex 官方策略文件通常位于 `~/.codex/rules/default.rules`，本项目不会自动写入该全局路径。
 
 ### 1.2 全局数据
 
@@ -68,6 +71,11 @@ ag-kit doctor --fix
     - Gemini 目标当前不支持自动修复，建议执行 `ag-kit update --target gemini`。
 
 ## 3. 升级流程
+
+### 3.0 Codex 官方 `.rules`（可选）
+
+如果你需要启用 Codex 官方命令审批策略（`prefix_rule()` 等），请手动配置 `~/.codex/rules/default.rules`。  
+可直接参考：`docs/codex-rules-template.md`。
 
 ### 3.1 客户端升级
 

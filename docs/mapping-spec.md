@@ -33,6 +33,9 @@ Codex（代码智能体环境）适配器包含一个内置的资源转换层（
 
 自动生成风险控制规则，安装/更新时同样会注入工作区根目录 `antigravity.rules` 的托管区块。
 
+> 注意：这里的 `antigravity.rules` 是本项目的托管说明文件，不是 Codex 官方 `.rules` 审批策略文件。  
+> 如需配置 Codex 官方审批规则，请单独维护 `~/.codex/rules/default.rules`（参考 `docs/codex-rules-template.md`）。
+
 ### `manifest.json` 托管清单
 
 用于完整性与漂移检测，核心结构如下：

@@ -4,6 +4,7 @@
 
 - 归档时间：2026-02-12
 - 归档方式：先抓取官方源，再整理为中文 Markdown 版本（不改机制语义）
+- 证据索引：`docs/official/sources-index.md`（记录来源 URL、拉取时间、SHA256）
 
 ## Antigravity
 

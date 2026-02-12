@@ -29,7 +29,14 @@ cd /path/to/antigravity-kit-cn
 node bin/ag-kit.js init --target codex --path /path/to/your-project
 ```
 
-这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .agents`），并把 Codex 托管规则注入工作区 `AGENTS.md` 与 `antigravity.rules`。
+这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .agents`），并把 Codex 托管内容注入工作区 `AGENTS.md` 与 `antigravity.rules`（说明性托管区块，不是 Codex 官方 `.rules` 审批策略文件）。
+
+### Codex 规则边界说明
+
+- `antigravity.rules`：本项目生成并注入的托管说明文件，用于记录受管资源与运维约束。
+- `.rules`（如 `~/.codex/rules/default.rules`）：Codex 官方的命令审批/执行策略文件（Starlark 规则，支持 `prefix_rule()`）。
+- 默认行为：本项目不会自动写入你的全局 `~/.codex/rules`，避免引入不可预期的全局副作用。
+- 如需启用官方 `.rules` 审批策略，请参考 `docs/codex-rules-template.md`。
 
 ### ⚠️ 关于 `.gitignore` 的重要说明
 
