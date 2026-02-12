@@ -14,6 +14,9 @@ const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agent");
 const WORKSPACE_INDEX_VERSION = 2;
 const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
 const SUPPORTED_TARGETS = ["gemini", "codex"];
+const INDEX_LOCK_RETRY_MS = 50;
+const INDEX_LOCK_TIMEOUT_MS = 3000;
+const INDEX_LOCK_STALE_MS = 30000;
 
 function nowISO() {
     return new Date().toISOString();
@@ -437,6 +440,74 @@ function writeWorkspaceIndex(indexPath, index) {
     fs.writeFileSync(indexPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
 }
 
+function sleepSync(ms) {
+    const buffer = new SharedArrayBuffer(4);
+    const view = new Int32Array(buffer);
+    Atomics.wait(view, 0, 0, ms);
+}
+
+function acquireWorkspaceIndexLock(indexPath) {
+    const lockPath = `${indexPath}.lock`;
+    const startedAt = Date.now();
+
+    while (true) {
+        try {
+            fs.mkdirSync(path.dirname(indexPath), { recursive: true });
+            const fd = fs.openSync(lockPath, "wx");
+            fs.writeFileSync(fd, `${process.pid}\n${nowISO()}\n`, "utf8");
+            return { lockPath, fd };
+        } catch (err) {
+            if (err && err.code !== "EEXIST") {
+                throw new Error(`索引锁创建失败: ${lockPath}`);
+            }
+
+            let removedStale = false;
+            try {
+                const stat = fs.statSync(lockPath);
+                if (Date.now() - stat.mtimeMs > INDEX_LOCK_STALE_MS) {
+                    fs.rmSync(lockPath, { force: true });
+                    removedStale = true;
+                }
+            } catch (_statErr) {
+                removedStale = false;
+            }
+            if (removedStale) {
+                continue;
+            }
+
+            if (Date.now() - startedAt >= INDEX_LOCK_TIMEOUT_MS) {
+                throw new Error(`工作区索引正被其他进程占用: ${indexPath}`);
+            }
+            sleepSync(INDEX_LOCK_RETRY_MS);
+        }
+    }
+}
+
+function releaseWorkspaceIndexLock(lockHandle) {
+    if (!lockHandle) return;
+    try {
+        if (typeof lockHandle.fd === "number") {
+            fs.closeSync(lockHandle.fd);
+        }
+    } catch (_closeErr) {
+        // ignore
+    }
+    try {
+        fs.rmSync(lockHandle.lockPath, { force: true });
+    } catch (_rmErr) {
+        // ignore
+    }
+}
+
+function withWorkspaceIndexLock(indexPath, fn) {
+    const lockHandle = acquireWorkspaceIndexLock(indexPath);
+    try {
+        return fn();
+    } finally {
+        releaseWorkspaceIndexLock(lockHandle);
+    }
+}
+
 function evaluateWorkspaceExclusion(index, workspaceRoot) {
     const normalizedPath = normalizeAbsolutePath(workspaceRoot);
     const excludedPaths = Array.isArray(index.excludedPaths) ? index.excludedPaths : [];
@@ -539,21 +610,43 @@ function registerWorkspaceTarget(workspaceRoot, targetName, options) {
         return;
     }
 
-    const normalizedPath = normalizeAbsolutePath(workspaceRoot);
-    const { indexPath, index } = readWorkspaceIndex();
-    const timestamp = nowISO();
-    const exclusion = evaluateWorkspaceExclusion(index, normalizedPath);
+    if (options.dryRun) {
+        const normalizedPath = normalizeAbsolutePath(workspaceRoot);
+        previewWorkspaceIndexRegistration(normalizedPath, targetName, options);
+        return;
+    }
 
-    if (exclusion.excluded) {
-        const removedCount = removeWorkspaceRecord(index, normalizedPath);
-        if (!options.dryRun && removedCount > 0) {
-            index.updatedAt = timestamp;
-            writeWorkspaceIndex(indexPath, index);
+    const normalizedPath = normalizeAbsolutePath(workspaceRoot);
+    const indexPath = getWorkspaceIndexPath();
+    const timestamp = nowISO();
+    let removedCount = 0;
+    let exclusionReason = "";
+    let excluded = false;
+
+    withWorkspaceIndexLock(indexPath, () => {
+        const { index } = readWorkspaceIndex();
+        const exclusion = evaluateWorkspaceExclusion(index, normalizedPath);
+        excluded = exclusion.excluded;
+        exclusionReason = exclusion.reason;
+
+        if (exclusion.excluded) {
+            removedCount = removeWorkspaceRecord(index, normalizedPath);
+            if (removedCount > 0) {
+                index.updatedAt = timestamp;
+                writeWorkspaceIndex(indexPath, index);
+            }
+            return;
         }
 
+        upsertWorkspaceTarget(index, normalizedPath, targetName, timestamp);
+        index.updatedAt = timestamp;
+        writeWorkspaceIndex(indexPath, index);
+    });
+
+    if (excluded) {
         if (!options.silentIndexLog) {
             log(options, `⏭️ 已跳过索引登记: ${normalizedPath}`);
-            log(options, `   原因: ${exclusion.reason}`);
+            log(options, `   原因: ${exclusionReason}`);
             if (removedCount > 0) {
                 log(options, `🧹 已清理旧索引记录: ${normalizedPath}`);
             }
@@ -561,15 +654,6 @@ function registerWorkspaceTarget(workspaceRoot, targetName, options) {
         }
         return;
     }
-
-    if (options.dryRun) {
-        previewWorkspaceIndexRegistration(normalizedPath, targetName, options);
-        return;
-    }
-
-    upsertWorkspaceTarget(index, normalizedPath, targetName, timestamp);
-    index.updatedAt = timestamp;
-    writeWorkspaceIndex(indexPath, index);
 
     if (!options.silentIndexLog) {
         log(options, `🗂️ 已登记工作区索引: ${normalizedPath} [${targetName}]`);
@@ -785,6 +869,7 @@ async function commandUpdateAll(options) {
     let removedExcluded = 0;
     const timestamp = nowISO();
     const nextRecords = [];
+    const removedRecordKeys = new Set();
 
     for (let i = 0; i < records.length; i++) {
         const item = normalizeWorkspaceRecordV2(records[i], normalizeAbsolutePath(records[i].path));
@@ -793,6 +878,7 @@ async function commandUpdateAll(options) {
 
         if (exclusion.excluded) {
             removedExcluded += 1;
+            removedRecordKeys.add(pathCompareKey(workspacePath));
             if (options.dryRun) {
                 log(options, `[dry-run] [${i + 1}/${records.length}] 将从批量索引移除排除路径: ${workspacePath}（${exclusion.reason}）`);
             } else {
@@ -804,6 +890,7 @@ async function commandUpdateAll(options) {
         if (!fs.existsSync(workspacePath)) {
             if (options.pruneMissing) {
                 removedMissing += 1;
+                removedRecordKeys.add(pathCompareKey(workspacePath));
                 log(options, `🧽 [${i + 1}/${records.length}] 已移除失效工作区索引: ${workspacePath}`);
             } else {
                 skipped += 1;
@@ -867,9 +954,28 @@ async function commandUpdateAll(options) {
     }
 
     if (!options.dryRun) {
-        index.workspaces = nextRecords.sort((a, b) => a.path.localeCompare(b.path));
-        index.updatedAt = timestamp;
-        writeWorkspaceIndex(indexPath, index);
+        withWorkspaceIndexLock(indexPath, () => {
+            const { index: latestIndex } = readWorkspaceIndex();
+            const mergedMap = new Map();
+
+            for (const item of latestIndex.workspaces || []) {
+                if (!item || typeof item.path !== "string") continue;
+                mergedMap.set(pathCompareKey(item.path), normalizeWorkspaceRecordV2(item, normalizeAbsolutePath(item.path)));
+            }
+
+            for (const removedKey of removedRecordKeys) {
+                mergedMap.delete(removedKey);
+            }
+
+            for (const item of nextRecords) {
+                if (!item || typeof item.path !== "string") continue;
+                mergedMap.set(pathCompareKey(item.path), normalizeWorkspaceRecordV2(item, normalizeAbsolutePath(item.path)));
+            }
+
+            latestIndex.workspaces = Array.from(mergedMap.values()).sort((a, b) => a.path.localeCompare(b.path));
+            latestIndex.updatedAt = timestamp;
+            writeWorkspaceIndex(indexPath, latestIndex);
+        });
     }
 
     log(options, "📊 批量更新完成");
@@ -987,13 +1093,17 @@ function commandExcludeList(options) {
 
 function commandExcludeAdd(options) {
     const targetPath = requirePathOption(options, "exclude add");
-    const { indexPath, index } = readWorkspaceIndex();
+    const indexPath = getWorkspaceIndexPath();
     const normalizedTarget = normalizeAbsolutePath(targetPath);
     const targetKey = pathCompareKey(normalizedTarget);
-    const existed = index.excludedPaths.some((item) => pathCompareKey(item) === targetKey);
+    let existed = false;
+    let matchedCount = 0;
 
-    const matchedWorkspaces = index.workspaces.filter((item) => isPathInOrUnder(normalizedTarget, item.path));
-    const matchedCount = matchedWorkspaces.length;
+    withWorkspaceIndexLock(indexPath, () => {
+        const { index } = readWorkspaceIndex();
+        existed = index.excludedPaths.some((item) => pathCompareKey(item) === targetKey);
+        matchedCount = index.workspaces.filter((item) => isPathInOrUnder(normalizedTarget, item.path)).length;
+    });
 
     if (options.dryRun) {
         if (existed) {
@@ -1008,13 +1118,25 @@ function commandExcludeAdd(options) {
     }
 
     if (!existed) {
-        index.excludedPaths.push(normalizedTarget);
-        index.excludedPaths = normalizePathList(index.excludedPaths);
+        withWorkspaceIndexLock(indexPath, () => {
+            const { index } = readWorkspaceIndex();
+            const hasTarget = index.excludedPaths.some((item) => pathCompareKey(item) === targetKey);
+            if (!hasTarget) {
+                index.excludedPaths.push(normalizedTarget);
+                index.excludedPaths = normalizePathList(index.excludedPaths);
+            }
+            index.workspaces = index.workspaces.filter((item) => !isPathInOrUnder(normalizedTarget, item.path));
+            index.updatedAt = nowISO();
+            writeWorkspaceIndex(indexPath, index);
+        });
+    } else {
+        withWorkspaceIndexLock(indexPath, () => {
+            const { index } = readWorkspaceIndex();
+            index.workspaces = index.workspaces.filter((item) => !isPathInOrUnder(normalizedTarget, item.path));
+            index.updatedAt = nowISO();
+            writeWorkspaceIndex(indexPath, index);
+        });
     }
-
-    index.workspaces = index.workspaces.filter((item) => !isPathInOrUnder(normalizedTarget, item.path));
-    index.updatedAt = nowISO();
-    writeWorkspaceIndex(indexPath, index);
 
     if (existed) {
         log(options, `ℹ️ 排除路径已存在: ${normalizedTarget}`);
@@ -1030,10 +1152,15 @@ function commandExcludeAdd(options) {
 
 function commandExcludeRemove(options) {
     const targetPath = requirePathOption(options, "exclude remove");
-    const { indexPath, index } = readWorkspaceIndex();
+    const indexPath = getWorkspaceIndexPath();
     const normalizedTarget = normalizeAbsolutePath(targetPath);
     const targetKey = pathCompareKey(normalizedTarget);
-    const existed = index.excludedPaths.some((item) => pathCompareKey(item) === targetKey);
+    let existed = false;
+
+    withWorkspaceIndexLock(indexPath, () => {
+        const { index } = readWorkspaceIndex();
+        existed = index.excludedPaths.some((item) => pathCompareKey(item) === targetKey);
+    });
 
     if (!existed) {
         log(options, `ℹ️ 排除路径不存在: ${normalizedTarget}`);
@@ -1045,9 +1172,12 @@ function commandExcludeRemove(options) {
         return;
     }
 
-    index.excludedPaths = index.excludedPaths.filter((item) => pathCompareKey(item) !== targetKey);
-    index.updatedAt = nowISO();
-    writeWorkspaceIndex(indexPath, index);
+    withWorkspaceIndexLock(indexPath, () => {
+        const { index } = readWorkspaceIndex();
+        index.excludedPaths = index.excludedPaths.filter((item) => pathCompareKey(item) !== targetKey);
+        index.updatedAt = nowISO();
+        writeWorkspaceIndex(indexPath, index);
+    });
 
     log(options, `✅ 已移除排除路径: ${normalizedTarget}`);
     log(options, `📚 索引文件: ${indexPath}`);
