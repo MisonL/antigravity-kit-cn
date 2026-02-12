@@ -148,7 +148,7 @@ ag-kit exclude remove --path /path/to/dir         # 删除排除路径
 - 执行 `ag-kit init` / `ag-kit update` 时，会把工作区路径登记到全局索引文件：
   - macOS / Linux / WSL: `~/.ag-kit/workspaces.json`
   - Windows PowerShell / CMD: `%USERPROFILE%\.ag-kit\workspaces.json`
-- 默认会自动排除 antigravity-kit 源码目录和系统临时目录（如 macOS `/var/folders/...`、Linux `/tmp`、Windows `%TEMP%`）。
+- 默认会自动排除 antigravity-kit 源码目录和系统临时目录（如 macOS `/var/folders/...`、`/tmp`、`/private/tmp`，Linux `/tmp`，Windows `%TEMP%`）。
 - 可通过 `--no-index` 让 `init/update` 跳过索引登记（适合临时验证目录）。
 - `ag-kit update` 只依赖当前目录（或 `--path` 指定目录）的已安装目标，不依赖全局索引。
 - 执行 `ag-kit update-all` 时，会遍历索引并批量更新每个工作区（可通过 `--targets` 限定目标）。

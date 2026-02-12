@@ -279,6 +279,16 @@ function getSystemTempRoots() {
         process.env.TMP,
         process.env.TEMP,
     ];
+
+    // Add common POSIX temp roots explicitly.
+    // On macOS, os.tmpdir() usually resolves to /var/folders/... and may not cover /tmp.
+    if (process.platform !== "win32") {
+        rawRoots.push("/tmp", "/var/tmp");
+        if (process.platform === "darwin") {
+            rawRoots.push("/private/tmp", "/private/var/tmp");
+        }
+    }
+
     const expandedRoots = [];
 
     for (const root of rawRoots) {

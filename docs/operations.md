@@ -25,7 +25,7 @@
 
 - **macOS / Linux**: `~/.ag-kit/workspaces.json`
 - **Windows**: `%USERPROFILE%\.ag-kit\workspaces.json`
-- 默认不会把系统临时目录写入索引（如 macOS `/var/folders/...`、Linux `/tmp`、Windows `%TEMP%`）。
+- 默认不会把系统临时目录写入索引（如 macOS `/var/folders/...`、`/tmp`、`/private/tmp`，Linux `/tmp`，Windows `%TEMP%`）。
 - 对临时验证场景，可在 `init/update` 时加 `--no-index` 完全跳过索引登记。
 - `ag-kit update` 仅处理当前目录（或 `--path` 指定目录），不依赖全局索引。
 - `ag-kit update-all` 仅处理索引内工作区；若项目曾使用 `--no-index`，可在项目内执行一次不带 `--no-index` 的 `ag-kit update` 重新纳入索引。
