@@ -37,4 +37,12 @@ describe('RuleGenerator', () => {
         assert.ok(antigravityRules.includes('Antigravity Risk Controls'));
         assert.deepStrictEqual(codexJson.skills, []);
     });
+
+    test('generate should require explicit version', () => {
+        const transformResult = { metadata: [] };
+        assert.throws(
+            () => RuleGenerator.generate(transformResult),
+            /需要显式传入版本号/,
+        );
+    });
 });

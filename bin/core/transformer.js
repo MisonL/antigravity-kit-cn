@@ -25,26 +25,117 @@ class ResourceTransformer {
             return candidate;
         }
 
+        function stripWrappingQuotes(value) {
+            const trimmed = String(value || "").trim();
+            if ((trimmed.startsWith("\"") && trimmed.endsWith("\"")) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+                return trimmed.slice(1, -1);
+            }
+            return trimmed;
+        }
+
+        function foldYamlBlock(lines) {
+            const paragraphs = [];
+            let current = [];
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed) {
+                    if (current.length > 0) {
+                        paragraphs.push(current.join(" "));
+                        current = [];
+                    }
+                    continue;
+                }
+                current.push(trimmed);
+            }
+
+            if (current.length > 0) {
+                paragraphs.push(current.join(" "));
+            }
+
+            return paragraphs.join("\n");
+        }
+
+        function collectIndentedLines(lines, startIndex) {
+            const collected = [];
+            let idx = startIndex;
+            let baseIndent = -1;
+
+            while (idx < lines.length) {
+                const line = lines[idx];
+                if (line.trim() === "") {
+                    if (collected.length > 0) {
+                        collected.push("");
+                    }
+                    idx += 1;
+                    continue;
+                }
+
+                const indentMatch = line.match(/^(\s+)/);
+                if (!indentMatch) {
+                    break;
+                }
+
+                const indentLength = indentMatch[1].length;
+                if (baseIndent < 0) {
+                    baseIndent = indentLength;
+                }
+                if (indentLength < baseIndent) {
+                    break;
+                }
+
+                collected.push(line.slice(baseIndent));
+                idx += 1;
+            }
+
+            return { lines: collected, nextIndex: idx - 1 };
+        }
+
         function parseFrontmatter(content) {
-            const normalized = String(content || "");
-            if (!normalized.startsWith("---")) {
+            const normalized = String(content || "").replace(/\r\n?/g, "\n");
+            if (!normalized.startsWith("---\n")) {
                 return { frontmatter: {}, body: normalized };
             }
 
-            const match = normalized.match(/^---\n([\s\S]*?)\n---\n?/);
+            const match = normalized.match(/^---\n([\s\S]*?)\n---(?:\n|$)/);
             if (!match) {
                 return { frontmatter: {}, body: normalized };
             }
 
             const fmRaw = match[1];
             const frontmatter = {};
-            for (const line of fmRaw.split("\n")) {
-                const idx = line.indexOf(":");
-                if (idx <= 0) continue;
-                const key = line.slice(0, idx).trim();
-                const value = line.slice(idx + 1).trim();
+            const lines = fmRaw.split("\n");
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const keyMatch = line.match(/^([A-Za-z0-9_-]+)\s*:\s*(.*)$/);
+                if (!keyMatch) continue;
+
+                const key = keyMatch[1];
+                const inlineValue = keyMatch[2];
                 if (!key) continue;
-                frontmatter[key] = value;
+
+                if (inlineValue === "|" || inlineValue === ">") {
+                    const block = collectIndentedLines(lines, i + 1);
+                    i = Math.max(i, block.nextIndex);
+                    frontmatter[key] = inlineValue === ">"
+                        ? foldYamlBlock(block.lines)
+                        : block.lines.join("\n").trim();
+                    continue;
+                }
+
+                if (inlineValue.trim() === "") {
+                    const block = collectIndentedLines(lines, i + 1);
+                    if (block.lines.length > 0) {
+                        i = Math.max(i, block.nextIndex);
+                        frontmatter[key] = block.lines.join("\n").trim();
+                    } else {
+                        frontmatter[key] = "";
+                    }
+                    continue;
+                }
+
+                frontmatter[key] = stripWrappingQuotes(inlineValue);
             }
 
             const body = normalized.slice(match[0].length);

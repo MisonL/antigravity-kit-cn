@@ -4,7 +4,10 @@ class RuleGenerator {
      * @param {object} transformResult Result from Transformer
      * @returns {object} { agentsMd: string, antigravityRules: string, codexJson: object }
      */
-    static generate(transformResult, version = "1.0.0") {
+    static generate(transformResult, version) {
+        if (typeof version !== "string" || version.trim() === "") {
+            throw new Error("RuleGenerator.generate 需要显式传入版本号");
+        }
         const { metadata } = transformResult;
         
         // 1. Generate codex.json

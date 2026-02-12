@@ -4,6 +4,7 @@ const os = require("os");
 const ResourceLoader = require("./resource-loader");
 const ResourceTransformer = require("./transformer");
 const RuleGenerator = require("./generator");
+const pkg = require("../../package.json");
 
 class CodexBuilder {
     /**
@@ -46,7 +47,7 @@ class CodexBuilder {
         }
 
         // 4. Generate & Write Metadata
-        const { agentsMd, antigravityRules, codexJson } = RuleGenerator.generate(transformResult);
+        const { agentsMd, antigravityRules, codexJson } = RuleGenerator.generate(transformResult, pkg.version);
         
         fs.writeFileSync(path.join(outputDir, "codex.json"), `${JSON.stringify(codexJson, null, 2)}\n`);
         fs.writeFileSync(path.join(outputDir, "AGENTS.md"), `${agentsMd}\n`);

@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const CodexAdapter = require('../bin/adapters/codex');
+const pkg = require('../package.json');
 
 describe('Phase C Integration', () => {
     let workDir;
@@ -68,6 +69,11 @@ describe('Phase C Integration', () => {
         assert.ok(workspaceAgents.includes('BEGIN AG-KIT MANAGED BLOCK: codex-core-rules'));
         assert.ok(workspaceAgents.includes('test-skill'));
         assert.ok(workspaceRules.includes('BEGIN AG-KIT MANAGED BLOCK: codex-risk-controls'));
+
+        const codexJson = JSON.parse(fs.readFileSync(path.join(codexDir, 'codex.json'), 'utf8'));
+        assert.strictEqual(codexJson.version, pkg.version);
+        assert.ok(agentsMd.includes(`Version: ${pkg.version}`));
+        assert.ok(workspaceRules.includes(`version: ${pkg.version}`));
     });
 
     test('CodexBuilder should avoid ID collisions between skills and workflows', () => {
