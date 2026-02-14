@@ -97,3 +97,43 @@ npm install -g .
     ```bash
     rm -rf .agent
     ```
+
+## 4. 日常维护
+
+### 4.1 清理本地生成产物
+
+在仓库根目录执行：
+
+```bash
+npm run clean
+```
+
+- 会清理常见生成目录：`.temp_ag_kit`、`coverage`、`web/.next`、`web/node_modules`、`web/out`、`web/.turbo`。
+- 只想预览，不实际删除：
+
+```bash
+npm run clean:dry-run
+```
+
+### 4.2 回归检查
+
+```bash
+npm test
+```
+
+- 当前测试命令仅扫描 `tests/` 目录，避免误执行 `web/.next` 等构建产物中的文件。
+- 若需要检查前端代码规范（可选），先安装依赖再执行：
+
+```bash
+npm install --prefix web
+npm run lint --prefix web
+```
+
+### 4.3 一键健康复检
+
+```bash
+npm run health-check
+```
+
+- 会顺序执行：`npm test`、CLI 临时工作区链路验证（`init/status/doctor/update/update-all/exclude`）、`npm run clean:dry-run`。
+- 适合升级后或准备发布前的快速回归确认。

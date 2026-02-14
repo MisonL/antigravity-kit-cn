@@ -164,6 +164,22 @@ ag-kit exclude remove --path /path/to/dir         # 删除排除路径
 - 可通过 `ag-kit exclude add/remove/list` 维护自定义排除路径（支持排除整棵目录树）。
 - 也可通过环境变量 `AG_KIT_INDEX_PATH` 指定自定义索引路径。
 
+### 开发维护命令
+
+```bash
+npm run clean           # 清理本地生成产物（如 web/.next、web/node_modules）
+npm run clean:dry-run   # 预览将被清理的路径
+npm test                # 只执行 tests/ 目录下测试
+npm run health-check    # 一键执行全链路健康复检
+```
+
+如果你在 `web/` 子项目内开发，可按需执行：
+
+```bash
+npm install --prefix web
+npm run lint --prefix web
+```
+
 ## 卸载
 
 ### 卸载本机全局 CLI

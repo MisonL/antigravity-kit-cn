@@ -21,6 +21,9 @@
   "author": "vudovn",
   "license": "MIT",
   "scripts": {
+    "clean": "node scripts/clean.js",
+    "clean:dry-run": "node scripts/clean.js --dry-run",
+    "health-check": "bash scripts/health-check.sh",
     "postinstall": "node scripts/postinstall-check.js",
     "test": "node --test tests"
   },
