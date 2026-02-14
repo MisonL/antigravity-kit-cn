@@ -80,6 +80,12 @@ ag-kit doctor --fix
 ### 3.1 客户端升级
 
 ```bash
+npm install -g @mison/ag-kit-cn@latest
+```
+
+若你以源码方式安装过，也可以继续使用源码升级：
+
+```bash
 git -C /path/to/antigravity-kit-cn pull
 cd /path/to/antigravity-kit-cn
 npm install -g .

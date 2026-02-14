@@ -8,9 +8,7 @@
 ## 快速安装
 
 ```bash
-git clone https://github.com/MisonL/antigravity-kit-cn.git
-cd antigravity-kit-cn
-npm install -g .
+npm install -g @mison/ag-kit-cn
 ```
 
 然后在你的目标项目中初始化：
@@ -27,6 +25,14 @@ ag-kit init --target codex    # 安装 Codex 结构（.agents + 托管规则注�
 ```bash
 cd /path/to/antigravity-kit-cn
 node bin/ag-kit.js init --target codex --path /path/to/your-project
+```
+
+如需源码开发安装：
+
+```bash
+git clone https://github.com/MisonL/antigravity-kit-cn.git
+cd antigravity-kit-cn
+npm install -g .
 ```
 
 这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .agents`），并把 Codex 托管内容注入工作区 `AGENTS.md` 与 `antigravity.rules`（说明性托管区块，不是 Codex 官方 `.rules` 审批策略文件）。
@@ -155,7 +161,7 @@ ag-kit exclude remove --path /path/to/dir         # 删除排除路径
 - 执行 `ag-kit init` / `ag-kit update` 时，会把工作区路径登记到全局索引文件：
   - macOS / Linux / WSL: `~/.ag-kit/workspaces.json`
   - Windows PowerShell / CMD: `%USERPROFILE%\.ag-kit\workspaces.json`
-- 默认会自动排除 antigravity-kit 源码目录和系统临时目录（如 macOS `/var/folders/...`、`/tmp`、`/private/tmp`，Linux `/tmp`，Windows `%TEMP%`）。
+- 默认会自动排除 Ag-Kit 工具包源码目录和系统临时目录（如 macOS `/var/folders/...`、`/tmp`、`/private/tmp`，Linux `/tmp`，Windows `%TEMP%`）。
 - 可通过 `--no-index` 让 `init/update` 跳过索引登记（适合临时验证目录）。
 - `ag-kit update` 只依赖当前目录（或 `--path` 指定目录）的已安装目标，不依赖全局索引。
 - 执行 `ag-kit update-all` 时，会遍历索引并批量更新每个工作区（可通过 `--targets` 限定目标）。
@@ -185,13 +191,13 @@ npm run lint --prefix web
 ### 卸载本机全局 CLI
 
 ```bash
-npm uninstall -g antigravity-kit-cn
+npm uninstall -g @mison/ag-kit-cn
 ```
 
 如果你同时安装过别名或上游英文版，可一并清理：
 
 ```bash
-npm uninstall -g antigravity-kit @vudovn/ag-kit
+npm uninstall -g antigravity-kit-cn antigravity-kit @vudovn/ag-kit
 ```
 
 ### 卸载某个项目内的 Antigravity Kit
