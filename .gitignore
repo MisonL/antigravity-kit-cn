@@ -3,5 +3,9 @@ node_modules/
 .temp_ag_kit/
 antigravity-doc
 others
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 reference/*
 !reference/.gitignore
