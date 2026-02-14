@@ -1,6 +1,10 @@
 # Antigravity Kit CN
 
-> 包含 Skills（技能）、Agents（智能体）与 Workflows（工作流）的 AI Agent 模板
+[![npm version](https://img.shields.io/npm/v/%40mison%2Fag-kit-cn?logo=npm)](https://www.npmjs.com/package/@mison/ag-kit-cn)
+[![npm downloads](https://img.shields.io/npm/dm/%40mison%2Fag-kit-cn?logo=npm)](https://www.npmjs.com/package/@mison/ag-kit-cn)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+> 面向 Antigravity 与 Codex 的中文 AI Agent 模板工具包，提供 Skills、Agents、Workflows 与 ag-kit CLI 的一键安装、更新和治理。
 >
 > [!NOTE]
 > 本仓库基于上游 vudovn/antigravity-kit 同步更新并进行中文化，同时提供 Codex（代码智能体环境）适配。
