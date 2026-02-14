@@ -13,6 +13,7 @@ const { selectTargets } = require("./interactive");
 const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agent");
 const WORKSPACE_INDEX_VERSION = 2;
 const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
+const TOOLKIT_PACKAGE_NAMES = new Set(["@mison/ag-kit-cn", "antigravity-kit-cn", "antigravity-kit"]);
 const SUPPORTED_TARGETS = ["gemini", "codex"];
 const INDEX_LOCK_RETRY_MS = 50;
 const INDEX_LOCK_TIMEOUT_MS = 3000;
@@ -269,7 +270,7 @@ function isToolkitSourceDirectory(workspacePath) {
         const content = fs.readFileSync(packageJsonPath, "utf8");
         const parsed = JSON.parse(content);
         const name = typeof parsed.name === "string" ? parsed.name : "";
-        return name === "antigravity-kit-cn" || name === "antigravity-kit";
+        return TOOLKIT_PACKAGE_NAMES.has(name);
     } catch (err) {
         return false;
     }
@@ -523,7 +524,7 @@ function evaluateWorkspaceExclusion(index, workspaceRoot) {
     if (isToolkitSourceDirectory(normalizedPath)) {
         return {
             excluded: true,
-            reason: "检测为 antigravity-kit 源码目录（默认排除）",
+            reason: "检测为 Ag-Kit 工具包源码目录（默认排除）",
             path: normalizedPath,
         };
     }
@@ -1078,7 +1079,7 @@ function commandExcludeList(options) {
 
     console.log("🛡️ 工作区排除清单");
     console.log(`   索引文件: ${indexPath}`);
-    console.log("   默认规则: 自动排除 antigravity-kit 源码目录与系统临时目录（无需手动添加）");
+    console.log("   默认规则: 自动排除 Ag-Kit 工具包源码目录与系统临时目录（无需手动添加）");
 
     if (excluded.length === 0) {
         console.log("   当前无自定义排除路径。");

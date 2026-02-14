@@ -350,4 +350,33 @@ describe("CLI Smoke", () => {
             fs.rmSync(localWorkspace, { recursive: true, force: true });
         }
     });
+
+    test("init should skip indexing toolkit source-like workspace by package name", () => {
+        const toolkitWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ag-kit-toolkit-source-"));
+        try {
+            fs.mkdirSync(path.join(toolkitWorkspace, "bin"), { recursive: true });
+            fs.writeFileSync(
+                path.join(toolkitWorkspace, "package.json"),
+                JSON.stringify({ name: "@mison/ag-kit-cn", version: "2.0.1" }, null, 2),
+                "utf8",
+            );
+            fs.writeFileSync(path.join(toolkitWorkspace, "bin", "ag-kit.js"), "#!/usr/bin/env node\n", "utf8");
+
+            const initResult = runCli(
+                ["init", "--target", "gemini", "--path", toolkitWorkspace, "--quiet"],
+                { env: { AG_KIT_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+            if (!fs.existsSync(indexPath)) {
+                return;
+            }
+
+            const indexData = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+            const hasWorkspace = (indexData.workspaces || []).some((item) => item.path === toolkitWorkspace);
+            assert.ok(!hasWorkspace, "toolkit source-like workspace should be excluded from index");
+        } finally {
+            fs.rmSync(toolkitWorkspace, { recursive: true, force: true });
+        }
+    });
 });
