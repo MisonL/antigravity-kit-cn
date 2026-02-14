@@ -22,7 +22,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "node scripts/postinstall-check.js",
-    "test": "node --test"
+    "test": "node --test tests"
   },
   "bin": {
     "ag-kit": "./bin/ag-kit.js"
