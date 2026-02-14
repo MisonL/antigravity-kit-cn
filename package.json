@@ -1,5 +1,5 @@
 {
-  "name": "antigravity-kit-cn",
+  "name": "@mison/ag-kit-cn",
   "version": "2.0.1",
   "description": "AI Agent templates - Skills, Agents, and Workflows for enhanced coding assistance",
   "repository": {
@@ -27,6 +27,24 @@
     "postinstall": "node scripts/postinstall-check.js",
     "test": "node --test tests"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    ".agent/**",
+    "bin/**",
+    "scripts/postinstall-check.js",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "AGENT_FLOW.md",
+    "docs/codex-rules-template.md",
+    "docs/mapping-spec.md",
+    "docs/multi-target-adapter.md",
+    "docs/operations.md",
+    "docs/terminology-style-guide.md",
+    "docs/official/**"
+  ],
   "bin": {
     "ag-kit": "./bin/ag-kit.js"
   }
