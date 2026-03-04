@@ -6,6 +6,10 @@ const ManifestManager = require("../utils/manifest");
 const AtomicWriter = require("../utils/atomic-writer");
 const GitHelper = require("../utils/git-helper");
 const { upsertManagedBlock } = require("../utils/managed-block");
+const {
+    hasLegacyAgentLayoutSignal,
+    hasLegacyGeminiLayoutSignal,
+} = require("../utils/legacy-layout");
 const { cloneBranchAgentDir } = require("../utils");
 const CodexBuilder = require("../core/builder");
 const pkg = require("../../package.json");
@@ -59,8 +63,8 @@ class CodexAdapter extends BaseAdapter {
         const legacyExists = fs.existsSync(legacyDir);
         const legacyUnmanaged = legacyExists && !legacyManaged;
         const canBootstrapFromLegacy = legacyManaged
-            || fs.existsSync(path.join(this.workspaceRoot, AGENT_DIR_NAME))
-            || fs.existsSync(path.join(this.workspaceRoot, GEMINI_DIR_NAME));
+            || hasLegacyAgentLayoutSignal(this.workspaceRoot)
+            || hasLegacyGeminiLayoutSignal(this.workspaceRoot);
 
         if (mode === "install" && managedExists && !this.options.force) {
             throw new Error(`${MANAGED_DIR_NAME} 目录已存在。请使用 --force 覆盖。`);

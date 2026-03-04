@@ -7,6 +7,7 @@ const { spawnSync } = require("node:child_process");
 
 const REPO_ROOT = path.resolve(__dirname, "..");
 const CLI_PATH = path.join(REPO_ROOT, "bin", "ag-kit.js");
+const PROJECTION_MARKER = ".ag-kit-projection.json";
 
 function runCli(args, options = {}) {
     const env = {
@@ -20,6 +21,18 @@ function runCli(args, options = {}) {
         env,
         encoding: "utf8",
     });
+}
+
+function writeManagedProjectionMarker(workspaceDir, dirName, type) {
+    const projectionDir = path.join(workspaceDir, dirName);
+    fs.mkdirSync(projectionDir, { recursive: true });
+    const markerPath = path.join(projectionDir, PROJECTION_MARKER);
+    fs.writeFileSync(markerPath, `${JSON.stringify({
+        managedBy: "ag-kit-cn",
+        type,
+        version: "test",
+        generatedAt: new Date().toISOString(),
+    }, null, 2)}\n`, "utf8");
 }
 
 describe("CLI Smoke", () => {
@@ -219,7 +232,7 @@ describe("CLI Smoke", () => {
     });
 
     test("update should run in gemini dry-run mode", () => {
-        fs.mkdirSync(path.join(workspaceDir, ".agent"), { recursive: true });
+        writeManagedProjectionMarker(workspaceDir, ".agent", "agent");
 
         const result = runCli(
             ["update", "--target", "gemini", "--path", workspaceDir, "--dry-run", "--quiet"],
@@ -228,9 +241,40 @@ describe("CLI Smoke", () => {
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
     });
 
+    test("update should fail when only non-managed .agent exists", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".agent"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".agent", "custom.md"), "# custom agent config\n", "utf8");
+
+        const result = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.notStrictEqual(result.status, 0);
+        assert.match(result.stderr || result.stdout, /未检测到 Antigravity Kit 安装/);
+    });
+
     test("update should fail when only non-managed .gemini exists", () => {
         fs.mkdirSync(path.join(workspaceDir, ".gemini"), { recursive: true });
         fs.writeFileSync(path.join(workspaceDir, ".gemini", "settings.json"), JSON.stringify({ theme: "custom" }));
+
+        const result = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.notStrictEqual(result.status, 0);
+        assert.match(result.stderr || result.stdout, /未检测到 Antigravity Kit 安装/);
+    });
+
+    test("update should fail when non-managed .gemini has context7 settings only", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".gemini"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".gemini", "settings.json"), JSON.stringify({
+            mcpServers: {
+                context7: {
+                    command: "npx",
+                    args: ["-y", "@upstash/context7-mcp"],
+                },
+            },
+        }), "utf8");
 
         const result = runCli(
             ["update", "--path", workspaceDir, "--quiet"],
@@ -261,7 +305,7 @@ describe("CLI Smoke", () => {
     });
 
     test("update-all should run in dry-run mode with indexed workspace", () => {
-        fs.mkdirSync(path.join(workspaceDir, ".agent"), { recursive: true });
+        writeManagedProjectionMarker(workspaceDir, ".agent", "agent");
         const now = new Date().toISOString();
         const seedIndex = {
             version: 2,

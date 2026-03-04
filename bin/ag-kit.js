@@ -8,6 +8,11 @@ const pkg = require("../package.json");
 const { readGlobalNpmDependencies } = require("./utils");
 const CodexAdapter = require("./adapters/codex");
 const {
+    isManagedProjectionDir,
+    hasLegacyAgentLayoutSignal,
+    hasLegacyGeminiLayoutSignal,
+} = require("./utils/legacy-layout");
+const {
     selectTargets,
     selectAgentConflictPolicy,
     selectGeminiAgentsPolicy,
@@ -26,7 +31,6 @@ const TARGET_ALIAS_MAP = {
     gemini: "full",
     codex: "full",
 };
-const PROJECTION_MARKER = ".ag-kit-projection.json";
 const INDEX_LOCK_RETRY_MS = 50;
 const INDEX_LOCK_TIMEOUT_MS = 3000;
 const INDEX_LOCK_STALE_MS = 30000;
@@ -781,24 +785,9 @@ function isManagedLegacyCodexDir(workspaceRoot) {
     }
 }
 
-function isManagedProjectionDir(workspaceRoot, dirName, type) {
-    const markerPath = path.join(workspaceRoot, dirName, PROJECTION_MARKER);
-    if (!fs.existsSync(markerPath)) {
-        return false;
-    }
-
-    try {
-        const parsed = JSON.parse(fs.readFileSync(markerPath, "utf8"));
-        return parsed
-            && parsed.managedBy === "ag-kit-cn"
-            && parsed.type === type;
-    } catch (_err) {
-        return false;
-    }
-}
-
 function hasLegacyLayoutSignal(workspaceRoot) {
-    return fs.existsSync(path.join(workspaceRoot, ".agent"))
+    return hasLegacyAgentLayoutSignal(workspaceRoot)
+        || hasLegacyGeminiLayoutSignal(workspaceRoot)
         || isManagedLegacyCodexDir(workspaceRoot);
 }
 

@@ -5,6 +5,8 @@ const os = require("os");
 const path = require("path");
 const GeminiAdapter = require("../bin/adapters/gemini");
 
+const PROJECTION_MARKER = ".ag-kit-projection.json";
+
 describe("GeminiAdapter", () => {
     let workDir;
 
@@ -20,6 +22,12 @@ describe("GeminiAdapter", () => {
         const agentDir = path.join(workDir, ".agent");
         fs.mkdirSync(agentDir, { recursive: true });
         fs.writeFileSync(path.join(agentDir, "SKILL.md"), "same-source-target", "utf8");
+        fs.writeFileSync(path.join(agentDir, PROJECTION_MARKER), `${JSON.stringify({
+            managedBy: "ag-kit-cn",
+            type: "agent",
+            version: "test",
+            generatedAt: new Date().toISOString(),
+        }, null, 2)}\n`, "utf8");
 
         const adapter = new GeminiAdapter(workDir, { quiet: true });
         adapter.update(agentDir);
