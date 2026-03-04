@@ -200,6 +200,14 @@ npm install --prefix web
 npm run lint --prefix web
 ```
 
+### CI 与分支门禁
+
+- 仓库内置 GitHub Actions 工作流：`.github/workflows/ci.yml`。
+- PR 到 `main` / `preview/agents-v3` 会执行两个检查：
+  - `CI / test`
+  - `CI / health-check`
+- 建议在仓库 Branch Protection 中将以上两项设为 Required status checks，避免未验证改动直接合并。
+
 ## 卸载
 
 ### 卸载本机全局 CLI

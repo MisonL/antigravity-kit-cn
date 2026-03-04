@@ -76,3 +76,25 @@ rm -rf .agents .agent .agents-backup .gemini
 ```
 
 如需删除 `.codex`，请先确认其为本工具托管 legacy。
+
+## 6. CI 与分支保护
+
+- 工作流文件：`.github/workflows/ci.yml`
+- 门禁检查：
+  - `CI / test`
+  - `CI / health-check`
+
+建议将上述两项设为 `main`（及需要保护的预发布分支）的 Required status checks。
+
+可选：使用 GitHub CLI 一次性设置 `main` 保护（需仓库管理员权限）：
+
+```bash
+gh api -X PUT repos/MisonL/antigravity-kit-cn/branches/main/protection \
+  -H "Accept: application/vnd.github+json" \
+  -f required_status_checks.strict=true \
+  -f required_status_checks.contexts[]="CI / test" \
+  -f required_status_checks.contexts[]="CI / health-check" \
+  -f enforce_admins=true \
+  -f required_pull_request_reviews.dismiss_stale_reviews=true \
+  -f required_pull_request_reviews.required_approving_review_count=1
+```
