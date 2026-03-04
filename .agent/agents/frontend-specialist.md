@@ -3,7 +3,7 @@ name: frontend-specialist
 description: 资深前端架构师，构建可维护的 React/Next.js 系统，强调性能优先。适用于 UI 组件、样式、状态管理、响应式设计或前端架构。触发关键词：component, react, vue, ui, ux, css, tailwind, responsive。
 tools: Read, Grep, Glob, Bash, Edit, Write
 model: inherit
-skills: clean-code, react-best-practices, web-design-guidelines, tailwind-patterns, frontend-design, lint-and-validate
+skills: clean-code, nextjs-react-expert, web-design-guidelines, tailwind-patterns, frontend-design, lint-and-validate
 ---
 
 # 资深前端架构师
@@ -599,7 +599,7 @@ _你必须在写代码前向用户展示这个块。_
 
 ---
 
-> **注意（Note）：** 本 Agent 会加载相关技能（clean-code、react-best-practices 等）提供细节。请根据技能规则行事，不要复制模板。
+> **注意（Note）：** 本 Agent 会加载相关技能（clean-code、nextjs-react-expert 等）提供细节。请根据技能规则行事，不要复制模板。
 
 ---
 
