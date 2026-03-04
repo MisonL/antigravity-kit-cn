@@ -7,6 +7,7 @@ const AtomicWriter = require("../utils/atomic-writer");
 const GitHelper = require("../utils/git-helper");
 const { upsertManagedBlock } = require("../utils/managed-block");
 const {
+    hasManagedCanonicalManifestSignal,
     hasManagedAgentProjectionSignal,
     hasManagedGeminiProjectionSignal,
 } = require("../utils/managed-evidence");
@@ -58,7 +59,8 @@ class CodexAdapter extends BaseAdapter {
     _applyManagedFlow(mode, sourceDir) {
         const managedDir = path.join(this.workspaceRoot, MANAGED_DIR_NAME);
         const legacyDir = path.join(this.workspaceRoot, LEGACY_DIR_NAME);
-        const managedExists = fs.existsSync(managedDir);
+        const managedDirExists = fs.existsSync(managedDir);
+        const managedCanonicalExists = hasManagedCanonicalManifestSignal(this.workspaceRoot);
         const legacyManaged = this._isManagedLegacyCodexDir(legacyDir);
         const legacyExists = fs.existsSync(legacyDir);
         const legacyUnmanaged = legacyExists && !legacyManaged;
@@ -66,10 +68,13 @@ class CodexAdapter extends BaseAdapter {
             || hasManagedAgentProjectionSignal(this.workspaceRoot)
             || hasManagedGeminiProjectionSignal(this.workspaceRoot);
 
-        if (mode === "install" && managedExists && !this.options.force) {
+        if (mode === "install" && managedDirExists && !this.options.force) {
             throw new Error(`${MANAGED_DIR_NAME} 目录已存在。请使用 --force 覆盖。`);
         }
-        if (mode === "update" && !managedExists && !canBootstrapFromLegacy) {
+        if (mode === "update" && !managedCanonicalExists && managedDirExists) {
+            throw new Error(`${MANAGED_DIR_NAME} 目录存在但未检测到受管 manifest，已停止更新以避免覆盖非托管内容。请先清理后执行 init，或使用 init --force 覆盖安装。`);
+        }
+        if (mode === "update" && !managedCanonicalExists && !canBootstrapFromLegacy) {
             throw new Error(`${MANAGED_DIR_NAME} 目录不存在，且未检测到可迁移的 legacy 结构，无法更新。请先执行 init。`);
         }
 
@@ -84,7 +89,7 @@ class CodexAdapter extends BaseAdapter {
 
             if (this.options.dryRun) {
                 this.log(`[dry-run] 将原子更新: ${managedDir}`);
-                if (managedExists && this.options.force) {
+                if (managedDirExists && this.options.force) {
                     const candidates = this._collectBackupCandidates(managedDir, incomingFiles);
                     if (candidates.fullSnapshot) {
                         this.log(`[dry-run] 覆盖前将备份整目录: ${managedDir}`);
@@ -103,7 +108,7 @@ class CodexAdapter extends BaseAdapter {
                 return;
             }
 
-            if (managedExists && this.options.force) {
+            if (managedDirExists && this.options.force) {
                 const candidates = this._collectBackupCandidates(managedDir, incomingFiles);
                 const backupResult = this._backupCandidates(managedDir, candidates);
                 if (backupResult) {

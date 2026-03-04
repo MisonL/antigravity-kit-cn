@@ -42,6 +42,7 @@ ag-kit update-all --targets full
 
 - 工作区索引：`~/.ag-kit/workspaces.json`（或 `AG_KIT_INDEX_PATH` 自定义）。
 - 自动迁移状态：`~/.ag-kit/migrations/v3.json`（或 `AG_KIT_MIGRATION_STATE_PATH` 自定义）。
+- `ag-kit status` 只读显示 `Auto-Migration(v3): done|pending`。
 - 可配合 `--prune-missing` 清理失效路径。
 
 ### 2.3 诊断与修复

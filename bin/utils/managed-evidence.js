@@ -3,6 +3,11 @@ const path = require("path");
 
 const PROJECTION_MARKER = ".ag-kit-projection.json";
 
+function hasManagedCanonicalManifestSignal(workspaceRoot) {
+    const manifestPath = path.join(workspaceRoot, ".agents", "manifest.json");
+    return fs.existsSync(manifestPath);
+}
+
 function isManagedProjectionDir(workspaceRoot, dirName, type) {
     const markerPath = path.join(workspaceRoot, dirName, PROJECTION_MARKER);
     if (!fs.existsSync(markerPath)) {
@@ -44,6 +49,7 @@ function hasManagedGeminiProjectionSignal(workspaceRoot) {
 
 module.exports = {
     PROJECTION_MARKER,
+    hasManagedCanonicalManifestSignal,
     isManagedProjectionDir,
     hasManagedAgentProjectionSignal,
     hasManagedGeminiAgentsNamespace,

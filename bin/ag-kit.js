@@ -8,6 +8,7 @@ const pkg = require("../package.json");
 const { readGlobalNpmDependencies } = require("./utils");
 const CodexAdapter = require("./adapters/codex");
 const {
+    hasManagedCanonicalManifestSignal,
     isManagedProjectionDir,
     hasManagedAgentProjectionSignal,
     hasManagedGeminiProjectionSignal,
@@ -924,7 +925,7 @@ function hasManagedLegacyLayoutSignal(workspaceRoot) {
 }
 
 function detectInstalledTargets(workspaceRoot) {
-    if (fs.existsSync(path.join(workspaceRoot, ".agents")) || hasManagedLegacyLayoutSignal(workspaceRoot)) {
+    if (hasManagedCanonicalManifestSignal(workspaceRoot) || hasManagedLegacyLayoutSignal(workspaceRoot)) {
         return ["full"];
     }
     return [];
@@ -933,7 +934,7 @@ function detectInstalledTargets(workspaceRoot) {
 function isTargetInstalled(workspaceRoot, targetName) {
     const normalized = normalizeTargetName(targetName);
     if (normalized === "full") {
-        return fs.existsSync(path.join(workspaceRoot, ".agents")) || hasManagedLegacyLayoutSignal(workspaceRoot);
+        return hasManagedCanonicalManifestSignal(workspaceRoot) || hasManagedLegacyLayoutSignal(workspaceRoot);
     }
     return false;
 }
@@ -1055,10 +1056,18 @@ async function runAutoMigrationOnce(command, options) {
             continue;
         }
 
-        if (fs.existsSync(path.join(workspacePath, ".agents"))) {
+        const managedCanonical = hasManagedCanonicalManifestSignal(workspacePath);
+        const agentsDirExists = fs.existsSync(path.join(workspacePath, ".agents"));
+
+        if (managedCanonical) {
             upsertMigrationRecord(state, workspacePath, "already_v3", nowISO());
             touchedState = true;
             alreadyManagedCount += 1;
+            continue;
+        }
+
+        if (agentsDirExists) {
+            // Avoid touching user-managed .agents directory without managed manifest evidence.
             continue;
         }
 
@@ -1586,11 +1595,11 @@ function commandStatus(options) {
     try {
         const { state } = readMigrationState();
         const entry = getMigrationRecord(state, workspaceRoot);
-        if (entry) {
-            migrationStatus = `${entry.status}${entry.updatedAt ? ` @ ${entry.updatedAt}` : ""}`;
+        if (entry && (entry.status === "migrated" || entry.status === "already_v3")) {
+            migrationStatus = "done";
         }
     } catch (_err) {
-        migrationStatus = "unknown";
+        migrationStatus = "pending";
     }
     console.log(`   Auto-Migration(v3): ${migrationStatus}`);
 
@@ -1598,7 +1607,7 @@ function commandStatus(options) {
     const agentProjectionDir = path.join(workspaceRoot, ".agent");
     const geminiProjectionDir = path.join(workspaceRoot, ".gemini");
     const legacyDir = path.join(workspaceRoot, ".codex");
-    const hasManaged = fs.existsSync(managedDir);
+    const hasManaged = hasManagedCanonicalManifestSignal(workspaceRoot);
     const hasLegacy = fs.existsSync(legacyDir);
     const isManagedLegacy = isManagedLegacyCodexDir(workspaceRoot);
 

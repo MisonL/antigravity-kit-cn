@@ -25,6 +25,7 @@ ag-kit status
 - 自动生成兼容投影：`.agent/`、`.gemini/`
 - 根 `AGENTS.md`/`antigravity.rules` 托管区块已刷新
 - 首轮执行 `init/update/update-all/doctor --fix` 时，会对索引中的受管 legacy 工作区做一次自动迁移
+- `ag-kit status` 中 `Auto-Migration(v3)` 为 `done` 或 `pending`
 
 ## 3. 旧目录兼容规则
 

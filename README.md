@@ -182,6 +182,7 @@ ag-kit exclude remove --path /path/to/dir         # 删除排除路径
 - 可通过 `ag-kit exclude add/remove/list` 维护自定义排除路径（支持排除整棵目录树）。
 - 也可通过环境变量 `AG_KIT_INDEX_PATH` 指定自定义索引路径。
 - 自动迁移状态默认在 `~/.ag-kit/migrations/v3.json`，可用 `AG_KIT_MIGRATION_STATE_PATH` 自定义。
+- `ag-kit status` 会显示 `Auto-Migration(v3): done|pending`（只读状态）。
 
 ### 开发维护命令
 

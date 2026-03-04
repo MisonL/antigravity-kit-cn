@@ -312,6 +312,30 @@ describe("CLI Smoke", () => {
         assert.match(result.stderr || result.stdout, /未检测到 Antigravity Kit 安装/);
     });
 
+    test("update should fail when .agents exists without managed manifest", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".agents"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".agents", "custom.txt"), "user managed\n", "utf8");
+
+        const result = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.notStrictEqual(result.status, 0);
+        assert.match(result.stderr || result.stdout, /未检测到 Antigravity Kit 安装/);
+    });
+
+    test("status should fail when .agents exists without managed manifest", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".agents"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".agents", "custom.txt"), "user managed\n", "utf8");
+
+        const result = runCli(
+            ["status", "--path", workspaceDir],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.notStrictEqual(result.status, 0);
+        assert.match(result.stderr || result.stdout, /未检测到 Antigravity Kit 安装/);
+    });
+
     test("status should reject unsupported --no-index option", () => {
         fs.mkdirSync(path.join(workspaceDir, ".agent"), { recursive: true });
 
@@ -448,8 +472,75 @@ describe("CLI Smoke", () => {
             );
             assert.strictEqual(second.status, 0, second.stderr || second.stdout);
             assert.ok(fs.existsSync(sentinel), "auto migration should run once per workspace");
+
+            const statusResult = runCli(
+                ["status", "--path", legacyWorkspace],
+                { env: { AG_KIT_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(statusResult.status, 0, statusResult.stderr || statusResult.stdout);
+            assert.match(statusResult.stdout, /Auto-Migration\(v3\): done/);
         } finally {
             fs.rmSync(legacyWorkspace, { recursive: true, force: true });
+        }
+    });
+
+    test("init should keep migrating other workspaces when one auto-migration target fails", () => {
+        if (process.platform === "win32") {
+            return;
+        }
+
+        const successWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ag-kit-auto-migrate-success-"));
+        const failedWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ag-kit-auto-migrate-failed-"));
+        const triggerWorkspace = path.join(tempDir, "trigger-workspace-partial-failure");
+        let originalMode = null;
+
+        try {
+            fs.mkdirSync(triggerWorkspace, { recursive: true });
+
+            writeManagedProjectionMarker(successWorkspace, ".agent", "agent");
+            fs.writeFileSync(path.join(successWorkspace, ".agent", "legacy.md"), "# legacy success\n", "utf8");
+
+            writeManagedProjectionMarker(failedWorkspace, ".agent", "agent");
+            fs.writeFileSync(path.join(failedWorkspace, ".agent", "legacy.md"), "# legacy failed\n", "utf8");
+
+            originalMode = fs.statSync(failedWorkspace).mode & 0o777;
+            fs.chmodSync(failedWorkspace, 0o555);
+
+            const now = new Date().toISOString();
+            const seedIndex = {
+                version: 2,
+                updatedAt: now,
+                workspaces: [
+                    { path: successWorkspace, targets: {} },
+                    { path: failedWorkspace, targets: {} },
+                ],
+                excludedPaths: [],
+            };
+            fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
+
+            const result = runCli(
+                ["init", "--path", triggerWorkspace, "--quiet"],
+                { env: { AG_KIT_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+
+            assert.ok(fs.existsSync(path.join(successWorkspace, ".agents", "manifest.json")), "success workspace should still be migrated");
+            assert.ok(!fs.existsSync(path.join(failedWorkspace, ".agents", "manifest.json")), "failed workspace should not be marked as migrated");
+
+            const state = JSON.parse(fs.readFileSync(migrationStatePath, "utf8"));
+            const entries = Object.values(state.migratedWorkspaces || {});
+            assert.ok(entries.some((entry) => entry && entry.path === successWorkspace && entry.status === "migrated"));
+            assert.ok(!entries.some((entry) => entry && entry.path === failedWorkspace), "failed workspace should not be persisted as done");
+        } finally {
+            if (originalMode !== null) {
+                try {
+                    fs.chmodSync(failedWorkspace, originalMode);
+                } catch (_err) {
+                    // ignore chmod restore error in cleanup
+                }
+            }
+            fs.rmSync(successWorkspace, { recursive: true, force: true });
+            fs.rmSync(failedWorkspace, { recursive: true, force: true });
         }
     });
 
