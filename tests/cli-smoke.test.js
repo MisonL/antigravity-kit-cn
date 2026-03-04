@@ -103,6 +103,35 @@ describe("CLI Smoke", () => {
         assert.ok(fs.existsSync(path.join(workspaceDir, ".codex")));
     });
 
+    test("doctor --fix should be idempotent on consecutive runs", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".codex"), { recursive: true });
+        fs.writeFileSync(
+            path.join(workspaceDir, ".codex", "manifest.json"),
+            JSON.stringify({ version: 2, target: "codex", files: {} }, null, 2),
+            "utf8",
+        );
+        fs.writeFileSync(path.join(workspaceDir, ".codex", "legacy.txt"), "legacy\n", "utf8");
+
+        const firstFix = runCli(
+            ["doctor", "--target", "codex", "--path", workspaceDir, "--fix", "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(firstFix.status, 0, firstFix.stderr || firstFix.stdout);
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agents", "manifest.json")));
+        assert.ok(!fs.existsSync(path.join(workspaceDir, ".codex")));
+
+        const manifestPath = path.join(workspaceDir, ".agents", "manifest.json");
+        const manifestAfterFirstFix = fs.readFileSync(manifestPath, "utf8");
+
+        const secondFix = runCli(
+            ["doctor", "--target", "codex", "--path", workspaceDir, "--fix", "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(secondFix.status, 0, secondFix.stderr || secondFix.stdout);
+        assert.strictEqual(fs.readFileSync(manifestPath, "utf8"), manifestAfterFirstFix);
+        assert.ok(!fs.existsSync(path.join(workspaceDir, ".codex")));
+    });
+
     test("init should not index temporary workspace by default", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
@@ -310,6 +339,79 @@ describe("CLI Smoke", () => {
         );
         assert.notStrictEqual(result.status, 0);
         assert.match(result.stderr || result.stdout, /未检测到 Antigravity Kit 安装/);
+    });
+
+    test("update should migrate managed legacy .gemini namespace to canonical .agents", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".gemini", "agents"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".gemini", "agents", "ag-kit-legacy.md"), "# legacy gemini agent\n", "utf8");
+
+        const result = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agents", "manifest.json")));
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agent", PROJECTION_MARKER)));
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".gemini", PROJECTION_MARKER)));
+    });
+
+    test("update should preserve user keys when merging .gemini/settings.json", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".gemini", "agents"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".gemini", "agents", "ag-kit-legacy.md"), "# legacy gemini agent\n", "utf8");
+        fs.writeFileSync(path.join(workspaceDir, ".gemini", "settings.json"), JSON.stringify({
+            theme: "custom-theme",
+            telemetry: {
+                enabled: false,
+            },
+            mcpServers: {
+                custom_local: {
+                    command: "node",
+                    args: ["custom-mcp.js"],
+                },
+            },
+        }, null, 2), "utf8");
+
+        const result = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+
+        const settings = JSON.parse(fs.readFileSync(path.join(workspaceDir, ".gemini", "settings.json"), "utf8"));
+        assert.strictEqual(settings.theme, "custom-theme");
+        assert.deepStrictEqual(settings.telemetry, { enabled: false });
+        assert.ok(settings.mcpServers.custom_local, "custom mcp server should be preserved");
+        assert.ok(settings.mcpServers.context7, "context7 should be merged");
+        assert.ok(settings.mcpServers.context7_backup, "context7_backup should be merged");
+    });
+
+    test("update should append .gemini/agents entries idempotently", () => {
+        writeManagedProjectionMarker(workspaceDir, ".agent", "agent");
+        fs.mkdirSync(path.join(workspaceDir, ".gemini", "agents"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".gemini", "agents", "user-note.md"), "# keep me\n", "utf8");
+
+        const first = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(first.status, 0, first.stderr || first.stdout);
+
+        const agentsDir = path.join(workspaceDir, ".gemini", "agents");
+        const firstEntries = fs.readdirSync(agentsDir);
+        const firstManagedCount = firstEntries.filter((name) => /^ag-kit-.*\.md$/i.test(name)).length;
+        assert.ok(firstManagedCount > 0, "managed ag-kit agents should be appended");
+        assert.strictEqual(fs.readFileSync(path.join(agentsDir, "user-note.md"), "utf8"), "# keep me\n");
+
+        const second = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(second.status, 0, second.stderr || second.stdout);
+
+        const secondEntries = fs.readdirSync(agentsDir);
+        const secondManagedCount = secondEntries.filter((name) => /^ag-kit-.*\.md$/i.test(name)).length;
+        assert.strictEqual(secondManagedCount, firstManagedCount, "managed agent append should stay idempotent");
+        assert.strictEqual(fs.readFileSync(path.join(agentsDir, "user-note.md"), "utf8"), "# keep me\n");
     });
 
     test("update should fail when .agents exists without managed manifest", () => {
