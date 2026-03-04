@@ -12,6 +12,7 @@
 
 - 规则汇总：`docs/official/rules-baseline.md`
 - 证据索引：`docs/official/sources-index.md`
+- 兼容审查：`docs/official/mechanism-compat-audit-2026-03-04.md`
 - 最近集中核对日期：2026-03-04（UTC）
 
 ## 覆盖范围

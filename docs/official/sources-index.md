@@ -66,7 +66,7 @@
 | `docs/reference/policy-engine.md` | `https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/reference/policy-engine.md` | `abf7f48de1d77c1619d7add259f8788f9ca142824adaab003abb7fa7f1af3643` | `c89d4f9c6c97` | `2026-02-27T23:41:47Z` |
 | `docs/cli/gemini-md.md` | `https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/gemini-md.md` | `d1ccf1120ae69e90f4becabe11342b4c857b4e8fc2807219dab96ef923ee338e` | `d25c469f7723` | `2026-02-19T23:47:39Z` |
 
-Gemini CLI 仓库最新推送时间：`2026-03-04T01:28:06Z`
+Gemini CLI 仓库最新推送时间：`2026-03-04T02:20:00Z`
 
 ## 校验命令示例
 

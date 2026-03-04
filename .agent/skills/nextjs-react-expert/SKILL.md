@@ -1,5 +1,5 @@
 ---
-name: react-best-practices
+name: nextjs-react-expert
 description: 来自 Vercel Engineering 的 React 与 Next.js 性能优化规则。适用于构建组件、优化性能、消除瀑布式请求（waterfalls）、缩减 bundle、性能代码审查与服务端/客户端优化实现。
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
@@ -106,7 +106,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 | 数据库优化              | `@[skills/database-design]`       |
 | 测试策略                | `@[skills/testing-patterns]`      |
 | UI/UX 设计原则          | `@[skills/frontend-design]`       |
-| TypeScript 模式         | `@[skills/typescript-expert]`     |
+| TypeScript/Node 实践    | `@[skills/nodejs-best-practices]` |
 | 部署与 DevOps           | `@[skills/deployment-procedures]` |
 
 ---

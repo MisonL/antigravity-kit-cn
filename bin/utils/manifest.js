@@ -13,6 +13,7 @@ class ManifestManager {
             updatedAt: "",
             files: {},
         };
+        this.lastLoadError = null;
     }
 
     /**
@@ -77,11 +78,13 @@ class ManifestManager {
      * Load manifest from disk
      */
     load() {
+        this.lastLoadError = null;
         if (fs.existsSync(this.manifestPath)) {
             try {
                 const raw = fs.readFileSync(this.manifestPath, "utf8");
                 this.manifest = ManifestManager.normalizeManifestShape(JSON.parse(raw));
             } catch (err) {
+                this.lastLoadError = err;
                 this.manifest = {
                     version: 2,
                     target: typeof this.options.target === "string" ? this.options.target : "",

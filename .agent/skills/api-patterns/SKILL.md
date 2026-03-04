@@ -36,9 +36,9 @@ allowed-tools: Read, Write, Edit, Glob, Grep
 
 | Need（需求） | Skill（技能） |
 | ---- | ------------ |
-| API implementation（API 落地实现） | `@[skills/backend-development]` |
+| API implementation（API 落地实现） | `@[skills/nodejs-best-practices]` |
 | Data structure（数据库结构设计） | `@[skills/database-design]` |
-| Security details（安全加固细节） | `@[skills/security-hardening]` |
+| Security details（安全加固细节） | `@[skills/vulnerability-scanner]` |
 
 ---
 

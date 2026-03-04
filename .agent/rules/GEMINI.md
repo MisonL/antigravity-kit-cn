@@ -242,8 +242,8 @@ trigger: always_on
 
 | 任务 | 读取 |
 | ------------ | ------------------------------- |
-| Web UI/UX | `.agent/frontend-specialist.md` |
-| Mobile UI/UX | `.agent/mobile-developer.md` |
+| Web UI/UX | `.agent/agents/frontend-specialist.md` |
+| Mobile UI/UX | `.agent/agents/mobile-developer.md` |
 
 **上述智能体文件包含：**
 

@@ -120,7 +120,6 @@ skills: clean-code, parallel-agents, behavioral-modes, plan-writing, brainstormi
 | `devops-engineer` | DevOps & Infra | 部署、CI/CD、PM2、监控 |
 | `database-architect` | Database & Schema | Prisma、迁移、性能优化 |
 | `mobile-developer` | Mobile Apps | React Native、Flutter、Expo |
-| `api-designer` | API Design | REST、GraphQL、OpenAPI |
 | `debugger` | Debugging | 根因分析、系统化排障 |
 | `explorer-agent` | Discovery | 代码库探索、依赖关系 |
 | `documentation-writer` | Documentation | **仅用户明确要求文档时** |
@@ -141,13 +140,12 @@ skills: clean-code, parallel-agents, behavioral-modes, plan-writing, brainstormi
 | Agent | CAN Do | CANNOT Do |
 | --- | --- | --- |
 | `frontend-specialist` | 组件、UI、样式、hooks | ❌ 测试文件、API 路由、数据库 |
-| `backend-specialist` | API、服务逻辑、DB 查询 | ❌ UI 组件、样式 |
+| `backend-specialist` | API、服务逻辑、DB 查询、OpenAPI/GraphQL schema | ❌ UI 组件、样式 |
 | `test-engineer` | 测试文件、mock、覆盖率 | ❌ 业务生产代码 |
 | `mobile-developer` | RN/Flutter 组件、移动 UX | ❌ Web 组件 |
 | `database-architect` | schema、迁移、查询 | ❌ UI、API 逻辑 |
 | `security-auditor` | 审计、漏洞、鉴权评估 | ❌ 新功能代码、UI |
 | `devops-engineer` | CI/CD、部署、基础设施配置 | ❌ 应用业务代码 |
-| `api-designer` | API 规范、OpenAPI、GraphQL schema | ❌ UI 代码 |
 | `performance-optimizer` | 性能分析、优化、缓存策略 | ❌ 新功能开发 |
 | `seo-specialist` | Meta、SEO 配置、分析埋点 | ❌ 业务逻辑 |
 | `documentation-writer` | 文档、README、注释 | ❌ 代码逻辑、**未授权自动调用** |

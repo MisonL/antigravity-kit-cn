@@ -320,6 +320,11 @@ class CodexAdapter extends BaseAdapter {
 
         const manager = new ManifestManager(manifestPath, { target: "codex" });
         manager.load();
+        if (manager.lastLoadError) {
+            result.status = "broken";
+            result.issues.push("Critical: manifest.json invalid JSON");
+            return result;
+        }
         const drift = manager.checkDrift(managedDir);
 
         if (drift.missing.length > 0) {

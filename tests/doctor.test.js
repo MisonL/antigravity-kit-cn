@@ -13,7 +13,14 @@ describe('Doctor Command', () => {
         workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'doctor-test-'));
         // Setup mock environment
         // Gemini
-        fs.mkdirSync(path.join(workDir, '.agent'));
+        fs.mkdirSync(path.join(workDir, '.agent', 'agents'), { recursive: true });
+        fs.mkdirSync(path.join(workDir, '.agent', 'skills'), { recursive: true });
+        fs.mkdirSync(path.join(workDir, '.agent', 'rules'), { recursive: true });
+        fs.mkdirSync(path.join(workDir, '.agent', 'workflows'), { recursive: true });
+        fs.writeFileSync(path.join(workDir, '.agent', 'agents', 'orchestrator.md'), '# orchestrator');
+        fs.writeFileSync(path.join(workDir, '.agent', 'skills', 'doc.md'), '# skills');
+        fs.writeFileSync(path.join(workDir, '.agent', 'rules', 'GEMINI.md'), '# rules');
+        fs.writeFileSync(path.join(workDir, '.agent', 'workflows', 'create.md'), '# workflow');
         // Codex
         fs.mkdirSync(path.join(workDir, '.agents'));
         fs.writeFileSync(path.join(workDir, '.agents', 'manifest.json'), JSON.stringify({ version: 2, target: 'codex', files: {} }));
@@ -36,6 +43,14 @@ describe('Doctor Command', () => {
         assert.strictEqual(res.status, 'missing');
     });
 
+    test('GeminiAdapter checkIntegrity should flag missing required files', () => {
+        fs.rmSync(path.join(workDir, '.agent', 'rules', 'GEMINI.md'));
+        const adapter = new GeminiAdapter(workDir, { quiet: true });
+        const res = adapter.checkIntegrity();
+        assert.strictEqual(res.status, 'broken');
+        assert.ok(res.issues.some((issue) => issue.includes('.agent/rules/GEMINI.md')));
+    });
+
     test('CodexAdapter checkIntegrity ok', () => {
         const adapter = new CodexAdapter(workDir, { quiet: true });
         const res = adapter.checkIntegrity();
@@ -55,6 +70,14 @@ describe('Doctor Command', () => {
         const res = adapter.checkIntegrity();
         assert.strictEqual(res.status, 'broken');
         assert.ok(res.issues.some((issue) => issue.includes('.codex')));
+    });
+
+    test('CodexAdapter checkIntegrity should flag invalid manifest JSON', () => {
+        fs.writeFileSync(path.join(workDir, '.agents', 'manifest.json'), '{invalid-json');
+        const adapter = new CodexAdapter(workDir, { quiet: true });
+        const res = adapter.checkIntegrity();
+        assert.strictEqual(res.status, 'broken');
+        assert.ok(res.issues.some((issue) => issue.includes('invalid JSON')));
     });
 
     test('CodexAdapter fixIntegrity should migrate legacy .codex directory', () => {

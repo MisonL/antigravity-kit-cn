@@ -115,7 +115,6 @@ allowed-tools: Read, Glob, Grep
 | `devops-engineer` | 运维开发 | "部署", "CI/CD（持续集成/交付）", "基础设施" |
 | `database-architect` | 数据库架构 | "模式（Schema）", "Prisma", "迁移" |
 | `mobile-developer` | 移动端开发 | "React Native", "Flutter", "移动端" |
-| `api-designer` | API 设计 | "REST（表述性状态转移）", "GraphQL（图查询语言）", "OpenAPI（开放 API 规范）" |
 | `debugger` | 调试专家 | "Bug（缺陷）", "错误", "不工作" |
 | `explorer-agent` | 探索发现 | "探索", "映射", "结构" |
 | `documentation-writer` | 文档编写 | "写文档", "创建 README（说明文档）", "生成 API 文档" |

@@ -16,7 +16,7 @@ $ARGUMENTS
 
 1. **需求分析**
    - 理解用户的具体需求
-   - 如果信息缺失，使用 `conversation-manager` 技能进行提问
+   - 如果信息缺失，使用 `brainstorming` 技能进行结构化提问
 
 2. **项目规划**
    - 使用 `project-planner` Agent（智能体）进行任务拆解

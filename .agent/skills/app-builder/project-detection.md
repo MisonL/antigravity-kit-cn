@@ -29,6 +29,6 @@
 1. Tokenize user request（对用户请求分词）
 2. 提取关键词
 3. 确定项目类型
-4. 检测缺失信息 → 转发给 conversation-manager（对话管理器）
+4. 检测缺失信息 → 转发给 brainstorming（结构化澄清）
 5. 建议技术栈
 ```

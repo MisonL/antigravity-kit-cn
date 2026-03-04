@@ -126,6 +126,28 @@ class GeminiAdapter extends BaseAdapter {
         if (!fs.existsSync(agentDir)) {
              return { status: "missing", issues: [".agent directory missing"] };
         }
+
+        const issues = [];
+        const requiredDirs = ["agents", "skills", "rules", "workflows"];
+        for (const relPath of requiredDirs) {
+            const absPath = path.join(agentDir, relPath);
+            if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) {
+                issues.push(`Missing required directory: .agent/${relPath}`);
+            }
+        }
+
+        const requiredFiles = ["rules/GEMINI.md", "agents/orchestrator.md"];
+        for (const relPath of requiredFiles) {
+            const absPath = path.join(agentDir, relPath);
+            if (!fs.existsSync(absPath) || !fs.statSync(absPath).isFile()) {
+                issues.push(`Missing required file: .agent/${relPath}`);
+            }
+        }
+
+        if (issues.length > 0) {
+            return { status: "broken", issues };
+        }
+
         return { status: "ok", issues: [] };
     }
 
