@@ -228,6 +228,18 @@ describe("CLI Smoke", () => {
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
     });
 
+    test("update should fail when only non-managed .gemini exists", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".gemini"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".gemini", "settings.json"), JSON.stringify({ theme: "custom" }));
+
+        const result = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.notStrictEqual(result.status, 0);
+        assert.match(result.stderr || result.stdout, /未检测到 Antigravity Kit 安装/);
+    });
+
     test("status should reject unsupported --no-index option", () => {
         fs.mkdirSync(path.join(workspaceDir, ".agent"), { recursive: true });
 

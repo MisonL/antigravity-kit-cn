@@ -26,6 +26,7 @@ const TARGET_ALIAS_MAP = {
     gemini: "full",
     codex: "full",
 };
+const PROJECTION_MARKER = ".ag-kit-projection.json";
 const INDEX_LOCK_RETRY_MS = 50;
 const INDEX_LOCK_TIMEOUT_MS = 3000;
 const INDEX_LOCK_STALE_MS = 30000;
@@ -780,9 +781,24 @@ function isManagedLegacyCodexDir(workspaceRoot) {
     }
 }
 
+function isManagedProjectionDir(workspaceRoot, dirName, type) {
+    const markerPath = path.join(workspaceRoot, dirName, PROJECTION_MARKER);
+    if (!fs.existsSync(markerPath)) {
+        return false;
+    }
+
+    try {
+        const parsed = JSON.parse(fs.readFileSync(markerPath, "utf8"));
+        return parsed
+            && parsed.managedBy === "ag-kit-cn"
+            && parsed.type === type;
+    } catch (_err) {
+        return false;
+    }
+}
+
 function hasLegacyLayoutSignal(workspaceRoot) {
     return fs.existsSync(path.join(workspaceRoot, ".agent"))
-        || fs.existsSync(path.join(workspaceRoot, ".gemini"))
         || isManagedLegacyCodexDir(workspaceRoot);
 }
 
@@ -836,9 +852,13 @@ function resolveTargetsForUpdate(workspaceRoot, options) {
 async function resolveConflictPolicies(workspaceRoot, options) {
     const next = { ...options };
     const isInteractive = !next.nonInteractive && process.stdin.isTTY && process.stdout.isTTY;
+    const hasAgentDir = fs.existsSync(path.join(workspaceRoot, ".agent"));
+    const hasGeminiAgentsDir = fs.existsSync(path.join(workspaceRoot, ".gemini", "agents"));
+    const managedAgentProjection = isManagedProjectionDir(workspaceRoot, ".agent", "agent");
+    const managedGeminiProjection = isManagedProjectionDir(workspaceRoot, ".gemini", "gemini");
 
     if (!next.agentConflictPolicy) {
-        if (fs.existsSync(path.join(workspaceRoot, ".agent")) && isInteractive) {
+        if (hasAgentDir && !managedAgentProjection && isInteractive) {
             next.agentConflictPolicy = await selectAgentConflictPolicy();
         } else {
             next.agentConflictPolicy = "backup_replace";
@@ -846,7 +866,7 @@ async function resolveConflictPolicies(workspaceRoot, options) {
     }
 
     if (!next.geminiAgentsPolicy) {
-        if (fs.existsSync(path.join(workspaceRoot, ".gemini", "agents")) && isInteractive) {
+        if (hasGeminiAgentsDir && !managedGeminiProjection && isInteractive) {
             next.geminiAgentsPolicy = await selectGeminiAgentsPolicy();
         } else {
             next.geminiAgentsPolicy = "append";
