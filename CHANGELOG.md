@@ -10,6 +10,8 @@
 ### 新增
 
 - 增加 `--accept-legacy-agent`：允许将仅存在 legacy `.agent` 的旧项目迁移到 v3 `.agents` 体系（`update/update-all/doctor --fix` 均可用，会创建 rollback 快照）。
+- 增加 `ag-kit sync`：一键同步（未安装则 init，已安装则 update；必要时自愈）。
+- 增加用户级默认配置：支持 `~/.ag-kit/config.json`（或 `AG_KIT_CONFIG_PATH`）设置常用默认参数，CLI 显式参数优先。
 
 ### 变更
 
@@ -19,6 +21,7 @@
 - 备份路径收敛：单次操作产生的 rollback 快照与冲突备份统一落在同一 `<timestamp>` 目录。
 - `doctor --fix` 执行修复前会创建 rollback 快照（仅在需要修复时写入）。
 - `health-check` 默认切换为 Node 脚本实现（跨平台），并在检查链路中隔离 `AG_KIT_BACKUP_ROOT` 到临时目录。
+- CLI 帮助输出分层：默认展示最常用路径，`ag-kit help <command> --advanced` 才显示高级参数与说明。
 
 ## [3.0.0-beta.0] - 2026-03-04
 

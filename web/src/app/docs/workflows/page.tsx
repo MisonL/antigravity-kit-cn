@@ -115,7 +115,7 @@ export default function WorkflowsPage() {
                     在 Antigravity Editor 中，你可以通过 Agent 面板顶部的 “...” 进入 Customizations，然后在 Workflows 面板中创建全局或工作区工作流。
                 </p>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    在 Antigravity Kit 中，工作流以文件形式保存在 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent/workflows/</code>，便于版本控制与团队共享：
+                    在 Antigravity Kit 中，工作流以文件形式保存在 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agents/workflows/</code>（Canonical），并会生成 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent/workflows/</code> 兼容投影，便于版本控制与团队共享：
                 </p>
 
                 <div className="relative group mb-6">
@@ -134,7 +134,7 @@ description: 部署到预发布环境
                 </div>
 
                 <p className="text-base text-zinc-600 dark:text-zinc-400">
-                    保存为 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent/workflows/deploy-staging.md</code>，然后用 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">/deploy-staging</code> 调用。
+                    保存为 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agents/workflows/deploy-staging.md</code>，然后用 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">/deploy-staging</code> 调用。
                 </p>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mt-4">
                     你也可以在工作流步骤中调用其他工作流，例如 “Call /workflow-2”。 

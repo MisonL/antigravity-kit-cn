@@ -23,6 +23,7 @@ graph TD
 ## 命令语义
 
 ```bash
+ag-kit sync
 ag-kit init
 ag-kit update
 ag-kit update-all --targets full

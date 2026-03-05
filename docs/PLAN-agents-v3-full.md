@@ -14,7 +14,9 @@
 2. 自动生成兼容视图：`.agent`、`.gemini`、根 `AGENTS.md` 托管区块。
 3. 升级兼容旧目录：`.agent`、`.codex`、`.gemini`。
 4. `init/update/update-all/doctor` 全链路支持 v3 收敛。
-5. 发布 `3.0.0-beta.0` 预览版（GitHub prerelease + npm beta tag）。
+5. 提供一键入口 `sync`，将“首次安装/日常升级/必要时自愈”收敛为一条命令。
+6. 支持用户级默认配置（如 `nonInteractive/disableAgentProjection`），减少反复传参。
+7. 发布 `3.0.0-beta.0` 预览版（GitHub prerelease + npm beta tag）。
 
 ### 1.2 非目标
 1. 不重写 skills/workflows 的业务语义。
@@ -55,11 +57,13 @@
 非交互默认：`.agent` 备份后替换；`.gemini/agents` 追加。
 
 ## 4. CLI 行为定义
-1. `init`/`update` 统一执行 full 安装（不再分开安装 gemini/codex）。
-2. `--target gemini|codex` 保留兼容，但内部归一为 full。
-3. 对仅 legacy `.agent` 的工作区，`update/update-all/doctor --fix` 支持通过 `--accept-legacy-agent` 迁移到 v3。
-4. `status` 显示 canonical + projection + legacy 状态。
-5. `doctor --fix` 收敛到 v3，并保持幂等。
+1. 新增 `sync`：一键同步当前项目到最新状态。未安装则执行 `init`；已安装则执行 `update`；必要时在存在托管信号的前提下触发 `doctor --fix` 自愈。
+2. `init`/`update` 统一执行 full 安装（不再分开安装 gemini/codex）。
+3. `--target gemini|codex` 保留兼容，但内部归一为 full。
+4. 对仅 legacy `.agent` 的工作区，`update/update-all/doctor --fix` 支持通过 `--accept-legacy-agent` 迁移到 v3。
+5. `status` 显示 canonical + projection + legacy 状态。
+6. `doctor --fix` 收敛到 v3，并保持幂等。
+7. 可选用户配置：`~/.ag-kit/config.json`（或 `AG_KIT_CONFIG_PATH`）用于设置默认参数；CLI 显式参数优先于配置文件。
 
 ## 5. MCP 双通道策略（Context7）
 - `context7`：`@upstash/context7-mcp`

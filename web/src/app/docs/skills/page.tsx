@@ -75,7 +75,7 @@ export default function SkillsPage() {
                     技能存放位置
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    Antigravity 支持两类技能：
+                    v3 以 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agents/</code> 为主目录，并会生成 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent/</code> 兼容投影。你可以在以下位置放置技能：
                 </p>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm border border-zinc-200 dark:border-zinc-800">
@@ -87,12 +87,16 @@ export default function SkillsPage() {
                         </thead>
                         <tbody>
                             <tr className="border-t border-zinc-200 dark:border-zinc-800">
+                                <td className="px-4 py-2 font-mono text-zinc-700 dark:text-zinc-300">&lt;workspace-root&gt;/.agents/skills/&lt;skill-folder&gt;/</td>
+                                <td className="px-4 py-2 text-zinc-600 dark:text-zinc-400">工作区内（Canonical）</td>
+                            </tr>
+                            <tr className="border-t border-zinc-200 dark:border-zinc-800">
                                 <td className="px-4 py-2 font-mono text-zinc-700 dark:text-zinc-300">&lt;workspace-root&gt;/.agent/skills/&lt;skill-folder&gt;/</td>
-                                <td className="px-4 py-2 text-zinc-600 dark:text-zinc-400">工作区内</td>
+                                <td className="px-4 py-2 text-zinc-600 dark:text-zinc-400">兼容投影（自动生成）</td>
                             </tr>
                             <tr className="border-t border-zinc-200 dark:border-zinc-800">
                                 <td className="px-4 py-2 font-mono text-zinc-700 dark:text-zinc-300">~/.gemini/antigravity/skills/&lt;skill-folder&gt;/</td>
-                                <td className="px-4 py-2 text-zinc-600 dark:text-zinc-400">全局（所有工作区）</td>
+                                <td className="px-4 py-2 text-zinc-600 dark:text-zinc-400">全局（所有工作区，Gemini）</td>
                             </tr>
                         </tbody>
                     </table>
@@ -113,7 +117,7 @@ export default function SkillsPage() {
                 </ol>
                 <div className="relative group mb-6">
                     <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                        <code className="text-zinc-100">{`.agent/skills/
+                        <code className="text-zinc-100">{`.agents/skills/
 └── my-skill/
     └── SKILL.md`}</code>
                     </pre>
@@ -187,7 +191,7 @@ Step-by-step guidance, conventions, and patterns the agent should follow.`}</cod
                 </p>
                 <div className="relative group mb-6">
                     <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                        <code className="text-zinc-100">{`.agent/skills/my-skill/
+                        <code className="text-zinc-100">{`.agents/skills/my-skill/
 ├── SKILL.md       # 主指引（必需）
 ├── scripts/       # 辅助脚本（可选）
 ├── examples/      # 参考实现（可选）
