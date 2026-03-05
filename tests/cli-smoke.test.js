@@ -331,6 +331,23 @@ describe("CLI Smoke", () => {
         assert.match(result.stderr || result.stdout, /未检测到 Antigravity Kit 安装/);
     });
 
+    test("update should migrate legacy .agent workspace when --accept-legacy-agent is set", () => {
+        fs.mkdirSync(path.join(workspaceDir, ".agent", "agents"), { recursive: true });
+        fs.mkdirSync(path.join(workspaceDir, ".agent", "skills"), { recursive: true });
+        fs.mkdirSync(path.join(workspaceDir, ".agent", "rules"), { recursive: true });
+        fs.mkdirSync(path.join(workspaceDir, ".agent", "workflows"), { recursive: true });
+        fs.writeFileSync(path.join(workspaceDir, ".agent", "rules", "GEMINI.md"), "# legacy rule\n", "utf8");
+        fs.writeFileSync(path.join(workspaceDir, ".agent", "agents", "orchestrator.md"), "# legacy orchestrator\n", "utf8");
+
+        const result = runCli(
+            ["update", "--path", workspaceDir, "--accept-legacy-agent", "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agents", "manifest.json")));
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agent", PROJECTION_MARKER)));
+    });
+
     test("update should fail when only non-managed .gemini exists", () => {
         fs.mkdirSync(path.join(workspaceDir, ".gemini"), { recursive: true });
         fs.writeFileSync(path.join(workspaceDir, ".gemini", "settings.json"), JSON.stringify({ theme: "custom" }));
@@ -658,6 +675,40 @@ describe("CLI Smoke", () => {
             );
             assert.strictEqual(statusResult.status, 0, statusResult.stderr || statusResult.stdout);
             assert.match(statusResult.stdout, /Auto-Migration\(v3\): done/);
+        } finally {
+            fs.rmSync(legacyWorkspace, { recursive: true, force: true });
+        }
+    });
+
+    test("init --no-index should skip auto-migration side effects", () => {
+        const legacyWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ag-kit-auto-migrate-no-index-"));
+        const triggerWorkspace = path.join(tempDir, "trigger-workspace-no-index");
+        try {
+            fs.mkdirSync(triggerWorkspace, { recursive: true });
+            writeManagedProjectionMarker(legacyWorkspace, ".agent", "agent");
+            fs.writeFileSync(path.join(legacyWorkspace, ".agent", "legacy.md"), "# legacy\n", "utf8");
+
+            const now = new Date().toISOString();
+            const seedIndex = {
+                version: 2,
+                updatedAt: now,
+                workspaces: [
+                    {
+                        path: legacyWorkspace,
+                        targets: {},
+                    },
+                ],
+                excludedPaths: [],
+            };
+            fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
+
+            const result = runCli(
+                ["init", "--path", triggerWorkspace, "--no-index", "--quiet"],
+                { env: { AG_KIT_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+            assert.ok(!fs.existsSync(path.join(legacyWorkspace, ".agents", "manifest.json")), "legacy workspace should not be migrated when --no-index is set");
+            assert.ok(!fs.existsSync(migrationStatePath), "migration state should not be written when auto-migration is skipped");
         } finally {
             fs.rmSync(legacyWorkspace, { recursive: true, force: true });
         }

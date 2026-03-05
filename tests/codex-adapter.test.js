@@ -83,7 +83,7 @@ describe("CodexAdapter", () => {
         assert.ok(fs.existsSync(path.join(workDir, ".agents", "new.txt")));
     });
 
-    test("update should detect drift and backup", () => {
+    test("update should keep drifted content in rollback snapshot", () => {
         const options = { quiet: true, force: true };
         const adapter = new CodexAdapter(workDir, options);
 
@@ -106,12 +106,12 @@ describe("CodexAdapter", () => {
         assert.ok(fs.existsSync(path.join(agentsDir, "new.txt")));
 
         assert.ok(fs.existsSync(backupBase));
-        const backupFile = findBackupContaining("file.txt");
-        assert.ok(backupFile, "should contain backed up conflict file");
+        const backupFile = findBackupContaining(path.join("rollback", ".agents", "file.txt"));
+        assert.ok(backupFile, "should contain rollback snapshot of pre-update file");
         assert.strictEqual(fs.readFileSync(backupFile, "utf8"), "modified content");
     });
 
-    test("smart overwrite should skip backup when local content already equals incoming content", () => {
+    test("update should not create legacy smart-overwrite backups", () => {
         const options = { quiet: true, force: true };
         const adapter = new CodexAdapter(workDir, options);
 
@@ -129,10 +129,10 @@ describe("CodexAdapter", () => {
         const backupBase = getWorkspaceBackupBucket(workDir);
         assert.ok(fs.existsSync(backupBase), "rollback 快照目录应存在");
         const fullSnapshot = findBackupContaining(path.join("full-snapshot", "file.txt"));
-        assert.strictEqual(fullSnapshot, "", "smart overwrite 命中同哈希时不应创建覆盖冲突备份");
+        assert.strictEqual(fullSnapshot, "", "v3 应仅依赖 rollback 快照，不再生成 full-snapshot 冲突备份");
     });
 
-    test("update should create full snapshot backup when manifest is invalid", () => {
+    test("update should keep content in rollback snapshot when manifest is invalid", () => {
         const options = { quiet: true, force: true };
         const adapter = new CodexAdapter(workDir, options);
         adapter.install(installSource);
@@ -149,8 +149,8 @@ describe("CodexAdapter", () => {
 
         const backupBase = getWorkspaceBackupBucket(workDir);
         assert.ok(fs.existsSync(backupBase));
-        const snapshotFile = findBackupContaining(path.join("full-snapshot", "file.txt"));
-        assert.ok(fs.existsSync(snapshotFile));
+        const snapshotFile = findBackupContaining(path.join("rollback", ".agents", "file.txt"));
+        assert.ok(snapshotFile, "should contain rollback snapshot");
         assert.strictEqual(fs.readFileSync(snapshotFile, "utf8"), "user-modified");
     });
 });

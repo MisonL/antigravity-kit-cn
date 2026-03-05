@@ -21,6 +21,7 @@ const {
     selectTargets,
     selectAgentConflictPolicy,
     selectGeminiAgentsPolicy,
+    confirmLegacyAgentMigration,
 } = require("./interactive");
 const { runVerification } = require("../scripts/verify-3platform");
 
@@ -80,7 +81,7 @@ function createEmptyWorkspaceIndex() {
 function printUsage() {
     console.log("用法:");
     console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--disable-agent-projection] [--no-index] [--quiet] [--dry-run]");
-    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--disable-agent-projection] [--no-index] [--quiet] [--dry-run]");
+    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--accept-legacy-agent] [--non-interactive] [--disable-agent-projection] [--no-index] [--quiet] [--dry-run]");
     console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--disable-agent-projection] [--quiet] [--dry-run]");
     console.log("  ag-kit verify [--path <dir>] [--json] [--quiet]");
     console.log("  ag-kit rollback [--path <dir>] [--backup <timestamp>] [--quiet] [--dry-run]");
@@ -120,6 +121,7 @@ function parseArgs(argv) {
         branch: "",
         targets: [],
         disableAgentProjection: false,
+        acceptLegacyAgent: false,
         agentConflictPolicy: "",
         geminiAgentsPolicy: "",
     };
@@ -163,6 +165,9 @@ function parseArgs(argv) {
         } else if (arg === "--disable-agent-projection") {
             providedFlags.push(arg);
             options.disableAgentProjection = true;
+        } else if (arg === "--accept-legacy-agent") {
+            providedFlags.push(arg);
+            options.acceptLegacyAgent = true;
         } else if (arg === "--fix") {
             providedFlags.push(arg);
             options.fix = true;
@@ -206,7 +211,7 @@ function parseArgs(argv) {
 
 const COMMAND_ALLOWED_FLAGS = {
     init: ["--force", "--path", "--branch", "--target", "--targets", "--non-interactive", "--disable-agent-projection", "--no-index", "--quiet", "--dry-run"],
-    update: ["--path", "--branch", "--target", "--targets", "--non-interactive", "--disable-agent-projection", "--no-index", "--quiet", "--dry-run"],
+    update: ["--path", "--branch", "--target", "--targets", "--accept-legacy-agent", "--non-interactive", "--disable-agent-projection", "--no-index", "--quiet", "--dry-run"],
     "update-all": ["--branch", "--targets", "--prune-missing", "--disable-agent-projection", "--quiet", "--dry-run"],
     verify: ["--path", "--json", "--quiet"],
     rollback: ["--path", "--backup", "--quiet", "--dry-run"],
@@ -942,6 +947,43 @@ function isManagedLegacyCodexDir(workspaceRoot) {
     }
 }
 
+function looksLikeLegacyAgentWorkspace(workspaceRoot) {
+    const agentDir = path.join(workspaceRoot, ".agent");
+    try {
+        if (!fs.existsSync(agentDir) || !fs.statSync(agentDir).isDirectory()) {
+            return false;
+        }
+    } catch (_err) {
+        return false;
+    }
+
+    const requiredDirs = ["agents", "skills", "rules", "workflows"];
+    for (const relPath of requiredDirs) {
+        const absPath = path.join(agentDir, relPath);
+        try {
+            if (!fs.existsSync(absPath) || !fs.statSync(absPath).isDirectory()) {
+                return false;
+            }
+        } catch (_err) {
+            return false;
+        }
+    }
+
+    const requiredFiles = ["rules/GEMINI.md", "agents/orchestrator.md"];
+    for (const relPath of requiredFiles) {
+        const absPath = path.join(agentDir, relPath);
+        try {
+            if (!fs.existsSync(absPath) || !fs.statSync(absPath).isFile()) {
+                return false;
+            }
+        } catch (_err) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function hasManagedLegacyLayoutSignal(workspaceRoot) {
     return hasManagedAgentProjectionSignal(workspaceRoot)
         || hasManagedGeminiProjectionSignal(workspaceRoot)
@@ -1028,6 +1070,9 @@ async function resolveConflictPolicies(workspaceRoot, options) {
 
 function shouldRunAutoMigration(command, options) {
     if (options.dryRun) {
+        return false;
+    }
+    if (options.noIndex) {
         return false;
     }
 
@@ -1163,10 +1208,34 @@ async function commandInit(options) {
 
 async function commandUpdate(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
-    const targets = resolveTargetsForUpdate(workspaceRoot, options);
+    let targets = resolveTargetsForUpdate(workspaceRoot, options);
+    const legacyAgentCandidate = looksLikeLegacyAgentWorkspace(workspaceRoot);
+
+    if (targets.length === 0 && legacyAgentCandidate) {
+        if (options.acceptLegacyAgent) {
+            targets = ["full"];
+        } else if (!options.nonInteractive && process.stdin.isTTY && process.stdout.isTTY) {
+            const confirmed = await confirmLegacyAgentMigration();
+            if (confirmed) {
+                options.acceptLegacyAgent = true;
+                options.agentConflictPolicy = options.agentConflictPolicy || "backup_replace";
+                targets = ["full"];
+            }
+        }
+    }
+
     const runOptions = await resolveConflictPolicies(workspaceRoot, options);
 
     if (targets.length === 0) {
+        if (legacyAgentCandidate) {
+            throw new Error(
+                "此目录未检测到 Antigravity Kit 安装，无法更新。\n"
+                + "检测到疑似旧版仅 .agent 安装，但当前为非交互环境或未显式允许迁移。\n"
+                + "可选方案:\n"
+                + "1) 执行 ag-kit update --accept-legacy-agent --path <dir> 进行迁移（会创建 rollback 快照）\n"
+                + "2) 或执行 ag-kit init --force --path <dir> 直接覆盖升级（同样会备份冲突目录）"
+            );
+        }
         throw new Error("此目录未检测到 Antigravity Kit 安装，无法更新。请先执行 init。");
     }
 
@@ -1174,10 +1243,12 @@ async function commandUpdate(options) {
 
     let updatedAny = false;
     for (const target of targets) {
-        if (!isTargetInstalled(workspaceRoot, target) && options.targets.length > 0) {
+        const installed = isTargetInstalled(workspaceRoot, target)
+            || (target === "full" && runOptions.acceptLegacyAgent && legacyAgentCandidate);
+        if (!installed && options.targets.length > 0) {
             throw new Error(`目标未安装: ${target}`);
         }
-        if (!isTargetInstalled(workspaceRoot, target)) {
+        if (!installed) {
             log(options, `⏭️ 目标未安装，跳过: ${target}`);
             continue;
         }

@@ -81,9 +81,9 @@ npm run verify:3platform -- --path /path/to/workspace
 
 ## 3. 备份与漂移
 
-- 更新前若检测到用户修改冲突，会备份到 `~/.ag-kit/backups/<workspace-key>/<timestamp>/`。
+- 安装/更新前会创建一键回退快照到 `~/.ag-kit/backups/<workspace-key>/<timestamp>/`（含 `rollback-manifest.json` 与 `rollback/`）。
 - 可通过 `AG_KIT_BACKUP_ROOT` 自定义备份根目录。
-- `manifest.json` 无法解析时，走全量快照备份后再更新。
+- `manifest.json` 无法解析时仍可通过 rollback 快照回退（建议先执行 `ag-kit rollback --dry-run` 预演）。
 
 ## 4. MCP（Context7 主备）
 

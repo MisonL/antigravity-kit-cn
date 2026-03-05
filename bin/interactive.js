@@ -113,8 +113,28 @@ async function selectGeminiAgentsPolicy() {
     ]);
 }
 
+/**
+ * 当仅检测到 legacy .agent 且无托管证据时，询问是否执行 v3 迁移。
+ * @returns {Promise<boolean>}
+ */
+async function confirmLegacyAgentMigration() {
+    return askChoice("检测到疑似旧版仅 .agent 安装，是否迁移到 v3 统一 .agents 体系？", [
+        {
+            value: true,
+            label: "迁移到 v3（推荐）",
+            hint: "会创建 rollback 快照并把 .agents 作为唯一主目录，随后重建 .agent/.gemini 投影",
+        },
+        {
+            value: false,
+            label: "不迁移（退出）",
+            hint: "保持现状，不执行 update；你也可以改用 ag-kit init --force 手动升级",
+        },
+    ]);
+}
+
 module.exports = {
     selectTargets,
     selectAgentConflictPolicy,
     selectGeminiAgentsPolicy,
+    confirmLegacyAgentMigration,
 };

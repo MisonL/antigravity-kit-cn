@@ -6,6 +6,7 @@ const { spawnSync } = require("node:child_process");
 
 const ROOT_DIR = path.resolve(__dirname, "..");
 const LOCAL_CLI_PATH = path.join(ROOT_DIR, "bin", "ag-kit.js");
+const { hasManagedAgentProjectionSignal } = require("../bin/utils/managed-evidence");
 
 function parseArgs(argv) {
     const options = {
@@ -214,6 +215,8 @@ function runVerification(rawOptions = {}) {
     const geminiSettingsPath = path.join(workspace, ".gemini", "settings.json");
     const localBackupPath = path.join(workspace, ".agents-backup");
     const agentProjectionPath = path.join(workspace, ".agent");
+    const agentProjectionExists = fs.existsSync(agentProjectionPath);
+    const agentProjectionManaged = hasManagedAgentProjectionSignal(workspace);
 
     checkFileExists(checks, "C01", "Canonical 目录 .agents", managedDir);
     const manifest = checkJsonFile(checks, "C02", "Canonical manifest.json", managedManifestPath);
@@ -345,6 +348,22 @@ function runVerification(rawOptions = {}) {
         });
     }
 
+    if (agentProjectionExists && !agentProjectionManaged) {
+        checks.push({
+            id: "W03",
+            label: ".agent 投影托管证据",
+            status: "warn",
+            detail: "检测到非托管 .agent，可能导致重复规则加载或影响迁移；如确认由旧版 ag-kit 生成，可运行 update 并选择备份替换/停用投影",
+        });
+    } else {
+        checks.push({
+            id: "W03",
+            label: ".agent 投影托管证据",
+            status: "pass",
+            detail: agentProjectionExists ? "存在托管投影标记" : "未检测到 .agent（可能已停用投影）",
+        });
+    }
+
     const geminiRulePaths = collectLocalGeminiRulePaths(workspace);
     if (geminiRulePaths.length > 1) {
         checks.push({
@@ -374,7 +393,7 @@ function runVerification(rawOptions = {}) {
     const report = {
         workspace,
         cliMode,
-        agentProjectionEnabled: fs.existsSync(agentProjectionPath),
+        agentProjectionEnabled: agentProjectionManaged,
         checks,
         summary,
         generatedAt: new Date().toISOString(),

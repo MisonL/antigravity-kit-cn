@@ -72,7 +72,8 @@ class CodexAdapter extends BaseAdapter {
         const legacyUnmanaged = legacyExists && !legacyManaged;
         const canBootstrapFromLegacy = legacyManaged
             || hasManagedAgentProjectionSignal(this.workspaceRoot)
-            || hasManagedGeminiProjectionSignal(this.workspaceRoot);
+            || hasManagedGeminiProjectionSignal(this.workspaceRoot)
+            || (this.options.acceptLegacyAgent && fs.existsSync(path.join(this.workspaceRoot, AGENT_DIR_NAME)));
 
         if (mode === "install" && managedDirExists && !this.options.force) {
             throw new Error(`${MANAGED_DIR_NAME} 目录已存在。请使用 --force 覆盖。`);
@@ -86,23 +87,15 @@ class CodexAdapter extends BaseAdapter {
 
         const { installSource, sourceLabel, cleanup } = this._resolveInstallSource(sourceDir);
         let stagingDir = "";
-        let incomingFiles = {};
 
         try {
             const staging = this._createStaging(installSource, sourceLabel);
             stagingDir = staging.stagingDir;
-            incomingFiles = staging.incomingFiles;
 
             if (this.options.dryRun) {
                 this.log(`[dry-run] 将原子更新: ${managedDir}`);
-                if (managedDirExists && this.options.force) {
-                    const candidates = this._collectBackupCandidates(managedDir, incomingFiles);
-                    if (candidates.fullSnapshot) {
-                        this.log(`[dry-run] 覆盖前将备份整目录: ${managedDir}`);
-                    } else if (candidates.files.length > 0) {
-                        this.log(`[dry-run] 覆盖前将备份 ${candidates.files.length} 个冲突文件`);
-                    }
-                }
+                this.log("[dry-run] 覆盖前将创建一键回退快照（rollback-manifest.json + rollback/）");
+                this.log(`[dry-run] 回退快照根目录: ${getWorkspaceBackupBucket(this.workspaceRoot)}`);
                 if (legacyManaged) {
                     this.log(`[dry-run] 检测到托管 legacy ${LEGACY_DIR_NAME}，将迁移并清理`);
                 } else if (legacyUnmanaged) {
@@ -119,14 +112,6 @@ class CodexAdapter extends BaseAdapter {
             const rollbackSnapshot = this._createRollbackSnapshot(mode);
             if (rollbackSnapshot) {
                 this.log(`📦 已创建一键回退快照: ${rollbackSnapshot.backupId}`);
-            }
-
-            if (managedDirExists && this.options.force) {
-                const candidates = this._collectBackupCandidates(managedDir, incomingFiles);
-                const backupResult = this._backupCandidates(managedDir, candidates);
-                if (backupResult) {
-                    this.log(`📦 已备份覆盖前文件: ${backupResult.summary}`);
-                }
             }
 
             AtomicWriter.atomicCopyDir(stagingDir, managedDir, { logger: this.log.bind(this) });
@@ -301,58 +286,6 @@ class CodexAdapter extends BaseAdapter {
         } catch (_err) {
             return false;
         }
-    }
-
-    _collectBackupCandidates(targetDir, incomingFiles) {
-        const manifestPath = path.join(targetDir, "manifest.json");
-        if (!fs.existsSync(manifestPath)) {
-            return { fullSnapshot: true, files: [] };
-        }
-
-        try {
-            const raw = fs.readFileSync(manifestPath, "utf8");
-            const parsed = JSON.parse(raw);
-            const files = parsed && typeof parsed.files === "object" ? parsed.files : null;
-            if (!files || Object.keys(files).length === 0) {
-                return { fullSnapshot: true, files: [] };
-            }
-        } catch (_err) {
-            return { fullSnapshot: true, files: [] };
-        }
-
-        const manager = new ManifestManager(manifestPath, { target: "full" });
-        manager.load();
-
-        return {
-            fullSnapshot: false,
-            files: manager.collectSmartOverwriteConflicts(targetDir, incomingFiles),
-        };
-    }
-
-    _backupCandidates(targetDir, candidates) {
-        if (!candidates.fullSnapshot && candidates.files.length === 0) {
-            return null;
-        }
-
-        const backupRoot = this._createBackupRoot();
-
-        if (candidates.fullSnapshot) {
-            const snapshotDir = path.join(backupRoot, "full-snapshot");
-            this._copyDir(targetDir, snapshotDir);
-            return { summary: `${backupRoot} (full snapshot)` };
-        }
-
-        for (const relPath of candidates.files) {
-            const src = path.join(targetDir, relPath);
-            if (!fs.existsSync(src)) {
-                continue;
-            }
-            const dest = path.join(backupRoot, relPath);
-            fs.mkdirSync(path.dirname(dest), { recursive: true });
-            fs.copyFileSync(src, dest);
-        }
-
-        return { summary: `${backupRoot} (${candidates.files.length} files)` };
     }
 
     _backupDirectorySnapshot(sourceDir, label) {
