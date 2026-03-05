@@ -1043,7 +1043,7 @@ async function resolveConflictPolicies(workspaceRoot, options) {
     const hasAgentDir = fs.existsSync(path.join(workspaceRoot, ".agent"));
     const hasGeminiAgentsDir = fs.existsSync(path.join(workspaceRoot, ".gemini", "agents"));
     const managedAgentProjection = isManagedProjectionDir(workspaceRoot, ".agent", "agent");
-    const managedGeminiProjection = isManagedProjectionDir(workspaceRoot, ".gemini", "gemini");
+    const managedGeminiProjection = hasManagedGeminiProjectionSignal(workspaceRoot);
 
     if (next.disableAgentProjection && !next.agentConflictPolicy) {
         next.agentConflictPolicy = "disable";
@@ -1224,8 +1224,6 @@ async function commandUpdate(options) {
         }
     }
 
-    const runOptions = await resolveConflictPolicies(workspaceRoot, options);
-
     if (targets.length === 0) {
         if (legacyAgentCandidate) {
             throw new Error(
@@ -1238,6 +1236,8 @@ async function commandUpdate(options) {
         }
         throw new Error("此目录未检测到 Antigravity Kit 安装，无法更新。请先执行 init。");
     }
+
+    const runOptions = await resolveConflictPolicies(workspaceRoot, options);
 
     log(options, `🔄 正在更新 Antigravity Kit (Targets: ${targets.join(", ")})...`);
 
