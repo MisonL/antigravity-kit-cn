@@ -15,20 +15,20 @@
 npm install -g @mison/ag-kit-cn
 ```
 
-然后在你的目标项目中初始化：
+运行环境要求：Node.js `>=18`（建议使用当前 LTS）。
+
+然后在你的目标项目中执行一次同步（推荐）：
 
 ```bash
 cd /path/to/your-project
-ag-kit init --target gemini   # 安装 Gemini 结构（.agent）
-ag-kit init --target codex    # 安装 Codex 结构（.agents + 托管规则注入）
-# 或者直接 ag-kit init，在交互中选择目标
+ag-kit sync
 ```
 
 可选：不做全局安装，直接在仓库目录执行：
 
 ```bash
 cd /path/to/antigravity-kit-cn
-node bin/ag-kit.js init --target codex --path /path/to/your-project
+node bin/ag-kit.js sync --path /path/to/your-project
 ```
 
 如需源码开发安装：
@@ -39,7 +39,7 @@ cd antigravity-kit-cn
 npm install -g .
 ```
 
-这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .agents`），并把 Codex 托管内容注入工作区 `AGENTS.md` 与 `antigravity.rules`（说明性托管区块，不是 Codex 官方 `.rules` 审批策略文件）。
+安装会统一写入 `.agents`，并自动生成兼容投影（`.agent`、`.gemini`），同时把托管内容注入工作区 `AGENTS.md` 与 `antigravity.rules`（说明性托管区块，不是 Codex 官方 `.rules` 审批策略文件）。
 
 ### Codex 规则边界说明
 
@@ -50,10 +50,10 @@ npm install -g .
 
 ### ⚠️ 关于 `.gitignore` 的重要说明
 
-如果你正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/`、`.agents/` 添加到 `.gitignore` 可能会阻止 IDE 索引工作流，导致斜杠命令（如 `/plan`、`/debug`）无法出现在对话建议中。
+如果你正在使用 **Cursor** 或 **Windsurf** 等 AI 编辑器，将 `.agent/`、`.agents/`、`.gemini/` 添加到 `.gitignore` 可能会阻止 IDE 索引工作流，导致斜杠命令（如 `/plan`、`/debug`）无法出现在对话建议中。
 
 **推荐方案：**
-1. 确保 `.agent/`、`.agents/` **不要** 出现在项目的 `.gitignore` 中。
+1. 确保 `.agent/`、`.agents/`、`.gemini/` **不要** 出现在项目的 `.gitignore` 中。
 2. 作为替代方案，将其加入本地排除文件：`.git/info/exclude`。
 
 ## 包含内容
@@ -129,50 +129,75 @@ AI：🤖 正在使用 @debugger 进行系统化分析...
 
 ## CLI 工具
 
-CLI（命令行界面）工具：
+把它当成一个按钮：绝大多数情况只需要 `ag-kit sync`。
 
 | 命令 | 描述 |
 | --- | --- |
-| `ag-kit init` | 安装指定目标：gemini/codex |
-| `ag-kit update` | 更新当前项目已安装目标 |
-| `ag-kit update-all` | 批量更新所有已登记工作区 |
-| `ag-kit doctor` | 诊断安装完整性（可 `--fix` 自愈） |
-| `ag-kit exclude` | 管理全局索引排除清单 |
-| `ag-kit status` | 检查安装状态 |
+| `ag-kit sync` | 同步当前项目到最新状态（未安装则 init，已安装则 update，必要时自愈） |
+| `ag-kit verify --json` | 结构化校验输出（CI 友好） |
+| `ag-kit rollback --dry-run` | 回退预演（确认后再执行 rollback） |
 
-### 常用选项
+### 上手（精简）
 
 ```bash
-ag-kit init --target gemini --path ./myapp        # 安装 Gemini 到指定目录
-ag-kit init --target codex --path ./myapp         # 安装 Codex 到指定目录
-ag-kit init --targets gemini,codex --path ./myapp # 一次安装多个目标
-ag-kit init --non-interactive --target codex      # 非交互模式必须显式指定目标
-ag-kit init --target codex --no-index --path ./tmp-workspace # 安装但不写入全局索引
-ag-kit init --branch dev --force                  # 覆盖安装并指定分支
-ag-kit init --quiet --dry-run                     # 预览操作而不执行
-ag-kit update --target codex --path ./myapp       # 更新指定目标（默认会刷新索引）
-ag-kit update --target codex --no-index --path ./myapp # 更新但不刷新索引
-ag-kit doctor --target codex --fix --path ./myapp # 检查并自动修复
-ag-kit update-all --targets codex                 # 批量更新所有登记工作区里的 codex 目标
-ag-kit update-all --prune-missing                 # 清理索引中已失效的路径
-ag-kit exclude list                               # 查看排除清单
-ag-kit exclude add --path /path/to/dir            # 新增排除路径
-ag-kit exclude remove --path /path/to/dir         # 删除排除路径
+ag-kit sync
+
+ag-kit verify --json --path ./myapp
+
+ag-kit rollback --dry-run
 ```
 
-### 批量更新机制
+更多参数与解释请直接看帮助：
 
-- 执行 `ag-kit init` / `ag-kit update` 时，会把工作区路径登记到全局索引文件：
-  - macOS / Linux / WSL: `~/.ag-kit/workspaces.json`
-  - Windows PowerShell / CMD: `%USERPROFILE%\.ag-kit\workspaces.json`
-- 默认会自动排除 Ag-Kit 工具包源码目录和系统临时目录（如 macOS `/var/folders/...`、`/tmp`、`/private/tmp`，Linux `/tmp`，Windows `%TEMP%`）。
-- 可通过 `--no-index` 让 `init/update` 跳过索引登记（适合临时验证目录）。
-- `ag-kit update` 只依赖当前目录（或 `--path` 指定目录）的已安装目标，不依赖全局索引。
-- 执行 `ag-kit update-all` 时，会遍历索引并批量更新每个工作区（可通过 `--targets` 限定目标）。
-- 可用 `--prune-missing` 自动移除索引里已失效的工作区路径。
-- 对于历史项目（尚未登记，或曾经 `--no-index` 跳过登记），可在该项目执行一次不带 `--no-index` 的 `ag-kit update`（或 `ag-kit init --force`）后纳入索引。
-- 可通过 `ag-kit exclude add/remove/list` 维护自定义排除路径（支持排除整棵目录树）。
-- 也可通过环境变量 `AG_KIT_INDEX_PATH` 指定自定义索引路径。
+```bash
+ag-kit help
+ag-kit help sync
+ag-kit help --advanced
+```
+
+### 高级（少用）
+
+只有当你明确知道自己需要时，再使用这些命令/参数（不建议抄一堆参数当“习惯用法”）：
+
+```bash
+# 显式拆分流程
+ag-kit init
+ag-kit update
+ag-kit doctor --fix
+
+# 强制覆盖安装（危险）
+ag-kit init --force --path ./myapp
+
+# 预演/静默（调试开关）
+ag-kit update --dry-run --path ./myapp
+ag-kit update --quiet --path ./myapp
+
+# 索引/批量升级
+ag-kit update-all --prune-missing --non-interactive
+ag-kit update-all --targets full
+ag-kit sync --no-index
+
+# legacy 迁移（仅当项目只剩旧版 .agent 且无托管证据时）
+ag-kit update --accept-legacy-agent
+ag-kit update-all --accept-legacy-agent
+ag-kit doctor --fix --accept-legacy-agent
+
+# 兼容参数（仍会归一为 full）
+ag-kit init --target codex
+ag-kit init --target gemini
+
+# 索引排除
+ag-kit exclude list
+ag-kit exclude add --path /path/to/dir
+ag-kit exclude remove --path /path/to/dir
+
+# 状态（只读）
+ag-kit status --path ./myapp
+```
+
+升级与迁移说明：
+- 旧项目升级到 `3.0.0-beta.0`：`docs/migration-v3-beta.md`
+- 运维/批量升级/索引机制：`docs/operations.md`
 
 ### 开发维护命令
 
@@ -181,6 +206,7 @@ npm run clean           # 清理本地生成产物（如 web/.next、web/node_mo
 npm run clean:dry-run   # 预览将被清理的路径
 npm test                # 只执行 tests/ 目录下测试
 npm run health-check    # 一键执行全链路健康复检
+npm run verify:3platform -- --path /path/to/workspace  # 三平台可用性与配置一致性检查
 ```
 
 如果你在 `web/` 子项目内开发，可按需执行：
@@ -189,6 +215,14 @@ npm run health-check    # 一键执行全链路健康复检
 npm install --prefix web
 npm run lint --prefix web
 ```
+
+### CI 与分支门禁
+
+- 仓库内置 GitHub Actions 工作流：`.github/workflows/ci.yml`。
+- PR 到 `main` / `preview/agents-v3` 会执行两个检查：
+  - `CI / test`
+  - `CI / health-check`
+- 建议在仓库 Branch Protection 中将以上两项设为 Required status checks，避免未验证改动直接合并。
 
 ## 卸载
 
@@ -210,14 +244,21 @@ macOS / Linux / WSL:
 
 ```bash
 cd /path/to/your-project
-rm -rf .agent .agents .agents-backup .codex
+rm -rf .agent .agents .agents-backup .gemini antigravity.rules
+# 如需清理 v3 新版全局回退快照：
+# rm -rf ~/.ag-kit/backups
+# 若确认 .codex 是本工具托管 legacy（含 manifest.json 且 target=codex/full），可再删除：
+# rm -rf .codex
 ```
 
 Windows PowerShell:
 
 ```powershell
 Set-Location C:\path\to\your-project
-Remove-Item .agent,.agents,.agents-backup,.codex -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item .agent,.agents,.agents-backup,.gemini,antigravity.rules -Recurse -Force -ErrorAction SilentlyContinue
+# 如需清理 v3 新版全局回退快照：
+# Remove-Item "$env:USERPROFILE\.ag-kit\backups" -Recurse -Force -ErrorAction SilentlyContinue
+# 若确认 .codex 为本工具托管 legacy，再手动删除 .codex
 ```
 
 Windows CMD:
@@ -227,7 +268,11 @@ cd /d C:\path\to\your-project
 rmdir /s /q .agent
 rmdir /s /q .agents
 rmdir /s /q .agents-backup
-rmdir /s /q .codex
+rmdir /s /q .gemini
+del /f /q antigravity.rules
+REM 若确认 .codex 为本工具托管 legacy，再手动删除 .codex
+REM 如需清理 v3 新版全局回退快照:
+REM rmdir /s /q %USERPROFILE%\.ag-kit\backups
 ```
 
 ### 清理批量更新索引（可选）

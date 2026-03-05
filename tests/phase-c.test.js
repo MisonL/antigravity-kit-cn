@@ -61,7 +61,7 @@ describe('Phase C Integration', () => {
         
         const agentsMd = fs.readFileSync(path.join(codexDir, 'AGENTS.md'), 'utf8');
         assert.ok(agentsMd.includes('test-skill'));
-        assert.ok(agentsMd.includes('(Codex Managed)'));
+        assert.ok(agentsMd.includes('(AG-Kit Managed)'));
 
         // Verification 4: Workspace managed block injection
         const workspaceAgents = fs.readFileSync(path.join(workDir, 'AGENTS.md'), 'utf8');

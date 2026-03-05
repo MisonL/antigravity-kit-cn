@@ -63,14 +63,16 @@ function cloneBranchAgentDir(branch, options) {
         throw new Error(`无法拉取分支 ${safeBranch}，请确认分支存在且网络可用`);
     }
 
+    const clonedAgentsDir = path.join(tempDir, ".agents");
     const clonedAgentDir = path.join(tempDir, ".agent");
-    if (!fs.existsSync(clonedAgentDir)) {
+    const selectedDir = fs.existsSync(clonedAgentsDir) ? clonedAgentsDir : clonedAgentDir;
+    if (!fs.existsSync(selectedDir)) {
         fs.rmSync(tempDir, { recursive: true, force: true });
-        throw new Error(`分支 ${safeBranch} 中未找到 .agent 目录`);
+        throw new Error(`分支 ${safeBranch} 中未找到 .agents 或 .agent 目录`);
     }
 
     return {
-        agentDir: clonedAgentDir,
+        agentDir: selectedDir,
         cleanup: () => fs.rmSync(tempDir, { recursive: true, force: true }),
     };
 }

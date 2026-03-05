@@ -1,68 +1,62 @@
-# Codex（代码智能体环境）资源映射规范
+# Full 模式资源映射规范
 
-Codex（代码智能体环境）适配器包含一个内置的资源转换层（`bin/core/`），负责将通用的 Agent（智能体）能力描述、Skill（技能）与 Workflow（工作流）转换为 Codex 兼容的标准化格式。
+本文描述 v3 统一目录体系下的资源映射。
 
-## 转换规则
+## 1. Canonical 与 Projection
 
-### 1. Skill（技能）
+- Canonical：`.agents/**`
+- Projection：`.agent/**`、`.gemini/**`、根 `AGENTS.md`/`antigravity.rules` 托管区块
 
-- **源路径**: `.agent/skills/<name>/SKILL.md`
-- **Codex ID（标识）**: `<name>`（保持与上游技能名一致）
-- **目标路径**: `.agents/skills/<name>/SKILL.md`
+## 2. 关键映射规则
 
-### 2. Workflow（工作流）
+### 2.1 Skills
+- Canonical 路径：`.agents/skills/<name>/SKILL.md`
+- Antigravity 兼容：投影到 `.agent/skills/<name>/SKILL.md`
+- Codex 兼容：直接读取 `.agents/skills/*`
 
-- **源路径**: `.agent/workflows/<name>.md`
-- **Codex ID（标识）**: `workflow-<name>`
-- **目标路径**: `.agents/skills/workflow-<name>/SKILL.md`
-- **说明**: 工作流会转换为符合 Codex 规范的 `SKILL.md`（自动补齐 `name` / `description` Frontmatter（文档头元数据））。
-- **冲突处理**: 若生成 ID 与现有 Skill/Workflow 冲突，构建器会自动追加 `-2`、`-3`... 后缀，确保 ID 和目录唯一。
+### 2.2 Workflows
+- Canonical 路径：`.agents/workflows/<name>.md`
+- Codex 兼容增强：额外生成 `workflow-<name>` 的技能桥接（位于 `.agents/skills/`）
 
-## 托管文件生成
+### 2.3 Agents
+- Canonical 路径：`.agents/agents/*.md`
+- Gemini 兼容：写入 `.gemini/agents/ag-kit-*.md`（追加模式，保留用户文件）
 
-### `codex.json` 元数据
+### 2.4 MCP
+- Canonical：`.agents/mcp_config.json`
+- Gemini 兼容：合并到 `.gemini/settings.json#mcpServers`
+- Context7：同步 `context7` 与 `context7_backup`
 
-包含版本信息和所有资源的清单映射。
+## 3. 托管清单 manifest
 
-### `AGENTS.md` 规则接入点
+`manifest.json`（v3）用于：
+- 受管文件哈希校验
+- 漂移检测
+- 覆盖前冲突备份判定
 
-自动生成的 Markdown 文件，列出所有 Capabilities（能力）并声明版本。
-安装/更新时，CLI（命令行界面）会把该内容注入工作区根目录 `AGENTS.md` 的托管区块中（不会覆盖用户自定义内容）。
-
-### `antigravity.rules` 风险控制
-
-自动生成风险控制规则，安装/更新时同样会注入工作区根目录 `antigravity.rules` 的托管区块。
-
-> 注意：这里的 `antigravity.rules` 是本项目的托管说明文件，不是 Codex 官方 `.rules` 审批策略文件。  
-> 如需配置 Codex 官方审批规则，请单独维护 `~/.codex/rules/default.rules`（参考 `docs/codex-rules-template.md`）。
-
-### `manifest.json` 托管清单
-
-用于完整性与漂移检测，核心结构如下：
+示例：
 
 ```json
 {
-  "version": 2,
-  "target": "codex",
-  "kitVersion": "2.0.1",
+  "version": 3,
+  "target": "full",
+  "kitVersion": "3.0.0-beta.0",
   "files": {
-    "skills/example-skill/SKILL.md": {
+    "skills/example/SKILL.md": {
       "hash": "sha256...",
-      "source": "bundled/skills/example-skill/SKILL.md"
+      "source": "bundled:full/skills/example/SKILL.md"
     }
   }
 }
 ```
 
-覆盖策略：仅当当前文件 hash（哈希）同时满足 `当前文件 hash != manifest hash` 且 `当前文件 hash != 新版本 hash` 时，才会备份并覆盖。
+## 4. Legacy 迁移边界
 
-## 动态构建
+1. 托管 `.codex`：迁移到 `.agents` 后清理。
+2. 非托管 `.codex`：保留不删。
+3. `.agent`/`.gemini`：用于迁移输入或投影冲突处理，不作为主源。
 
-当使用 `ag-kit init --target codex` 安装旧版 Gemini 结构的仓库时，CLI 会自动触发 Just-in-Time Build（即时构建）流程：
+## 5. 官方规则边界
 
-1. 克隆/读取源仓库。
-2. 识别为 Legacy（旧版）结构（`.agent/skills` 存在但无 `manifest.json`）。
-3. 在临时目录启动构建流水线。
-4. 将构建产物安装到项目的 `.agents` 目录（若检测到旧版 `.codex` 会自动迁移/清理）。
-
-此过程对用户透明。
+- `antigravity.rules` 是本项目托管说明文件，不是 Codex 官方 `.rules`。
+- Codex 官方审批规则仍在 `~/.codex/rules/default.rules`（参考 `docs/codex-rules-template.md`）。

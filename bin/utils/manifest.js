@@ -7,7 +7,7 @@ class ManifestManager {
         this.manifestPath = manifestPath;
         this.options = options;
         this.manifest = {
-            version: 2,
+            version: 3,
             target: typeof options.target === "string" ? options.target : "",
             kitVersion: typeof options.kitVersion === "string" ? options.kitVersion : "",
             updatedAt: "",
@@ -52,7 +52,7 @@ class ManifestManager {
 
     static normalizeManifestShape(input) {
         const output = {
-            version: typeof input.version === "number" ? input.version : 2,
+            version: typeof input.version === "number" ? input.version : 3,
             target: typeof input.target === "string" ? input.target : "",
             kitVersion: typeof input.kitVersion === "string" ? input.kitVersion : "",
             updatedAt: typeof input.updatedAt === "string" ? input.updatedAt : "",
@@ -86,7 +86,7 @@ class ManifestManager {
             } catch (err) {
                 this.lastLoadError = err;
                 this.manifest = {
-                    version: 2,
+                    version: 3,
                     target: typeof this.options.target === "string" ? this.options.target : "",
                     kitVersion: typeof this.options.kitVersion === "string" ? this.options.kitVersion : "",
                     updatedAt: "",

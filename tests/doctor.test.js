@@ -37,18 +37,19 @@ describe('Doctor Command', () => {
     });
 
     test('GeminiAdapter checkIntegrity missing', () => {
+        fs.rmSync(path.join(workDir, '.agents'), { recursive: true, force: true });
         fs.rmSync(path.join(workDir, '.agent'), { recursive: true });
         const adapter = new GeminiAdapter(workDir, { quiet: true });
         const res = adapter.checkIntegrity();
         assert.strictEqual(res.status, 'missing');
     });
 
-    test('GeminiAdapter checkIntegrity should flag missing required files', () => {
-        fs.rmSync(path.join(workDir, '.agent', 'rules', 'GEMINI.md'));
+    test('GeminiAdapter checkIntegrity should flag invalid manifest JSON', () => {
+        fs.writeFileSync(path.join(workDir, '.agents', 'manifest.json'), '{invalid-json');
         const adapter = new GeminiAdapter(workDir, { quiet: true });
         const res = adapter.checkIntegrity();
         assert.strictEqual(res.status, 'broken');
-        assert.ok(res.issues.some((issue) => issue.includes('.agent/rules/GEMINI.md')));
+        assert.ok(res.issues.some((issue) => issue.includes('invalid JSON')));
     });
 
     test('CodexAdapter checkIntegrity ok', () => {
@@ -64,11 +65,11 @@ describe('Doctor Command', () => {
         assert.strictEqual(res.status, 'missing');
     });
 
-    test('CodexAdapter checkIntegrity should flag legacy .codex directory', () => {
+    test('CodexAdapter checkIntegrity should allow non-managed legacy .codex directory', () => {
         fs.mkdirSync(path.join(workDir, '.codex'), { recursive: true });
         const adapter = new CodexAdapter(workDir, { quiet: true });
         const res = adapter.checkIntegrity();
-        assert.strictEqual(res.status, 'broken');
+        assert.strictEqual(res.status, 'ok');
         assert.ok(res.issues.some((issue) => issue.includes('.codex')));
     });
 

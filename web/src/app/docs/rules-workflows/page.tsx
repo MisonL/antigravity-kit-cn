@@ -53,8 +53,11 @@ export default function RulesWorkflowsPage() {
                         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-3">工作区规则</h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
                             工作区规则存放在当前工作区或 Git 根目录的
-                            <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono ml-1">.agent/rules</code>
+                            <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono ml-1">.agents/rules</code>
                             文件夹。
+                        </p>
+                        <p className="text-base text-zinc-600 dark:text-zinc-400 mb-2">
+                            说明：<code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">.agent/rules</code> 为自动生成的兼容投影，请以 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">.agents</code> 为主目录。
                         </p>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-2">你可以为规则指定激活方式：</p>
                         <ul className="space-y-2 text-base text-zinc-600 dark:text-zinc-400">

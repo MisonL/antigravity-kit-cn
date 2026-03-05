@@ -1,19 +1,19 @@
 # Repository Guidelines
 
 ## 项目结构与模块组织
-- `bin/`：CLI 主入口与核心逻辑。`bin/ag-kit.js` 负责命令分发，`bin/core/` 处理构建/转换，`bin/adapters/` 处理 `gemini`/`codex` 目标差异，`bin/utils/` 放通用工具。
-- `scripts/`：维护脚本（如 `clean.js`、`health-check.sh`、`postinstall-check.js`）。
+- `bin/`：CLI 主入口与核心逻辑。`bin/ag-kit.js` 负责命令分发，`bin/core/` 处理构建/转换，`bin/adapters/` 实现 full 安装与兼容投影（`.agent/.gemini`），`bin/utils/` 放通用工具。
+- `scripts/`：维护脚本（如 `clean.js`、`health-check.js`、`postinstall-check.js`；`health-check.sh` 为类 Unix 兼容封装）。
 - `tests/`：Node 内置测试（`*.test.js`），覆盖 CLI、适配器、生成器、清理与健康检查。
 - `docs/` 与 `reference/`：规范文档与参考资料。
 - `web/`：Next.js 文档站（`web/src` 源码，`web/public` 静态资源）。
-- `.agent/`：模板资源源文件，供 CLI 安装到目标项目。
+- `.agents/`：项目模板源（Canonical）；CLI 安装时生成目标项目兼容投影（`.agent/.gemini`）。
 
 ## 构建、测试与开发命令
 - 根项目依赖安装：`bun install`（如需兼容可用 `npm install`）。
 - 运行测试：`bun run test`（等价 `node --test tests`）。
 - 健康复检：`bun run health-check`（测试 + CLI 核心链路 + 清理预检）。
 - 清理产物：`bun run clean`，预览清理：`bun run clean:dry-run`。
-- 本地调试 CLI：`node bin/ag-kit.js --version` 或 `node bin/ag-kit.js init --target codex --path ./tmp-workspace`。
+- 本地调试 CLI：`node bin/ag-kit.js --version` 或 `node bin/ag-kit.js init --path ./tmp-workspace`。
 - `web/` 子项目：`cd web && bun install && bun run dev`，发布构建 `bun run build`，代码检查 `bun run lint`。
 
 ## 代码风格与命名约定

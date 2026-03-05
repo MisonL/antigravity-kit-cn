@@ -26,8 +26,16 @@ export default function CLIPage() {
                     概览
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code> CLI 用于在多个项目中管理 Antigravity Kit 安装。请先按安装指南完成本仓库本地安装。
+                    <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code> CLI 用于在多个项目中管理 Antigravity Kit 安装。v3 以 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agents/</code> 为唯一主目录，并自动生成 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 与 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gemini/</code> 兼容投影。
                 </p>
+                <div className="relative group">
+                    <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                        <code className="text-zinc-100">{`ag-kit sync
+
+ag-kit help
+ag-kit help sync`}</code>
+                    </pre>
+                </div>
             </section>
 
             {/* Commands */}
@@ -37,13 +45,38 @@ export default function CLIPage() {
                 </h2>
 
                 <div className="space-y-8">
+                    {/* sync */}
+                    <div>
+                        <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
+                            <code className="font-mono">ag-kit sync</code>
+                        </h3>
+                        <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
+                            一键同步当前项目到最新状态：未安装则执行 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">init</code>，已安装则执行 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">update</code>，必要时会按托管证据自愈。
+                        </p>
+
+                        <div className="relative group mb-4">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">ag-kit sync</code>
+                            </pre>
+                        </div>
+
+                        <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+                            <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
+                            <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
+                                <li>• 统一写入 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agents/</code>（Canonical），并同步 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code>、<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gemini/</code> 与根托管区块</li>
+                                <li>• 需要写入前会创建 rollback 快照，支持 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">ag-kit rollback</code> 一键回退</li>
+                                <li>• 若项目仅存在 legacy <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 且无托管证据，非交互/CI 需显式 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--accept-legacy-agent</code> 才会迁移</li>
+                            </ul>
+                        </div>
+                    </div>
+
                     {/* init */}
                     <div>
                         <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
                             <code className="font-mono">ag-kit init</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
-                            通过安装 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent</code> 文件夹在项目中初始化 Antigravity Kit。
+                            初始化安装 v3 统一结构：写入 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agents</code> 并生成兼容投影。
                         </p>
 
                         <div className="relative group mb-4">
@@ -55,10 +88,10 @@ export default function CLIPage() {
                         <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
                             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
-                                <li>• 在当前目录创建 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 文件夹</li>
+                                <li>• 在当前目录创建 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agents/</code>（Canonical），并生成 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code>、<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gemini/</code> 兼容投影</li>
                                 <li>• 默认从当前 CLI 包内置模板复制内容（指定 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--branch</code> 时从 GitHub 拉取）</li>
-                                <li>• 若已存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 则跳过（使用 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--force</code> 覆盖）</li>
-                                <li>• 自动扫描并清理 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gitignore</code> 中会忽略 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的规则</li>
+                                <li>• 若已存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agents/</code> 则跳过（使用 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--force</code> 覆盖）</li>
+                                <li>• 自动扫描并清理 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gitignore</code> 中会忽略 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agents</code>/<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code>/<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gemini</code> 的规则</li>
                                 <li>• 自动检测全局是否存在上游英文版 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">@vudovn/ag-kit</code>，并提示命令冲突风险；在全局安装阶段可交互确认是否自动卸载</li>
                             </ul>
                         </div>
@@ -81,8 +114,67 @@ export default function CLIPage() {
 
                         <div className="p-4 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/20">
                             <p className="text-sm text-amber-900 dark:text-amber-200">
-                                <strong className="font-semibold">警告：</strong>此操作会删除并替换你的 <code className="px-1 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 font-mono text-xs">.agent/</code> 文件夹，请先备份自定义修改。
+                                <strong className="font-semibold">提示：</strong>更新会替换受管文件（<code className="px-1 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 font-mono text-xs">.agents/</code> 及投影/托管区块），执行前会创建 rollback 快照，必要时可用 <code className="px-1 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40 font-mono text-xs">ag-kit rollback</code> 一键回退。
                             </p>
+                        </div>
+                    </div>
+
+                    {/* doctor */}
+                    <div>
+                        <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
+                            <code className="font-mono">ag-kit doctor</code>
+                        </h3>
+                        <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
+                            诊断安装完整性，必要时用 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">--fix</code> 执行幂等修复。
+                        </p>
+
+                        <div className="relative group mb-4">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">{`ag-kit doctor
+ag-kit doctor --fix`}</code>
+                            </pre>
+                        </div>
+
+                        <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+                            <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
+                            <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
+                                <li>• 检查 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agents</code> 与 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">manifest.json</code> 完整性</li>
+                                <li>• <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--fix</code> 会在写入前创建 rollback 快照，并重放托管区块与投影</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* rollback */}
+                    <div>
+                        <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
+                            <code className="font-mono">ag-kit rollback</code>
+                        </h3>
+                        <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
+                            回退到升级/安装前自动创建的 rollback 快照（建议先 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">--dry-run</code> 预演）。
+                        </p>
+
+                        <div className="relative group mb-4">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">{`ag-kit rollback --dry-run
+ag-kit rollback`}</code>
+                            </pre>
+                        </div>
+                    </div>
+
+                    {/* verify */}
+                    <div>
+                        <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
+                            <code className="font-mono">ag-kit verify</code>
+                        </h3>
+                        <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
+                            三平台（Codex / Gemini / Antigravity）可用性与一致性检查，支持 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">--json</code> 输出（CI 友好）。
+                        </p>
+
+                        <div className="relative group mb-4">
+                            <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+                                <code className="text-zinc-100">{`ag-kit verify --path ./my-project
+ag-kit verify --path ./my-project --json`}</code>
+                            </pre>
                         </div>
                     </div>
 
@@ -105,10 +197,10 @@ export default function CLIPage() {
                             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
                                 <li>• 读取全局索引文件（macOS / Linux / WSL：<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">~/.ag-kit/workspaces.json</code>；Windows：<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">%USERPROFILE%\.ag-kit\workspaces.json</code>）</li>
-                                <li>• 对每个已登记且存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的工作区执行更新</li>
+                                <li>• 对每个已登记且存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agents</code> 的工作区执行更新</li>
                                 <li>• 输出批量更新汇总（成功/跳过/失败）</li>
                                 <li>• 默认自动排除 antigravity-kit 源码目录，避免索引冲突</li>
-                                <li>• 历史项目需先执行一次 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">ag-kit update</code> 才会被纳入索引</li>
+                                <li>• 历史项目需先执行一次 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">ag-kit sync</code>/<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">init</code>/<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">update</code> 才会被纳入索引</li>
                             </ul>
                         </div>
                     </div>
@@ -187,7 +279,7 @@ export default function CLIPage() {
                                     <code className="font-mono text-zinc-900 dark:text-zinc-50">--force</code>
                                 </td>
                                 <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                                    覆盖已有的 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">.agent</code> 文件夹
+                                    覆盖已有的 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">.agents</code> 受管目录（会替换受管文件）
                                 </td>
                             </tr>
                             <tr>
@@ -195,7 +287,7 @@ export default function CLIPage() {
                                     <code className="font-mono text-zinc-900 dark:text-zinc-50">--path &lt;dir&gt;</code>
                                 </td>
                                 <td className="py-3 px-4 text-zinc-600 dark:text-zinc-400">
-                                    安装到指定目录而非当前目录
+                                    指定工作区目录（默认当前目录）
                                 </td>
                             </tr>
                             <tr>
@@ -233,6 +325,9 @@ export default function CLIPage() {
                         </tbody>
                     </table>
                 </div>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-4">
+                    完整参数与高级用法请运行 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">ag-kit help</code> 或 <code className="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 font-mono text-xs">ag-kit help &lt;command&gt;</code>。
+                </p>
             </section>
 
             {/* Examples */}
@@ -281,7 +376,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit init --quiet --force</code>
+                                <code className="text-zinc-100">ag-kit sync --non-interactive --quiet</code>
                             </pre>
                         </div>
                     </div>
@@ -342,27 +437,31 @@ export default function CLIPage() {
                             卸载全局 CLI
                         </h3>
                         <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                            <code className="text-zinc-100">{`npm uninstall -g antigravity-kit-cn
-npm uninstall -g antigravity-kit @vudovn/ag-kit`}</code>
+                            <code className="text-zinc-100">{`npm uninstall -g @mison/ag-kit-cn
+npm uninstall -g @vudovn/ag-kit`}</code>
                         </pre>
                     </div>
 
                     <div>
                         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
-                            删除项目中的 .agent
+                            删除项目中的受管目录
                         </h3>
                         <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
                             <code className="text-zinc-100">{`cd /path/to/your-project
-rm -rf .agent`}</code>
+rm -rf .agents .agent .gemini`}</code>
                         </pre>
                         <pre className="mt-3 p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
                             <code className="text-zinc-100">{`# Windows PowerShell
 Set-Location C:\\path\\to\\your-project
+Remove-Item .agents -Recurse -Force
 Remove-Item .agent -Recurse -Force
+Remove-Item .gemini -Recurse -Force
 
 # Windows CMD
 cd /d C:\\path\\to\\your-project
-rmdir /s /q .agent`}</code>
+rmdir /s /q .agents
+rmdir /s /q .agent
+rmdir /s /q .gemini`}</code>
                         </pre>
                     </div>
 

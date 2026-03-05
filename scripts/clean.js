@@ -90,7 +90,7 @@ function runClean(options = {}) {
             }
             console.log(`⏭️ 已跳过: ${item.path} (${item.reason})`);
         }
-        console.log(`📊 清理完成: removed=${removedCount}, dryRun=${wouldRemoveCount}, skipped=${skippedCount}`);
+        console.log(`📊 清理完成: removed=${removedCount}, wouldRemove=${wouldRemoveCount}, skipped=${skippedCount}, dryRun=${normalizedOptions.dryRun ? 1 : 0}`);
     }
 
     return {

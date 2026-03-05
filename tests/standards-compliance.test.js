@@ -30,8 +30,8 @@ function collectTokens(content, regex) {
 
 describe('Standards Compliance', () => {
     test('all skill directories should include SKILL.md', () => {
-        const skillsRoot = path.resolve('.agent/skills');
-        assert.ok(fs.existsSync(skillsRoot), 'missing .agent/skills');
+        const skillsRoot = path.resolve('.agents/skills');
+        assert.ok(fs.existsSync(skillsRoot), 'missing .agents/skills');
 
         const skillDirs = fs
             .readdirSync(skillsRoot, { withFileTypes: true })
@@ -134,7 +134,7 @@ describe('Standards Compliance', () => {
         assert.ok(!content.includes('.codex/skills/'), 'should not contain deprecated .codex/skills path');
     });
 
-    test('.agent script files should stay identical to reference snapshot', { skip: !fs.existsSync(path.resolve('reference/antigravity-kit/.agent')) }, () => {
+    test('.agents script files should stay identical to reference snapshot', { skip: !fs.existsSync(path.resolve('reference/antigravity-kit/.agent')) }, () => {
         const refScriptsRoot = path.resolve('reference/antigravity-kit/.agent');
         const mismatches = [];
 
@@ -151,7 +151,7 @@ describe('Standards Compliance', () => {
                 if (abs.includes(`${path.sep}__pycache__${path.sep}`) || abs.endsWith('.pyc')) continue;
 
                 const rel = path.relative(refScriptsRoot, abs);
-                const localFile = path.resolve('.agent', rel);
+                const localFile = path.resolve('.agents', rel);
                 if (!fs.existsSync(localFile)) {
                     mismatches.push(`${rel} (missing local file)`);
                     continue;
