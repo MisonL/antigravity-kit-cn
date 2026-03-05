@@ -15,6 +15,8 @@
 npm install -g @mison/ag-kit-cn
 ```
 
+运行环境要求：Node.js `>=18`（建议使用当前 LTS）。
+
 然后在你的目标项目中初始化：
 
 ```bash
@@ -156,6 +158,7 @@ ag-kit init --branch dev --force                  # 覆盖安装并指定分支
 ag-kit init --quiet --dry-run                     # 预览操作而不执行
 ag-kit update --path ./myapp                      # 更新并收敛 legacy
 ag-kit update --target codex --path ./myapp       # 兼容写法，仍归一为 full
+ag-kit update --accept-legacy-agent --path ./myapp # 迁移仅 .agent 的旧版安装到 v3
 ag-kit update --non-interactive --path ./myapp    # 非交互更新（CI 推荐）
 ag-kit update --disable-agent-projection --path ./myapp # 删除/停用托管 .agent 投影
 ag-kit update --no-index --path ./myapp           # 更新但不刷新索引
@@ -193,6 +196,7 @@ ag-kit exclude remove --path /path/to/dir         # 删除排除路径
 - 可通过 `ag-kit exclude add/remove/list` 维护自定义排除路径（支持排除整棵目录树）。
 - 也可通过环境变量 `AG_KIT_INDEX_PATH` 指定自定义索引路径。
 - 自动迁移状态默认在 `~/.ag-kit/migrations/v3.json`，可用 `AG_KIT_MIGRATION_STATE_PATH` 自定义。
+- 如需跳过自动迁移，可设置 `AG_KIT_SKIP_AUTO_MIGRATION=1`（`--no-index` 也会跳过自动迁移以避免全局副作用）。
 - `ag-kit status` 会显示 `Auto-Migration(v3): done|pending`（只读状态）。
 - `ag-kit rollback` 默认回退到最近一次快照；快照在升级/安装前自动写入 `~/.ag-kit/backups/<workspace-key>/<timestamp>/rollback-manifest.json`。
 - 可通过 `AG_KIT_BACKUP_ROOT` 自定义快照根目录（CI 或隔离测试推荐）。

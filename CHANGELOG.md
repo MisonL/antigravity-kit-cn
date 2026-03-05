@@ -7,6 +7,17 @@
 
 ## [Unreleased]
 
+### 新增
+
+- 增加 `--accept-legacy-agent`：允许将仅存在 legacy `.agent` 的旧项目迁移到 v3 `.agents` 体系（会创建 rollback 快照）。
+
+### 变更
+
+- `--no-index` 模式下不再触发自动迁移（避免产生全局索引/迁移状态副作用）。
+- `verify` 以托管证据判断 `.agent` 投影是否启用，并对非托管 `.agent` 给出告警。
+- 简化更新备份策略：统一依赖 rollback 快照，不再生成额外的覆盖冲突备份目录。
+- `health-check` 默认切换为 Node 脚本实现（跨平台），并在检查链路中隔离 `AG_KIT_BACKUP_ROOT` 到临时目录。
+
 ## [3.0.0-beta.0] - 2026-03-04
 
 ### 新增

@@ -2,7 +2,7 @@
 
 ## 项目结构与模块组织
 - `bin/`：CLI 主入口与核心逻辑。`bin/ag-kit.js` 负责命令分发，`bin/core/` 处理构建/转换，`bin/adapters/` 实现 full 安装与兼容投影（`.agent/.gemini`），`bin/utils/` 放通用工具。
-- `scripts/`：维护脚本（如 `clean.js`、`health-check.sh`、`postinstall-check.js`）。
+- `scripts/`：维护脚本（如 `clean.js`、`health-check.js`、`postinstall-check.js`；`health-check.sh` 为类 Unix 兼容封装）。
 - `tests/`：Node 内置测试（`*.test.js`），覆盖 CLI、适配器、生成器、清理与健康检查。
 - `docs/` 与 `reference/`：规范文档与参考资料。
 - `web/`：Next.js 文档站（`web/src` 源码，`web/public` 静态资源）。
