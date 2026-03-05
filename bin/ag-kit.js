@@ -82,10 +82,10 @@ function printUsage() {
     console.log("用法:");
     console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--disable-agent-projection] [--no-index] [--quiet] [--dry-run]");
     console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--accept-legacy-agent] [--non-interactive] [--disable-agent-projection] [--no-index] [--quiet] [--dry-run]");
-    console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--disable-agent-projection] [--quiet] [--dry-run]");
+    console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--accept-legacy-agent] [--prune-missing] [--disable-agent-projection] [--quiet] [--dry-run]");
     console.log("  ag-kit verify [--path <dir>] [--json] [--quiet]");
     console.log("  ag-kit rollback [--path <dir>] [--backup <timestamp>] [--quiet] [--dry-run]");
-    console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]");
+    console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--accept-legacy-agent] [--fix] [--quiet]");
     console.log("  ag-kit exclude list [--quiet]");
     console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
     console.log("  ag-kit exclude remove --path <dir> [--dry-run] [--quiet]");
@@ -212,10 +212,10 @@ function parseArgs(argv) {
 const COMMAND_ALLOWED_FLAGS = {
     init: ["--force", "--path", "--branch", "--target", "--targets", "--non-interactive", "--disable-agent-projection", "--no-index", "--quiet", "--dry-run"],
     update: ["--path", "--branch", "--target", "--targets", "--accept-legacy-agent", "--non-interactive", "--disable-agent-projection", "--no-index", "--quiet", "--dry-run"],
-    "update-all": ["--branch", "--targets", "--prune-missing", "--disable-agent-projection", "--quiet", "--dry-run"],
+    "update-all": ["--branch", "--targets", "--accept-legacy-agent", "--prune-missing", "--disable-agent-projection", "--quiet", "--dry-run"],
     verify: ["--path", "--json", "--quiet"],
     rollback: ["--path", "--backup", "--quiet", "--dry-run"],
-    doctor: ["--path", "--target", "--targets", "--fix", "--quiet"],
+    doctor: ["--path", "--target", "--targets", "--accept-legacy-agent", "--fix", "--quiet"],
     status: ["--path", "--quiet"],
     "exclude:list": ["--quiet"],
     "exclude:add": ["--path", "--dry-run", "--quiet"],
@@ -1296,6 +1296,7 @@ async function commandUpdateAll(options) {
     const requestedTargets = normalizeTargets(options.targets);
     const { indexPath, index } = readWorkspaceIndex();
     const records = index.workspaces || [];
+    const isInteractive = !options.nonInteractive && process.stdin.isTTY && process.stdout.isTTY;
 
     if (records.length === 0) {
         log(options, "ℹ️ 全局索引为空，没有可批量更新的工作区。");
@@ -1314,6 +1315,11 @@ async function commandUpdateAll(options) {
     const timestamp = nowISO();
     const nextRecords = [];
     const removedRecordKeys = new Set();
+
+    const isInstalledOrLegacy = (workspacePath, targetName, acceptLegacyAgent, legacyAgentCandidate) => {
+        return isTargetInstalled(workspacePath, targetName)
+            || (targetName === "full" && acceptLegacyAgent && legacyAgentCandidate);
+    };
 
     for (let i = 0; i < records.length; i++) {
         const item = normalizeWorkspaceRecordV2(records[i], normalizeAbsolutePath(records[i].path));
@@ -1344,6 +1350,9 @@ async function commandUpdateAll(options) {
             continue;
         }
 
+        const legacyAgentCandidate = looksLikeLegacyAgentWorkspace(workspacePath);
+        let acceptLegacyAgent = !!options.acceptLegacyAgent;
+
         const installedTargets = detectInstalledTargets(workspacePath);
         let targets = [];
         if (requestedTargets.length > 0) {
@@ -1353,29 +1362,64 @@ async function commandUpdateAll(options) {
         }
         targets = normalizeTargets(targets);
 
-        if (targets.length === 0) {
-            skipped += 1;
-            log(options, `⏭️ [${i + 1}/${records.length}] 未检测到可更新目标，已跳过: ${workspacePath}`);
-            nextRecords.push(item);
-            continue;
+        const anyUpdatable = targets.some((target) => isInstalledOrLegacy(workspacePath, target, acceptLegacyAgent, legacyAgentCandidate));
+        if (targets.length === 0 || !anyUpdatable) {
+            if (legacyAgentCandidate) {
+                if (!acceptLegacyAgent) {
+                    if (isInteractive) {
+                        log(options, `ℹ️ [${i + 1}/${records.length}] 检测到疑似旧版仅 .agent 安装: ${workspacePath}`);
+                        const confirmed = await confirmLegacyAgentMigration();
+                        if (confirmed) {
+                            acceptLegacyAgent = true;
+                        }
+                    }
+                }
+
+                if (!acceptLegacyAgent) {
+                    skipped += 1;
+                    log(options, `⏭️ [${i + 1}/${records.length}] 检测到疑似旧版仅 .agent 安装，但当前为非交互环境或未显式允许迁移，已跳过: ${workspacePath}`);
+                    if (!options.quiet) {
+                        log(options, "   可选方案:");
+                        log(options, "   1) 执行 ag-kit update-all --accept-legacy-agent 进行迁移（会创建 rollback 快照）");
+                        log(options, "   2) 或对单个项目执行 ag-kit update --accept-legacy-agent --path <dir>");
+                        log(options, "   3) 或执行 ag-kit init --force --path <dir> 覆盖升级");
+                    }
+                    nextRecords.push(item);
+                    continue;
+                }
+
+                targets = ["full"];
+            } else {
+                skipped += 1;
+                log(options, `⏭️ [${i + 1}/${records.length}] 未检测到可更新目标，已跳过: ${workspacePath}`);
+                nextRecords.push(item);
+                continue;
+            }
         }
 
         log(options, `📦 [${i + 1}/${records.length}] 更新: ${workspacePath} [${targets.join(", ")}]`);
 
         const updatedTargets = [];
         for (const target of targets) {
-            if (!isTargetInstalled(workspacePath, target)) {
+            if (!isInstalledOrLegacy(workspacePath, target, acceptLegacyAgent, legacyAgentCandidate)) {
                 log(options, `⏭️ [${i + 1}/${records.length}] 目标未安装，跳过: ${target}`);
                 continue;
             }
 
             try {
-                const conflictOptions = await resolveConflictPolicies(workspacePath, options);
+                const baseOptions = acceptLegacyAgent && legacyAgentCandidate
+                    ? {
+                        ...options,
+                        agentConflictPolicy: options.agentConflictPolicy || "backup_replace",
+                    }
+                    : options;
+                const conflictOptions = await resolveConflictPolicies(workspacePath, baseOptions);
                 const runOptions = {
                     ...conflictOptions,
                     force: true,
                     path: workspacePath,
                     silentIndexLog: true,
+                    acceptLegacyAgent,
                 };
                 const adapter = createAdapter(target, workspacePath, runOptions);
                 adapter.update(BUNDLED_AGENT_DIR);
@@ -1623,6 +1667,8 @@ function commandVerify(options) {
 async function commandDoctor(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
     let targets = normalizeTargets(options.targets);
+    const legacyAgentCandidate = looksLikeLegacyAgentWorkspace(workspaceRoot);
+    const isInteractive = !options.nonInteractive && process.stdin.isTTY && process.stdout.isTTY;
     const out = (message) => {
         if (!options.quiet) {
             console.log(message);
@@ -1633,7 +1679,50 @@ async function commandDoctor(options) {
         targets = detectInstalledTargets(workspaceRoot);
     }
 
+    const anyInstalledTarget = targets.some((target) => isTargetInstalled(workspaceRoot, target));
+    if (!anyInstalledTarget && legacyAgentCandidate && options.fix) {
+        if (options.acceptLegacyAgent) {
+            targets = ["full"];
+            options.agentConflictPolicy = options.agentConflictPolicy || "backup_replace";
+        } else if (isInteractive) {
+            const confirmed = await confirmLegacyAgentMigration();
+            if (confirmed) {
+                options.acceptLegacyAgent = true;
+                options.agentConflictPolicy = options.agentConflictPolicy || "backup_replace";
+                targets = ["full"];
+            } else {
+                throw new Error(
+                    "未检测到已安装的目标。\n"
+                    + "检测到疑似旧版仅 .agent 安装，但当前未启用迁移。\n"
+                    + "可选方案:\n"
+                    + "1) 执行 ag-kit doctor --fix --accept-legacy-agent --path <dir> 进行迁移（会创建 rollback 快照）\n"
+                    + "2) 或执行 ag-kit update --accept-legacy-agent --path <dir> 进行迁移\n"
+                    + "3) 或执行 ag-kit init --force --path <dir> 覆盖升级"
+                );
+            }
+        } else {
+            throw new Error(
+                "未检测到已安装的目标。\n"
+                + "检测到疑似旧版仅 .agent 安装，但当前为非交互环境或未显式允许迁移。\n"
+                + "可选方案:\n"
+                + "1) 执行 ag-kit doctor --fix --accept-legacy-agent --path <dir> 进行迁移（会创建 rollback 快照）\n"
+                + "2) 或执行 ag-kit update --accept-legacy-agent --path <dir> 进行迁移\n"
+                + "3) 或执行 ag-kit init --force --path <dir> 覆盖升级"
+            );
+        }
+    }
+
     if (targets.length === 0) {
+        if (legacyAgentCandidate) {
+            throw new Error(
+                "未检测到已安装的目标。\n"
+                + "检测到疑似旧版仅 .agent 安装，但当前未启用迁移。\n"
+                + "可选方案:\n"
+                + "1) 执行 ag-kit doctor --fix --accept-legacy-agent --path <dir> 进行迁移（会创建 rollback 快照）\n"
+                + "2) 或执行 ag-kit update --accept-legacy-agent --path <dir> 进行迁移\n"
+                + "3) 或执行 ag-kit init --force --path <dir> 覆盖升级"
+            );
+        }
         throw new Error("未检测到已安装的目标。请指定 --target 或先执行 init。");
     }
 
@@ -1657,22 +1746,43 @@ async function commandDoctor(options) {
         }
 
         if (options.fix) {
-            const fixRes = adapter.fixIntegrity();
-            if (fixRes && fixRes.fixed) {
-                out(`  🛠️ 已修复: ${fixRes.summary}`);
-                result = adapter.checkIntegrity();
-                if (result.status === "ok") {
-                    out("  ✅ 修复后状态正常");
-                    targetHasIssue = false;
-                } else {
-                    out(`  ⚠️ 修复后仍有问题: ${result.status}`);
-                    for (const issue of result.issues || []) {
-                        out(`     - ${issue}`);
+            if (target === "full" && options.acceptLegacyAgent && legacyAgentCandidate && !isTargetInstalled(workspaceRoot, "full")) {
+                try {
+                    adapter.update(BUNDLED_AGENT_DIR);
+                    out("  🛠️ 已迁移 legacy .agent 并收敛到 v3 (.agents)");
+                    result = adapter.checkIntegrity();
+                    if (result.status === "ok") {
+                        out("  ✅ 修复后状态正常");
+                        targetHasIssue = false;
+                    } else {
+                        out(`  ⚠️ 修复后仍有问题: ${result.status}`);
+                        for (const issue of result.issues || []) {
+                            out(`     - ${issue}`);
+                        }
+                        targetHasIssue = true;
                     }
+                } catch (err) {
+                    out(`  ❌ legacy .agent 迁移失败: ${err.message}`);
                     targetHasIssue = true;
                 }
             } else {
-                out(`  ℹ️ 自动修复未执行: ${fixRes ? fixRes.summary : "无可用修复"}`);
+                const fixRes = adapter.fixIntegrity();
+                if (fixRes && fixRes.fixed) {
+                    out(`  🛠️ 已修复: ${fixRes.summary}`);
+                    result = adapter.checkIntegrity();
+                    if (result.status === "ok") {
+                        out("  ✅ 修复后状态正常");
+                        targetHasIssue = false;
+                    } else {
+                        out(`  ⚠️ 修复后仍有问题: ${result.status}`);
+                        for (const issue of result.issues || []) {
+                            out(`     - ${issue}`);
+                        }
+                        targetHasIssue = true;
+                    }
+                } else {
+                    out(`  ℹ️ 自动修复未执行: ${fixRes ? fixRes.summary : "无可用修复"}`);
+                }
             }
         }
 
@@ -1853,11 +1963,18 @@ function countSkillsRecursive(dir) {
 function commandStatus(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
     const installedTargets = detectInstalledTargets(workspaceRoot);
+    const legacyAgentCandidate = looksLikeLegacyAgentWorkspace(workspaceRoot);
 
     if (installedTargets.length === 0) {
         if (!options.quiet) {
             console.log("❌ 未检测到 Antigravity Kit 安装");
             console.log(`   目标目录: ${workspaceRoot}`);
+            if (legacyAgentCandidate) {
+                console.log("   检测到疑似旧版仅 .agent 安装（未托管）");
+                console.log("   可选方案:");
+                console.log("   1) 执行 ag-kit update --accept-legacy-agent --path <dir> 进行迁移（会创建 rollback 快照）");
+                console.log("   2) 或执行 ag-kit init --force --path <dir> 覆盖升级");
+            }
         }
         process.exitCode = 1;
         return;
