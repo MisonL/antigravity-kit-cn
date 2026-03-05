@@ -30,6 +30,12 @@ const DEFAULT_AGENT_CONFLICT_POLICY = "backup_replace";
 const DEFAULT_GEMINI_AGENTS_POLICY = "append";
 
 class CodexAdapter extends BaseAdapter {
+    constructor(workspaceRoot, options) {
+        super(workspaceRoot, options);
+        // Ensure a single backup root per install/update/fix run so rollback + conflict backups are co-located.
+        this._runBackupRoot = "";
+    }
+
     get targetName() {
         return "full";
     }
@@ -63,6 +69,9 @@ class CodexAdapter extends BaseAdapter {
     }
 
     _applyManagedFlow(mode, sourceDir) {
+        // One backup root per install/update run.
+        this._runBackupRoot = "";
+
         const managedDir = path.join(this.workspaceRoot, MANAGED_DIR_NAME);
         const legacyDir = path.join(this.workspaceRoot, LEGACY_DIR_NAME);
         const managedDirExists = fs.existsSync(managedDir);
@@ -300,6 +309,10 @@ class CodexAdapter extends BaseAdapter {
     }
 
     _createBackupRoot() {
+        if (this._runBackupRoot) {
+            return this._runBackupRoot;
+        }
+
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
         const bucketRoot = getWorkspaceBackupBucket(this.workspaceRoot);
         fs.mkdirSync(bucketRoot, { recursive: true });
@@ -310,6 +323,7 @@ class CodexAdapter extends BaseAdapter {
             suffix += 1;
         }
         fs.mkdirSync(backupRoot, { recursive: true });
+        this._runBackupRoot = backupRoot;
         return backupRoot;
     }
 
@@ -747,9 +761,15 @@ class CodexAdapter extends BaseAdapter {
     }
 
     fixIntegrity() {
+        // One backup root per doctor --fix run.
+        this._runBackupRoot = "";
+
         const managedDir = path.join(this.workspaceRoot, MANAGED_DIR_NAME);
         const legacyDir = path.join(this.workspaceRoot, LEGACY_DIR_NAME);
         const fixes = [];
+
+        this._migrateLegacyBackupLayout();
+        this._createRollbackSnapshot("doctor_fix");
 
         if (!fs.existsSync(managedDir)) {
             if (this._isManagedLegacyCodexDir(legacyDir)) {
