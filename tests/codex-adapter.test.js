@@ -4,21 +4,47 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const CodexAdapter = require("../bin/adapters/codex");
+const { getWorkspaceBackupBucket } = require("../bin/utils/backup-store");
 
 describe("CodexAdapter", () => {
     let workDir;
     let installSource;
+    let backupRoot;
 
     beforeEach(() => {
         workDir = fs.mkdtempSync(path.join(os.tmpdir(), "adapter-test-"));
+        backupRoot = path.join(workDir, ".tmp-backups");
+        process.env.AG_KIT_BACKUP_ROOT = backupRoot;
         installSource = path.join(workDir, "source");
         fs.mkdirSync(installSource);
         fs.writeFileSync(path.join(installSource, "file.txt"), "content");
     });
 
     afterEach(() => {
+        delete process.env.AG_KIT_BACKUP_ROOT;
         fs.rmSync(workDir, { recursive: true, force: true });
     });
+
+    function listBackupDirs() {
+        const bucket = getWorkspaceBackupBucket(workDir);
+        if (!fs.existsSync(bucket)) {
+            return [];
+        }
+        return fs.readdirSync(bucket, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => path.join(bucket, entry.name));
+    }
+
+    function findBackupContaining(relPath) {
+        const dirs = listBackupDirs();
+        for (const dir of dirs) {
+            const candidate = path.join(dir, relPath);
+            if (fs.existsSync(candidate)) {
+                return candidate;
+            }
+        }
+        return "";
+    }
 
     test("install should create .agents as managed codex directory", () => {
         const adapter = new CodexAdapter(workDir, { quiet: true });
@@ -74,17 +100,15 @@ describe("CodexAdapter", () => {
         adapter.update(updateSource);
 
         const agentsDir = path.join(workDir, ".agents");
-        const backupBase = path.join(workDir, ".agents-backup");
+        const backupBase = getWorkspaceBackupBucket(workDir);
 
         assert.strictEqual(fs.readFileSync(path.join(agentsDir, "file.txt"), "utf8"), "v2 content");
         assert.ok(fs.existsSync(path.join(agentsDir, "new.txt")));
 
         assert.ok(fs.existsSync(backupBase));
-        const backups = fs.readdirSync(backupBase);
-        assert.strictEqual(backups.length, 1);
-        const latestBackup = path.join(backupBase, backups[0]);
-        assert.ok(fs.existsSync(path.join(latestBackup, "file.txt")));
-        assert.strictEqual(fs.readFileSync(path.join(latestBackup, "file.txt"), "utf8"), "modified content");
+        const backupFile = findBackupContaining("file.txt");
+        assert.ok(backupFile, "should contain backed up conflict file");
+        assert.strictEqual(fs.readFileSync(backupFile, "utf8"), "modified content");
     });
 
     test("smart overwrite should skip backup when local content already equals incoming content", () => {
@@ -102,8 +126,10 @@ describe("CodexAdapter", () => {
 
         adapter.update(updateSource);
 
-        const backupBase = path.join(workDir, ".agents-backup");
-        assert.ok(!fs.existsSync(backupBase), "No backup should be created when file already equals incoming hash");
+        const backupBase = getWorkspaceBackupBucket(workDir);
+        assert.ok(fs.existsSync(backupBase), "rollback 快照目录应存在");
+        const fullSnapshot = findBackupContaining(path.join("full-snapshot", "file.txt"));
+        assert.strictEqual(fullSnapshot, "", "smart overwrite 命中同哈希时不应创建覆盖冲突备份");
     });
 
     test("update should create full snapshot backup when manifest is invalid", () => {
@@ -121,11 +147,9 @@ describe("CodexAdapter", () => {
 
         adapter.update(updateSource);
 
-        const backupBase = path.join(workDir, ".agents-backup");
+        const backupBase = getWorkspaceBackupBucket(workDir);
         assert.ok(fs.existsSync(backupBase));
-        const backups = fs.readdirSync(backupBase);
-        assert.strictEqual(backups.length, 1);
-        const snapshotFile = path.join(backupBase, backups[0], "full-snapshot", "file.txt");
+        const snapshotFile = findBackupContaining(path.join("full-snapshot", "file.txt"));
         assert.ok(fs.existsSync(snapshotFile));
         assert.strictEqual(fs.readFileSync(snapshotFile, "utf8"), "user-modified");
     });

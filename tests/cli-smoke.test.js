@@ -40,18 +40,22 @@ describe("CLI Smoke", () => {
     let workspaceDir;
     let indexPath;
     let migrationStatePath;
+    let backupRoot;
 
     beforeEach(() => {
         tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-cli-test-"));
         workspaceDir = path.join(tempDir, "workspace");
         indexPath = path.join(tempDir, "workspaces.json");
         migrationStatePath = path.join(tempDir, "migration-v3.json");
+        backupRoot = path.join(tempDir, "backups");
         process.env.AG_KIT_MIGRATION_STATE_PATH = migrationStatePath;
+        process.env.AG_KIT_BACKUP_ROOT = backupRoot;
         fs.mkdirSync(workspaceDir, { recursive: true });
     });
 
     afterEach(() => {
         delete process.env.AG_KIT_MIGRATION_STATE_PATH;
+        delete process.env.AG_KIT_BACKUP_ROOT;
         fs.rmSync(tempDir, { recursive: true, force: true });
     });
 
@@ -284,6 +288,23 @@ describe("CLI Smoke", () => {
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
     });
 
+    test("update should support --disable-agent-projection and remove managed .agent", () => {
+        const initResult = runCli(
+            ["init", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agent")), ".agent projection should exist after init");
+
+        const updateResult = runCli(
+            ["update", "--path", workspaceDir, "--disable-agent-projection", "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(updateResult.status, 0, updateResult.stderr || updateResult.stdout);
+        assert.ok(fs.existsSync(path.join(workspaceDir, ".agents")), "canonical .agents should remain");
+        assert.ok(!fs.existsSync(path.join(workspaceDir, ".agent")), "managed .agent projection should be removed");
+    });
+
     test("update should fail when only non-managed .agent exists", () => {
         fs.mkdirSync(path.join(workspaceDir, ".agent"), { recursive: true });
         fs.writeFileSync(path.join(workspaceDir, ".agent", "custom.md"), "# custom agent config\n", "utf8");
@@ -414,6 +435,44 @@ describe("CLI Smoke", () => {
         assert.strictEqual(fs.readFileSync(path.join(agentsDir, "user-note.md"), "utf8"), "# keep me\n");
     });
 
+    test("rollback should restore latest pre-update snapshot", () => {
+        const initResult = runCli(
+            ["init", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+        const sentinelPath = path.join(workspaceDir, ".agents", "sentinel-before-update.txt");
+        fs.writeFileSync(sentinelPath, "before-update\n", "utf8");
+        const agentsMdPath = path.join(workspaceDir, "AGENTS.md");
+        fs.writeFileSync(agentsMdPath, "user-only-content\n", "utf8");
+
+        const updateResult = runCli(
+            ["update", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(updateResult.status, 0, updateResult.stderr || updateResult.stdout);
+        assert.ok(!fs.existsSync(sentinelPath), "sentinel should be removed after update");
+        assert.notStrictEqual(fs.readFileSync(agentsMdPath, "utf8"), "user-only-content\n");
+
+        const rollbackResult = runCli(
+            ["rollback", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(rollbackResult.status, 0, rollbackResult.stderr || rollbackResult.stdout);
+        assert.strictEqual(fs.readFileSync(sentinelPath, "utf8"), "before-update\n");
+        assert.strictEqual(fs.readFileSync(agentsMdPath, "utf8"), "user-only-content\n");
+    });
+
+    test("rollback should fail when no snapshot exists", () => {
+        const result = runCli(
+            ["rollback", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.notStrictEqual(result.status, 0);
+        assert.match(result.stderr || result.stdout, /未找到可用回退快照/);
+    });
+
     test("update should fail when .agents exists without managed manifest", () => {
         fs.mkdirSync(path.join(workspaceDir, ".agents"), { recursive: true });
         fs.writeFileSync(path.join(workspaceDir, ".agents", "custom.txt"), "user managed\n", "utf8");
@@ -447,6 +506,24 @@ describe("CLI Smoke", () => {
         );
         assert.notStrictEqual(result.status, 0);
         assert.match(result.stderr || result.stdout, /命令 status 不支持参数: --no-index/);
+    });
+
+    test("verify should output JSON report and pass on initialized workspace", () => {
+        const initResult = runCli(
+            ["init", "--path", workspaceDir, "--quiet"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+        const verifyResult = runCli(
+            ["verify", "--path", workspaceDir, "--json"],
+            { env: { AG_KIT_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(verifyResult.status, 0, verifyResult.stderr || verifyResult.stdout);
+
+        const report = JSON.parse(verifyResult.stdout);
+        assert.strictEqual(report.workspace, workspaceDir);
+        assert.strictEqual(report.summary.fail, 0);
     });
 
     test("exclude list should reject unsupported --path option", () => {
