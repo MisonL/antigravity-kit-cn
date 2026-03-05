@@ -11,6 +11,11 @@ const {
     hasManagedAgentProjectionSignal,
     hasManagedGeminiProjectionSignal,
 } = require("../utils/managed-evidence");
+const {
+    LEGACY_LOCAL_BACKUP_DIR,
+    getWorkspaceBackupBucket,
+    getLegacyWorkspaceBackupBucket,
+} = require("../utils/backup-store");
 const { cloneBranchAgentDir } = require("../utils");
 const CodexBuilder = require("../core/builder");
 const pkg = require("../../package.json");
@@ -20,6 +25,7 @@ const LEGACY_DIR_NAME = ".codex";
 const AGENT_DIR_NAME = ".agent";
 const GEMINI_DIR_NAME = ".gemini";
 const PROJECTION_MARKER = ".ag-kit-projection.json";
+const ROLLBACK_MANIFEST_NAME = "rollback-manifest.json";
 const DEFAULT_AGENT_CONFLICT_POLICY = "backup_replace";
 const DEFAULT_GEMINI_AGENTS_POLICY = "append";
 
@@ -106,6 +112,13 @@ class CodexAdapter extends BaseAdapter {
                 this.log("[dry-run] 将更新工作区托管文件: AGENTS.md, antigravity.rules");
                 this._cleanupGitIgnore();
                 return;
+            }
+
+            this._migrateLegacyBackupLayout();
+
+            const rollbackSnapshot = this._createRollbackSnapshot(mode);
+            if (rollbackSnapshot) {
+                this.log(`📦 已创建一键回退快照: ${rollbackSnapshot.backupId}`);
             }
 
             if (managedDirExists && this.options.force) {
@@ -355,7 +368,14 @@ class CodexAdapter extends BaseAdapter {
 
     _createBackupRoot() {
         const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-        const backupRoot = path.join(this.workspaceRoot, ".agents-backup", timestamp);
+        const bucketRoot = getWorkspaceBackupBucket(this.workspaceRoot);
+        fs.mkdirSync(bucketRoot, { recursive: true });
+        let backupRoot = path.join(bucketRoot, timestamp);
+        let suffix = 1;
+        while (fs.existsSync(backupRoot)) {
+            backupRoot = path.join(bucketRoot, `${timestamp}-${suffix}`);
+            suffix += 1;
+        }
         fs.mkdirSync(backupRoot, { recursive: true });
         return backupRoot;
     }
@@ -391,10 +411,28 @@ class CodexAdapter extends BaseAdapter {
     _syncAgentProjection(managedDir) {
         const projectionDir = path.join(this.workspaceRoot, AGENT_DIR_NAME);
         const exists = fs.existsSync(projectionDir);
+        const policy = this.options.agentConflictPolicy || DEFAULT_AGENT_CONFLICT_POLICY;
+
+        if (policy === "disable") {
+            if (!exists) {
+                this.log(`ℹ️ 按策略停用 ${AGENT_DIR_NAME} 投影`);
+                return;
+            }
+
+            if (this._isManagedProjection(projectionDir, "agent")) {
+                fs.rmSync(projectionDir, { recursive: true, force: true });
+                this.log(`🧹 已停用并移除托管 ${AGENT_DIR_NAME} 投影`);
+                return;
+            }
+
+            const suffix = new Date().toISOString().replace(/[:.]/g, "-");
+            const renamed = path.join(this.workspaceRoot, `.agent.user.${suffix}`);
+            fs.renameSync(projectionDir, renamed);
+            this.log(`📦 已保留用户 ${AGENT_DIR_NAME} 并停用投影: ${path.basename(renamed)}`);
+            return;
+        }
 
         if (exists && !this._isManagedProjection(projectionDir, "agent")) {
-            const policy = this.options.agentConflictPolicy || DEFAULT_AGENT_CONFLICT_POLICY;
-
             if (policy === "keep") {
                 this.log(`ℹ️ 按策略保留已有 ${AGENT_DIR_NAME}，跳过投影同步`);
                 return;
@@ -405,6 +443,9 @@ class CodexAdapter extends BaseAdapter {
                 const renamed = path.join(this.workspaceRoot, `.agent.user.${suffix}`);
                 fs.renameSync(projectionDir, renamed);
                 this.log(`📦 已将旧 ${AGENT_DIR_NAME} 重命名为 ${path.basename(renamed)}`);
+            } else if (policy === "replace") {
+                fs.rmSync(projectionDir, { recursive: true, force: true });
+                this.log(`🧹 已删除冲突 ${AGENT_DIR_NAME}（未备份）`);
             } else {
                 const backup = this._backupDirectorySnapshot(projectionDir, "agent-conflict");
                 this.log(`📦 已备份冲突 ${AGENT_DIR_NAME}: ${backup}`);
@@ -547,6 +588,142 @@ class CodexAdapter extends BaseAdapter {
         fs.mkdirSync(path.dirname(target), { recursive: true });
         fs.copyFileSync(filePath, target);
         return target;
+    }
+
+    _createRollbackSnapshot(mode) {
+        const backupRoot = this._createBackupRoot();
+        const backupId = path.basename(backupRoot);
+        const rollbackRoot = path.join(backupRoot, "rollback");
+        fs.mkdirSync(rollbackRoot, { recursive: true });
+
+        const targets = [
+            { path: ".agents", type: "dir" },
+            { path: ".agent", type: "dir" },
+            { path: ".gemini", type: "dir" },
+            { path: ".codex", type: "dir" },
+            { path: "AGENTS.md", type: "file" },
+            { path: "antigravity.rules", type: "file" },
+            { path: ".gitignore", type: "file" },
+        ];
+
+        const manifestTargets = [];
+
+        for (const target of targets) {
+            const absPath = path.join(this.workspaceRoot, target.path);
+            const existed = fs.existsSync(absPath);
+            const entry = {
+                path: target.path,
+                type: target.type,
+                existed,
+            };
+            manifestTargets.push(entry);
+
+            if (!existed) {
+                continue;
+            }
+
+            const snapshotPath = path.join(rollbackRoot, target.path);
+            if (target.type === "file") {
+                fs.mkdirSync(path.dirname(snapshotPath), { recursive: true });
+                fs.copyFileSync(absPath, snapshotPath);
+            } else {
+                this._copyDir(absPath, snapshotPath);
+            }
+        }
+
+        const manifestPath = path.join(backupRoot, ROLLBACK_MANIFEST_NAME);
+        const manifest = {
+            version: 1,
+            type: "ag-kit-rollback",
+            createdAt: new Date().toISOString(),
+            mode,
+            workspaceRoot: this.workspaceRoot,
+            managedBy: "ag-kit-cn",
+            targets: manifestTargets,
+        };
+        fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+
+        return {
+            backupRoot,
+            backupId,
+            manifestPath,
+        };
+    }
+
+    _migrateLegacyBackupLayout() {
+        const legacyRoot = getLegacyWorkspaceBackupBucket(this.workspaceRoot);
+        if (!fs.existsSync(legacyRoot)) {
+            return;
+        }
+
+        let entries;
+        try {
+            entries = fs.readdirSync(legacyRoot, { withFileTypes: true });
+        } catch (_err) {
+            return;
+        }
+
+        if (!Array.isArray(entries) || entries.length === 0) {
+            fs.rmSync(legacyRoot, { recursive: true, force: true });
+            return;
+        }
+
+        const bucketRoot = getWorkspaceBackupBucket(this.workspaceRoot);
+        fs.mkdirSync(bucketRoot, { recursive: true });
+
+        let movedCount = 0;
+        for (const entry of entries) {
+            const srcPath = path.join(legacyRoot, entry.name);
+            const preferredName = entry.name.startsWith("legacy-")
+                ? entry.name
+                : `legacy-${entry.name}`;
+            const destPath = this._resolveAvailableBackupPath(path.join(bucketRoot, preferredName));
+            try {
+                this._movePathSafely(srcPath, destPath);
+                movedCount += 1;
+            } catch (err) {
+                this.log(`⚠️ 迁移历史备份失败（已跳过）: ${srcPath} -> ${destPath}`);
+                this.log(`   ${err.message}`);
+            }
+        }
+
+        if (movedCount > 0) {
+            this.log(`🧹 已迁移历史 ${LEGACY_LOCAL_BACKUP_DIR} 到全局备份目录: ${bucketRoot} (${movedCount} 项)`);
+        }
+        const remaining = fs.readdirSync(legacyRoot, { withFileTypes: true });
+        if (remaining.length === 0) {
+            fs.rmSync(legacyRoot, { recursive: true, force: true });
+        }
+    }
+
+    _resolveAvailableBackupPath(basePath) {
+        let candidate = basePath;
+        let index = 1;
+        while (fs.existsSync(candidate)) {
+            candidate = `${basePath}-${index}`;
+            index += 1;
+        }
+        return candidate;
+    }
+
+    _movePathSafely(srcPath, destPath) {
+        fs.mkdirSync(path.dirname(destPath), { recursive: true });
+        try {
+            fs.renameSync(srcPath, destPath);
+            return;
+        } catch (err) {
+            if (!err || err.code !== "EXDEV") {
+                throw err;
+            }
+        }
+
+        const stat = fs.statSync(srcPath);
+        if (stat.isDirectory()) {
+            this._copyDir(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+        fs.rmSync(srcPath, { recursive: true, force: true });
     }
 
     _cleanupGitIgnore() {

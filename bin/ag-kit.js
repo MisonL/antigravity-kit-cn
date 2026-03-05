@@ -14,10 +14,15 @@ const {
     hasManagedGeminiProjectionSignal,
 } = require("./utils/managed-evidence");
 const {
+    getWorkspaceBackupBucket,
+    getLegacyWorkspaceBackupBucket,
+} = require("./utils/backup-store");
+const {
     selectTargets,
     selectAgentConflictPolicy,
     selectGeminiAgentsPolicy,
 } = require("./interactive");
+const { runVerification } = require("../scripts/verify-3platform");
 
 const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agents");
 const WORKSPACE_INDEX_VERSION = 2;
@@ -74,9 +79,11 @@ function createEmptyWorkspaceIndex() {
 
 function printUsage() {
     console.log("用法:");
-    console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--no-index] [--quiet] [--dry-run]");
-    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--no-index] [--quiet] [--dry-run]");
-    console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]");
+    console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--disable-agent-projection] [--no-index] [--quiet] [--dry-run]");
+    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--disable-agent-projection] [--no-index] [--quiet] [--dry-run]");
+    console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--disable-agent-projection] [--quiet] [--dry-run]");
+    console.log("  ag-kit verify [--path <dir>] [--json] [--quiet]");
+    console.log("  ag-kit rollback [--path <dir>] [--backup <timestamp>] [--quiet] [--dry-run]");
     console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]");
     console.log("  ag-kit exclude list [--quiet]");
     console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
@@ -108,8 +115,11 @@ function parseArgs(argv) {
         fix: false,
         subcommand: "",
         path: "",
+        json: false,
+        backup: "",
         branch: "",
         targets: [],
+        disableAgentProjection: false,
         agentConflictPolicy: "",
         geminiAgentsPolicy: "",
     };
@@ -135,6 +145,9 @@ function parseArgs(argv) {
         } else if (arg === "--quiet") {
             providedFlags.push(arg);
             options.quiet = true;
+        } else if (arg === "--json") {
+            providedFlags.push(arg);
+            options.json = true;
         } else if (arg === "--dry-run") {
             providedFlags.push(arg);
             options.dryRun = true;
@@ -147,6 +160,9 @@ function parseArgs(argv) {
         } else if (arg === "--no-index") {
             providedFlags.push(arg);
             options.noIndex = true;
+        } else if (arg === "--disable-agent-projection") {
+            providedFlags.push(arg);
+            options.disableAgentProjection = true;
         } else if (arg === "--fix") {
             providedFlags.push(arg);
             options.fix = true;
@@ -162,6 +178,12 @@ function parseArgs(argv) {
                 throw new Error("--branch 需要一个分支名参数");
             }
             options.branch = argv[++i];
+        } else if (arg === "--backup") {
+            providedFlags.push(arg);
+            if (i + 1 >= argv.length) {
+                throw new Error("--backup 需要一个备份标识参数");
+            }
+            options.backup = argv[++i];
         } else if (arg === "--target") {
             providedFlags.push(arg);
             if (i + 1 >= argv.length) {
@@ -183,9 +205,11 @@ function parseArgs(argv) {
 }
 
 const COMMAND_ALLOWED_FLAGS = {
-    init: ["--force", "--path", "--branch", "--target", "--targets", "--non-interactive", "--no-index", "--quiet", "--dry-run"],
-    update: ["--path", "--branch", "--target", "--targets", "--non-interactive", "--no-index", "--quiet", "--dry-run"],
-    "update-all": ["--branch", "--targets", "--prune-missing", "--quiet", "--dry-run"],
+    init: ["--force", "--path", "--branch", "--target", "--targets", "--non-interactive", "--disable-agent-projection", "--no-index", "--quiet", "--dry-run"],
+    update: ["--path", "--branch", "--target", "--targets", "--non-interactive", "--disable-agent-projection", "--no-index", "--quiet", "--dry-run"],
+    "update-all": ["--branch", "--targets", "--prune-missing", "--disable-agent-projection", "--quiet", "--dry-run"],
+    verify: ["--path", "--json", "--quiet"],
+    rollback: ["--path", "--backup", "--quiet", "--dry-run"],
     doctor: ["--path", "--target", "--targets", "--fix", "--quiet"],
     status: ["--path", "--quiet"],
     "exclude:list": ["--quiet"],
@@ -979,6 +1003,10 @@ async function resolveConflictPolicies(workspaceRoot, options) {
     const managedAgentProjection = isManagedProjectionDir(workspaceRoot, ".agent", "agent");
     const managedGeminiProjection = isManagedProjectionDir(workspaceRoot, ".gemini", "gemini");
 
+    if (next.disableAgentProjection && !next.agentConflictPolicy) {
+        next.agentConflictPolicy = "disable";
+    }
+
     if (!next.agentConflictPolicy) {
         if (hasAgentDir && !managedAgentProjection && isInteractive) {
             next.agentConflictPolicy = await selectAgentConflictPolicy();
@@ -1271,13 +1299,12 @@ async function commandUpdateAll(options) {
             }
 
             try {
+                const conflictOptions = await resolveConflictPolicies(workspacePath, options);
                 const runOptions = {
-                    ...options,
+                    ...conflictOptions,
                     force: true,
                     path: workspacePath,
                     silentIndexLog: true,
-                    agentConflictPolicy: "backup_replace",
-                    geminiAgentsPolicy: "append",
                 };
                 const adapter = createAdapter(target, workspacePath, runOptions);
                 adapter.update(BUNDLED_AGENT_DIR);
@@ -1335,6 +1362,189 @@ async function commandUpdateAll(options) {
     }
 
     if (failed > 0) {
+        process.exitCode = 1;
+    }
+}
+
+function copyDirRecursive(src, dest) {
+    fs.mkdirSync(dest, { recursive: true });
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+    for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+        if (entry.isDirectory()) {
+            copyDirRecursive(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    }
+}
+
+function removePathIfExists(targetPath) {
+    if (!fs.existsSync(targetPath)) {
+        return;
+    }
+    fs.rmSync(targetPath, { recursive: true, force: true });
+}
+
+function isSafeRollbackTarget(relPath) {
+    if (typeof relPath !== "string" || relPath.trim() === "") {
+        return false;
+    }
+    if (path.isAbsolute(relPath)) {
+        return false;
+    }
+    const normalized = path.normalize(relPath);
+    if (normalized === ".." || normalized.startsWith(`..${path.sep}`)) {
+        return false;
+    }
+    return true;
+}
+
+function parseRollbackManifest(manifestPath) {
+    if (!fs.existsSync(manifestPath)) {
+        return null;
+    }
+
+    try {
+        const parsed = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+        if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.targets)) {
+            return null;
+        }
+        return parsed;
+    } catch (_err) {
+        return null;
+    }
+}
+
+function listRollbackSnapshots(workspaceRoot) {
+    const backupBases = [
+        { type: "global", dir: getWorkspaceBackupBucket(workspaceRoot) },
+        { type: "legacy-local", dir: getLegacyWorkspaceBackupBucket(workspaceRoot) },
+    ];
+    const snapshots = [];
+    for (const backupBase of backupBases) {
+        if (!fs.existsSync(backupBase.dir)) {
+            continue;
+        }
+
+        const entries = fs.readdirSync(backupBase.dir, { withFileTypes: true });
+        for (const entry of entries) {
+            if (!entry.isDirectory()) {
+                continue;
+            }
+
+            const backupId = entry.name;
+            const backupRoot = path.join(backupBase.dir, backupId);
+            const manifestPath = path.join(backupRoot, "rollback-manifest.json");
+            const manifest = parseRollbackManifest(manifestPath);
+            if (!manifest) {
+                continue;
+            }
+
+            snapshots.push({
+                backupId,
+                backupRoot,
+                manifest,
+                source: backupBase.type,
+            });
+        }
+    }
+
+    snapshots.sort((a, b) => {
+        const timeA = Date.parse(a.manifest.createdAt || "");
+        const timeB = Date.parse(b.manifest.createdAt || "");
+        if (Number.isFinite(timeA) && Number.isFinite(timeB) && timeA !== timeB) {
+            return timeB - timeA;
+        }
+        return b.backupId.localeCompare(a.backupId);
+    });
+    return snapshots;
+}
+
+function commandRollback(options) {
+    const workspaceRoot = resolveWorkspaceRoot(options.path);
+    const snapshots = listRollbackSnapshots(workspaceRoot);
+    if (snapshots.length === 0) {
+        throw new Error(`未找到可用回退快照。已检查: ${getWorkspaceBackupBucket(workspaceRoot)} 与 ${getLegacyWorkspaceBackupBucket(workspaceRoot)}`);
+    }
+
+    let selected = snapshots[0];
+    if (options.backup) {
+        const found = snapshots.find((item) => item.backupId === options.backup);
+        if (!found) {
+            const candidates = snapshots.slice(0, 5).map((item) => item.backupId).join(", ");
+            throw new Error(`未找到备份: ${options.backup}。可用备份(最近 5 条): ${candidates}`);
+        }
+        selected = found;
+    }
+
+    const rollbackRoot = path.join(selected.backupRoot, "rollback");
+    if (!fs.existsSync(rollbackRoot)) {
+        throw new Error(`回退快照目录缺失: ${rollbackRoot}`);
+    }
+
+    log(options, `↩️ 准备回退工作区: ${workspaceRoot}`);
+    log(options, `📦 使用备份: ${selected.backupId}`);
+    log(options, `📁 备份位置: ${selected.backupRoot} (${selected.source})`);
+
+    for (const target of selected.manifest.targets) {
+        const relPath = target && typeof target.path === "string" ? target.path : "";
+        if (!isSafeRollbackTarget(relPath)) {
+            throw new Error(`回退清单包含非法路径: ${String(relPath)}`);
+        }
+
+        const type = target && target.type === "file" ? "file" : "dir";
+        const existed = !!(target && target.existed);
+        const absPath = path.join(workspaceRoot, relPath);
+        const snapshotPath = path.join(rollbackRoot, relPath);
+
+        if (existed) {
+            if (!fs.existsSync(snapshotPath)) {
+                throw new Error(`回退快照缺失: ${snapshotPath}`);
+            }
+
+            if (options.dryRun) {
+                log(options, `[dry-run] 将恢复 ${relPath}`);
+                continue;
+            }
+
+            removePathIfExists(absPath);
+            if (type === "file") {
+                fs.mkdirSync(path.dirname(absPath), { recursive: true });
+                fs.copyFileSync(snapshotPath, absPath);
+            } else {
+                copyDirRecursive(snapshotPath, absPath);
+            }
+        } else {
+            if (options.dryRun) {
+                log(options, `[dry-run] 将移除 ${relPath}（回退前不存在）`);
+                continue;
+            }
+            removePathIfExists(absPath);
+        }
+    }
+
+    if (options.dryRun) {
+        log(options, "✅ 回退预演完成（未写入文件）");
+        return;
+    }
+
+    log(options, "✅ 回退完成");
+}
+
+function commandVerify(options) {
+    const workspaceRoot = resolveWorkspaceRoot(options.path);
+    const report = runVerification({
+        workspace: workspaceRoot,
+        json: options.json,
+        quiet: options.quiet,
+        print: true,
+        useGlobalCli: false,
+        env: process.env,
+    });
+
+    if (report.summary.fail > 0) {
         process.exitCode = 1;
     }
 }
@@ -1678,6 +1888,16 @@ async function main() {
 
         if (command === "update-all") {
             await commandUpdateAll(options);
+            return;
+        }
+
+        if (command === "verify") {
+            commandVerify(options);
+            return;
+        }
+
+        if (command === "rollback") {
+            commandRollback(options);
             return;
         }
 

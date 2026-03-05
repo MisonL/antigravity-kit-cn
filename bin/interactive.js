@@ -57,14 +57,19 @@ async function selectTargets() {
 
 /**
  * 冲突：已有 .agent 且无法确定是否托管时，询问处理策略。
- * @returns {Promise<"backup_replace"|"keep"|"rename_disable">}
+ * @returns {Promise<"backup_replace"|"replace"|"keep"|"rename_disable"|"disable">}
  */
 async function selectAgentConflictPolicy() {
     return askChoice("检测到已有 .agent 目录，请选择处理方式:", [
         {
             value: "backup_replace",
             label: "备份后替换（推荐）",
-            hint: "将现有 .agent 备份到 .agents-backup 后，用 .agents 投影覆盖",
+            hint: "将现有 .agent 备份后，用 .agents 投影覆盖",
+        },
+        {
+            value: "replace",
+            label: "直接替换（不备份）",
+            hint: "删除现有 .agent 后重建投影，速度更快但不可回退此冲突目录",
         },
         {
             value: "keep",
@@ -75,6 +80,11 @@ async function selectAgentConflictPolicy() {
             value: "rename_disable",
             label: "改名失效后创建新投影",
             hint: "把原目录改名为 .agent.user.<ts>，再生成新的 .agent 投影",
+        },
+        {
+            value: "disable",
+            label: "停用 .agent 投影",
+            hint: "移除/改名 .agent 并停止同步该兼容目录，避免规则重复加载",
         },
     ]);
 }
