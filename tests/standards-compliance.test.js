@@ -3,6 +3,12 @@ const assert = require('node:assert');
 const fs = require('fs');
 const path = require('path');
 
+const REF_ROOT = path.resolve('reference/antigravity-kit');
+const REF_AGENTS_ROOT = path.resolve('reference/antigravity-kit/.agents');
+const REF_LEGACY_AGENT_ROOT = path.resolve('reference/antigravity-kit/.agent');
+const REF_SCRIPTS_ROOT = fs.existsSync(REF_AGENTS_ROOT) ? REF_AGENTS_ROOT : REF_LEGACY_AGENT_ROOT;
+const HAS_REF_SCRIPTS_ROOT = fs.existsSync(REF_SCRIPTS_ROOT);
+
 function walkDirs(root) {
     const out = [];
     const stack = [root];
@@ -30,8 +36,8 @@ function collectTokens(content, regex) {
 
 describe('Standards Compliance', () => {
     test('all skill directories should include SKILL.md', () => {
-        const skillsRoot = path.resolve('.agent/skills');
-        assert.ok(fs.existsSync(skillsRoot), 'missing .agent/skills');
+        const skillsRoot = path.resolve('.agents/skills');
+        assert.ok(fs.existsSync(skillsRoot), 'missing .agents/skills');
 
         const skillDirs = fs
             .readdirSync(skillsRoot, { withFileTypes: true })
@@ -69,9 +75,9 @@ describe('Standards Compliance', () => {
         }
     });
 
-    test('critical mechanism tokens should remain aligned with reference snapshot', { skip: !fs.existsSync(path.resolve('reference/antigravity-kit')) }, () => {
-        const refRoot = path.resolve('reference/antigravity-kit');
-        const tokenRegex = /(ag-kit|python3?|checklist\.py|verify_all\.py|security_scan\.py|ux_audit\.py|accessibility_checker\.py|schema_validator\.py|lint_runner\.py|type_coverage\.py|playwright_runner\.py|lighthouse_audit\.py|api_validator\.py|mobile_audit\.py|seo_checker\.py|geo_checker\.py|i18n_checker\.py|\.agent\/|\.codex\/|AGENTS\.md|antigravity\.rules|manifest\.json|--target|--targets|--fix|--path|--no-index|--dry-run|--quiet|--force)/g;
+    test('critical mechanism tokens should remain aligned with reference snapshot', { skip: !fs.existsSync(REF_ROOT) }, () => {
+        const refRoot = REF_ROOT;
+        const tokenRegex = /(ag-kit|python3?|checklist\.py|verify_all\.py|security_scan\.py|ux_audit\.py|accessibility_checker\.py|schema_validator\.py|lint_runner\.py|type_coverage\.py|playwright_runner\.py|lighthouse_audit\.py|api_validator\.py|mobile_audit\.py|seo_checker\.py|geo_checker\.py|i18n_checker\.py|\.agent\/|\.agents\/|\.agents-backup\/|\.codex\/|AGENTS\.md|antigravity\.rules|manifest\.json|--target|--targets|--fix|--path|--no-index|--dry-run|--quiet|--force)/g;
         const slashCommandRegex = /(?:^|[\s`"'(\[])(\/(?:brainstorm|create|debug|deploy|enhance|orchestrate|plan|preview|status|test|ui-ux-pro-max))(?=$|[\s`"'，。,.:：)\]])/gm;
 
         const markdownFiles = [];
@@ -134,8 +140,8 @@ describe('Standards Compliance', () => {
         assert.ok(!content.includes('.codex/skills/'), 'should not contain deprecated .codex/skills path');
     });
 
-    test('.agent script files should stay identical to reference snapshot', { skip: !fs.existsSync(path.resolve('reference/antigravity-kit/.agent')) }, () => {
-        const refScriptsRoot = path.resolve('reference/antigravity-kit/.agent');
+    test('.agents script files should stay identical to reference snapshot', { skip: !HAS_REF_SCRIPTS_ROOT }, () => {
+        const refScriptsRoot = REF_SCRIPTS_ROOT;
         const mismatches = [];
 
         const stack = [refScriptsRoot];
@@ -151,7 +157,7 @@ describe('Standards Compliance', () => {
                 if (abs.includes(`${path.sep}__pycache__${path.sep}`) || abs.endsWith('.pyc')) continue;
 
                 const rel = path.relative(refScriptsRoot, abs);
-                const localFile = path.resolve('.agent', rel);
+                const localFile = path.resolve('.agents', rel);
                 if (!fs.existsSync(localFile)) {
                     mismatches.push(`${rel} (missing local file)`);
                     continue;

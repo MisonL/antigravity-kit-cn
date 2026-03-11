@@ -6,7 +6,7 @@
 - `tests/`：Node 内置测试（`*.test.js`），覆盖 CLI、适配器、生成器、清理与健康检查。
 - `docs/` 与 `reference/`：规范文档与参考资料。
 - `web/`：Next.js 文档站（`web/src` 源码，`web/public` 静态资源）。
-- `.agent/`：模板资源源文件，供 CLI 安装到目标项目。
+- `.agents/`：模板资源源文件（Canonical），供 CLI 投影生成目标项目结构（Gemini -> `.agent/`，Codex -> `.agents/`）。
 
 ## 构建、测试与开发命令
 - 根项目依赖安装：`bun install`（如需兼容可用 `npm install`）。

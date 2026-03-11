@@ -100,6 +100,13 @@ export default function SkillsPage() {
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mt-4">
                     工作区技能适合项目专用流程（如团队部署规范或测试约定）；全局技能适合跨项目通用工具。
                 </p>
+                <div className="mt-4 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/20 p-4">
+                    <p className="text-sm text-amber-900 dark:text-amber-100">
+                        <strong className="font-semibold">Ag-Kit 注记：</strong>本仓库模板源统一放在 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agents/</code>。
+                        当目标为 Gemini/Antigravity 时，CLI 会将模板投影到工作区的 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agent/</code>，
+                        全局同步仍写入 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">~/.gemini/antigravity/skills/</code>。
+                    </p>
+                </div>
             </section>
 
             {/* Creating a skill */}

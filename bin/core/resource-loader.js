@@ -4,8 +4,8 @@ const path = require("path");
 class ResourceLoader {
     constructor(rootDir) {
         this.rootDir = rootDir;
-        this.skillsDir = path.join(rootDir, ".agent", "skills");
-        this.workflowsDir = path.join(rootDir, ".agent", "workflows");
+        this.skillsDir = path.join(rootDir, ".agents", "skills");
+        this.workflowsDir = path.join(rootDir, ".agents", "workflows");
     }
 
     /**

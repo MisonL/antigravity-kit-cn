@@ -36,6 +36,8 @@ Antigravity 支持两类 Skill：
 - 工作区 Skill：适合项目专属流程（如部署规范、测试约定）。
 - 全局 Skill：适合跨项目复用的个人工具或通用能力。
 
+> Ag-Kit 注记：本仓库模板源统一放在 `.agents/` 目录（Canonical）。当目标为 Gemini/Antigravity 时，CLI 会将模板投影到工作区的 `.agent/`；全局同步仍写入 `~/.gemini/antigravity/skills/`。
+
 ## 如何创建 Skill
 
 1. 在 Skill 目录下创建文件夹。

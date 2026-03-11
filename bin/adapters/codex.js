@@ -132,16 +132,17 @@ class CodexAdapter extends BaseAdapter {
         const CodexBuilder = require("../core/builder");
         let buildTemp = "";
 
-        const hasAgentDir = fs.existsSync(path.join(installSource, ".agent"));
+        const hasAgentsRoot = fs.existsSync(path.join(installSource, ".agents"));
+        const hasLegacyAgentRoot = fs.existsSync(path.join(installSource, ".agent"));
         const hasSkillsDir = fs.existsSync(path.join(installSource, "skills"));
         const isCodexPrebuilt = fs.existsSync(path.join(installSource, "manifest.json"));
 
         if (!isCodexPrebuilt) {
             if (hasSkillsDir) {
-                this.log("🛠️ 检测到 .agent 内容格式，正在构建 Codex 结构...");
+                this.log("🛠️ 检测到模板目录格式，正在构建 Codex 结构...");
                 const mockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-root-"));
-                const mockAgent = path.join(mockRoot, ".agent");
-                this._copyDir(installSource, mockAgent);
+                const mockAgents = path.join(mockRoot, ".agents");
+                this._copyDir(installSource, mockAgents);
 
                 buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-out-"));
                 CodexBuilder.build(mockRoot, buildTemp);
@@ -154,8 +155,8 @@ class CodexAdapter extends BaseAdapter {
                     fs.rmSync(mockRoot, { recursive: true, force: true });
                     fs.rmSync(buildTemp, { recursive: true, force: true });
                 };
-            } else if (hasAgentDir) {
-                this.log("🛠️ 检测到仓库根目录格式，正在构建 Codex 结构...");
+            } else if (hasAgentsRoot) {
+                this.log("🛠️ 检测到仓库根目录格式(.agents)，正在构建 Codex 结构...");
                 buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-out-"));
                 CodexBuilder.build(installSource, buildTemp);
                 installSource = buildTemp;
@@ -164,6 +165,23 @@ class CodexAdapter extends BaseAdapter {
                 const previousCleanup = cleanup;
                 cleanup = () => {
                     if (previousCleanup) previousCleanup();
+                    fs.rmSync(buildTemp, { recursive: true, force: true });
+                };
+            } else if (hasLegacyAgentRoot) {
+                this.log("🛠️ 检测到旧版仓库根目录格式(.agent)，正在构建 Codex 结构...");
+                const mockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-root-"));
+                const mockAgents = path.join(mockRoot, ".agents");
+                this._copyDir(path.join(installSource, ".agent"), mockAgents);
+
+                buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-out-"));
+                CodexBuilder.build(mockRoot, buildTemp);
+                installSource = buildTemp;
+                sourceLabel = `${sourceLabel}:compiled`;
+
+                const previousCleanup = cleanup;
+                cleanup = () => {
+                    if (previousCleanup) previousCleanup();
+                    fs.rmSync(mockRoot, { recursive: true, force: true });
                     fs.rmSync(buildTemp, { recursive: true, force: true });
                 };
             }

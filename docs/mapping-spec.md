@@ -6,15 +6,17 @@ Codex（代码智能体环境）适配器包含一个内置的资源转换层（
 
 ### 1. Skill（技能）
 
-- **源路径**: `.agent/skills/<name>/SKILL.md`
+- **源路径**: `.agents/skills/<name>/SKILL.md`
 - **Codex ID（标识）**: `<name>`（保持与上游技能名一致）
 - **目标路径**: `.agents/skills/<name>/SKILL.md`
+- **兼容**: 仍支持旧版 `.agent/skills/<name>/SKILL.md` 作为输入。
 
 ### 2. Workflow（工作流）
 
-- **源路径**: `.agent/workflows/<name>.md`
+- **源路径**: `.agents/workflows/<name>.md`
 - **Codex ID（标识）**: `workflow-<name>`
 - **目标路径**: `.agents/skills/workflow-<name>/SKILL.md`
+- **兼容**: 仍支持旧版 `.agent/workflows/<name>.md` 作为输入。
 - **说明**: 工作流会转换为符合 Codex 规范的 `SKILL.md`（自动补齐 `name` / `description` Frontmatter（文档头元数据））。
 - **冲突处理**: 若生成 ID 与现有 Skill/Workflow 冲突，构建器会自动追加 `-2`、`-3`... 后缀，确保 ID 和目录唯一。
 

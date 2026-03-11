@@ -25,13 +25,14 @@
     "clean:dry-run": "node scripts/clean.js --dry-run",
     "health-check": "bash scripts/health-check.sh",
     "postinstall": "node scripts/postinstall-check.js",
-    "test": "node --test \"tests/**/*.test.js\""
+    "test": "node --test \"tests/**/*.test.js\"",
+    "ci:verify": "node scripts/ci-verify.js"
   },
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    ".agent/**",
+    ".agents/**",
     "bin/**",
     "scripts/postinstall-check.js",
     "README.md",

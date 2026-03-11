@@ -9,7 +9,7 @@ const pkg = require("../../package.json");
 class CodexBuilder {
     /**
      * Build a Codex structure from a legacy/source repository
-     * @param {string} sourceRoot Root of the repo (containing .agent/)
+     * @param {string} sourceRoot Root of the repo (containing .agents/)
      * @param {string} outputDir Directory to output the built .agents-compatible structure
      */
     static build(sourceRoot, outputDir) {

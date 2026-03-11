@@ -41,6 +41,25 @@ npm install -g .
 
 这会把所选目标结构安装到你的项目中（`gemini -> .agent`，`codex -> .agents`），并把 Codex 托管内容注入工作区 `AGENTS.md` 与 `antigravity.rules`（说明性托管区块，不是 Codex 官方 `.rules` 审批策略文件）。
 
+### 全局安装（跨项目复用 Skills）
+
+为区分“项目安装”和“全局安装”，提供专用命令面：
+
+- 项目安装：`ag-kit init` / `ag-kit update`（功能最完整）
+- 全局安装：`ag-kit global sync`（仅同步 Skills，跨项目复用）
+
+示例：
+
+```bash
+ag-kit global sync --target codex
+ag-kit global sync --target gemini
+ag-kit global status
+```
+
+全局安装只同步 Skills，不写入 Rules/Agents/Workflows，避免全局副作用。
+
+规划与边界细节见：`docs/plan-global-install.md`
+
 ### Codex 规则边界说明
 
 - `antigravity.rules`：本项目生成并注入的托管说明文件，用于记录受管资源与运维约束。

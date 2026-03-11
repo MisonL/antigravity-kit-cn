@@ -5,12 +5,15 @@ const os = require("os");
 const path = require("path");
 
 const pkg = require("../package.json");
-const { readGlobalNpmDependencies } = require("./utils");
+const { readGlobalNpmDependencies, cloneBranchAgentDir } = require("./utils");
+const ManifestManager = require("./utils/manifest");
+const AtomicWriter = require("./utils/atomic-writer");
+const CodexBuilder = require("./core/builder");
 const GeminiAdapter = require("./adapters/gemini");
 const CodexAdapter = require("./adapters/codex");
 const { selectTargets } = require("./interactive");
 
-const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agent");
+const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agents");
 const WORKSPACE_INDEX_VERSION = 2;
 const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
 const TOOLKIT_PACKAGE_NAMES = new Set(["@mison/ag-kit-cn", "antigravity-kit-cn", "antigravity-kit"]);
@@ -40,12 +43,68 @@ function createEmptyWorkspaceIndex() {
     };
 }
 
+function resolveGlobalRootDir() {
+    const customRoot = process.env.AG_KIT_GLOBAL_ROOT;
+    if (typeof customRoot === "string" && customRoot.trim()) {
+        return path.resolve(process.cwd(), customRoot);
+    }
+    return os.homedir();
+}
+
+function resolveGlobalSkillRoot(targetName) {
+    const globalRoot = resolveGlobalRootDir();
+    if (targetName === "codex") {
+        return path.join(globalRoot, ".agents", "skills");
+    }
+    if (targetName === "gemini") {
+        return path.join(globalRoot, ".gemini", "antigravity", "skills");
+    }
+    throw new Error(`未知目标: ${targetName}`);
+}
+
+function resolveGlobalBackupRoot(timestamp) {
+    const globalRoot = resolveGlobalRootDir();
+    return path.join(globalRoot, ".ag-kit", "backups", "global", timestamp);
+}
+
+function copyDirRecursive(src, dest) {
+    fs.mkdirSync(dest, { recursive: true });
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+    for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+        if (entry.isDirectory()) {
+            copyDirRecursive(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    }
+}
+
+function areDirectoriesEqual(leftDir, rightDir) {
+    const left = ManifestManager.generateFromDir(leftDir);
+    const right = ManifestManager.generateFromDir(rightDir);
+    const leftKeys = Object.keys(left);
+    const rightKeys = Object.keys(right);
+    if (leftKeys.length !== rightKeys.length) {
+        return false;
+    }
+    for (const key of leftKeys) {
+        if (left[key] !== right[key]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function printUsage() {
     console.log("用法:");
     console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--no-index] [--quiet] [--dry-run]");
     console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--no-index] [--quiet] [--dry-run]");
     console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]");
     console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]");
+    console.log("  ag-kit global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]");
+    console.log("  ag-kit global status [--quiet]");
     console.log("  ag-kit exclude list [--quiet]");
     console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
     console.log("  ag-kit exclude remove --path <dir> [--dry-run] [--quiet]");
@@ -79,12 +138,12 @@ function parseArgs(argv) {
     const providedFlags = [];
 
     let startIndex = 1;
-    if (command === "exclude") {
+    if (command === "exclude" || command === "global") {
         if (argv.length > 1 && !argv[1].startsWith("--")) {
             options.subcommand = argv[1];
             startIndex = 2;
         } else {
-            options.subcommand = "list";
+            options.subcommand = command === "global" ? "status" : "list";
             startIndex = 1;
         }
     }
@@ -151,6 +210,8 @@ const COMMAND_ALLOWED_FLAGS = {
     "update-all": ["--branch", "--targets", "--prune-missing", "--quiet", "--dry-run"],
     doctor: ["--path", "--target", "--targets", "--fix", "--quiet"],
     status: ["--path", "--quiet"],
+    "global:sync": ["--target", "--targets", "--branch", "--quiet", "--dry-run"],
+    "global:status": ["--quiet"],
     "exclude:list": ["--quiet"],
     "exclude:add": ["--path", "--dry-run", "--quiet"],
     "exclude:remove": ["--path", "--dry-run", "--quiet"],
@@ -162,6 +223,11 @@ function resolveAllowedFlags(command, options) {
         const key = `exclude:${subcommand}`;
         return COMMAND_ALLOWED_FLAGS[key] || null;
     }
+    if (command === "global") {
+        const subcommand = String(options.subcommand || "status").toLowerCase();
+        const key = `global:${subcommand}`;
+        return COMMAND_ALLOWED_FLAGS[key] || null;
+    }
     return COMMAND_ALLOWED_FLAGS[command] || null;
 }
 
@@ -169,6 +235,10 @@ function resolveCommandLabel(command, options) {
     if (command === "exclude") {
         const subcommand = String(options.subcommand || "list").toLowerCase();
         return `exclude ${subcommand}`;
+    }
+    if (command === "global") {
+        const subcommand = String(options.subcommand || "status").toLowerCase();
+        return `global ${subcommand}`;
     }
     return command;
 }
@@ -776,6 +846,220 @@ function resolveTargetsForUpdate(workspaceRoot, options) {
     return detectInstalledTargets(workspaceRoot);
 }
 
+function resolveTargetsForGlobalSync(options) {
+    return resolveTargetsForInit(options);
+}
+
+function resolveAgentInstallSource(options) {
+    let agentDir = BUNDLED_AGENT_DIR;
+    let cleanup = null;
+    let sourceLabel = "bundled";
+
+    if (options.branch) {
+        const remote = cloneBranchAgentDir(options.branch, {
+            quiet: options.quiet,
+            logger: log.bind(null, options),
+        });
+        agentDir = remote.agentDir;
+        cleanup = remote.cleanup;
+        sourceLabel = `branch:${options.branch}`;
+    }
+
+    if (!fs.existsSync(agentDir) && !options.branch) {
+        const legacyDir = path.resolve(__dirname, "../.agent");
+        if (fs.existsSync(legacyDir)) {
+            agentDir = legacyDir;
+            sourceLabel = "bundled:legacy";
+        }
+    }
+
+    if (!fs.existsSync(agentDir)) {
+        throw new Error(`未找到模板目录: ${agentDir}`);
+    }
+
+    return { agentDir, cleanup, sourceLabel };
+}
+
+function listSkillDirectories(skillsRoot) {
+    if (!fs.existsSync(skillsRoot)) {
+        return [];
+    }
+    return fs
+        .readdirSync(skillsRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((name) => fs.existsSync(path.join(skillsRoot, name, "SKILL.md")));
+}
+
+function backupSkillDirectory(targetName, skillName, sourceDir, timestamp, options) {
+    const backupRoot = resolveGlobalBackupRoot(timestamp);
+    const backupDir = path.join(backupRoot, targetName, skillName);
+    fs.mkdirSync(path.dirname(backupDir), { recursive: true });
+    copyDirRecursive(sourceDir, backupDir);
+    log(options, `📦 已备份 ${targetName} 全局 Skill: ${skillName} -> ${backupDir}`);
+}
+
+function syncSkillDirectory(targetName, srcDir, destDir, timestamp, options) {
+    const exists = fs.existsSync(destDir);
+    if (exists) {
+        if (areDirectoriesEqual(srcDir, destDir)) {
+            log(options, `⏭️ 全局 Skill 已最新，无需同步: ${targetName}/${path.basename(destDir)}`);
+            return { skipped: 1, synced: 0, backedUp: 0 };
+        }
+    }
+
+    if (options.dryRun) {
+        log(options, `[dry-run] 将同步全局 Skill: ${targetName}/${path.basename(destDir)}`);
+        return { skipped: 0, synced: 0, backedUp: exists ? 1 : 0 };
+    }
+
+    let backedUp = 0;
+    if (exists) {
+        backupSkillDirectory(targetName, path.basename(destDir), destDir, timestamp, options);
+        backedUp = 1;
+    }
+
+    const logger = options.quiet ? (() => {}) : log.bind(null, options);
+    AtomicWriter.atomicCopyDir(srcDir, destDir, { logger });
+    log(options, `✅ 已同步全局 Skill: ${targetName}/${path.basename(destDir)}`);
+
+    return { skipped: 0, synced: 1, backedUp };
+}
+
+function syncGlobalSkillsFromRoot(targetName, skillsRoot, timestamp, options) {
+    const destRoot = resolveGlobalSkillRoot(targetName);
+    const skillNames = listSkillDirectories(skillsRoot);
+    if (skillNames.length === 0) {
+        throw new Error(`未检测到可同步的 Skills: ${skillsRoot}`);
+    }
+
+    if (options.dryRun) {
+        log(options, `[dry-run] 将同步 ${skillNames.length} 个全局 Skills -> ${destRoot}`);
+    }
+
+    let synced = 0;
+    let skipped = 0;
+    let backedUp = 0;
+
+    for (const skillName of skillNames) {
+        const srcDir = path.join(skillsRoot, skillName);
+        const destDir = path.join(destRoot, skillName);
+        const result = syncSkillDirectory(targetName, srcDir, destDir, timestamp, options);
+        synced += result.synced;
+        skipped += result.skipped;
+        backedUp += result.backedUp;
+    }
+
+    return { total: skillNames.length, synced, skipped, backedUp, destRoot };
+}
+
+function applyGlobalSync(targetName, agentDir, timestamp, options) {
+    if (targetName === "codex") {
+        const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-global-codex-"));
+        const mockRoot = path.join(tempRoot, "source");
+        const mockAgent = path.join(mockRoot, ".agents");
+        const outputDir = path.join(tempRoot, "out");
+
+        try {
+            copyDirRecursive(agentDir, mockAgent);
+            CodexBuilder.build(mockRoot, outputDir);
+            const skillsRoot = path.join(outputDir, "skills");
+            return syncGlobalSkillsFromRoot(targetName, skillsRoot, timestamp, options);
+        } finally {
+            fs.rmSync(tempRoot, { recursive: true, force: true });
+        }
+    }
+
+    if (targetName === "gemini") {
+        const skillsRoot = path.join(agentDir, "skills");
+        return syncGlobalSkillsFromRoot(targetName, skillsRoot, timestamp, options);
+    }
+
+    throw new Error(`未知目标: ${targetName}`);
+}
+
+function detectInstalledGlobalTargets() {
+    const targets = [];
+    const globalRoot = resolveGlobalRootDir();
+    if (fs.existsSync(path.join(globalRoot, ".agents", "skills"))) {
+        targets.push("codex");
+    }
+    if (fs.existsSync(path.join(globalRoot, ".gemini", "antigravity", "skills"))) {
+        targets.push("gemini");
+    }
+    return targets;
+}
+
+async function commandGlobalSync(options) {
+    const targets = await resolveTargetsForGlobalSync(options);
+    const { agentDir, cleanup, sourceLabel } = resolveAgentInstallSource(options);
+    const timestamp = nowISO().replace(/[:.]/g, "-");
+
+    try {
+        log(options, `🌍 全局同步源: ${sourceLabel}`);
+        for (const target of targets) {
+            log(options, `📦 正在同步全局目标 [${target}] ...`);
+            const result = applyGlobalSync(target, agentDir, timestamp, options);
+            if (!options.dryRun) {
+                log(options, `📊 全局同步完成 [${target}]：总计 ${result.total}，新增/覆盖 ${result.synced}，跳过 ${result.skipped}，备份 ${result.backedUp}`);
+                log(options, `   目标路径: ${result.destRoot}`);
+            }
+        }
+    } finally {
+        if (cleanup) cleanup();
+    }
+}
+
+function commandGlobalStatus(options) {
+    const targets = detectInstalledGlobalTargets();
+    const globalRoot = resolveGlobalRootDir();
+
+    if (targets.length === 0) {
+        if (!options.quiet) {
+            console.log("❌ 未检测到全局安装的 Skills");
+            console.log(`   全局根目录: ${globalRoot}`);
+        }
+        process.exitCode = 1;
+        return;
+    }
+
+    if (options.quiet) {
+        console.log("installed");
+        return;
+    }
+
+    console.log("✅ 已检测到全局 Skills 安装");
+    console.log(`   全局根目录: ${globalRoot}`);
+    console.log(`   Targets: ${targets.join(", ")}`);
+
+    if (targets.includes("gemini")) {
+        const skillsRoot = path.join(globalRoot, ".gemini", "antigravity", "skills");
+        const skillsCount = countSkillsRecursive(skillsRoot);
+        console.log("\n[gemini:global]");
+        console.log(`   路径: ${skillsRoot}`);
+        console.log(`   Skills: ${skillsCount}`);
+    }
+
+    if (targets.includes("codex")) {
+        const skillsRoot = path.join(globalRoot, ".agents", "skills");
+        const skillsCount = countSkillsRecursive(skillsRoot);
+        console.log("\n[codex:global]");
+        console.log(`   路径: ${skillsRoot}`);
+        console.log(`   Skills: ${skillsCount}`);
+    }
+}
+
+function commandGlobal(options) {
+    const subcommand = String(options.subcommand || "status").toLowerCase();
+    if (subcommand === "sync") {
+        return commandGlobalSync(options);
+    }
+    if (subcommand === "status") {
+        return commandGlobalStatus(options);
+    }
+    throw new Error(`未知 global 子命令: ${subcommand}`);
+}
+
 async function commandInit(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
     const targets = await resolveTargetsForInit(options);
@@ -1311,6 +1595,11 @@ async function main() {
 
         if (command === "doctor") {
             await commandDoctor(options);
+            return;
+        }
+
+        if (command === "global") {
+            await commandGlobal(options);
             return;
         }
 

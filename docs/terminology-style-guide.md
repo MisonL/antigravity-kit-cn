@@ -61,7 +61,7 @@
 
 ## 当前覆盖范围（2026-02）
 
-- `.agent/**/*.md`（含 `agents/`、`skills/`、`workflows/`、`ARCHITECTURE.md`）
+- `.agents/**/*.md`（含 `agents/`、`skills/`、`workflows/`、`ARCHITECTURE.md`）
 - `README.md`
 - `AGENT_FLOW.md`
 - `docs/*.md`

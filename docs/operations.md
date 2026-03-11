@@ -8,7 +8,7 @@
 
 ```text
 /my-project
-├── .agent/               # Legacy（旧版）Gemini 模式直连目录（使用 Gemini 时）
+├── .agent/               # Gemini 兼容输出目录（使用 Gemini 时）
 ├── .agents/              # Codex 托管上游目录（只读/自动管理）
 │   ├── manifest.json     # 完整性清单，用于漂移检测
 │   ├── AGENTS.md         # 核心规则源（由构建器生成）
@@ -32,6 +32,22 @@
 - 对临时验证场景，可在 `init/update` 时加 `--no-index` 完全跳过索引登记。
 - `ag-kit update` 仅处理当前目录（或 `--path` 指定目录），不依赖全局索引。
 - `ag-kit update-all` 仅处理索引内工作区；若项目曾使用 `--no-index`，可在项目内执行一次不带 `--no-index` 的 `ag-kit update` 重新纳入索引。
+
+### 1.3 全局 Skills
+
+已提供“全局安装”能力，用于跨项目复用 Skills，且与项目安装严格区分：
+
+- 项目安装：落盘到项目目录（`.agent/`、`.agents/`），功能最完整。
+- 全局安装：仅同步 Skills，落盘到用户目录：
+  - Codex：`$HOME/.agents/skills/`
+  - Antigravity：`$HOME/.gemini/antigravity/skills/`
+- 不写入全局 Rules/Agents/Workflows，避免不可预期的全局副作用。
+- 命令面：
+  - `ag-kit global sync --target codex`
+  - `ag-kit global sync --target gemini`
+  - `ag-kit global status`
+
+规划与边界细节见：`docs/plan-global-install.md`
 
 ## 2. 故障排查
 

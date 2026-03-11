@@ -63,6 +63,13 @@ export default function RulesWorkflowsPage() {
                             <li><strong className="text-zinc-900 dark:text-zinc-50">Model Decision</strong>：根据规则的自然语言描述，由模型决定是否应用。</li>
                             <li><strong className="text-zinc-900 dark:text-zinc-50">Glob</strong>：根据你设定的 glob 模式（如 *.js、src/**/*.ts）匹配文件时自动应用。</li>
                         </ul>
+                        <div className="mt-4 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/20 p-4">
+                            <p className="text-sm text-amber-900 dark:text-amber-100">
+                                <strong className="font-semibold">Ag-Kit 注记：</strong>本仓库模板源统一放在 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agents/</code>，
+                                但 Gemini/Antigravity 的规则与工作流仍遵循官方的 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agent/</code> 工作区路径。
+                                为避免副作用，Ag-Kit 的全局同步仅覆盖 Skills，不写全局 Rules/Workflows。
+                            </p>
+                        </div>
                     </div>
 
                     <div>
