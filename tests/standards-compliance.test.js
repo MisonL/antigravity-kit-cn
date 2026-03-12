@@ -9,23 +9,6 @@ const REF_LEGACY_AGENT_ROOT = path.resolve('reference/antigravity-kit/.agent');
 const REF_SCRIPTS_ROOT = fs.existsSync(REF_AGENTS_ROOT) ? REF_AGENTS_ROOT : REF_LEGACY_AGENT_ROOT;
 const HAS_REF_SCRIPTS_ROOT = fs.existsSync(REF_SCRIPTS_ROOT);
 
-function walkDirs(root) {
-    const out = [];
-    const stack = [root];
-    while (stack.length > 0) {
-        const current = stack.pop();
-        if (!fs.existsSync(current)) continue;
-        for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
-            const abs = path.join(current, entry.name);
-            if (entry.isDirectory()) {
-                out.push(abs);
-                stack.push(abs);
-            }
-        }
-    }
-    return out;
-}
-
 function collectTokens(content, regex) {
     const tokens = new Set();
     for (const match of String(content || "").matchAll(regex)) {
@@ -55,7 +38,6 @@ describe('Standards Compliance', () => {
             'README.md',
             'docs/PLAN.md',
             'docs/TECH.md',
-            'docs/code-review-report.md',
             'bin/core/generator.js',
         ];
         const skipped = [];
