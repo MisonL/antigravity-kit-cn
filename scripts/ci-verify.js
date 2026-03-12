@@ -70,8 +70,7 @@ function main() {
         throw new Error("exclude remove 未生效");
     }
 
-    runCli(["global", "sync", "--target", "codex", "--quiet"], { env });
-    runCli(["global", "sync", "--target", "gemini", "--quiet"], { env });
+    runCli(["global", "sync", "--quiet"], { env });
     runCli(["global", "status", "--quiet"], { env });
 
     const codexSkill = path.join(globalRoot, ".agents", "skills", "workflow-plan", "SKILL.md");

@@ -103,7 +103,7 @@ function printUsage() {
     console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--no-index] [--quiet] [--dry-run]");
     console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]");
     console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]");
-    console.log("  ag-kit global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]");
+    console.log("  ag-kit global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]  # 默认同步 codex+gemini");
     console.log("  ag-kit global status [--quiet]");
     console.log("  ag-kit exclude list [--quiet]");
     console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
@@ -847,7 +847,12 @@ function resolveTargetsForUpdate(workspaceRoot, options) {
 }
 
 function resolveTargetsForGlobalSync(options) {
-    return resolveTargetsForInit(options);
+    const requested = normalizeTargets(options.targets);
+    if (requested.length > 0) {
+        return requested;
+    }
+    // 保持 global sync 简洁：默认同步两个目标。
+    return ["codex", "gemini"];
 }
 
 function resolveAgentInstallSource(options) {

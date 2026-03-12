@@ -52,6 +52,20 @@ describe("Global Sync", () => {
         assert.ok(fs.existsSync(path.join(skillsRoot, "workflow-plan", "SKILL.md")), "missing expected workflow skill: workflow-plan");
     });
 
+    test("global sync should default to syncing codex and gemini when no target is provided", () => {
+        const result = runCli(["global", "sync", "--quiet"], {
+            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+        });
+        assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+
+        const codexRoot = path.join(tempDir, ".agents", "skills");
+        assert.ok(fs.existsSync(path.join(codexRoot, "clean-code", "SKILL.md")), "missing expected codex skill: clean-code");
+        assert.ok(fs.existsSync(path.join(codexRoot, "workflow-plan", "SKILL.md")), "missing expected codex workflow skill: workflow-plan");
+
+        const geminiRoot = path.join(tempDir, ".gemini", "antigravity", "skills");
+        assert.ok(fs.existsSync(path.join(geminiRoot, "clean-code", "SKILL.md")), "missing expected gemini skill: clean-code");
+    });
+
     test("global sync should install gemini skills into ~/.gemini/antigravity/skills", () => {
         const result = runCli(["global", "sync", "--target", "gemini", "--quiet"], {
             env: { AG_KIT_GLOBAL_ROOT: tempDir },
