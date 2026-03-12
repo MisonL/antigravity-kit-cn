@@ -71,7 +71,10 @@ function main() {
     }
 
     runCli(["global", "sync", "--quiet"], { env });
-    runCli(["global", "status", "--quiet"], { env });
+    const globalStatus = runCli(["global", "status", "--quiet"], { env }).trim();
+    if (globalStatus !== "installed") {
+        throw new Error(`global status 结果异常: ${globalStatus}`);
+    }
 
     const codexSkill = path.join(globalRoot, ".agents", "skills", "workflow-plan", "SKILL.md");
     const geminiSkill = path.join(globalRoot, ".gemini", "antigravity", "skills", "clean-code", "SKILL.md");

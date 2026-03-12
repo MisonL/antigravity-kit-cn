@@ -23,7 +23,7 @@
   "scripts": {
     "clean": "node scripts/clean.js",
     "clean:dry-run": "node scripts/clean.js --dry-run",
-    "health-check": "bash scripts/health-check.sh",
+    "health-check": "node scripts/health-check.js",
     "postinstall": "node scripts/postinstall-check.js",
     "test": "node --test \"tests/**/*.test.js\"",
     "ci:verify": "node scripts/ci-verify.js"
@@ -34,7 +34,12 @@
   "files": [
     ".agents/**",
     "bin/**",
+    "scripts/clean.js",
+    "scripts/ci-verify.js",
+    "scripts/health-check.js",
+    "scripts/health-check.sh",
     "scripts/postinstall-check.js",
+    "tests/**/*.test.js",
     "README.md",
     "LICENSE",
     "CHANGELOG.md",

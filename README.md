@@ -15,6 +15,12 @@
 npm install -g @mison/ag-kit-cn
 ```
 
+或使用 Bun：
+
+```bash
+bun install -g @mison/ag-kit-cn
+```
+
 然后在你的目标项目中初始化：
 
 ```bash
@@ -184,6 +190,13 @@ ag-kit exclude add --path /path/to/dir            # 新增排除路径
 ag-kit exclude remove --path /path/to/dir         # 删除排除路径
 ```
 
+### 状态命令约定
+
+- `ag-kit status --quiet`：输出 `installed` / `broken` / `missing`
+- `ag-kit global status --quiet`：输出 `installed` / `broken` / `missing`
+- 退出码：`0=installed`，`1=broken`，`2=missing`
+- `status` 面向自动化健康判断；如需问题明细，使用 `ag-kit doctor`
+
 ### 批量更新机制
 
 - 执行 `ag-kit init` / `ag-kit update` 时，会把工作区路径登记到全局索引文件：
@@ -201,18 +214,20 @@ ag-kit exclude remove --path /path/to/dir         # 删除排除路径
 ### 开发维护命令
 
 ```bash
-npm run clean           # 清理本地生成产物（如 web/.next、web/node_modules）
-npm run clean:dry-run   # 预览将被清理的路径
-npm test                # 只执行 tests/ 目录下测试
-npm run health-check    # 一键执行全链路健康复检
+bun run clean           # 清理本地生成产物（如 web/.next、web/node_modules）
+bun run clean:dry-run   # 预览将被清理的路径
+bun run test            # 只执行 tests/ 目录下测试
+bun run health-check    # 一键执行全链路健康复检
 ```
 
 如果你在 `web/` 子项目内开发，可按需执行：
 
 ```bash
-npm install --prefix web
-npm run lint --prefix web
+bun install --cwd web
+bun run lint --cwd web
 ```
+
+> 说明：若你通过 `bun install -g` 安装 CLI，Bun 默认会阻止本包 `postinstall`。上游同名包冲突提示会在首次执行 `ag-kit init/update/global sync` 时给出。
 
 ## 卸载
 

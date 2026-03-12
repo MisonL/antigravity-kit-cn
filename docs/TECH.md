@@ -5,6 +5,7 @@
 bun install
 bun run test
 bun run ci:verify
+bun run health-check
 cd web && bun install && bun run lint
 ```
 
@@ -52,6 +53,17 @@ cd web && bun install && bun run lint
 ### 测试隔离
 - `AG_KIT_GLOBAL_ROOT`：替代 `$HOME`（用于测试与 CI，避免污染真实用户目录）
 
+## 状态契约（自动化）
+- `ag-kit status --quiet` / `ag-kit global status --quiet` 只输出三态：
+  - `installed`：检测到目标且完整性正常
+  - `broken`：检测到目标但存在残缺、漂移或结构异常
+  - `missing`：未检测到任何已安装目标
+- 退出码固定为：
+  - `0` = `installed`
+  - `1` = `broken`
+  - `2` = `missing`
+- 若需要问题明细，使用 `ag-kit doctor`；`status` 负责健康状态，`doctor` 负责诊断细节。
+
 ## 手动回滚（全局 Skills）
 1. 找到备份目录：`$HOME/.ag-kit/backups/global/<timestamp>/...`
 2. 按 Skill 回滚（推荐一次只处理一个 Skill 目录）：
@@ -78,6 +90,11 @@ Copy-Item "$HOME\\.ag-kit\\backups\\global\\$ts\\codex\\$skill" "$HOME\\.agents\
 - `AG_KIT_INDEX_PATH`：工作区索引文件路径（默认 `~/.ag-kit/workspaces.json`）
 - `AG_KIT_GLOBAL_ROOT`：全局目录根（替代 `$HOME`）
 - `AG_KIT_SKIP_UPSTREAM_CHECK`：跳过上游同名包安装提示（测试用）
+
+## 安装提示机制
+- npm 全局安装：`postinstall` 会尽力检测并提示上游英文版 `@vudovn/ag-kit` 冲突。
+- Bun 全局安装：Bun 默认会阻止本包 `postinstall`；因此冲突提示以内置 CLI 运行期检查为准，会在 `init` / `update` / `update-all` / `global sync` 时提示。
+- 冲突提示只负责提醒，不会自动修改当前安装状态；如需清理可执行 `npm uninstall -g @vudovn/ag-kit`。
 
 ## 常见故障
 - 更新中断：原子替换保证不会出现半写状态；重新运行 `update`/`global sync` 即可。

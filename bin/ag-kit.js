@@ -21,6 +21,11 @@ const SUPPORTED_TARGETS = ["gemini", "codex"];
 const INDEX_LOCK_RETRY_MS = 50;
 const INDEX_LOCK_TIMEOUT_MS = 3000;
 const INDEX_LOCK_STALE_MS = 30000;
+const QUIET_STATUS_EXIT_CODES = {
+    installed: 0,
+    broken: 1,
+    missing: 2,
+};
 
 function nowISO() {
     return new Date().toISOString();
@@ -739,7 +744,12 @@ function maybeWarnUpstreamGlobalConflict(command, options) {
     if (process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
         return;
     }
-    if (command !== "init" && command !== "update" && command !== "update-all") {
+    const shouldWarn =
+        command === "init"
+        || command === "update"
+        || command === "update-all"
+        || (command === "global" && String(options.subcommand || "").toLowerCase() === "sync");
+    if (!shouldWarn) {
         return;
     }
 
@@ -755,6 +765,7 @@ function maybeWarnUpstreamGlobalConflict(command, options) {
     log(options, `⚠️ 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}。`);
     log(options, "⚠️ 上游英文版与当前中文版共用 `ag-kit` 命令名，后安装者会覆盖命令入口。");
     log(options, `👉 建议执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
+    log(options, "ℹ️ 若你通过 bun install -g 安装，Bun 默认会阻止本包 postinstall；因此这里会在首次执行 CLI 时再次提醒。");
 }
 
 function normalizeTargets(rawTargets) {
@@ -803,6 +814,116 @@ function isTargetInstalled(workspaceRoot, targetName) {
         return fs.existsSync(path.join(workspaceRoot, ".agents")) || fs.existsSync(path.join(workspaceRoot, ".codex"));
     }
     return false;
+}
+
+function setQuietStatusExitCode(state) {
+    process.exitCode = Object.prototype.hasOwnProperty.call(QUIET_STATUS_EXIT_CODES, state)
+        ? QUIET_STATUS_EXIT_CODES[state]
+        : 1;
+}
+
+function normalizeIntegrityState(result) {
+    if (!result || result.status === "missing") {
+        return "missing";
+    }
+    if (result.status === "ok") {
+        return "installed";
+    }
+    return "broken";
+}
+
+function evaluateWorkspaceState(workspaceRoot, options) {
+    const targets = detectInstalledTargets(workspaceRoot);
+    if (targets.length === 0) {
+        return {
+            state: "missing",
+            targets: [],
+        };
+    }
+
+    const targetStates = targets.map((targetName) => {
+        const adapter = createAdapter(targetName, workspaceRoot, {
+            ...options,
+            quiet: true,
+        });
+        const integrity = adapter.checkIntegrity();
+        return {
+            targetName,
+            state: normalizeIntegrityState(integrity),
+            integrity,
+            version: typeof adapter.getInstalledVersion === "function" ? adapter.getInstalledVersion() : null,
+        };
+    });
+
+    const hasIssue = targetStates.some((item) => item.state !== "installed");
+    return {
+        state: hasIssue ? "broken" : "installed",
+        targets: targetStates,
+    };
+}
+
+function getGlobalTargetPaths(globalRoot, targetName) {
+    if (targetName === "codex") {
+        return {
+            markerDir: path.join(globalRoot, ".agents"),
+            skillsRoot: path.join(globalRoot, ".agents", "skills"),
+        };
+    }
+    if (targetName === "gemini") {
+        return {
+            markerDir: path.join(globalRoot, ".gemini", "antigravity"),
+            skillsRoot: path.join(globalRoot, ".gemini", "antigravity", "skills"),
+        };
+    }
+    throw new Error(`未知全局目标: ${targetName}`);
+}
+
+function evaluateGlobalState() {
+    const globalRoot = resolveGlobalRootDir();
+    const targetStates = SUPPORTED_TARGETS.map((targetName) => {
+        const paths = getGlobalTargetPaths(globalRoot, targetName);
+        const markerExists = fs.existsSync(paths.markerDir);
+        const skillsExists = fs.existsSync(paths.skillsRoot);
+        const skillsCount = skillsExists ? countSkillsRecursive(paths.skillsRoot) : 0;
+        let state = "missing";
+        const issues = [];
+
+        if (markerExists || skillsExists) {
+            if (!skillsExists) {
+                state = "broken";
+                issues.push("Skills 根目录缺失");
+            } else if (skillsCount === 0) {
+                state = "broken";
+                issues.push("未检测到任何 SKILL.md");
+            } else {
+                state = "installed";
+            }
+        }
+
+        return {
+            targetName,
+            state,
+            markerDir: paths.markerDir,
+            skillsRoot: paths.skillsRoot,
+            skillsCount,
+            issues,
+        };
+    }).filter((item) => item.state !== "missing");
+
+    if (targetStates.length === 0) {
+        return {
+            globalRoot,
+            state: "missing",
+            targets: [],
+        };
+    }
+
+    const hasIssue = targetStates.some((item) => item.state !== "installed");
+    return {
+        globalRoot,
+        state: hasIssue ? "broken" : "installed",
+        targets: targetStates,
+    };
 }
 
 function createAdapter(targetName, workspaceRoot, options) {
@@ -983,18 +1104,6 @@ function applyGlobalSync(targetName, agentDir, timestamp, options) {
     throw new Error(`未知目标: ${targetName}`);
 }
 
-function detectInstalledGlobalTargets() {
-    const targets = [];
-    const globalRoot = resolveGlobalRootDir();
-    if (fs.existsSync(path.join(globalRoot, ".agents", "skills"))) {
-        targets.push("codex");
-    }
-    if (fs.existsSync(path.join(globalRoot, ".gemini", "antigravity", "skills"))) {
-        targets.push("gemini");
-    }
-    return targets;
-}
-
 async function commandGlobalSync(options) {
     const targets = await resolveTargetsForGlobalSync(options);
     const { agentDir, cleanup, sourceLabel } = resolveAgentInstallSource(options);
@@ -1016,42 +1125,45 @@ async function commandGlobalSync(options) {
 }
 
 function commandGlobalStatus(options) {
-    const targets = detectInstalledGlobalTargets();
-    const globalRoot = resolveGlobalRootDir();
+    const summary = evaluateGlobalState();
 
-    if (targets.length === 0) {
+    if (summary.state === "missing") {
+        if (options.quiet) {
+            console.log("missing");
+        }
         if (!options.quiet) {
             console.log("❌ 未检测到全局安装的 Skills");
-            console.log(`   全局根目录: ${globalRoot}`);
+            console.log(`   全局根目录: ${summary.globalRoot}`);
         }
-        process.exitCode = 1;
+        setQuietStatusExitCode("missing");
         return;
     }
 
     if (options.quiet) {
-        console.log("installed");
+        console.log(summary.state);
+        setQuietStatusExitCode(summary.state);
         return;
     }
 
-    console.log("✅ 已检测到全局 Skills 安装");
-    console.log(`   全局根目录: ${globalRoot}`);
-    console.log(`   Targets: ${targets.join(", ")}`);
+    console.log(summary.state === "installed" ? "✅ 全局 Skills 状态正常" : "⚠️ 全局 Skills 存在问题");
+    console.log(`   全局根目录: ${summary.globalRoot}`);
+    console.log(`   总体状态: ${summary.state}`);
+    console.log(`   Targets: ${summary.targets.map((item) => item.targetName).join(", ")}`);
 
-    if (targets.includes("gemini")) {
-        const skillsRoot = path.join(globalRoot, ".gemini", "antigravity", "skills");
-        const skillsCount = countSkillsRecursive(skillsRoot);
-        console.log("\n[gemini:global]");
-        console.log(`   路径: ${skillsRoot}`);
-        console.log(`   Skills: ${skillsCount}`);
+    for (const item of summary.targets) {
+        console.log(`\n[${item.targetName}:global]`);
+        console.log(`   状态: ${item.state}`);
+        console.log(`   路径: ${item.skillsRoot}`);
+        if (item.state === "installed") {
+            console.log(`   Skills: ${item.skillsCount}`);
+            continue;
+        }
+        for (const issue of item.issues) {
+            console.log(`   Issue: ${issue}`);
+        }
     }
 
-    if (targets.includes("codex")) {
-        const skillsRoot = path.join(globalRoot, ".agents", "skills");
-        const skillsCount = countSkillsRecursive(skillsRoot);
-        console.log("\n[codex:global]");
-        console.log(`   路径: ${skillsRoot}`);
-        console.log(`   Skills: ${skillsCount}`);
-    }
+    setQuietStatusExitCode(summary.state);
 }
 
 function commandGlobal(options) {
@@ -1514,40 +1626,54 @@ function countSkillsRecursive(dir) {
 
 function commandStatus(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
-    const installedTargets = detectInstalledTargets(workspaceRoot);
+    const summary = evaluateWorkspaceState(workspaceRoot, options);
 
-    if (installedTargets.length === 0) {
+    if (summary.state === "missing") {
+        if (options.quiet) {
+            console.log("missing");
+        }
         if (!options.quiet) {
             console.log("❌ 未检测到 Antigravity Kit 安装");
             console.log(`   目标目录: ${workspaceRoot}`);
         }
-        process.exitCode = 1;
+        setQuietStatusExitCode("missing");
         return;
     }
 
     if (options.quiet) {
-        console.log("installed");
+        console.log(summary.state);
+        setQuietStatusExitCode(summary.state);
         return;
     }
 
-    console.log("✅ Antigravity Kit 已安装");
+    console.log(summary.state === "installed" ? "✅ Antigravity Kit 状态正常" : "⚠️ Antigravity Kit 存在问题");
     console.log(`   CLI 版本: ${pkg.version}`);
     console.log(`   工作区: ${workspaceRoot}`);
-    console.log(`   Targets: ${installedTargets.join(", ")}`);
+    console.log(`   总体状态: ${summary.state}`);
+    console.log(`   Targets: ${summary.targets.map((item) => item.targetName).join(", ")}`);
 
-    if (installedTargets.includes("gemini")) {
+    const geminiState = summary.targets.find((item) => item.targetName === "gemini");
+    if (geminiState) {
         const agentDir = path.join(workspaceRoot, ".agent");
         const agentsCount = countFilesIfExists(path.join(agentDir, "agents"), (name) => name.endsWith(".md"));
         const workflowsCount = countFilesIfExists(path.join(agentDir, "workflows"), (name) => name.endsWith(".md"));
         const skillsCount = countSkillsRecursive(path.join(agentDir, "skills"));
         console.log("\n[gemini]");
+        console.log(`   状态: ${geminiState.state}`);
         console.log(`   路径: ${agentDir}`);
-        console.log(`   Agents: ${agentsCount}`);
-        console.log(`   Skills: ${skillsCount}`);
-        console.log(`   Workflows: ${workflowsCount}`);
+        if (geminiState.state === "installed") {
+            console.log(`   Agents: ${agentsCount}`);
+            console.log(`   Skills: ${skillsCount}`);
+            console.log(`   Workflows: ${workflowsCount}`);
+        } else {
+            for (const issue of geminiState.integrity.issues || []) {
+                console.log(`   Issue: ${issue}`);
+            }
+        }
     }
 
-    if (installedTargets.includes("codex")) {
+    const codexState = summary.targets.find((item) => item.targetName === "codex");
+    if (codexState) {
         const managedDir = path.join(workspaceRoot, ".agents");
         const legacyDir = path.join(workspaceRoot, ".codex");
         const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
@@ -1555,13 +1681,21 @@ function commandStatus(options) {
         const hasManifest = fs.existsSync(path.join(activeDir, "manifest.json"));
         const legacyDetected = fs.existsSync(legacyDir);
         console.log("\n[codex]");
+        console.log(`   状态: ${codexState.state}`);
         console.log(`   路径: ${activeDir}`);
         console.log(`   Skills: ${skillsCount}`);
         console.log(`   Manifest: ${hasManifest ? "yes" : "no"}`);
         if (legacyDetected) {
             console.log("   Legacy: 检测到 .codex（建议执行 ag-kit update 迁移清理）");
         }
+        if (codexState.state !== "installed") {
+            for (const issue of codexState.integrity.issues || []) {
+                console.log(`   Issue: ${issue}`);
+            }
+        }
     }
+
+    setQuietStatusExitCode(summary.state);
 }
 
 async function main() {

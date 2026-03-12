@@ -11,11 +11,9 @@ class GeminiAdapter extends BaseAdapter {
     }
 
     getInstalledVersion() {
-        // In v1, version was not strictly tracked per target in a file.
-        // We assume check existence of .agent/agents directory.
         const agentDir = path.join(this.workspaceRoot, ".agent");
         if (fs.existsSync(agentDir)) {
-            return "2.0.1"; // Default to current version if exists
+            return null;
         }
         return null;
     }
