@@ -7,6 +7,19 @@
 
 ## [Unreleased]
 
+## [ling-1.1.1] - 2026-03-14
+
+### 新增
+
+- Spec 项目级工作区初始化与诊断：新增 `ling spec init` / `ling spec doctor`，在工作区落盘 `.ling/spec` 资产与 `issues.csv` 校验。
+- Spec Profiles 资产：全局与项目级均包含 `profiles/`，并纳入完整性校验与回退语义。
+- Spec 资产分支拉取：`ling spec init --branch <name>` 支持从指定分支的 `.spec/` 拉取 templates/references/profiles。
+
+### 变更
+
+- Spec 状态判定强化：`ling spec status` 增加文件级完整性校验，且在 `state.json` 缺失但检测到残留 artifacts 时返回 `broken` 并给出修复提示。
+- CI 改为 npm：CI 矩阵不再依赖 bun，统一使用 `npm ci/test/run` 执行验证。
+
 ## [ling-1.1.0] - 2026-03-13
 
 ### 新增
@@ -67,7 +80,8 @@
 
 本项目在 Ling 重启前的 2.x/3.x 版本记录已冻结，不再维护。
 
-[Unreleased]: https://github.com/MisonL/Ling/compare/ling-1.1.0...HEAD
+[Unreleased]: https://github.com/MisonL/Ling/compare/ling-1.1.1...HEAD
+[ling-1.1.1]: https://github.com/MisonL/Ling/releases/tag/ling-1.1.1
 [ling-1.1.0]: https://github.com/MisonL/Ling/releases/tag/ling-1.1.0
 [ling-1.0.2]: https://github.com/MisonL/Ling/releases/tag/ling-1.0.2
 [ling-1.0.1]: https://github.com/MisonL/Ling/releases/tag/ling-1.0.1

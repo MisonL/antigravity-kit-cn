@@ -27,6 +27,23 @@ trigger: always_on
 
 ---
 
+## Spec 协议（任务跟踪 CSV 驱动）
+
+当工作区存在 `issues.csv` 时，视其为任务跟踪文件（单一事实源），并遵循：
+
+1. 读取 `issues.csv` 并只锁定一个原子任务。
+2. 将任务状态从“未开始”改为“进行中”，再开始开发。
+3. 修改完成后运行最小充分验证，并记录证据。
+4. 自审通过后将状态改为“已完成”。
+5. 若验证失败，先修复或回退，不得静默降级。
+
+模板参考：
+
+- 优先：`.ling/spec/templates/driver-prompt.md`
+- 其次：`~/.ling/spec/templates/driver-prompt.md`（若已启用全局 Spec Profile）
+
+---
+
 ##  请求分类器（第 1 步）
 
 **在执行任何动作前，先对请求分类：**

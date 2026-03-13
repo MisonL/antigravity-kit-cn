@@ -5,7 +5,7 @@ const os = require("os");
 const path = require("path");
 
 const pkg = require("../package.json");
-const { readGlobalNpmDependencies, cloneBranchAgentDir } = require("./utils");
+const { readGlobalNpmDependencies, cloneBranchAgentDir, cloneBranchSpecDir } = require("./utils");
 const ManifestManager = require("./utils/manifest");
 const AtomicWriter = require("./utils/atomic-writer");
 const CodexBuilder = require("./core/builder");
@@ -55,6 +55,9 @@ const QUIET_STATUS_EXIT_CODES = {
 const SPEC_STATE_VERSION = 1;
 const SPEC_SKILL_NAMES = ["harness-engineering", "cybernetic-systems-engineering"];
 const VERSION_TAG_PREFIX = "ling-";
+const SPEC_TEMPLATE_REQUIRED_FILES = ["issues.template.csv", "driver-prompt.md", "review-report.md", "phase-acceptance.md", "handoff.md"];
+const SPEC_REFERENCE_REQUIRED_FILES = ["README.md", "harness-engineering-digest.md", "gda-framework.md", "cse-quickstart.md"];
+const SPEC_PROFILE_REQUIRED_FILES = ["codex/AGENTS.spec.md", "codex/ling.spec.rules.md", "gemini/GEMINI.spec.md"];
 
 function nowISO() {
     return new Date().toISOString();
@@ -172,6 +175,8 @@ function printUsage() {
     console.log(`  ${PRIMARY_CLI_NAME} spec enable [--target <name>|--targets <a,b>] [--quiet] [--dry-run]`);
     console.log(`  ${PRIMARY_CLI_NAME} spec disable [--target <name>|--targets <a,b>] [--quiet] [--dry-run]`);
     console.log(`  ${PRIMARY_CLI_NAME} spec status [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} spec init [--path <dir>] [--target <name>|--targets <a,b>] [--branch <name>] [--force] [--non-interactive] [--no-index] [--quiet] [--dry-run]`);
+    console.log(`  ${PRIMARY_CLI_NAME} spec doctor [--path <dir>] [--quiet]`);
     console.log(`  ${PRIMARY_CLI_NAME} exclude list [--quiet]`);
     console.log(`  ${PRIMARY_CLI_NAME} exclude add --path <dir> [--dry-run] [--quiet]`);
     console.log(`  ${PRIMARY_CLI_NAME} exclude remove --path <dir> [--dry-run] [--quiet]`);
@@ -290,6 +295,8 @@ const COMMAND_ALLOWED_FLAGS = {
     "spec:enable": ["--target", "--targets", "--quiet", "--dry-run"],
     "spec:disable": ["--target", "--targets", "--quiet", "--dry-run"],
     "spec:status": ["--quiet"],
+    "spec:init": ["--force", "--path", "--branch", "--target", "--targets", "--non-interactive", "--no-index", "--quiet", "--dry-run"],
+    "spec:doctor": ["--path", "--quiet"],
     "exclude:list": ["--quiet"],
     "exclude:add": ["--path", "--dry-run", "--quiet"],
     "exclude:remove": ["--path", "--dry-run", "--quiet"],
@@ -1447,6 +1454,10 @@ function getSpecHomeDir() {
     return path.join(resolveGlobalRootDir(), ".ling", "spec");
 }
 
+function getSpecWorkspaceDir() {
+    return path.join(resolveGlobalRootDir(), ".ling", "spec-workspace");
+}
+
 function getSpecStatePath() {
     return path.join(getSpecHomeDir(), "state.json");
 }
@@ -1524,6 +1535,46 @@ function ensureBundledSpecResources() {
     }
 }
 
+function listMissingFiles(rootDir, requiredRelPaths) {
+    if (!fs.existsSync(rootDir)) {
+        return requiredRelPaths.map((rel) => rel);
+    }
+    return requiredRelPaths.filter((rel) => !fs.existsSync(path.join(rootDir, ...rel.split("/"))));
+}
+
+function collectSpecOrphanIssues(specHome, hasStateFile) {
+    const issues = [];
+    const templatesDir = path.join(specHome, "templates");
+    const referencesDir = path.join(specHome, "references");
+    const profilesDir = path.join(specHome, "profiles");
+
+    if (fs.existsSync(templatesDir)) issues.push("Detected spec templates directory");
+    if (fs.existsSync(referencesDir)) issues.push("Detected spec references directory");
+    if (fs.existsSync(profilesDir)) issues.push("Detected spec profiles directory");
+
+    for (const targetName of SUPPORTED_TARGETS) {
+        for (const destination of getGlobalDestinations(targetName)) {
+            for (const skillName of SPEC_SKILL_NAMES) {
+                if (fs.existsSync(path.join(destination.skillsRoot, skillName, "SKILL.md"))) {
+                    issues.push(`Detected spec skill: ${destination.id}/${skillName}`);
+                }
+            }
+        }
+    }
+
+    if (issues.length === 0) {
+        return [];
+    }
+
+    if (!hasStateFile) {
+        issues.unshift("Spec artifacts detected but state.json missing (run: ling spec enable to repair)");
+    } else {
+        issues.unshift("Spec artifacts detected but no targets enabled (run: ling spec enable to reconcile or clean manually)");
+    }
+
+    return issues;
+}
+
 function backupDirSnapshot(sourceDir, backupDir, options, label) {
     if (!fs.existsSync(sourceDir)) {
         return "";
@@ -1560,6 +1611,59 @@ function removeDirIfExists(targetDir, options, label) {
     log(options, `[clean] 已删除 ${label}: ${targetDir}`);
 }
 
+function atomicWriteFile(targetPath, content, options, label) {
+    const targetDir = path.dirname(targetPath);
+    if (options.dryRun) {
+        log(options, `[dry-run] 将写入 ${label}: ${targetPath}`);
+        return;
+    }
+    fs.mkdirSync(targetDir, { recursive: true });
+    const tempPath = `${targetPath}.tmp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    fs.writeFileSync(tempPath, content, "utf8");
+    try {
+        if (fs.existsSync(targetPath)) {
+            const backupPath = `${targetPath}.bak-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`;
+            fs.renameSync(targetPath, backupPath);
+            try {
+                fs.renameSync(tempPath, targetPath);
+            } catch (err) {
+                try {
+                    fs.renameSync(backupPath, targetPath);
+                } catch (restoreErr) {
+                    throw new Error(`临界失败: 无法将新版本写入目标且无法恢复旧版本。旧版本位于 ${backupPath}。错误: ${err.message}`);
+                }
+                throw err;
+            }
+            try {
+                fs.rmSync(backupPath, { force: true });
+            } catch (cleanupErr) {
+                log(options, `[warn] 无法清理备份文件 ${backupPath}: ${cleanupErr.message}`);
+            }
+            return;
+        }
+        fs.renameSync(tempPath, targetPath);
+    } catch (err) {
+        if (fs.existsSync(tempPath)) {
+            fs.rmSync(tempPath, { force: true });
+        }
+        throw new Error(`原子写入失败: ${err.message}`);
+    }
+}
+
+function backupFileSnapshot(sourcePath, backupPath, options, label) {
+    if (!fs.existsSync(sourcePath)) {
+        return "";
+    }
+    if (options.dryRun) {
+        log(options, `[dry-run] 将备份 ${label}: ${sourcePath} -> ${backupPath}`);
+        return backupPath;
+    }
+    fs.mkdirSync(path.dirname(backupPath), { recursive: true });
+    fs.copyFileSync(sourcePath, backupPath);
+    log(options, `[backup] 已备份 ${label}: ${sourcePath} -> ${backupPath}`);
+    return backupPath;
+}
+
 async function ensureSpecAssetsInstalled(state, timestamp, options, prompter) {
     const specHome = getSpecHomeDir();
     const assets = {
@@ -1571,14 +1675,37 @@ async function ensureSpecAssetsInstalled(state, timestamp, options, prompter) {
             sourceDir: path.join(BUNDLED_SPEC_DIR, "references"),
             destDir: path.join(specHome, "references"),
         },
+        profiles: {
+            sourceDir: path.join(BUNDLED_SPEC_DIR, "profiles"),
+            destDir: path.join(specHome, "profiles"),
+        },
     };
 
     for (const [assetName, config] of Object.entries(assets)) {
-        if (state.assets[assetName] && state.assets[assetName].installedAt) {
+        const existingAssetState = state.assets[assetName];
+        const hasState = existingAssetState && existingAssetState.installedAt;
+        const exists = fs.existsSync(config.destDir);
+        const mode = normalizeSpecAssetMode(existingAssetState);
+
+        if (mode === "kept" && exists) {
             continue;
         }
 
-        const exists = fs.existsSync(config.destDir);
+        const equal = exists ? areDirectoriesEqual(config.sourceDir, config.destDir) : false;
+
+        if (exists && equal) {
+            if (!hasState) {
+                log(options, `[skip] Spec ${assetName} 已存在且一致，视为已启用: ${config.destDir}`);
+                state.assets[assetName] = {
+                    destPath: config.destDir,
+                    backupPath: "",
+                    installedAt: nowISO(),
+                    mode: "kept",
+                };
+            }
+            continue;
+        }
+
         let action = exists ? "backup" : "";
         if (exists && prompter) {
             action = await prompter.resolveConflict({
@@ -1586,6 +1713,8 @@ async function ensureSpecAssetsInstalled(state, timestamp, options, prompter) {
                 label: `Spec ${assetName}`,
                 path: config.destDir,
             });
+        } else if (exists && !prompter && (options.nonInteractive || !process.stdin.isTTY)) {
+            action = "backup";
         }
 
         if (action === "keep") {
@@ -1650,26 +1779,59 @@ function restoreSpecAsset(assetState, options, label) {
 }
 
 async function enableSpecTarget(targetName, state, timestamp, options, prompter) {
-    if (state.targets[targetName]) {
-        log(options, `[skip] Spec 目标已启用: ${targetName}`);
-        return;
-    }
-
     const destinations = getGlobalDestinations(targetName);
-    const targetState = {
+    const existingTargetState = state.targets[targetName];
+    if (existingTargetState) {
+        log(options, `[info] Spec 目标已启用，执行一致性修复: ${targetName}`);
+    }
+    const targetState = existingTargetState || {
         enabledAt: nowISO(),
         consumers: {},
     };
 
     for (const destination of destinations) {
+        const existingConsumerState =
+            targetState.consumers && targetState.consumers[destination.id] ? targetState.consumers[destination.id] : null;
         const consumerState = {
             skills: [],
         };
+        const existingSkills = new Map();
+        if (existingConsumerState && Array.isArray(existingConsumerState.skills)) {
+            for (const skill of existingConsumerState.skills) {
+                if (skill && typeof skill.name === "string") {
+                    existingSkills.set(skill.name, skill);
+                }
+            }
+        }
 
         for (const skillName of SPEC_SKILL_NAMES) {
             const srcDir = path.join(BUNDLED_SPEC_DIR, "skills", skillName);
             const destDir = path.join(destination.skillsRoot, skillName);
+            const existingSkillState = existingSkills.get(skillName);
+            const mode = normalizeSpecAssetMode(existingSkillState);
             const exists = fs.existsSync(destDir);
+            const equal = exists ? areDirectoriesEqual(srcDir, destDir) : false;
+
+            if (mode === "kept" && exists) {
+                consumerState.skills.push({
+                    name: skillName,
+                    destPath: destDir,
+                    backupPath: existingSkillState && existingSkillState.backupPath ? existingSkillState.backupPath : "",
+                    mode: "kept",
+                });
+                continue;
+            }
+
+            if (exists && equal) {
+                consumerState.skills.push({
+                    name: skillName,
+                    destPath: destDir,
+                    backupPath: existingSkillState && existingSkillState.backupPath ? existingSkillState.backupPath : "",
+                    mode: existingSkillState && existingSkillState.mode ? existingSkillState.mode : "kept",
+                });
+                continue;
+            }
+
             let action = exists ? "backup" : "";
             if (exists && prompter) {
                 action = await prompter.resolveConflict({
@@ -1677,6 +1839,8 @@ async function enableSpecTarget(targetName, state, timestamp, options, prompter)
                     label: `Spec Skill ${destination.id}/${skillName}`,
                     path: destDir,
                 });
+            } else if (exists && !prompter && (options.nonInteractive || !process.stdin.isTTY)) {
+                action = "backup";
             }
 
             if (action === "keep") {
@@ -1684,13 +1848,13 @@ async function enableSpecTarget(targetName, state, timestamp, options, prompter)
                 consumerState.skills.push({
                     name: skillName,
                     destPath: destDir,
-                    backupPath: "",
+                    backupPath: existingSkillState && existingSkillState.backupPath ? existingSkillState.backupPath : "",
                     mode: "kept",
                 });
                 continue;
             }
 
-            let backupPath = "";
+            let backupPath = existingSkillState && existingSkillState.backupPath ? existingSkillState.backupPath : "";
             if (exists && action !== "remove") {
                 backupPath = backupDirSnapshot(
                     destDir,
@@ -1742,14 +1906,28 @@ function disableSpecTarget(targetName, state, options) {
 }
 
 function evaluateSpecState() {
+    const statePath = getSpecStatePath();
+    const hasStateFile = fs.existsSync(statePath);
     const { state } = readSpecState();
     const targetNames = Object.keys(state.targets || {});
     if (targetNames.length === 0) {
+        const specHome = getSpecHomeDir();
+        const orphanIssues = collectSpecOrphanIssues(specHome, hasStateFile);
+        if (orphanIssues.length > 0) {
+            return {
+                state: "broken",
+                targets: [],
+                assets: state.assets || {},
+                specHome,
+                issues: orphanIssues,
+            };
+        }
         return {
             state: "missing",
             targets: [],
             assets: state.assets || {},
-            specHome: getSpecHomeDir(),
+            specHome,
+            issues: [],
         };
     }
 
@@ -1765,10 +1943,23 @@ function evaluateSpecState() {
         }
     }
 
-    for (const assetName of ["templates", "references"]) {
+    const specHome = getSpecHomeDir();
+    const assetRequirements = {
+        templates: { dir: path.join(specHome, "templates"), files: SPEC_TEMPLATE_REQUIRED_FILES },
+        references: { dir: path.join(specHome, "references"), files: SPEC_REFERENCE_REQUIRED_FILES },
+        profiles: { dir: path.join(specHome, "profiles"), files: SPEC_PROFILE_REQUIRED_FILES },
+    };
+
+    for (const assetName of ["templates", "references", "profiles"]) {
         const asset = state.assets[assetName];
         if (!asset || !asset.destPath || !fs.existsSync(asset.destPath)) {
             issues.push(`Missing spec asset: ${assetName}`);
+            continue;
+        }
+        const requirement = assetRequirements[assetName];
+        const missing = listMissingFiles(requirement.dir, requirement.files);
+        for (const rel of missing) {
+            issues.push(`Missing spec asset file: ${assetName}/${rel}`);
         }
     }
 
@@ -1777,7 +1968,7 @@ function evaluateSpecState() {
         targets: targetNames,
         issues,
         assets: state.assets || {},
-        specHome: getSpecHomeDir(),
+        specHome,
     };
 }
 
@@ -1806,6 +1997,294 @@ function commandSpecStatus(options) {
         console.log(`   Issue: ${issue}`);
     }
     setQuietStatusExitCode(summary.state);
+}
+
+function stripUtf8Bom(text) {
+    if (!text) return "";
+    return text.charCodeAt(0) === 0xFEFF ? text.slice(1) : text;
+}
+
+function parseCsvLine(line) {
+    const cells = [];
+    let current = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === "\"") {
+            if (inQuotes && line[i + 1] === "\"") {
+                current += "\"";
+                i += 1;
+                continue;
+            }
+            inQuotes = !inQuotes;
+            continue;
+        }
+        if (ch === "," && !inQuotes) {
+            cells.push(current);
+            current = "";
+            continue;
+        }
+        current += ch;
+    }
+    cells.push(current);
+    return cells;
+}
+
+function analyzeIssuesCsv(issuesPath) {
+    if (!fs.existsSync(issuesPath)) {
+        return { status: "missing", issues: ["Missing issues.csv"], stats: { total: 0, inProgress: 0 } };
+    }
+
+    const raw = stripUtf8Bom(fs.readFileSync(issuesPath, "utf8"));
+    const lines = raw.split(/\r?\n/).filter((line) => line.trim().length > 0);
+    if (lines.length === 0) {
+        return { status: "broken", issues: ["issues.csv is empty"], stats: { total: 0, inProgress: 0 } };
+    }
+
+    const header = parseCsvLine(lines[0]).map((cell) => cell.trim());
+    const statusIndex = header.findIndex((cell) => cell === "状态" || cell.includes("(状态)") || /状态/.test(cell));
+    if (statusIndex < 0) {
+        return { status: "broken", issues: ["issues.csv header missing 状态 column"], stats: { total: Math.max(0, lines.length - 1), inProgress: 0 } };
+    }
+
+    const allowedStates = new Set(["未开始", "进行中", "已完成"]);
+    let total = 0;
+    let inProgress = 0;
+    const issues = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        const row = parseCsvLine(lines[i]);
+        const isEmpty = row.every((cell) => String(cell || "").trim() === "");
+        if (isEmpty) {
+            continue;
+        }
+        total += 1;
+        const state = String(row[statusIndex] || "").trim();
+        if (!allowedStates.has(state)) {
+            issues.push(`Invalid 状态 at row ${i + 1}: ${state || "(empty)"}`);
+            continue;
+        }
+        if (state === "进行中") {
+            inProgress += 1;
+        }
+    }
+
+    if (inProgress > 1) {
+        issues.push(`Multiple tasks in 进行中: ${inProgress}`);
+    }
+
+    return {
+        status: issues.length > 0 ? "broken" : "ok",
+        issues,
+        stats: { total, inProgress },
+    };
+}
+
+function checkSpecProjectIntegrity(workspaceRoot) {
+    const issues = [];
+    const issuesPath = path.join(workspaceRoot, "issues.csv");
+    const issuesResult = analyzeIssuesCsv(issuesPath);
+
+    const specDir = path.join(workspaceRoot, ".ling", "spec");
+    const templatesDir = path.join(specDir, "templates");
+    const referencesDir = path.join(specDir, "references");
+    const profilesDir = path.join(specDir, "profiles");
+
+    const hasSpecDir = fs.existsSync(specDir);
+    if (!hasSpecDir) {
+        if (issuesResult.status !== "missing") {
+            issues.push("Missing .ling/spec directory (run: ling spec init)");
+        }
+    } else {
+        if (issuesResult.status === "missing") {
+            issues.push("Missing issues.csv (run: ling spec init)");
+        }
+        for (const rel of SPEC_TEMPLATE_REQUIRED_FILES) {
+            const filePath = path.join(templatesDir, rel);
+            if (!fs.existsSync(filePath)) {
+                issues.push(`Missing spec template: .ling/spec/templates/${rel}`);
+            }
+        }
+        for (const rel of SPEC_REFERENCE_REQUIRED_FILES) {
+            const filePath = path.join(referencesDir, rel);
+            if (!fs.existsSync(filePath)) {
+                issues.push(`Missing spec reference: .ling/spec/references/${rel}`);
+            }
+        }
+        for (const rel of SPEC_PROFILE_REQUIRED_FILES) {
+            const filePath = path.join(profilesDir, ...rel.split("/"));
+            if (!fs.existsSync(filePath)) {
+                issues.push(`Missing spec profile: .ling/spec/profiles/${rel}`);
+            }
+        }
+    }
+
+    if (issuesResult.status === "broken") {
+        issues.push(...issuesResult.issues);
+    }
+
+    const hasAnySpecSignal = hasSpecDir || issuesResult.status !== "missing";
+    if (!hasAnySpecSignal) {
+        return { status: "missing", issues: [], stats: { total: 0, inProgress: 0 } };
+    }
+
+    return {
+        status: issues.length > 0 ? "broken" : "ok",
+        issues,
+        stats: issuesResult.stats,
+    };
+}
+
+function resolveWorkspaceSpecBackupRoot(workspaceRoot, timestamp) {
+    return path.join(workspaceRoot, ".ling", "backups", "spec", timestamp, "before");
+}
+
+async function commandSpecInit(options) {
+    const workspaceRoot = options.path ? resolveWorkspaceRoot(options.path) : getSpecWorkspaceDir();
+    const prompter = createConflictPrompter(options);
+    const timestamp = nowISO().replace(/[:.]/g, "-");
+    const backupRoot = resolveWorkspaceSpecBackupRoot(workspaceRoot, timestamp);
+
+    const specDir = path.join(workspaceRoot, ".ling", "spec");
+    let specSourceDir = BUNDLED_SPEC_DIR;
+    let cleanupSpec = null;
+    if (options.branch) {
+        const remote = cloneBranchSpecDir(options.branch, {
+            quiet: options.quiet,
+            logger: log.bind(null, options),
+        });
+        specSourceDir = remote.specDir;
+        cleanupSpec = remote.cleanup;
+    }
+    const assets = {
+        templates: {
+            sourceDir: path.join(specSourceDir, "templates"),
+            destDir: path.join(specDir, "templates"),
+        },
+        references: {
+            sourceDir: path.join(specSourceDir, "references"),
+            destDir: path.join(specDir, "references"),
+        },
+        profiles: {
+            sourceDir: path.join(specSourceDir, "profiles"),
+            destDir: path.join(specDir, "profiles"),
+        },
+    };
+
+    try {
+        fs.mkdirSync(workspaceRoot, { recursive: true });
+
+        for (const [assetName, config] of Object.entries(assets)) {
+            const exists = fs.existsSync(config.destDir);
+            if (exists && areDirectoriesEqual(config.sourceDir, config.destDir)) {
+                log(options, `[skip] Spec ${assetName} 已最新，无需覆盖: ${config.destDir}`);
+                continue;
+            }
+
+            let action = exists ? "backup" : "";
+            if (exists && prompter) {
+                action = await prompter.resolveConflict({
+                    category: "spec:project:assets",
+                    label: `Spec ${assetName}`,
+                    path: config.destDir,
+                });
+            } else if (exists && !prompter && (options.force || options.nonInteractive || !process.stdin.isTTY)) {
+                action = "backup";
+            }
+
+            if (action === "keep") {
+                log(options, `[skip] 已保留 Spec ${assetName} 资产，不覆盖: ${config.destDir}`);
+                continue;
+            }
+
+            if (exists && action !== "remove") {
+                backupDirSnapshot(config.destDir, path.join(backupRoot, "assets", assetName), options, `Spec ${assetName}`);
+            } else if (exists && action === "remove") {
+                removeDirIfExists(config.destDir, options, `Spec ${assetName}`);
+            }
+            applyDirSnapshot(config.sourceDir, config.destDir, options, `Spec ${assetName}`);
+        }
+
+        const issuesPath = path.join(workspaceRoot, "issues.csv");
+        const issuesTemplatePath = path.join(specSourceDir, "templates", "issues.template.csv");
+        const issuesTemplate = stripUtf8Bom(fs.readFileSync(issuesTemplatePath, "utf8"));
+        const hasIssues = fs.existsSync(issuesPath);
+        if (hasIssues) {
+            let action = "backup";
+            if (prompter) {
+                action = await prompter.resolveConflict({
+                    category: "spec:project:file",
+                    label: "issues.csv",
+                    path: issuesPath,
+                });
+            }
+            if (action === "keep") {
+                log(options, "[skip] 已保留现有 issues.csv，不覆盖");
+            } else {
+                if (action !== "remove") {
+                    backupFileSnapshot(issuesPath, path.join(backupRoot, "issues.csv"), options, "issues.csv");
+                } else if (!options.dryRun) {
+                    fs.rmSync(issuesPath, { force: true });
+                }
+                atomicWriteFile(issuesPath, `${issuesTemplate.trimEnd()}\n`, options, "issues.csv");
+                log(options, options.dryRun ? `[dry-run] 将写入任务跟踪文件: ${issuesPath}` : `[ok] 已写入任务跟踪文件: ${issuesPath}`);
+            }
+        } else {
+            atomicWriteFile(issuesPath, `${issuesTemplate.trimEnd()}\n`, options, "issues.csv");
+            log(options, options.dryRun ? `[dry-run] 将创建任务跟踪文件: ${issuesPath}` : `[ok] 已创建任务跟踪文件: ${issuesPath}`);
+        }
+
+        const docsReviewsDir = path.join(workspaceRoot, "docs", "reviews");
+        const docsHandoffDir = path.join(workspaceRoot, "docs", "handoff");
+        if (options.dryRun) {
+            log(options, `[dry-run] 将确保目录存在: ${docsReviewsDir}`);
+            log(options, `[dry-run] 将确保目录存在: ${docsHandoffDir}`);
+        } else {
+            fs.mkdirSync(docsReviewsDir, { recursive: true });
+            fs.mkdirSync(docsHandoffDir, { recursive: true });
+        }
+
+        const requestedTargets = normalizeTargets(options.targets);
+        const shouldInitTargets = options.path ? requestedTargets.length > 0 : true;
+        const targets = shouldInitTargets ? (requestedTargets.length > 0 ? requestedTargets : [...SUPPORTED_TARGETS]) : [];
+        if (targets.length > 0) {
+            await initTargets(workspaceRoot, targets, options, prompter);
+        }
+
+        log(options, `[ok] Spec 初始化完成: ${workspaceRoot}`);
+    } finally {
+        if (cleanupSpec) cleanupSpec();
+        if (prompter) prompter.close();
+    }
+}
+
+function commandSpecDoctor(options) {
+    const workspaceRoot = options.path ? resolveWorkspaceRoot(options.path) : getSpecWorkspaceDir();
+    const result = checkSpecProjectIntegrity(workspaceRoot);
+    const state = result.status === "ok" ? "installed" : result.status;
+
+    if (options.quiet) {
+        console.log(state);
+        setQuietStatusExitCode(state);
+        return;
+    }
+
+    if (state === "missing") {
+        console.log("[warn] 未检测到 Spec 项目资产");
+        console.log(`   工作区: ${workspaceRoot}`);
+        setQuietStatusExitCode("missing");
+        return;
+    }
+
+    console.log(state === "installed" ? "[ok] Spec 项目资产状态正常" : "[warn] Spec 项目资产存在问题");
+    console.log(`   工作区: ${workspaceRoot}`);
+    console.log(`   任务数: ${result.stats.total}`);
+    console.log(`   进行中: ${result.stats.inProgress}`);
+    for (const issue of result.issues || []) {
+        console.log(`   Issue: ${issue}`);
+    }
+    setQuietStatusExitCode(state);
 }
 
 async function commandSpecEnable(options) {
@@ -1844,6 +2323,7 @@ function commandSpecDisable(options) {
     if (remainingTargets.length === 0) {
         restoreSpecAsset(state.assets.templates, options, "Spec templates");
         restoreSpecAsset(state.assets.references, options, "Spec references");
+        restoreSpecAsset(state.assets.profiles, options, "Spec profiles");
         state.assets = {};
     }
 
@@ -1851,6 +2331,14 @@ function commandSpecDisable(options) {
     if (!options.dryRun) {
         if (remainingTargets.length === 0) {
             removeSpecStateFile();
+            const specHome = getSpecHomeDir();
+            try {
+                if (fs.existsSync(specHome) && fs.readdirSync(specHome).length === 0) {
+                    fs.rmdirSync(specHome);
+                }
+            } catch (err) {
+                log(options, `[warn] 无法清理 Spec 根目录: ${err.message}`);
+            }
         } else {
             writeSpecState(statePath, state);
         }
@@ -1870,7 +2358,88 @@ async function commandSpec(options) {
     if (subcommand === "disable") {
         return commandSpecDisable(options);
     }
+    if (subcommand === "init") {
+        return await commandSpecInit(options);
+    }
+    if (subcommand === "doctor") {
+        return commandSpecDoctor(options);
+    }
     throw new Error(`未知 spec 子命令: ${subcommand}`);
+}
+
+async function initTargets(workspaceRoot, targets, options, prompter) {
+    for (const target of targets) {
+        const runOptions = { ...options };
+        const conflicts = [];
+
+        if (target === "gemini") {
+            const agentDir = path.join(workspaceRoot, ".agent");
+            if (fs.existsSync(agentDir)) {
+                conflicts.push({
+                    category: "project:gemini",
+                    label: ".agent",
+                    path: agentDir,
+                    target,
+                });
+            }
+        }
+
+        if (target === "codex") {
+            const managedDir = path.join(workspaceRoot, ".agents");
+            const legacyDir = path.join(workspaceRoot, ".codex");
+            if (fs.existsSync(managedDir) || fs.existsSync(legacyDir)) {
+                if (fs.existsSync(managedDir)) {
+                    conflicts.push({
+                        category: "project:codex",
+                        label: ".agents",
+                        path: managedDir,
+                        target,
+                    });
+                }
+                if (fs.existsSync(legacyDir)) {
+                    conflicts.push({
+                        category: "project:codex",
+                        label: ".codex",
+                        path: legacyDir,
+                        target,
+                    });
+                }
+            }
+        }
+
+        if (conflicts.length > 0) {
+            if (!prompter && !runOptions.force) {
+                throw new Error("检测到已有资产且当前环境不可交互，请使用 --force 或在交互终端中重试。");
+            }
+
+            const timestamp = nowISO().replace(/[:.]/g, "-");
+            let shouldSkip = false;
+
+            for (const conflict of conflicts) {
+                const action = prompter ? await prompter.resolveConflict(conflict) : "backup";
+                if (action === "keep") {
+                    log(options, `[skip] 已保留现有资产，跳过初始化: ${conflict.label}`);
+                    shouldSkip = true;
+                    break;
+                }
+                if (action === "backup") {
+                    const backupRootName = conflict.label === ".agent" ? ".agent-backup" : ".agents-backup";
+                    backupWorkspaceDir(workspaceRoot, conflict.path, backupRootName, timestamp, options, `工作区资产 ${conflict.label}`);
+                }
+                // remove/backup 都需要强制覆盖才能继续
+                runOptions.force = true;
+            }
+
+            if (shouldSkip) {
+                continue;
+            }
+        }
+
+        const adapter = createAdapter(target, workspaceRoot, runOptions);
+        log(options, `[sync] 正在初始化目标 [${target}] ...`);
+        adapter.install(BUNDLED_AGENT_DIR);
+        registerWorkspaceTarget(workspaceRoot, target, runOptions);
+    }
 }
 
 async function commandInit(options) {
@@ -1879,78 +2448,7 @@ async function commandInit(options) {
     const prompter = createConflictPrompter(options);
 
     try {
-        for (const target of targets) {
-            const runOptions = { ...options };
-            const conflicts = [];
-
-            if (target === "gemini") {
-                const agentDir = path.join(workspaceRoot, ".agent");
-                if (fs.existsSync(agentDir)) {
-                    conflicts.push({
-                        category: "project:gemini",
-                        label: ".agent",
-                        path: agentDir,
-                        target,
-                    });
-                }
-            }
-
-            if (target === "codex") {
-                const managedDir = path.join(workspaceRoot, ".agents");
-                const legacyDir = path.join(workspaceRoot, ".codex");
-                if (fs.existsSync(managedDir) || fs.existsSync(legacyDir)) {
-                    if (fs.existsSync(managedDir)) {
-                        conflicts.push({
-                            category: "project:codex",
-                            label: ".agents",
-                            path: managedDir,
-                            target,
-                        });
-                    }
-                    if (fs.existsSync(legacyDir)) {
-                        conflicts.push({
-                            category: "project:codex",
-                            label: ".codex",
-                            path: legacyDir,
-                            target,
-                        });
-                    }
-                }
-            }
-
-            if (conflicts.length > 0) {
-                if (!prompter && !runOptions.force) {
-                    throw new Error("检测到已有资产且当前环境不可交互，请使用 --force 或在交互终端中重试。");
-                }
-
-                const timestamp = nowISO().replace(/[:.]/g, "-");
-                let shouldSkip = false;
-
-                for (const conflict of conflicts) {
-                    const action = prompter ? await prompter.resolveConflict(conflict) : "backup";
-                    if (action === "keep") {
-                        log(options, `[skip] 已保留现有资产，跳过初始化: ${conflict.label}`);
-                        shouldSkip = true;
-                        break;
-                    }
-                    if (action === "backup") {
-                        const backupRootName = conflict.label === ".agent" ? ".agent-backup" : ".agents-backup";
-                        backupWorkspaceDir(workspaceRoot, conflict.path, backupRootName, timestamp, options, `工作区资产 ${conflict.label}`);
-                    }
-                    // remove/backup 都需要强制覆盖才能继续
-                    runOptions.force = true;
-                }
-
-                if (shouldSkip) {
-                    continue;
-                }
-            }
-
-            const adapter = createAdapter(target, workspaceRoot, runOptions);
-            log(options, `[sync] 正在初始化目标 [${target}] ...`);
-            adapter.install(BUNDLED_AGENT_DIR);
-            registerWorkspaceTarget(workspaceRoot, target, runOptions);
-        }
+        await initTargets(workspaceRoot, targets, options, prompter);
     } finally {
         if (prompter) prompter.close();
     }
@@ -2381,6 +2879,22 @@ async function commandDoctor(options) {
         }
 
         if (targetHasIssue) {
+            hasIssue = true;
+        }
+    }
+
+    const specResult = checkSpecProjectIntegrity(workspaceRoot);
+    if (specResult.status !== "missing") {
+        out(`\n[SPEC] 检查 Spec 项目资产...`);
+        if (specResult.status === "ok") {
+            out("  [ok] 状态正常");
+            out(`     - 任务数: ${specResult.stats.total}, 进行中: ${specResult.stats.inProgress}`);
+        } else {
+            out(`  [error] 状态: ${specResult.status}`);
+            out(`     - 任务数: ${specResult.stats.total}, 进行中: ${specResult.stats.inProgress}`);
+            for (const issue of specResult.issues || []) {
+                out(`     - ${issue}`);
+            }
             hasIssue = true;
         }
     }

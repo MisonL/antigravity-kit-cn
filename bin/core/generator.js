@@ -37,6 +37,7 @@ class RuleGenerator {
         agentsMd += `1. Managed resources are synchronized under \`.agents/skills\`.\n`;
         agentsMd += `2. Do not rename managed skill folders manually.\n`;
         agentsMd += `3. Use \`ling doctor --target codex --fix\` to recover missing managed artifacts.\n`;
+        agentsMd += `4. If \`issues.csv\` exists, treat it as the task tracking source of truth and keep at most one task in \`进行中\`.\n`;
 
         // 3. Generate risk controls
         let lingRules = `# Ling Risk Controls (Codex Managed)\n\n`;

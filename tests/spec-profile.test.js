@@ -51,11 +51,14 @@ describe("Spec Profile", () => {
         const stateFile = path.join(tempRoot, ".ling", "spec", "state.json");
         const templatesDir = path.join(tempRoot, ".ling", "spec", "templates");
         const referencesDir = path.join(tempRoot, ".ling", "spec", "references");
+        const profilesDir = path.join(tempRoot, ".ling", "spec", "profiles");
 
         assert.ok(fs.existsSync(codexSkill), "missing installed codex spec skill");
         assert.ok(fs.existsSync(stateFile), "missing spec state");
         assert.ok(fs.existsSync(path.join(templatesDir, "issues.template.csv")), "missing spec template");
         assert.ok(fs.existsSync(path.join(referencesDir, "harness-engineering-digest.md")), "missing spec reference");
+        assert.ok(fs.existsSync(path.join(profilesDir, "codex", "AGENTS.spec.md")), "missing spec profile");
+        assert.ok(fs.existsSync(path.join(profilesDir, "codex", "ling.spec.rules.md")), "missing spec profile rules");
 
         const statusResult = runCli(["spec", "status", "--quiet"], { env });
         assert.strictEqual(statusResult.status, 0);
@@ -67,6 +70,7 @@ describe("Spec Profile", () => {
         assert.ok(!fs.existsSync(stateFile), "spec state should be removed after final disable");
         assert.ok(!fs.existsSync(templatesDir), "spec templates should be removed after final disable");
         assert.ok(!fs.existsSync(referencesDir), "spec references should be removed after final disable");
+        assert.ok(!fs.existsSync(profilesDir), "spec profiles should be removed after final disable");
     });
 
     test("spec disable should restore pre-existing skill backup", () => {
@@ -82,5 +86,69 @@ describe("Spec Profile", () => {
         const disableResult = runCli(["spec", "disable", "--target", "codex", "--quiet"], { env });
         assert.strictEqual(disableResult.status, 0, disableResult.stderr || disableResult.stdout);
         assert.strictEqual(fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8"), "legacy skill");
+    });
+
+    test("spec enable should repair missing assets and skills when state exists", () => {
+        const env = { LING_GLOBAL_ROOT: tempRoot };
+
+        const enableResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
+
+        const templatesDir = path.join(tempRoot, ".ling", "spec", "templates");
+        const codexSkillDir = path.join(tempRoot, ".codex", "skills", "harness-engineering");
+        fs.rmSync(templatesDir, { recursive: true, force: true });
+        fs.rmSync(codexSkillDir, { recursive: true, force: true });
+
+        const brokenResult = runCli(["spec", "status", "--quiet"], { env });
+        assert.strictEqual(brokenResult.status, 1);
+        assert.strictEqual((brokenResult.stdout || "").trim(), "broken");
+
+        const repairResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(repairResult.status, 0, repairResult.stderr || repairResult.stdout);
+
+        const repairedStatus = runCli(["spec", "status", "--quiet"], { env });
+        assert.strictEqual(repairedStatus.status, 0);
+        assert.strictEqual((repairedStatus.stdout || "").trim(), "installed");
+
+        assert.ok(fs.existsSync(path.join(templatesDir, "issues.template.csv")), "templates should be repaired");
+        assert.ok(fs.existsSync(path.join(codexSkillDir, "SKILL.md")), "spec skill should be repaired");
+    });
+
+    test("spec status should report broken when an asset file is missing", () => {
+        const env = { LING_GLOBAL_ROOT: tempRoot };
+
+        const enableResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
+
+        const driverPrompt = path.join(tempRoot, ".ling", "spec", "templates", "driver-prompt.md");
+        assert.ok(fs.existsSync(driverPrompt), "driver-prompt.md should exist after enable");
+        fs.rmSync(driverPrompt, { force: true });
+
+        const statusResult = runCli(["spec", "status", "--quiet"], { env });
+        assert.strictEqual(statusResult.status, 1);
+        assert.strictEqual((statusResult.stdout || "").trim(), "broken");
+
+        const repairResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(repairResult.status, 0, repairResult.stderr || repairResult.stdout);
+        assert.ok(fs.existsSync(driverPrompt), "driver-prompt.md should be repaired");
+    });
+
+    test("spec status should report broken when state.json is missing but assets exist", () => {
+        const env = { LING_GLOBAL_ROOT: tempRoot };
+
+        const templatesDir = path.join(tempRoot, ".ling", "spec", "templates");
+        fs.mkdirSync(templatesDir, { recursive: true });
+        fs.writeFileSync(path.join(templatesDir, "issues.template.csv"), "sentinel", "utf8");
+
+        const statusResult = runCli(["spec", "status", "--quiet"], { env });
+        assert.strictEqual(statusResult.status, 1);
+        assert.strictEqual((statusResult.stdout || "").trim(), "broken");
+
+        const repairResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(repairResult.status, 0, repairResult.stderr || repairResult.stdout);
+
+        const repairedStatus = runCli(["spec", "status", "--quiet"], { env });
+        assert.strictEqual(repairedStatus.status, 0);
+        assert.strictEqual((repairedStatus.stdout || "").trim(), "installed");
     });
 });

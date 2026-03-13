@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
 
 jobs:
@@ -20,20 +19,16 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Setup Bun
-        run: |
-          npm install --global bun@1.3.9
-          bun --version
+          cache: npm
 
       - name: Install dependencies
-        run: bun install
+        run: npm ci
 
       - name: Run tests
-        run: bun run test
+        run: npm test
 
       - name: CI end-to-end verify
-        run: bun run ci:verify
+        run: npm run ci:verify
 
       - name: Health check
-        run: bun run health-check
+        run: npm run health-check
