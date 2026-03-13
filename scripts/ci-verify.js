@@ -9,6 +9,7 @@ const REPO_ROOT = path.resolve(__dirname, "..");
 const CLI_PATH = path.join(REPO_ROOT, "bin", "ling.js");
 
 function runCli(args, options = {}) {
+    const allowedStatuses = options.allowedStatuses || [0];
     const env = {
         ...process.env,
         LING_SKIP_UPSTREAM_CHECK: "1",
@@ -21,9 +22,11 @@ function runCli(args, options = {}) {
         encoding: "utf8",
     });
 
-    if (result.status !== 0) {
+    if (!allowedStatuses.includes(result.status)) {
         const message = result.stderr || result.stdout || "";
-        throw new Error(`命令失败: ling ${args.join(" ")}\n${message}`);
+        throw new Error(
+            `命令失败: ling ${args.join(" ")}\n(exit=${result.status})\n${message}`.trim(),
+        );
     }
 
     return result.stdout || "";
@@ -82,7 +85,10 @@ function main() {
         throw new Error(`spec status 结果异常: ${specStatus}`);
     }
     runCli(["spec", "disable", "--target", "codex", "--quiet"], { env });
-    const specStatusAfterDisable = runCli(["spec", "status", "--quiet"], { env }).trim();
+    const specStatusAfterDisable = runCli(["spec", "status", "--quiet"], {
+        env,
+        allowedStatuses: [0, 2],
+    }).trim();
     if (specStatusAfterDisable !== "missing") {
         throw new Error(`spec disable 后状态异常: ${specStatusAfterDisable}`);
     }
