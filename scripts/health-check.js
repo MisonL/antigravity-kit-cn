@@ -58,7 +58,7 @@ function main() {
     }
 
     logStep("验证 CLI 核心链路");
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-health-check-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-health-check-"));
     try {
         const workspaceDir = path.join(tempRoot, "workspace");
         const indexPath = path.join(tempRoot, "workspaces.json");
@@ -66,38 +66,49 @@ function main() {
         fs.mkdirSync(workspaceDir, { recursive: true });
 
         const env = {
-            AG_KIT_INDEX_PATH: indexPath,
-            AG_KIT_GLOBAL_ROOT: globalRoot,
-            AG_KIT_SKIP_UPSTREAM_CHECK: "1",
+            LING_INDEX_PATH: indexPath,
+            LING_GLOBAL_ROOT: globalRoot,
+            LING_SKIP_UPSTREAM_CHECK: "1",
         };
 
-        runCommand(`node bin/ag-kit.js init --targets gemini,codex --path "${workspaceDir}" --quiet`, { env });
+        runCommand(`node bin/ling.js init --targets gemini,codex --path "${workspaceDir}" --quiet`, { env });
 
-        const status = runCommand(`node bin/ag-kit.js status --path "${workspaceDir}" --quiet`, { env }).trim();
+        const status = runCommand(`node bin/ling.js status --path "${workspaceDir}" --quiet`, { env }).trim();
         if (status !== "installed") {
             throw new Error(`status 结果异常: ${status}`);
         }
 
-        runCommand(`node bin/ag-kit.js doctor --path "${workspaceDir}" --quiet`, { env });
-        runCommand(`node bin/ag-kit.js update --path "${workspaceDir}" --quiet`, { env });
-        runCommand("node bin/ag-kit.js update-all --dry-run --quiet", { env });
-        runCommand(`node bin/ag-kit.js exclude add --path "${workspaceDir}" --quiet`, { env });
+        runCommand(`node bin/ling.js doctor --path "${workspaceDir}" --quiet`, { env });
+        runCommand(`node bin/ling.js update --path "${workspaceDir}" --quiet`, { env });
+        runCommand("node bin/ling.js update-all --dry-run --quiet", { env });
+        runCommand(`node bin/ling.js exclude add --path "${workspaceDir}" --quiet`, { env });
 
-        const excluded = runCommand("node bin/ag-kit.js exclude list --quiet", { env });
+        const excluded = runCommand("node bin/ling.js exclude list --quiet", { env });
         if (!excluded.split(/\r?\n/).includes(workspaceDir)) {
             throw new Error("exclude add 未生效");
         }
 
-        runCommand(`node bin/ag-kit.js exclude remove --path "${workspaceDir}" --quiet`, { env });
-        const excludedAfter = runCommand("node bin/ag-kit.js exclude list --quiet", { env });
+        runCommand(`node bin/ling.js exclude remove --path "${workspaceDir}" --quiet`, { env });
+        const excludedAfter = runCommand("node bin/ling.js exclude list --quiet", { env });
         if (excludedAfter.split(/\r?\n/).includes(workspaceDir)) {
             throw new Error("exclude remove 未生效");
         }
 
-        runCommand("node bin/ag-kit.js global sync --quiet", { env });
-        const globalStatus = runCommand("node bin/ag-kit.js global status --quiet", { env }).trim();
+        runCommand("node bin/ling.js global sync --quiet", { env });
+        const globalStatus = runCommand("node bin/ling.js global status --quiet", { env }).trim();
         if (globalStatus !== "installed") {
             throw new Error(`global status 结果异常: ${globalStatus}`);
+        }
+
+        runCommand("node bin/ling.js spec enable --target codex --quiet", { env });
+        const specStatus = runCommand("node bin/ling.js spec status --quiet", { env }).trim();
+        if (specStatus !== "installed") {
+            throw new Error(`spec status 结果异常: ${specStatus}`);
+        }
+        runCommand("node bin/ling.js spec disable --target codex --quiet", { env });
+        const specStatusAfterDisable = runCommand("node bin/ling.js spec status --quiet", { env }).trim();
+        if (specStatusAfterDisable !== "missing") {
+            throw new Error(`spec disable 后状态异常: ${specStatusAfterDisable}`);
         }
 
         const globalChecks = [

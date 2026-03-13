@@ -14,9 +14,13 @@ const CodexAdapter = require("./adapters/codex");
 const { selectTargets } = require("./interactive");
 
 const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agents");
+const BUNDLED_SPEC_DIR = path.resolve(__dirname, "../.spec");
+const PRIMARY_CLI_NAME = "ling";
+const LEGACY_CLI_NAME = "ag-kit";
+const CURRENT_CLI_BASENAME = path.basename(process.argv[1] || "", path.extname(process.argv[1] || "")) || PRIMARY_CLI_NAME;
 const WORKSPACE_INDEX_VERSION = 2;
 const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
-const TOOLKIT_PACKAGE_NAMES = new Set(["@mison/ag-kit-cn", "antigravity-kit-cn", "antigravity-kit"]);
+const TOOLKIT_PACKAGE_NAMES = new Set(["@mison/ling", "@mison/ag-kit-cn", "antigravity-kit-cn", "antigravity-kit"]);
 const SUPPORTED_TARGETS = ["gemini", "codex"];
 const LEGACY_INDEX_TARGET_ALIASES = {
     full: "gemini",
@@ -50,17 +54,48 @@ const QUIET_STATUS_EXIT_CODES = {
     broken: 1,
     missing: 2,
 };
+const SPEC_STATE_VERSION = 1;
+const SPEC_SKILL_NAMES = ["harness-engineering", "cybernetic-systems-engineering"];
 
 function nowISO() {
     return new Date().toISOString();
 }
 
+function getControlHomeDir() {
+    const preferred = path.join(os.homedir(), ".ling");
+    const legacy = path.join(os.homedir(), ".ag-kit");
+
+    if (fs.existsSync(preferred)) {
+        return preferred;
+    }
+    if (fs.existsSync(legacy)) {
+        return legacy;
+    }
+    return preferred;
+}
+
+function migrateLegacyControlHomeDir() {
+    if (process.env.LING_INDEX_PATH || process.env.AG_KIT_INDEX_PATH) {
+        return null;
+    }
+
+    const preferred = path.join(os.homedir(), ".ling");
+    const legacy = path.join(os.homedir(), ".ag-kit");
+
+    if (fs.existsSync(preferred) || !fs.existsSync(legacy)) {
+        return null;
+    }
+
+    copyDirRecursive(legacy, preferred);
+    return { from: legacy, to: preferred };
+}
+
 function getWorkspaceIndexPath() {
-    const customPath = process.env.AG_KIT_INDEX_PATH;
+    const customPath = process.env.LING_INDEX_PATH || process.env.AG_KIT_INDEX_PATH;
     if (customPath) {
         return path.resolve(process.cwd(), customPath);
     }
-    return path.join(os.homedir(), ".ag-kit", "workspaces.json");
+    return path.join(getControlHomeDir(), "workspaces.json");
 }
 
 function createEmptyWorkspaceIndex() {
@@ -73,7 +108,7 @@ function createEmptyWorkspaceIndex() {
 }
 
 function resolveGlobalRootDir() {
-    const customRoot = process.env.AG_KIT_GLOBAL_ROOT;
+    const customRoot = process.env.LING_GLOBAL_ROOT || process.env.AG_KIT_GLOBAL_ROOT;
     if (typeof customRoot === "string" && customRoot.trim()) {
         return path.resolve(process.cwd(), customRoot);
     }
@@ -99,7 +134,7 @@ function listGlobalDestinations(globalRoot = resolveGlobalRootDir()) {
 
 function resolveGlobalBackupRoot(timestamp) {
     const globalRoot = resolveGlobalRootDir();
-    return path.join(globalRoot, ".ag-kit", "backups", "global", timestamp);
+    return path.join(globalRoot, ".ling", "backups", "global", timestamp);
 }
 
 function copyDirRecursive(src, dest) {
@@ -134,21 +169,24 @@ function areDirectoriesEqual(leftDir, rightDir) {
 
 function printUsage() {
     console.log("用法:");
-    console.log("  ag-kit init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--no-index] [--quiet] [--dry-run]");
-    console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--no-index] [--quiet] [--dry-run]");
-    console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]");
-    console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]");
-    console.log("  ag-kit global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]  # 默认同步 codex + gemini(cli+antigravity)");
-    console.log("  ag-kit global status [--quiet]");
-    console.log("  ag-kit exclude list [--quiet]");
-    console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
-    console.log("  ag-kit exclude remove --path <dir> [--dry-run] [--quiet]");
-    console.log("  ag-kit status [--path <dir>] [--quiet]");
-    console.log("  ag-kit --version");
+    console.log(`  ${PRIMARY_CLI_NAME} init [--force] [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--non-interactive] [--no-index] [--quiet] [--dry-run]`);
+    console.log(`  ${PRIMARY_CLI_NAME} update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--no-index] [--quiet] [--dry-run]`);
+    console.log(`  ${PRIMARY_CLI_NAME} update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]`);
+    console.log(`  ${PRIMARY_CLI_NAME} doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]  # 默认同步 codex + gemini(cli+antigravity)`);
+    console.log(`  ${PRIMARY_CLI_NAME} global status [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} spec enable [--target <name>|--targets <a,b>] [--quiet] [--dry-run]`);
+    console.log(`  ${PRIMARY_CLI_NAME} spec disable [--target <name>|--targets <a,b>] [--quiet] [--dry-run]`);
+    console.log(`  ${PRIMARY_CLI_NAME} spec status [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} exclude list [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} exclude add --path <dir> [--dry-run] [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} exclude remove --path <dir> [--dry-run] [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} status [--path <dir>] [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} --version`);
 }
 
 function printVersion() {
-    console.log(`ag-kit version ${pkg.version}`);
+    console.log(`${PRIMARY_CLI_NAME} version ${pkg.version}`);
 }
 
 function parseArgs(argv) {
@@ -174,11 +212,19 @@ function parseArgs(argv) {
 
     let startIndex = 1;
     if (command === "exclude" || command === "global") {
-        if (argv.length > 1 && !argv[1].startsWith("--")) {
+    if (argv.length > 1 && !argv[1].startsWith("--")) {
             options.subcommand = argv[1];
             startIndex = 2;
         } else {
             options.subcommand = command === "global" ? "status" : "list";
+            startIndex = 1;
+        }
+    } else if (command === "spec") {
+        if (argv.length > 1 && !argv[1].startsWith("--")) {
+            options.subcommand = argv[1];
+            startIndex = 2;
+        } else {
+            options.subcommand = "status";
             startIndex = 1;
         }
     }
@@ -247,6 +293,9 @@ const COMMAND_ALLOWED_FLAGS = {
     status: ["--path", "--quiet"],
     "global:sync": ["--target", "--targets", "--branch", "--quiet", "--dry-run"],
     "global:status": ["--quiet"],
+    "spec:enable": ["--target", "--targets", "--quiet", "--dry-run"],
+    "spec:disable": ["--target", "--targets", "--quiet", "--dry-run"],
+    "spec:status": ["--quiet"],
     "exclude:list": ["--quiet"],
     "exclude:add": ["--path", "--dry-run", "--quiet"],
     "exclude:remove": ["--path", "--dry-run", "--quiet"],
@@ -263,6 +312,11 @@ function resolveAllowedFlags(command, options) {
         const key = `global:${subcommand}`;
         return COMMAND_ALLOWED_FLAGS[key] || null;
     }
+    if (command === "spec") {
+        const subcommand = String(options.subcommand || "status").toLowerCase();
+        const key = `spec:${subcommand}`;
+        return COMMAND_ALLOWED_FLAGS[key] || null;
+    }
     return COMMAND_ALLOWED_FLAGS[command] || null;
 }
 
@@ -274,6 +328,10 @@ function resolveCommandLabel(command, options) {
     if (command === "global") {
         const subcommand = String(options.subcommand || "status").toLowerCase();
         return `global ${subcommand}`;
+    }
+    if (command === "spec") {
+        const subcommand = String(options.subcommand || "status").toLowerCase();
+        return `spec ${subcommand}`;
     }
     return command;
 }
@@ -365,9 +423,10 @@ function isPathExcludedByList(excludedPaths, workspacePath) {
 
 function isToolkitSourceDirectory(workspacePath) {
     const packageJsonPath = path.join(workspacePath, "package.json");
-    const cliPath = path.join(workspacePath, "bin", "ag-kit.js");
+    const legacyCliPath = path.join(workspacePath, "bin", "ag-kit.js");
+    const primaryCliPath = path.join(workspacePath, "bin", "ling.js");
 
-    if (!fs.existsSync(packageJsonPath) || !fs.existsSync(cliPath)) {
+    if (!fs.existsSync(packageJsonPath) || (!fs.existsSync(legacyCliPath) && !fs.existsSync(primaryCliPath))) {
         return false;
     }
 
@@ -650,7 +709,7 @@ function evaluateWorkspaceExclusion(index, workspaceRoot) {
     if (isToolkitSourceDirectory(normalizedPath)) {
         return {
             excluded: true,
-            reason: "检测为 Ag-Kit 工具包源码目录（默认排除）",
+            reason: "检测为灵轨工具包源码目录（默认排除）",
             path: normalizedPath,
         };
     }
@@ -792,14 +851,15 @@ function maybeWarnUpstreamGlobalConflict(command, options) {
     if (options.quiet) {
         return;
     }
-    if (process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
+    if (process.env.LING_SKIP_UPSTREAM_CHECK === "1" || process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
         return;
     }
     const shouldWarn =
         command === "init"
         || command === "update"
         || command === "update-all"
-        || (command === "global" && String(options.subcommand || "").toLowerCase() === "sync");
+        || (command === "global" && String(options.subcommand || "").toLowerCase() === "sync")
+        || (command === "spec" && String(options.subcommand || "").toLowerCase() === "enable");
     if (!shouldWarn) {
         return;
     }
@@ -814,9 +874,20 @@ function maybeWarnUpstreamGlobalConflict(command, options) {
     }
 
     log(options, `[warn] 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}。`);
-    log(options, "[warn] 上游英文版与当前中文版共用 `ag-kit` 命令名，后安装者会覆盖命令入口。");
+    log(options, `[warn] 上游英文版与当前版本共用 \`${LEGACY_CLI_NAME}\` 兼容命令名，后安装者会覆盖该入口。`);
     log(options, `[hint] 建议执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
-    log(options, "[info] 若你通过 bun install -g 安装，Bun 默认会阻止本包 postinstall；因此这里会在首次执行 CLI 时再次提醒。");
+    log(options, `[info] 正式命令已切换为 \`${PRIMARY_CLI_NAME}\`。若你通过 bun install -g 安装，Bun 默认会阻止本包 postinstall；因此这里会在首次执行 CLI 时再次提醒。`);
+}
+
+function maybeWarnLegacyCliAlias(options) {
+    if (options.quiet) {
+        return;
+    }
+    if (CURRENT_CLI_BASENAME !== LEGACY_CLI_NAME) {
+        return;
+    }
+
+    console.log(`[warn] \`${LEGACY_CLI_NAME}\` 已进入兼容模式，请改用 \`${PRIMARY_CLI_NAME}\`.`);
 }
 
 function normalizeTargets(rawTargets) {
@@ -1244,6 +1315,354 @@ function commandGlobal(options) {
     throw new Error(`未知 global 子命令: ${subcommand}`);
 }
 
+function getSpecHomeDir() {
+    return path.join(resolveGlobalRootDir(), ".ling", "spec");
+}
+
+function getSpecStatePath() {
+    return path.join(getSpecHomeDir(), "state.json");
+}
+
+function resolveSpecBackupRoot(timestamp) {
+    return path.join(resolveGlobalRootDir(), ".ling", "backups", "spec", timestamp, "before");
+}
+
+function createEmptySpecState() {
+    return {
+        version: SPEC_STATE_VERSION,
+        updatedAt: "",
+        targets: {},
+        assets: {},
+    };
+}
+
+function readSpecState() {
+    const statePath = getSpecStatePath();
+    if (!fs.existsSync(statePath)) {
+        return { statePath, state: createEmptySpecState() };
+    }
+
+    const raw = fs.readFileSync(statePath, "utf8").trim();
+    if (!raw) {
+        return { statePath, state: createEmptySpecState() };
+    }
+
+    let parsed;
+    try {
+        parsed = JSON.parse(raw);
+    } catch (err) {
+        throw new Error(`Spec 状态文件解析失败: ${statePath}`);
+    }
+
+    const state = createEmptySpecState();
+    state.updatedAt = typeof parsed.updatedAt === "string" ? parsed.updatedAt : "";
+    state.targets = parsed && typeof parsed.targets === "object" && parsed.targets ? parsed.targets : {};
+    state.assets = parsed && typeof parsed.assets === "object" && parsed.assets ? parsed.assets : {};
+    return { statePath, state };
+}
+
+function writeSpecState(statePath, state) {
+    const payload = {
+        version: SPEC_STATE_VERSION,
+        updatedAt: state.updatedAt || nowISO(),
+        targets: state.targets || {},
+        assets: state.assets || {},
+    };
+    fs.mkdirSync(path.dirname(statePath), { recursive: true });
+    fs.writeFileSync(statePath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+}
+
+function removeSpecStateFile() {
+    const statePath = getSpecStatePath();
+    if (fs.existsSync(statePath)) {
+        fs.rmSync(statePath, { force: true });
+    }
+}
+
+function resolveTargetsForSpec(options) {
+    if (options.targets.length === 0) {
+        return [...SUPPORTED_TARGETS];
+    }
+    return normalizeTargets(options.targets);
+}
+
+function ensureBundledSpecResources() {
+    for (const skillName of SPEC_SKILL_NAMES) {
+        const skillDir = path.join(BUNDLED_SPEC_DIR, "skills", skillName);
+        const skillFile = path.join(skillDir, "SKILL.md");
+        if (!fs.existsSync(skillFile)) {
+            throw new Error(`缺少 Spec Skill 资源: ${skillFile}`);
+        }
+    }
+}
+
+function backupDirSnapshot(sourceDir, backupDir, options, label) {
+    if (!fs.existsSync(sourceDir)) {
+        return "";
+    }
+    if (options.dryRun) {
+        log(options, `[dry-run] 将备份 ${label}: ${sourceDir} -> ${backupDir}`);
+        return backupDir;
+    }
+    fs.mkdirSync(path.dirname(backupDir), { recursive: true });
+    copyDirRecursive(sourceDir, backupDir);
+    log(options, `[backup] 已备份 ${label}: ${sourceDir} -> ${backupDir}`);
+    return backupDir;
+}
+
+function applyDirSnapshot(srcDir, destDir, options, label) {
+    if (options.dryRun) {
+        log(options, `[dry-run] 将写入 ${label}: ${srcDir} -> ${destDir}`);
+        return;
+    }
+    const logger = options.quiet ? (() => {}) : log.bind(null, options);
+    AtomicWriter.atomicCopyDir(srcDir, destDir, { logger });
+    log(options, `[ok] 已写入 ${label}: ${destDir}`);
+}
+
+function removeDirIfExists(targetDir, options, label) {
+    if (!fs.existsSync(targetDir)) {
+        return;
+    }
+    if (options.dryRun) {
+        log(options, `[dry-run] 将删除 ${label}: ${targetDir}`);
+        return;
+    }
+    fs.rmSync(targetDir, { recursive: true, force: true });
+    log(options, `[clean] 已删除 ${label}: ${targetDir}`);
+}
+
+function ensureSpecAssetsInstalled(state, timestamp, options) {
+    const specHome = getSpecHomeDir();
+    const assets = {
+        templates: {
+            sourceDir: path.join(BUNDLED_SPEC_DIR, "templates"),
+            destDir: path.join(specHome, "templates"),
+        },
+        references: {
+            sourceDir: path.join(BUNDLED_SPEC_DIR, "references"),
+            destDir: path.join(specHome, "references"),
+        },
+    };
+
+    for (const [assetName, config] of Object.entries(assets)) {
+        if (state.assets[assetName] && state.assets[assetName].installedAt) {
+            continue;
+        }
+
+        const backupPath = backupDirSnapshot(
+            config.destDir,
+            path.join(resolveSpecBackupRoot(timestamp), "assets", assetName),
+            options,
+            `Spec ${assetName}`,
+        );
+        applyDirSnapshot(config.sourceDir, config.destDir, options, `Spec ${assetName}`);
+        state.assets[assetName] = {
+            destPath: config.destDir,
+            backupPath,
+            installedAt: nowISO(),
+        };
+    }
+}
+
+function restoreSpecAsset(assetState, options, label) {
+    if (!assetState || typeof assetState.destPath !== "string") {
+        return;
+    }
+    if (assetState.backupPath && fs.existsSync(assetState.backupPath)) {
+        applyDirSnapshot(assetState.backupPath, assetState.destPath, options, label);
+        return;
+    }
+    removeDirIfExists(assetState.destPath, options, label);
+}
+
+function enableSpecTarget(targetName, state, timestamp, options) {
+    if (state.targets[targetName]) {
+        log(options, `[skip] Spec 目标已启用: ${targetName}`);
+        return;
+    }
+
+    const destinations = getGlobalDestinations(targetName);
+    const targetState = {
+        enabledAt: nowISO(),
+        consumers: {},
+    };
+
+    for (const destination of destinations) {
+        const consumerState = {
+            skills: [],
+        };
+
+        for (const skillName of SPEC_SKILL_NAMES) {
+            const srcDir = path.join(BUNDLED_SPEC_DIR, "skills", skillName);
+            const destDir = path.join(destination.skillsRoot, skillName);
+            const backupPath = backupDirSnapshot(
+                destDir,
+                path.join(resolveSpecBackupRoot(timestamp), destination.id, "skills", skillName),
+                options,
+                `Spec Skill ${destination.id}/${skillName}`,
+            );
+            applyDirSnapshot(srcDir, destDir, options, `Spec Skill ${destination.id}/${skillName}`);
+            consumerState.skills.push({
+                name: skillName,
+                destPath: destDir,
+                backupPath,
+            });
+        }
+
+        targetState.consumers[destination.id] = consumerState;
+    }
+
+    state.targets[targetName] = targetState;
+}
+
+function disableSpecTarget(targetName, state, options) {
+    const targetState = state.targets[targetName];
+    if (!targetState) {
+        log(options, `[skip] Spec 目标未启用: ${targetName}`);
+        return;
+    }
+
+    for (const [consumerId, consumerState] of Object.entries(targetState.consumers || {})) {
+        for (const skill of consumerState.skills || []) {
+            if (skill.backupPath && fs.existsSync(skill.backupPath)) {
+                applyDirSnapshot(skill.backupPath, skill.destPath, options, `恢复 Spec Skill ${consumerId}/${skill.name}`);
+            } else {
+                removeDirIfExists(skill.destPath, options, `Spec Skill ${consumerId}/${skill.name}`);
+            }
+        }
+    }
+
+    delete state.targets[targetName];
+}
+
+function evaluateSpecState() {
+    const { state } = readSpecState();
+    const targetNames = Object.keys(state.targets || {});
+    if (targetNames.length === 0) {
+        return {
+            state: "missing",
+            targets: [],
+            assets: state.assets || {},
+            specHome: getSpecHomeDir(),
+        };
+    }
+
+    const issues = [];
+    for (const targetName of targetNames) {
+        const targetState = state.targets[targetName];
+        for (const consumerState of Object.values(targetState.consumers || {})) {
+            for (const skill of consumerState.skills || []) {
+                if (!fs.existsSync(path.join(skill.destPath, "SKILL.md"))) {
+                    issues.push(`Missing spec skill: ${skill.destPath}`);
+                }
+            }
+        }
+    }
+
+    for (const assetName of ["templates", "references"]) {
+        const asset = state.assets[assetName];
+        if (!asset || !asset.destPath || !fs.existsSync(asset.destPath)) {
+            issues.push(`Missing spec asset: ${assetName}`);
+        }
+    }
+
+    return {
+        state: issues.length > 0 ? "broken" : "installed",
+        targets: targetNames,
+        issues,
+        assets: state.assets || {},
+        specHome: getSpecHomeDir(),
+    };
+}
+
+function commandSpecStatus(options) {
+    const summary = evaluateSpecState();
+    if (options.quiet) {
+        console.log(summary.state);
+        setQuietStatusExitCode(summary.state);
+        return;
+    }
+
+    if (summary.state === "missing") {
+        console.log("[warn] Spec Profile 未启用");
+        console.log(`   Spec 目录: ${summary.specHome}`);
+        setQuietStatusExitCode("missing");
+        return;
+    }
+
+    console.log(summary.state === "installed" ? "[ok] Spec Profile 状态正常" : "[warn] Spec Profile 存在问题");
+    console.log(`   Spec 目录: ${summary.specHome}`);
+    console.log(`   Targets: ${summary.targets.join(", ")}`);
+    for (const assetName of Object.keys(summary.assets || {})) {
+        console.log(`   Asset: ${assetName} -> ${summary.assets[assetName].destPath}`);
+    }
+    for (const issue of summary.issues || []) {
+        console.log(`   Issue: ${issue}`);
+    }
+    setQuietStatusExitCode(summary.state);
+}
+
+function commandSpecEnable(options) {
+    ensureBundledSpecResources();
+    const targets = resolveTargetsForSpec(options);
+    const { statePath, state } = readSpecState();
+    const timestamp = nowISO().replace(/[:.]/g, "-");
+
+    ensureSpecAssetsInstalled(state, timestamp, options);
+    for (const targetName of targets) {
+        enableSpecTarget(targetName, state, timestamp, options);
+    }
+
+    state.updatedAt = nowISO();
+    if (!options.dryRun) {
+        writeSpecState(statePath, state);
+    }
+
+    log(options, `[ok] Spec Profile 已启用 (Targets: ${targets.join(", ")})`);
+}
+
+function commandSpecDisable(options) {
+    const targets = resolveTargetsForSpec(options);
+    const { statePath, state } = readSpecState();
+
+    for (const targetName of targets) {
+        disableSpecTarget(targetName, state, options);
+    }
+
+    const remainingTargets = Object.keys(state.targets || {});
+    if (remainingTargets.length === 0) {
+        restoreSpecAsset(state.assets.templates, options, "Spec templates");
+        restoreSpecAsset(state.assets.references, options, "Spec references");
+        state.assets = {};
+    }
+
+    state.updatedAt = nowISO();
+    if (!options.dryRun) {
+        if (remainingTargets.length === 0) {
+            removeSpecStateFile();
+        } else {
+            writeSpecState(statePath, state);
+        }
+    }
+
+    log(options, `[ok] Spec Profile 已停用 (Targets: ${targets.join(", ")})`);
+}
+
+function commandSpec(options) {
+    const subcommand = String(options.subcommand || "status").toLowerCase();
+    if (subcommand === "status") {
+        return commandSpecStatus(options);
+    }
+    if (subcommand === "enable") {
+        return commandSpecEnable(options);
+    }
+    if (subcommand === "disable") {
+        return commandSpecDisable(options);
+    }
+    throw new Error(`未知 spec 子命令: ${subcommand}`);
+}
+
 async function commandInit(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
     const targets = await resolveTargetsForInit(options);
@@ -1265,10 +1684,10 @@ async function commandUpdate(options) {
     const targets = resolveTargetsForUpdate(workspaceRoot, options);
 
     if (targets.length === 0) {
-        throw new Error("此目录未检测到 Antigravity Kit 安装，无法更新。请先执行 init。");
+        throw new Error(`此目录未检测到 ${PRIMARY_CLI_NAME} 安装，无法更新。请先执行 init。`);
     }
 
-    log(options, `[update] 正在更新 Antigravity Kit (Targets: ${targets.join(", ")})...`);
+    log(options, `[update] 正在更新 Ling (Targets: ${targets.join(", ")})...`);
 
     let updatedAny = false;
     for (const target of targets) {
@@ -1315,7 +1734,7 @@ function mergeUpdatedTargets(record, workspacePath, targetNames, timestamp) {
 
 async function commandUpdateAll(options) {
     if (options.path) {
-        throw new Error("update-all 不支持 --path，请直接执行 ag-kit update-all");
+        throw new Error(`update-all 不支持 --path，请直接执行 ${PRIMARY_CLI_NAME} update-all`);
     }
 
     const requestedTargets = normalizeTargets(options.targets);
@@ -1324,7 +1743,7 @@ async function commandUpdateAll(options) {
 
     if (records.length === 0) {
         log(options, "[info] 全局索引为空，没有可批量更新的工作区。");
-        log(options, "   先在项目中执行 ag-kit init 或 ag-kit update 建立索引。");
+        log(options, `   先在项目中执行 ${PRIMARY_CLI_NAME} init 或 ${PRIMARY_CLI_NAME} update 建立索引。`);
         return;
     }
 
@@ -1547,7 +1966,7 @@ function commandExcludeList(options) {
 
     console.log("[exclude] 工作区排除清单");
     console.log(`   索引文件: ${indexPath}`);
-    console.log("   默认规则: 自动排除 Ag-Kit 工具包源码目录与系统临时目录（无需手动添加）");
+    console.log("   默认规则: 自动排除灵轨工具包源码目录与系统临时目录（无需手动添加）");
 
     if (excluded.length === 0) {
         console.log("   当前无自定义排除路径。");
@@ -1700,7 +2119,7 @@ function commandStatus(options) {
             console.log("missing");
         }
         if (!options.quiet) {
-            console.log("[error] 未检测到 Antigravity Kit 安装");
+            console.log("[error] 未检测到 Ling 安装");
             console.log(`   目标目录: ${workspaceRoot}`);
         }
         setQuietStatusExitCode("missing");
@@ -1713,7 +2132,7 @@ function commandStatus(options) {
         return;
     }
 
-    console.log(summary.state === "installed" ? "[ok] Antigravity Kit 状态正常" : "[warn] Antigravity Kit 存在问题");
+    console.log(summary.state === "installed" ? "[ok] Ling 状态正常" : "[warn] Ling 存在问题");
     console.log(`   CLI 版本: ${pkg.version}`);
     console.log(`   工作区: ${workspaceRoot}`);
     console.log(`   总体状态: ${summary.state}`);
@@ -1753,7 +2172,7 @@ function commandStatus(options) {
         console.log(`   Skills: ${skillsCount}`);
         console.log(`   Manifest: ${hasManifest ? "yes" : "no"}`);
         if (legacyDetected) {
-            console.log("   Legacy: 检测到 .codex（建议执行 ag-kit update 迁移清理）");
+            console.log(`   Legacy: 检测到 .codex（建议执行 ${PRIMARY_CLI_NAME} update 迁移清理）`);
         }
         if (codexState.state !== "installed") {
             for (const issue of codexState.integrity.issues || []) {
@@ -1767,7 +2186,13 @@ function commandStatus(options) {
 
 async function main() {
     try {
+        const migration = migrateLegacyControlHomeDir();
         const { command, options, providedFlags } = parseArgs(process.argv.slice(2));
+
+        if (migration && !options.quiet) {
+            console.log(`[migrate] 已迁移控制目录: ${migration.from} -> ${migration.to}`);
+        }
+        maybeWarnLegacyCliAlias(options);
 
         if (!command || command === "--help" || command === "-h") {
             printUsage();
@@ -1806,6 +2231,11 @@ async function main() {
 
         if (command === "global") {
             await commandGlobal(options);
+            return;
+        }
+
+        if (command === "spec") {
+            commandSpec(options);
             return;
         }
 

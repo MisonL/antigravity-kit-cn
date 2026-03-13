@@ -47,11 +47,11 @@ class CodexBuilder {
         }
 
         // 4. Generate & Write Metadata
-        const { agentsMd, antigravityRules, codexJson } = RuleGenerator.generate(transformResult, pkg.version);
+        const { agentsMd, lingRules, codexJson } = RuleGenerator.generate(transformResult, pkg.version);
         
         fs.writeFileSync(path.join(outputDir, "codex.json"), `${JSON.stringify(codexJson, null, 2)}\n`);
         fs.writeFileSync(path.join(outputDir, "AGENTS.md"), `${agentsMd}\n`);
-        fs.writeFileSync(path.join(outputDir, "antigravity.rules"), `${antigravityRules}\n`);
+        fs.writeFileSync(path.join(outputDir, "ling.rules"), `${lingRules}\n`);
 
         return {
             outputDir,

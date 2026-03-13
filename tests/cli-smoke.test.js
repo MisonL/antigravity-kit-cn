@@ -6,12 +6,12 @@ const path = require("path");
 const { spawnSync } = require("node:child_process");
 
 const REPO_ROOT = path.resolve(__dirname, "..");
-const CLI_PATH = path.join(REPO_ROOT, "bin", "ag-kit.js");
+const CLI_PATH = path.join(REPO_ROOT, "bin", "ling.js");
 
 function runCli(args, options = {}) {
     const env = {
         ...process.env,
-        AG_KIT_SKIP_UPSTREAM_CHECK: "1",
+        LING_SKIP_UPSTREAM_CHECK: "1",
         ...options.env,
     };
 
@@ -28,7 +28,7 @@ describe("CLI Smoke", () => {
     let indexPath;
 
     beforeEach(() => {
-        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-cli-test-"));
+        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ling-cli-test-"));
         workspaceDir = path.join(tempDir, "workspace");
         indexPath = path.join(tempDir, "workspaces.json");
         fs.mkdirSync(workspaceDir, { recursive: true });
@@ -41,13 +41,13 @@ describe("CLI Smoke", () => {
     test("doctor should work after codex init", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
         const doctorResult = runCli(
             ["doctor", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(doctorResult.status, 0, doctorResult.stderr || doctorResult.stdout);
     });
@@ -55,13 +55,13 @@ describe("CLI Smoke", () => {
     test("doctor --quiet should not print diagnostic details", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
         const doctorResult = runCli(
             ["doctor", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(doctorResult.status, 0, doctorResult.stderr || doctorResult.stdout);
         assert.strictEqual((doctorResult.stdout || "").trim(), "");
@@ -70,7 +70,7 @@ describe("CLI Smoke", () => {
     test("doctor --fix should remove stale .codex directory", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
@@ -80,7 +80,7 @@ describe("CLI Smoke", () => {
 
         const doctorFixResult = runCli(
             ["doctor", "--target", "codex", "--path", workspaceDir, "--fix", "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(doctorFixResult.status, 0, doctorFixResult.stderr || doctorFixResult.stdout);
         assert.ok(!fs.existsSync(path.join(workspaceDir, ".codex")));
@@ -89,7 +89,7 @@ describe("CLI Smoke", () => {
     test("init should not index temporary workspace by default", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
@@ -105,7 +105,7 @@ describe("CLI Smoke", () => {
     test("codex init should create .agents managed directory", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
         assert.ok(fs.existsSync(path.join(workspaceDir, ".agents")));
@@ -115,7 +115,7 @@ describe("CLI Smoke", () => {
     test("codex update should remove pre-existing legacy .codex directory", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
         assert.ok(fs.existsSync(path.join(workspaceDir, ".agents")));
@@ -125,7 +125,7 @@ describe("CLI Smoke", () => {
 
         const updateResult = runCli(
             ["update", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(updateResult.status, 0, updateResult.stderr || updateResult.stdout);
         assert.ok(!fs.existsSync(path.join(workspaceDir, ".codex")));
@@ -134,7 +134,7 @@ describe("CLI Smoke", () => {
 
     test("update-all should auto-clean temp workspace records from index", () => {
         const now = new Date().toISOString();
-        const tempWorkspacePath = path.join(os.tmpdir(), "ag-kit-indexed-temp", "workspace");
+        const tempWorkspacePath = path.join(os.tmpdir(), "ling-indexed-temp", "workspace");
         const seedIndex = {
             version: 2,
             updatedAt: now,
@@ -155,7 +155,7 @@ describe("CLI Smoke", () => {
         fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
 
         const result = runCli(["update-all", "--quiet"], {
-            env: { AG_KIT_INDEX_PATH: indexPath },
+            env: { LING_INDEX_PATH: indexPath },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
@@ -166,14 +166,14 @@ describe("CLI Smoke", () => {
 
     test("update-all should normalize legacy full target records in v2 index", () => {
         const now = new Date().toISOString();
-        const persistentRoot = fs.mkdtempSync(path.join(REPO_ROOT, ".temp-ag-kit-legacy-index-"));
+        const persistentRoot = fs.mkdtempSync(path.join(REPO_ROOT, ".temp-ling-legacy-index-"));
         const persistentWorkspace = path.join(persistentRoot, "workspace");
         fs.mkdirSync(persistentWorkspace, { recursive: true });
 
         try {
             const initResult = runCli(
                 ["init", "--target", "codex", "--path", persistentWorkspace, "--quiet"],
-                { env: { AG_KIT_INDEX_PATH: indexPath } },
+                { env: { LING_INDEX_PATH: indexPath } },
             );
             assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
@@ -197,7 +197,7 @@ describe("CLI Smoke", () => {
             fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
 
             const result = runCli(["update-all", "--quiet"], {
-                env: { AG_KIT_INDEX_PATH: indexPath },
+                env: { LING_INDEX_PATH: indexPath },
             });
             assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
@@ -217,9 +217,9 @@ describe("CLI Smoke", () => {
         const tmpRoot = os.tmpdir();
         let aliasTempPath = "";
         if (tmpRoot.startsWith("/var/")) {
-            aliasTempPath = `/private${tmpRoot}/ag-kit-indexed-temp/workspace`;
+            aliasTempPath = `/private${tmpRoot}/ling-indexed-temp/workspace`;
         } else if (tmpRoot.startsWith("/private/var/")) {
-            aliasTempPath = `${tmpRoot.replace(/^\/private/, "")}/ag-kit-indexed-temp/workspace`;
+            aliasTempPath = `${tmpRoot.replace(/^\/private/, "")}/ling-indexed-temp/workspace`;
         } else {
             return;
         }
@@ -245,7 +245,7 @@ describe("CLI Smoke", () => {
         fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
 
         const result = runCli(["update-all", "--quiet"], {
-            env: { AG_KIT_INDEX_PATH: indexPath },
+            env: { LING_INDEX_PATH: indexPath },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
@@ -257,7 +257,7 @@ describe("CLI Smoke", () => {
     test("init in non-interactive mode should require explicit target", () => {
         const result = runCli(
             ["init", "--non-interactive", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.notStrictEqual(result.status, 0);
         assert.match(result.stderr || result.stdout, /非交互模式下必须通过 --target 或 --targets 指定目标/);
@@ -268,7 +268,7 @@ describe("CLI Smoke", () => {
 
         const result = runCli(
             ["update", "--target", "gemini", "--path", workspaceDir, "--dry-run", "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
     });
@@ -276,7 +276,7 @@ describe("CLI Smoke", () => {
     test("status --quiet should report missing with exit code 2 when nothing is installed", () => {
         const result = runCli(
             ["status", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(result.status, 2);
         assert.strictEqual((result.stdout || "").trim(), "missing");
@@ -287,7 +287,7 @@ describe("CLI Smoke", () => {
 
         const result = runCli(
             ["status", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(result.status, 1);
         assert.strictEqual((result.stdout || "").trim(), "broken");
@@ -296,7 +296,7 @@ describe("CLI Smoke", () => {
     test("status --quiet should report broken for codex drift", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
@@ -304,7 +304,7 @@ describe("CLI Smoke", () => {
 
         const result = runCli(
             ["status", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(result.status, 1);
         assert.strictEqual((result.stdout || "").trim(), "broken");
@@ -313,13 +313,13 @@ describe("CLI Smoke", () => {
     test("status --quiet should report installed when installation is healthy", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
         const result = runCli(
             ["status", "--path", workspaceDir, "--quiet"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
         assert.strictEqual((result.stdout || "").trim(), "installed");
@@ -330,7 +330,7 @@ describe("CLI Smoke", () => {
 
         const result = runCli(
             ["status", "--path", workspaceDir, "--no-index"],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.notStrictEqual(result.status, 0);
         assert.match(result.stderr || result.stdout, /命令 status 不支持参数: --no-index/);
@@ -339,7 +339,7 @@ describe("CLI Smoke", () => {
     test("exclude list should reject unsupported --path option", () => {
         const result = runCli(
             ["exclude", "list", "--path", workspaceDir],
-            { env: { AG_KIT_INDEX_PATH: indexPath } },
+            { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.notStrictEqual(result.status, 0);
         assert.match(result.stderr || result.stdout, /命令 exclude list 不支持参数: --path/);
@@ -368,13 +368,13 @@ describe("CLI Smoke", () => {
         fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
 
         const result = runCli(["update-all", "--dry-run", "--quiet"], {
-            env: { AG_KIT_INDEX_PATH: indexPath },
+            env: { LING_INDEX_PATH: indexPath },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
     });
 
     test("update-all should update installed target even when index target list is stale", () => {
-        const localWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ag-kit-update-all-stale-target-"));
+        const localWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ling-update-all-stale-target-"));
         try {
             fs.mkdirSync(path.join(localWorkspace, ".codex"), { recursive: true });
             fs.writeFileSync(
@@ -404,7 +404,7 @@ describe("CLI Smoke", () => {
             fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
 
             const result = runCli(["update-all", "--targets", "codex", "--quiet"], {
-                env: { AG_KIT_INDEX_PATH: indexPath },
+                env: { LING_INDEX_PATH: indexPath },
             });
             assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
@@ -418,11 +418,11 @@ describe("CLI Smoke", () => {
     });
 
     test("init should respect --no-index on non-temp workspace", () => {
-        const localWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ag-kit-no-index-"));
+        const localWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ling-no-index-"));
         try {
             const initResult = runCli(
                 ["init", "--target", "codex", "--path", localWorkspace, "--no-index", "--quiet"],
-                { env: { AG_KIT_INDEX_PATH: indexPath } },
+                { env: { LING_INDEX_PATH: indexPath } },
             );
             assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 
@@ -436,7 +436,7 @@ describe("CLI Smoke", () => {
 
             const updateResult = runCli(
                 ["update", "--quiet"],
-                { cwd: localWorkspace, env: { AG_KIT_INDEX_PATH: indexPath } },
+                { cwd: localWorkspace, env: { LING_INDEX_PATH: indexPath } },
             );
             assert.strictEqual(updateResult.status, 0, updateResult.stderr || updateResult.stdout);
 
@@ -449,19 +449,19 @@ describe("CLI Smoke", () => {
     });
 
     test("init should skip indexing toolkit source-like workspace by package name", () => {
-        const toolkitWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ag-kit-toolkit-source-"));
+        const toolkitWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ling-toolkit-source-"));
         try {
             fs.mkdirSync(path.join(toolkitWorkspace, "bin"), { recursive: true });
             fs.writeFileSync(
                 path.join(toolkitWorkspace, "package.json"),
-                JSON.stringify({ name: "@mison/ag-kit-cn", version: "2.0.1" }, null, 2),
+                JSON.stringify({ name: "@mison/ling", version: "2.0.1" }, null, 2),
                 "utf8",
             );
-            fs.writeFileSync(path.join(toolkitWorkspace, "bin", "ag-kit.js"), "#!/usr/bin/env node\n", "utf8");
+            fs.writeFileSync(path.join(toolkitWorkspace, "bin", "ling.js"), "#!/usr/bin/env node\n", "utf8");
 
             const initResult = runCli(
                 ["init", "--target", "gemini", "--path", toolkitWorkspace, "--quiet"],
-                { env: { AG_KIT_INDEX_PATH: indexPath } },
+                { env: { LING_INDEX_PATH: indexPath } },
             );
             assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
 

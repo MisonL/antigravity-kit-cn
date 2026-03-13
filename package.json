@@ -1,17 +1,17 @@
 {
-  "name": "@mison/ag-kit-cn",
+  "name": "@mison/ling",
   "version": "3.0.0",
   "description": "AI Agent templates - Skills, Agents, and Workflows for enhanced coding assistance",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MisonL/antigravity-kit-cn.git"
+    "url": "git+https://github.com/MisonL/Ling.git"
   },
-  "homepage": "https://github.com/MisonL/antigravity-kit-cn#readme",
+  "homepage": "https://github.com/MisonL/Ling#readme",
   "bugs": {
-    "url": "https://github.com/MisonL/antigravity-kit-cn/issues"
+    "url": "https://github.com/MisonL/Ling/issues"
   },
   "keywords": [
-    "antigravity",
+    "ling",
     "ai",
     "agent",
     "gemini",
@@ -33,6 +33,7 @@
   },
   "files": [
     ".agents/**",
+    ".spec/**",
     "bin/**",
     "scripts/clean.js",
     "scripts/ci-verify.js",
@@ -49,6 +50,7 @@
     "docs/TECH.md"
   ],
   "bin": {
+    "ling": "./bin/ling.js",
     "ag-kit": "./bin/ag-kit.js"
   }
 }

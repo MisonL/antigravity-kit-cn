@@ -6,12 +6,12 @@ const path = require("path");
 const { spawnSync } = require("node:child_process");
 
 const REPO_ROOT = path.resolve(__dirname, "..");
-const CLI_PATH = path.join(REPO_ROOT, "bin", "ag-kit.js");
+const CLI_PATH = path.join(REPO_ROOT, "bin", "ling.js");
 
 function runCli(args, options = {}) {
     const env = {
         ...process.env,
-        AG_KIT_SKIP_UPSTREAM_CHECK: "1",
+        LING_SKIP_UPSTREAM_CHECK: "1",
         ...options.env,
     };
 
@@ -23,7 +23,7 @@ function runCli(args, options = {}) {
 
     if (result.status !== 0) {
         const message = result.stderr || result.stdout || "";
-        throw new Error(`命令失败: ag-kit ${args.join(" ")}\n${message}`);
+        throw new Error(`命令失败: ling ${args.join(" ")}\n${message}`);
     }
 
     return result.stdout || "";
@@ -36,7 +36,7 @@ function ensureExists(targetPath, label) {
 }
 
 function main() {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-ci-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-ci-"));
     const workspaceDir = path.join(tempRoot, "workspace");
     const indexPath = path.join(tempRoot, "workspaces.json");
     const globalRoot = path.join(tempRoot, "global-root");
@@ -44,8 +44,8 @@ function main() {
     fs.mkdirSync(workspaceDir, { recursive: true });
 
     const env = {
-        AG_KIT_INDEX_PATH: indexPath,
-        AG_KIT_GLOBAL_ROOT: globalRoot,
+        LING_INDEX_PATH: indexPath,
+        LING_GLOBAL_ROOT: globalRoot,
     };
 
     runCli(["init", "--targets", "gemini,codex", "--path", workspaceDir, "--quiet"], { env });
@@ -76,12 +76,27 @@ function main() {
         throw new Error(`global status 结果异常: ${globalStatus}`);
     }
 
+    runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+    const specStatus = runCli(["spec", "status", "--quiet"], { env }).trim();
+    if (specStatus !== "installed") {
+        throw new Error(`spec status 结果异常: ${specStatus}`);
+    }
+    runCli(["spec", "disable", "--target", "codex", "--quiet"], { env });
+    const specStatusAfterDisable = runCli(["spec", "status", "--quiet"], { env }).trim();
+    if (specStatusAfterDisable !== "missing") {
+        throw new Error(`spec disable 后状态异常: ${specStatusAfterDisable}`);
+    }
+
     const codexSkill = path.join(globalRoot, ".codex", "skills", "workflow-plan", "SKILL.md");
     const geminiCliSkill = path.join(globalRoot, ".gemini", "skills", "clean-code", "SKILL.md");
     const antigravitySkill = path.join(globalRoot, ".gemini", "antigravity", "skills", "clean-code", "SKILL.md");
+    const specCodexSkill = path.join(globalRoot, ".codex", "skills", "harness-engineering");
     ensureExists(codexSkill, "全局 Codex workflow-plan Skill");
     ensureExists(geminiCliSkill, "全局 Gemini CLI clean-code Skill");
     ensureExists(antigravitySkill, "全局 Antigravity clean-code Skill");
+    if (fs.existsSync(specCodexSkill)) {
+        throw new Error(`spec disable 后仍残留 Spec Skill: ${specCodexSkill}`);
+    }
 
     fs.rmSync(tempRoot, { recursive: true, force: true });
 }

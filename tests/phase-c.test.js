@@ -57,7 +57,7 @@ describe('Phase C Integration', () => {
         // Verification 3: Manifest & Meta
         assert.ok(fs.existsSync(path.join(codexDir, 'codex.json')));
         assert.ok(fs.existsSync(path.join(codexDir, 'AGENTS.md')));
-        assert.ok(fs.existsSync(path.join(codexDir, 'antigravity.rules')));
+        assert.ok(fs.existsSync(path.join(codexDir, 'ling.rules')));
         
         const agentsMd = fs.readFileSync(path.join(codexDir, 'AGENTS.md'), 'utf8');
         assert.ok(agentsMd.includes('test-skill'));
@@ -65,7 +65,7 @@ describe('Phase C Integration', () => {
 
         // Verification 4: Workspace managed block injection
         const workspaceAgents = fs.readFileSync(path.join(workDir, 'AGENTS.md'), 'utf8');
-        const workspaceRules = fs.readFileSync(path.join(workDir, 'antigravity.rules'), 'utf8');
+        const workspaceRules = fs.readFileSync(path.join(workDir, 'ling.rules'), 'utf8');
         assert.ok(workspaceAgents.includes('BEGIN AG-KIT MANAGED BLOCK: codex-core-rules'));
         assert.ok(workspaceAgents.includes('test-skill'));
         assert.ok(workspaceRules.includes('BEGIN AG-KIT MANAGED BLOCK: codex-risk-controls'));

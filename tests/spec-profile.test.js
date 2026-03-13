@@ -1,0 +1,86 @@
+const { test, describe, beforeEach, afterEach } = require("node:test");
+const assert = require("node:assert");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const { spawnSync } = require("node:child_process");
+
+const REPO_ROOT = path.resolve(__dirname, "..");
+const CLI_PATH = path.join(REPO_ROOT, "bin", "ling.js");
+
+function runCli(args, options = {}) {
+    const env = {
+        ...process.env,
+        LING_SKIP_UPSTREAM_CHECK: "1",
+        ...options.env,
+    };
+
+    return spawnSync(process.execPath, [CLI_PATH, ...args], {
+        cwd: options.cwd || REPO_ROOT,
+        env,
+        encoding: "utf8",
+    });
+}
+
+describe("Spec Profile", () => {
+    let tempRoot;
+
+    beforeEach(() => {
+        tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-spec-test-"));
+    });
+
+    afterEach(() => {
+        fs.rmSync(tempRoot, { recursive: true, force: true });
+    });
+
+    test("spec status should report missing before enable", () => {
+        const result = runCli(["spec", "status", "--quiet"], {
+            env: { LING_GLOBAL_ROOT: tempRoot },
+        });
+        assert.strictEqual(result.status, 2);
+        assert.strictEqual((result.stdout || "").trim(), "missing");
+    });
+
+    test("spec enable should install skills and assets, and disable should remove them", () => {
+        const env = { LING_GLOBAL_ROOT: tempRoot };
+
+        const enableResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
+
+        const codexSkill = path.join(tempRoot, ".codex", "skills", "harness-engineering", "SKILL.md");
+        const stateFile = path.join(tempRoot, ".ling", "spec", "state.json");
+        const templatesDir = path.join(tempRoot, ".ling", "spec", "templates");
+        const referencesDir = path.join(tempRoot, ".ling", "spec", "references");
+
+        assert.ok(fs.existsSync(codexSkill), "missing installed codex spec skill");
+        assert.ok(fs.existsSync(stateFile), "missing spec state");
+        assert.ok(fs.existsSync(path.join(templatesDir, "issues.template.csv")), "missing spec template");
+        assert.ok(fs.existsSync(path.join(referencesDir, "harness-engineering-digest.md")), "missing spec reference");
+
+        const statusResult = runCli(["spec", "status", "--quiet"], { env });
+        assert.strictEqual(statusResult.status, 0);
+        assert.strictEqual((statusResult.stdout || "").trim(), "installed");
+
+        const disableResult = runCli(["spec", "disable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(disableResult.status, 0, disableResult.stderr || disableResult.stdout);
+        assert.ok(!fs.existsSync(path.join(tempRoot, ".codex", "skills", "harness-engineering")), "spec skill should be removed");
+        assert.ok(!fs.existsSync(stateFile), "spec state should be removed after final disable");
+        assert.ok(!fs.existsSync(templatesDir), "spec templates should be removed after final disable");
+        assert.ok(!fs.existsSync(referencesDir), "spec references should be removed after final disable");
+    });
+
+    test("spec disable should restore pre-existing skill backup", () => {
+        const env = { LING_GLOBAL_ROOT: tempRoot };
+        const skillDir = path.join(tempRoot, ".codex", "skills", "harness-engineering");
+        fs.mkdirSync(skillDir, { recursive: true });
+        fs.writeFileSync(path.join(skillDir, "SKILL.md"), "legacy skill", "utf8");
+
+        const enableResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
+        assert.notStrictEqual(fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8"), "legacy skill");
+
+        const disableResult = runCli(["spec", "disable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(disableResult.status, 0, disableResult.stderr || disableResult.stdout);
+        assert.strictEqual(fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8"), "legacy skill");
+    });
+});

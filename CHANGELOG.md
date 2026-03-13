@@ -1,11 +1,31 @@
 # 更新日志
 
-本文件记录 Antigravity Kit 的重要变更。
+本文件记录灵轨（Ling）的重要变更。
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/2.0.0/)，
 本项目遵循 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
 ## [Unreleased]
+
+### 新增
+
+- 品牌更名基础设施：
+  - 主命令切换为 `ling`
+  - `ag-kit` 保留兼容入口
+  - 控制目录、索引和备份默认迁移到 `~/.ling/`
+  - `antigravity.rules` 收敛为 `ling.rules`
+- Spec Profile 全局层最小闭环：
+  - `ling spec status`
+  - `ling spec enable`
+  - `ling spec disable`
+  - 内置 `harness-engineering` 与 `cybernetic-systems-engineering`
+  - 内置 templates / references 资产与回退能力
+
+### 修复
+
+- 分发模板与脚本文本清理装饰性字符：避免在模板文本与脚本输出中使用 Emoji 或装饰性 Unicode，提升跨平台终端显示一致性。
+- Web 文档站快捷键提示对齐跨平台：搜索入口提示使用 `Cmd + K`（macOS）或 `Ctrl + K`（其他平台）。
+- 安全扫描器稳定性改进：减少自扫误报、提升依赖锁文件识别准确性，并验证 Web 基础安全响应头配置。
 
 ## [3.0.0] - 2026-03-13
 
@@ -85,5 +105,6 @@
 - 用于便捷安装与更新的 CLI（命令行界面）工具
 - 全面的文档与架构指南
 
-[Unreleased]: https://github.com/vudovn/antigravity-kit/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/vudovn/antigravity-kit/releases/tag/v2.0.0
+[Unreleased]: https://github.com/MisonL/Ling/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/MisonL/Ling/releases/tag/v3.0.0
+[2.0.0]: https://github.com/MisonL/Ling/releases/tag/v2.0.0

@@ -15,14 +15,14 @@ describe('RuleGenerator', () => {
             ],
         };
 
-        const { agentsMd, antigravityRules, codexJson } = RuleGenerator.generate(transformResult, '2.0.1');
+        const { agentsMd, lingRules, codexJson } = RuleGenerator.generate(transformResult, '2.0.1');
 
         assert.ok(agentsMd.includes('test-skill'));
-        assert.ok(agentsMd.includes('ag-kit doctor --target codex --fix'));
+        assert.ok(agentsMd.includes('ling doctor --target codex --fix'));
         assert.ok(agentsMd.includes('.agents/skills'));
 
-        assert.ok(antigravityRules.includes('Managed skills are stored under `.agents/skills`.'));
-        assert.ok(!antigravityRules.includes('.codex'));
+        assert.ok(lingRules.includes('Managed skills are stored under `.agents/skills`.'));
+        assert.ok(!lingRules.includes('.codex'));
 
         assert.strictEqual(codexJson.version, '2.0.1');
         assert.strictEqual(codexJson.skills.length, 1);
@@ -31,10 +31,10 @@ describe('RuleGenerator', () => {
 
     test('generate should work with empty metadata', () => {
         const transformResult = { metadata: [] };
-        const { agentsMd, antigravityRules, codexJson } = RuleGenerator.generate(transformResult, '2.0.1');
+        const { agentsMd, lingRules, codexJson } = RuleGenerator.generate(transformResult, '2.0.1');
 
         assert.ok(agentsMd.includes('Codex Managed'));
-        assert.ok(antigravityRules.includes('Antigravity Risk Controls'));
+        assert.ok(lingRules.includes('Ling Risk Controls'));
         assert.deepStrictEqual(codexJson.skills, []);
     });
 

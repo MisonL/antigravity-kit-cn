@@ -58,7 +58,7 @@ async function main() {
         return;
     }
 
-    if (process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
+    if (process.env.LING_SKIP_UPSTREAM_CHECK === "1" || process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
         return;
     }
 
@@ -72,13 +72,13 @@ async function main() {
     }
 
     console.warn(`\n[warn] 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}`);
-    console.warn("[warn] 上游英文版与当前中文版共用 `ag-kit` 命令名，后安装者会覆盖命令入口。");
+    console.warn("[warn] 上游英文版与当前版本共用 `ag-kit` 兼容命令名，后安装者会覆盖该入口。");
     console.warn("[warn] 为避免后续混淆，建议仅保留一个来源。\n");
 
     if (!canPromptUser()) {
         console.warn("[info] 当前环境不是交互式终端，无法确认是否自动卸载。");
         console.warn(`[hint] 如需卸载，请手动执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
-        console.warn("[info] 本次将继续安装；安装完成后由最后安装的版本接管 `ag-kit` 命令。\n");
+        console.warn("[info] 本次将继续安装；安装完成后正式命令请使用 `ling`。\n");
         return;
     }
 
@@ -86,7 +86,7 @@ async function main() {
 
     if (!shouldUninstall) {
         console.warn(`[info] 已保留 ${UPSTREAM_GLOBAL_PACKAGE}，继续安装当前版本。`);
-        console.warn("[info] 结果说明：`ag-kit` 命令由最后安装的包生效。\n");
+        console.warn("[info] 结果说明：正式命令请使用 `ling`，旧 `ag-kit` 仅保留兼容入口。\n");
         return;
     }
 
@@ -101,7 +101,7 @@ async function main() {
     console.warn(`[error] 自动卸载 ${UPSTREAM_GLOBAL_PACKAGE} 失败，将继续安装当前版本。`);
     console.warn("[info] 若需手动处理，请执行：");
     console.warn(`   npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
-    console.warn("[info] 安装完成后，`ag-kit` 命令仍由最后安装的版本生效。\n");
+    console.warn("[info] 安装完成后，正式命令请使用 `ling`；旧 `ag-kit` 仅保留兼容入口。\n");
 }
 
 main().catch((err) => {

@@ -79,7 +79,7 @@ describe('Standards Compliance', () => {
 
     test('critical mechanism tokens should remain aligned with reference snapshot', { skip: !fs.existsSync(REF_ROOT) }, () => {
         const refRoot = REF_ROOT;
-        const tokenRegex = /(ag-kit|python3?|checklist\.py|verify_all\.py|security_scan\.py|ux_audit\.py|accessibility_checker\.py|schema_validator\.py|lint_runner\.py|type_coverage\.py|playwright_runner\.py|lighthouse_audit\.py|api_validator\.py|mobile_audit\.py|seo_checker\.py|geo_checker\.py|i18n_checker\.py|\.agent\/|\.agents\/|\.agents-backup\/|\.codex\/|AGENTS\.md|antigravity\.rules|manifest\.json|--target|--targets|--fix|--path|--no-index|--dry-run|--quiet|--force)/g;
+        const tokenRegex = /(ag-kit|ling|python3?|checklist\.py|verify_all\.py|security_scan\.py|ux_audit\.py|accessibility_checker\.py|schema_validator\.py|lint_runner\.py|type_coverage\.py|playwright_runner\.py|lighthouse_audit\.py|api_validator\.py|mobile_audit\.py|seo_checker\.py|geo_checker\.py|i18n_checker\.py|\.agent\/|\.agents\/|\.agents-backup\/|\.codex\/|AGENTS\.md|antigravity\.rules|ling\.rules|manifest\.json|--target|--targets|--fix|--path|--no-index|--dry-run|--quiet|--force)/g;
         const slashCommandRegex = /(?:^|[\s`"'(\[])(\/(?:brainstorm|create|debug|deploy|enhance|orchestrate|plan|preview|status|test|ui-ux-pro-max))(?=$|[\s`"'，。,.:：)\]])/gm;
 
         const markdownFiles = [];

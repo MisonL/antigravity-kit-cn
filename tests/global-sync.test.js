@@ -6,12 +6,12 @@ const path = require("path");
 const { spawnSync } = require("node:child_process");
 
 const REPO_ROOT = path.resolve(__dirname, "..");
-const CLI_PATH = path.join(REPO_ROOT, "bin", "ag-kit.js");
+const CLI_PATH = path.join(REPO_ROOT, "bin", "ling.js");
 
 function runCli(args, options = {}) {
     const env = {
         ...process.env,
-        AG_KIT_SKIP_UPSTREAM_CHECK: "1",
+        LING_SKIP_UPSTREAM_CHECK: "1",
         ...options.env,
     };
 
@@ -26,7 +26,7 @@ describe("Global Sync", () => {
     let tempDir;
 
     beforeEach(() => {
-        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-global-sync-test-"));
+        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ling-global-sync-test-"));
     });
 
     afterEach(() => {
@@ -35,7 +35,7 @@ describe("Global Sync", () => {
 
     test("global status should report missing when no global skills installed", () => {
         const result = runCli(["global", "status", "--quiet"], {
-            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+            env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 2);
         assert.strictEqual((result.stdout || "").trim(), "missing");
@@ -45,7 +45,7 @@ describe("Global Sync", () => {
         fs.mkdirSync(path.join(tempDir, ".codex"), { recursive: true });
 
         const result = runCli(["global", "status", "--quiet"], {
-            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+            env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 1);
         assert.strictEqual((result.stdout || "").trim(), "broken");
@@ -53,7 +53,7 @@ describe("Global Sync", () => {
 
     test("global sync should install codex skills into $HOME/.codex/skills", () => {
         const result = runCli(["global", "sync", "--target", "codex", "--quiet"], {
-            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+            env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
@@ -65,7 +65,7 @@ describe("Global Sync", () => {
 
     test("global sync should default to syncing codex and gemini when no target is provided", () => {
         const result = runCli(["global", "sync", "--quiet"], {
-            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+            env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
@@ -82,12 +82,12 @@ describe("Global Sync", () => {
 
     test("global status should report installed after global sync", () => {
         const syncResult = runCli(["global", "sync", "--quiet"], {
-            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+            env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(syncResult.status, 0, syncResult.stderr || syncResult.stdout);
 
         const statusResult = runCli(["global", "status", "--quiet"], {
-            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+            env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(statusResult.status, 0, statusResult.stderr || statusResult.stdout);
         assert.strictEqual((statusResult.stdout || "").trim(), "installed");
@@ -95,7 +95,7 @@ describe("Global Sync", () => {
 
     test("global sync should install gemini skills into both ~/.gemini/skills and ~/.gemini/antigravity/skills", () => {
         const result = runCli(["global", "sync", "--target", "gemini", "--quiet"], {
-            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+            env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
@@ -114,11 +114,11 @@ describe("Global Sync", () => {
         fs.writeFileSync(path.join(skillsRoot, "SKILL.md"), "modified", "utf8");
 
         const result = runCli(["global", "sync", "--target", "codex", "--quiet"], {
-            env: { AG_KIT_GLOBAL_ROOT: tempDir },
+            env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
-        const backupRoot = path.join(tempDir, ".ag-kit", "backups", "global");
+        const backupRoot = path.join(tempDir, ".ling", "backups", "global");
         assert.ok(fs.existsSync(backupRoot), "missing backup root");
 
         const timestamps = fs

@@ -80,7 +80,7 @@ class CodexAdapter extends BaseAdapter {
                         this.log(`[dry-run] 将备份 ${candidates.files.length} 个用户修改文件到 .agents-backup`);
                     }
                 }
-                this.log("[dry-run] 将更新工作区托管文件: AGENTS.md, antigravity.rules");
+                this.log("[dry-run] 将更新工作区托管文件: AGENTS.md, ling.rules");
                 this._cleanupGitIgnore();
                 return;
             }
@@ -267,7 +267,7 @@ class CodexAdapter extends BaseAdapter {
 
     _syncWorkspaceManagedFiles(managedDir) {
         const managedAgentsPath = path.join(managedDir, "AGENTS.md");
-        const managedRulesPath = path.join(managedDir, "antigravity.rules");
+        const managedRulesPath = path.join(managedDir, "ling.rules");
 
         if (fs.existsSync(managedAgentsPath)) {
             const body = fs.readFileSync(managedAgentsPath, "utf8");
@@ -280,11 +280,18 @@ class CodexAdapter extends BaseAdapter {
 
         if (fs.existsSync(managedRulesPath)) {
             const body = fs.readFileSync(managedRulesPath, "utf8");
-            const outputPath = path.join(this.workspaceRoot, "antigravity.rules");
+            const outputPath = path.join(this.workspaceRoot, "ling.rules");
+            const legacyOutputPath = path.join(this.workspaceRoot, "antigravity.rules");
+
+            if (!this.options.dryRun && !fs.existsSync(outputPath) && fs.existsSync(legacyOutputPath)) {
+                fs.renameSync(legacyOutputPath, outputPath);
+                this.log("[migrate] 已将工作区 antigravity.rules 迁移为 ling.rules");
+            }
+
             const result = upsertManagedBlock(outputPath, "codex-risk-controls", body, {
                 dryRun: this.options.dryRun,
             });
-            this.log(`[managed] antigravity.rules 托管区块同步: ${result.action}`);
+            this.log(`[managed] ling.rules 托管区块同步: ${result.action}`);
         }
     }
 
@@ -377,7 +384,7 @@ class CodexAdapter extends BaseAdapter {
             } else {
                 return {
                     fixed: false,
-                    summary: `缺少 ${MANAGED_DIR_NAME}，无法自动修复。请执行 ag-kit init --target codex 或 ag-kit update。`,
+                    summary: `缺少 ${MANAGED_DIR_NAME}，无法自动修复。请执行 ling init --target codex 或 ling update。`,
                 };
             }
         }

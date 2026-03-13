@@ -25,6 +25,8 @@ describe("Package Tarball", () => {
         assert.ok(files.has("scripts/health-check.js"), "tarball missing scripts/health-check.js");
         assert.ok(files.has("scripts/health-check.sh"), "tarball missing scripts/health-check.sh");
         assert.ok(files.has("scripts/run-tests.js"), "tarball missing scripts/run-tests.js");
+        assert.ok(files.has(".spec/skills/harness-engineering/SKILL.md"), "tarball missing .spec harness-engineering skill");
+        assert.ok(files.has(".spec/templates/issues.template.csv"), "tarball missing .spec issues template");
         assert.ok(files.has("tests/cli-smoke.test.js"), "tarball missing tests/cli-smoke.test.js");
         assert.ok(files.has("tests/global-sync.test.js"), "tarball missing tests/global-sync.test.js");
     });

@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-const REPO_URL = "https://github.com/MisonL/antigravity-kit-cn.git";
+const REPO_URL = "https://github.com/MisonL/Ling.git";
 
 function parseJsonSafe(raw) {
     try {
