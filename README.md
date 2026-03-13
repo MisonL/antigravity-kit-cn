@@ -54,6 +54,9 @@ npm install -g .
 - 项目安装：`ag-kit init` / `ag-kit update`（功能最完整）
 - 全局安装：`ag-kit global sync`（仅同步 Skills，跨项目复用）
 - 默认行为：`ag-kit global sync` 未指定 `--target/--targets` 时，同步 `codex + gemini`
+- 真实落盘：
+  - `codex` -> `~/.codex/skills/`
+  - `gemini` -> 同时写入 `~/.gemini/skills/` 与 `~/.gemini/antigravity/skills/`
 
 示例：
 
@@ -165,7 +168,7 @@ CLI（命令行界面）工具：
 | `ag-kit update` | 更新当前项目已安装目标 |
 | `ag-kit update-all` | 批量更新所有已登记工作区 |
 | `ag-kit doctor` | 诊断安装完整性（可 `--fix` 自愈） |
-| `ag-kit global sync` | 全局同步 Skills（默认同步 codex+gemini） |
+| `ag-kit global sync` | 全局同步 Skills（默认同步 codex + gemini；其中 gemini 同步到 gemini-cli 与 antigravity） |
 | `ag-kit global status` | 查看全局 Skills 安装状态 |
 | `ag-kit exclude` | 管理全局索引排除清单 |
 | `ag-kit status` | 检查安装状态 |
@@ -227,7 +230,7 @@ bun install --cwd web
 bun run lint --cwd web
 ```
 
-> 说明：若你通过 `bun install -g` 安装 CLI，Bun 默认会阻止本包 `postinstall`。上游同名包冲突提示会在首次执行 `ag-kit init/update/global sync` 时给出。
+> 说明：若你通过 `bun install -g` 安装 CLI，Bun 默认会阻止本包 `postinstall`。上游同名包冲突提示会在首次执行 `ag-kit init/update/update-all/global sync` 时给出。
 
 ## 卸载
 

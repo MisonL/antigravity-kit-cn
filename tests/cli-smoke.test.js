@@ -164,6 +164,51 @@ describe("CLI Smoke", () => {
         assert.ok(!hasTempWorkspace, "temp workspace record should be removed during update-all");
     });
 
+    test("update-all should normalize legacy full target records in v2 index", () => {
+        const now = new Date().toISOString();
+        const persistentRoot = fs.mkdtempSync(path.join(REPO_ROOT, ".temp-ag-kit-legacy-index-"));
+        const persistentWorkspace = path.join(persistentRoot, "workspace");
+        fs.mkdirSync(persistentWorkspace, { recursive: true });
+
+        try {
+            const initResult = runCli(
+                ["init", "--target", "codex", "--path", persistentWorkspace, "--quiet"],
+                { env: { AG_KIT_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+            const seedIndex = {
+                version: 2,
+                updatedAt: now,
+                workspaces: [
+                    {
+                        path: persistentWorkspace,
+                        targets: {
+                            full: {
+                                version: "1.9.0",
+                                installedAt: now,
+                                updatedAt: now,
+                            },
+                        },
+                    },
+                ],
+                excludedPaths: [],
+            };
+            fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
+
+            const result = runCli(["update-all", "--quiet"], {
+                env: { AG_KIT_INDEX_PATH: indexPath },
+            });
+            assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+
+            const normalized = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+            assert.ok(!("full" in normalized.workspaces[0].targets), "legacy full target should be removed from rewritten index");
+            assert.ok("codex" in normalized.workspaces[0].targets, "codex target should be preserved after update-all");
+        } finally {
+            fs.rmSync(persistentRoot, { recursive: true, force: true });
+        }
+    });
+
     test("update-all should auto-clean macOS /private/var temp alias records", () => {
         if (process.platform !== "darwin") {
             return;

@@ -99,6 +99,17 @@ function main() {
         if (globalStatus !== "installed") {
             throw new Error(`global status 结果异常: ${globalStatus}`);
         }
+
+        const globalChecks = [
+            path.join(globalRoot, ".codex", "skills", "workflow-plan", "SKILL.md"),
+            path.join(globalRoot, ".gemini", "skills", "clean-code", "SKILL.md"),
+            path.join(globalRoot, ".gemini", "antigravity", "skills", "clean-code", "SKILL.md"),
+        ];
+        for (const targetPath of globalChecks) {
+            if (!fs.existsSync(targetPath)) {
+                throw new Error(`global sync 未生成预期文件: ${targetPath}`);
+            }
+        }
     } finally {
         fs.rmSync(tempRoot, { recursive: true, force: true });
     }

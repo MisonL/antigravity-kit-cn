@@ -22,10 +22,11 @@ cd web && bun install && bun run lint
 - `codex`：项目根目录 `.agents/`（受管）+ `.agents-backup/`（漂移覆盖备份）
 
 ### 全局级（仅同步 Skills）
-- `codex`：`$HOME/.agents/skills/`
-- `gemini`：`$HOME/.gemini/antigravity/skills/`
+- `codex`：`$HOME/.codex/skills/`
+- `gemini-cli`：`$HOME/.gemini/skills/`
+- `antigravity`：`$HOME/.gemini/antigravity/skills/`
 
-> 说明：仓库内 Skills 源路径为 `.agents/skills/`，全局同步会将其写入上述全局目录。
+> 说明：仓库内 Skills 源路径为 `.agents/skills/`，全局同步会将其投影到真实工具读取的全局目录；仓库 Canonical 仍是 `.agents/`。
 
 ## 端到端链路（简述）
 ### 项目安装 / 更新
@@ -41,14 +42,15 @@ cd web && bun install && bun run lint
 ## 全局同步：`ag-kit global sync/status`
 ### 默认目标
 - 未指定 `--target/--targets`：默认同步 `codex + gemini`
-- 可用 `--target codex` 或 `--targets codex,gemini` 限定目标
+- `--target gemini` / `--targets codex,gemini` 中的 `gemini` 会同时写入 gemini-cli 与 antigravity 两个消费端目录
 
 ### 来源与覆盖策略
 - 来源：默认使用本包内置 `.agents/`；也可用 `--branch <name>` 从远端分支拉取模板源
 - 覆盖单位：每个 Skill 目录
 - 覆盖策略：只覆盖同名 Skill，不清理其他 Skill
 - 原子替换：按 Skill 目录原子替换，避免半写状态
-- 覆盖前备份：覆盖同名 Skill 前备份到 `$HOME/.ag-kit/backups/global/<timestamp>/<target>/<skill>/...`
+- 覆盖前备份：覆盖同名 Skill 前备份到 `$HOME/.ag-kit/backups/global/<timestamp>/<consumer>/<skill>/...`
+  - `consumer` 可能是 `codex`、`gemini-cli`、`antigravity`
 
 ### 测试隔离
 - `AG_KIT_GLOBAL_ROOT`：替代 `$HOME`（用于测试与 CI，避免污染真实用户目录）
@@ -67,23 +69,40 @@ cd web && bun install && bun run lint
 ## 手动回滚（全局 Skills）
 1. 找到备份目录：`$HOME/.ag-kit/backups/global/<timestamp>/...`
 2. 按 Skill 回滚（推荐一次只处理一个 Skill 目录）：
-   - Codex 目标：恢复到 `$HOME/.agents/skills/<skill>/`
-   - Gemini 目标：恢复到 `$HOME/.gemini/antigravity/skills/<skill>/`
+   - Codex 目标：恢复到 `$HOME/.codex/skills/<skill>/`
+   - Gemini CLI：恢复到 `$HOME/.gemini/skills/<skill>/`
+   - Antigravity：恢复到 `$HOME/.gemini/antigravity/skills/<skill>/`
 
 macOS / Linux 示例（把某个 Skill 回滚为备份版本）：
 ```bash
 ts="2026-03-12T12-00-00-000Z"
 skill="clean-code"
-rm -rf "$HOME/.agents/skills/$skill"
-cp -a "$HOME/.ag-kit/backups/global/$ts/codex/$skill" "$HOME/.agents/skills/$skill"
+rm -rf "$HOME/.codex/skills/$skill"
+cp -a "$HOME/.ag-kit/backups/global/$ts/codex/$skill" "$HOME/.codex/skills/$skill"
 ```
 
 Windows PowerShell 示例：
 ```powershell
 $ts = "2026-03-12T12-00-00-000Z"
 $skill = "clean-code"
-Remove-Item "$HOME\\.agents\\skills\\$skill" -Recurse -Force -ErrorAction SilentlyContinue
-Copy-Item "$HOME\\.ag-kit\\backups\\global\\$ts\\codex\\$skill" "$HOME\\.agents\\skills\\$skill" -Recurse -Force
+Remove-Item "$HOME\\.codex\\skills\\$skill" -Recurse -Force -ErrorAction SilentlyContinue
+Copy-Item "$HOME\\.ag-kit\\backups\\global\\$ts\\codex\\$skill" "$HOME\\.codex\\skills\\$skill" -Recurse -Force
+```
+
+Gemini CLI 回滚示例：
+```bash
+ts="2026-03-12T12-00-00-000Z"
+skill="clean-code"
+rm -rf "$HOME/.gemini/skills/$skill"
+cp -a "$HOME/.ag-kit/backups/global/$ts/gemini-cli/$skill" "$HOME/.gemini/skills/$skill"
+```
+
+Antigravity 回滚示例：
+```bash
+ts="2026-03-12T12-00-00-000Z"
+skill="clean-code"
+rm -rf "$HOME/.gemini/antigravity/skills/$skill"
+cp -a "$HOME/.ag-kit/backups/global/$ts/antigravity/$skill" "$HOME/.gemini/antigravity/skills/$skill"
 ```
 
 ## 环境变量

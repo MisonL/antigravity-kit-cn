@@ -42,7 +42,7 @@ describe("Global Sync", () => {
     });
 
     test("global status should report broken when target root exists but skills are incomplete", () => {
-        fs.mkdirSync(path.join(tempDir, ".agents"), { recursive: true });
+        fs.mkdirSync(path.join(tempDir, ".codex"), { recursive: true });
 
         const result = runCli(["global", "status", "--quiet"], {
             env: { AG_KIT_GLOBAL_ROOT: tempDir },
@@ -51,13 +51,13 @@ describe("Global Sync", () => {
         assert.strictEqual((result.stdout || "").trim(), "broken");
     });
 
-    test("global sync should install codex skills into $HOME/.agents/skills", () => {
+    test("global sync should install codex skills into $HOME/.codex/skills", () => {
         const result = runCli(["global", "sync", "--target", "codex", "--quiet"], {
             env: { AG_KIT_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
-        const skillsRoot = path.join(tempDir, ".agents", "skills");
+        const skillsRoot = path.join(tempDir, ".codex", "skills");
         assert.ok(fs.existsSync(skillsRoot), "missing global codex skills root");
         assert.ok(fs.existsSync(path.join(skillsRoot, "clean-code", "SKILL.md")), "missing expected skill: clean-code");
         assert.ok(fs.existsSync(path.join(skillsRoot, "workflow-plan", "SKILL.md")), "missing expected workflow skill: workflow-plan");
@@ -69,12 +69,15 @@ describe("Global Sync", () => {
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
-        const codexRoot = path.join(tempDir, ".agents", "skills");
+        const codexRoot = path.join(tempDir, ".codex", "skills");
         assert.ok(fs.existsSync(path.join(codexRoot, "clean-code", "SKILL.md")), "missing expected codex skill: clean-code");
         assert.ok(fs.existsSync(path.join(codexRoot, "workflow-plan", "SKILL.md")), "missing expected codex workflow skill: workflow-plan");
 
-        const geminiRoot = path.join(tempDir, ".gemini", "antigravity", "skills");
-        assert.ok(fs.existsSync(path.join(geminiRoot, "clean-code", "SKILL.md")), "missing expected gemini skill: clean-code");
+        const geminiCliRoot = path.join(tempDir, ".gemini", "skills");
+        assert.ok(fs.existsSync(path.join(geminiCliRoot, "clean-code", "SKILL.md")), "missing expected gemini-cli skill: clean-code");
+
+        const antigravityRoot = path.join(tempDir, ".gemini", "antigravity", "skills");
+        assert.ok(fs.existsSync(path.join(antigravityRoot, "clean-code", "SKILL.md")), "missing expected antigravity skill: clean-code");
     });
 
     test("global status should report installed after global sync", () => {
@@ -90,19 +93,23 @@ describe("Global Sync", () => {
         assert.strictEqual((statusResult.stdout || "").trim(), "installed");
     });
 
-    test("global sync should install gemini skills into ~/.gemini/antigravity/skills", () => {
+    test("global sync should install gemini skills into both ~/.gemini/skills and ~/.gemini/antigravity/skills", () => {
         const result = runCli(["global", "sync", "--target", "gemini", "--quiet"], {
             env: { AG_KIT_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
-        const skillsRoot = path.join(tempDir, ".gemini", "antigravity", "skills");
-        assert.ok(fs.existsSync(skillsRoot), "missing global antigravity skills root");
-        assert.ok(fs.existsSync(path.join(skillsRoot, "clean-code", "SKILL.md")), "missing expected skill: clean-code");
+        const geminiCliRoot = path.join(tempDir, ".gemini", "skills");
+        assert.ok(fs.existsSync(geminiCliRoot), "missing global gemini-cli skills root");
+        assert.ok(fs.existsSync(path.join(geminiCliRoot, "clean-code", "SKILL.md")), "missing expected gemini-cli skill: clean-code");
+
+        const antigravityRoot = path.join(tempDir, ".gemini", "antigravity", "skills");
+        assert.ok(fs.existsSync(antigravityRoot), "missing global antigravity skills root");
+        assert.ok(fs.existsSync(path.join(antigravityRoot, "clean-code", "SKILL.md")), "missing expected antigravity skill: clean-code");
     });
 
     test("global sync should create backup when overwriting an existing skill", () => {
-        const skillsRoot = path.join(tempDir, ".agents", "skills", "clean-code");
+        const skillsRoot = path.join(tempDir, ".codex", "skills", "clean-code");
         fs.mkdirSync(skillsRoot, { recursive: true });
         fs.writeFileSync(path.join(skillsRoot, "SKILL.md"), "modified", "utf8");
 

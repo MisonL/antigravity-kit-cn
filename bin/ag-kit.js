@@ -18,6 +18,30 @@ const WORKSPACE_INDEX_VERSION = 2;
 const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
 const TOOLKIT_PACKAGE_NAMES = new Set(["@mison/ag-kit-cn", "antigravity-kit-cn", "antigravity-kit"]);
 const SUPPORTED_TARGETS = ["gemini", "codex"];
+const LEGACY_INDEX_TARGET_ALIASES = {
+    full: "gemini",
+};
+const GLOBAL_TARGET_DESTINATIONS = {
+    codex: [
+        {
+            id: "codex",
+            rootParts: [".codex"],
+            skillsParts: [".codex", "skills"],
+        },
+    ],
+    gemini: [
+        {
+            id: "gemini-cli",
+            rootParts: [".gemini", "skills"],
+            skillsParts: [".gemini", "skills"],
+        },
+        {
+            id: "antigravity",
+            rootParts: [".gemini", "antigravity"],
+            skillsParts: [".gemini", "antigravity", "skills"],
+        },
+    ],
+};
 const INDEX_LOCK_RETRY_MS = 50;
 const INDEX_LOCK_TIMEOUT_MS = 3000;
 const INDEX_LOCK_STALE_MS = 30000;
@@ -56,15 +80,21 @@ function resolveGlobalRootDir() {
     return os.homedir();
 }
 
-function resolveGlobalSkillRoot(targetName) {
-    const globalRoot = resolveGlobalRootDir();
-    if (targetName === "codex") {
-        return path.join(globalRoot, ".agents", "skills");
+function getGlobalDestinations(targetName, globalRoot = resolveGlobalRootDir()) {
+    const config = GLOBAL_TARGET_DESTINATIONS[targetName];
+    if (!config) {
+        throw new Error(`未知目标: ${targetName}`);
     }
-    if (targetName === "gemini") {
-        return path.join(globalRoot, ".gemini", "antigravity", "skills");
-    }
-    throw new Error(`未知目标: ${targetName}`);
+    return config.map((item) => ({
+        ...item,
+        targetName,
+        rootDir: path.join(globalRoot, ...item.rootParts),
+        skillsRoot: path.join(globalRoot, ...item.skillsParts),
+    }));
+}
+
+function listGlobalDestinations(globalRoot = resolveGlobalRootDir()) {
+    return Object.keys(GLOBAL_TARGET_DESTINATIONS).flatMap((targetName) => getGlobalDestinations(targetName, globalRoot));
 }
 
 function resolveGlobalBackupRoot(timestamp) {
@@ -108,7 +138,7 @@ function printUsage() {
     console.log("  ag-kit update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--no-index] [--quiet] [--dry-run]");
     console.log("  ag-kit update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]");
     console.log("  ag-kit doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]");
-    console.log("  ag-kit global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]  # 默认同步 codex+gemini");
+    console.log("  ag-kit global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]  # 默认同步 codex + gemini(cli+antigravity)");
     console.log("  ag-kit global status [--quiet]");
     console.log("  ag-kit exclude list [--quiet]");
     console.log("  ag-kit exclude add --path <dir> [--dry-run] [--quiet]");
@@ -416,13 +446,34 @@ function normalizeTargetState(value) {
     };
 }
 
+function normalizeIndexTargetName(targetName) {
+    if (typeof targetName !== "string") {
+        return null;
+    }
+    const normalized = targetName.trim().toLowerCase();
+    if (!normalized) {
+        return null;
+    }
+    if (Object.prototype.hasOwnProperty.call(LEGACY_INDEX_TARGET_ALIASES, normalized)) {
+        return LEGACY_INDEX_TARGET_ALIASES[normalized];
+    }
+    if (SUPPORTED_TARGETS.includes(normalized)) {
+        return normalized;
+    }
+    return null;
+}
+
 function normalizeWorkspaceRecordV2(item, normalizedPath) {
     const targets = {};
     if (item && item.targets && typeof item.targets === "object") {
         for (const [targetName, state] of Object.entries(item.targets)) {
+            const normalizedTargetName = normalizeIndexTargetName(targetName);
+            if (!normalizedTargetName) {
+                continue;
+            }
             const normalizedState = normalizeTargetState(state);
             if (normalizedState) {
-                targets[targetName] = normalizedState;
+                targets[normalizedTargetName] = normalizedState;
             }
         }
     }
@@ -862,33 +913,16 @@ function evaluateWorkspaceState(workspaceRoot, options) {
     };
 }
 
-function getGlobalTargetPaths(globalRoot, targetName) {
-    if (targetName === "codex") {
-        return {
-            markerDir: path.join(globalRoot, ".agents"),
-            skillsRoot: path.join(globalRoot, ".agents", "skills"),
-        };
-    }
-    if (targetName === "gemini") {
-        return {
-            markerDir: path.join(globalRoot, ".gemini", "antigravity"),
-            skillsRoot: path.join(globalRoot, ".gemini", "antigravity", "skills"),
-        };
-    }
-    throw new Error(`未知全局目标: ${targetName}`);
-}
-
 function evaluateGlobalState() {
     const globalRoot = resolveGlobalRootDir();
-    const targetStates = SUPPORTED_TARGETS.map((targetName) => {
-        const paths = getGlobalTargetPaths(globalRoot, targetName);
-        const markerExists = fs.existsSync(paths.markerDir);
-        const skillsExists = fs.existsSync(paths.skillsRoot);
-        const skillsCount = skillsExists ? countSkillsRecursive(paths.skillsRoot) : 0;
+    const targetStates = listGlobalDestinations(globalRoot).map((destination) => {
+        const rootExists = fs.existsSync(destination.rootDir);
+        const skillsExists = fs.existsSync(destination.skillsRoot);
+        const skillsCount = skillsExists ? countSkillsRecursive(destination.skillsRoot) : 0;
         let state = "missing";
         const issues = [];
 
-        if (markerExists || skillsExists) {
+        if (rootExists || skillsExists) {
             if (!skillsExists) {
                 state = "broken";
                 issues.push("Skills 根目录缺失");
@@ -901,10 +935,11 @@ function evaluateGlobalState() {
         }
 
         return {
-            targetName,
+            targetName: destination.id,
+            family: destination.targetName,
             state,
-            markerDir: paths.markerDir,
-            skillsRoot: paths.skillsRoot,
+            rootDir: destination.rootDir,
+            skillsRoot: destination.skillsRoot,
             skillsCount,
             issues,
         };
@@ -972,7 +1007,7 @@ function resolveTargetsForGlobalSync(options) {
     if (requested.length > 0) {
         return requested;
     }
-    // 保持 global sync 简洁：默认同步两个目标。
+    // 保持 global sync 简洁：默认同步 codex + gemini；其中 gemini 会展开为 gemini-cli 与 antigravity。
     return ["codex", "gemini"];
 }
 
@@ -1025,58 +1060,87 @@ function backupSkillDirectory(targetName, skillName, sourceDir, timestamp, optio
     log(options, `📦 已备份 ${targetName} 全局 Skill: ${skillName} -> ${backupDir}`);
 }
 
-function syncSkillDirectory(targetName, srcDir, destDir, timestamp, options) {
+function syncSkillDirectory(destination, srcDir, destDir, timestamp, options) {
     const exists = fs.existsSync(destDir);
     if (exists) {
         if (areDirectoriesEqual(srcDir, destDir)) {
-            log(options, `⏭️ 全局 Skill 已最新，无需同步: ${targetName}/${path.basename(destDir)}`);
+            log(options, `⏭️ 全局 Skill 已最新，无需同步: ${destination.id}/${path.basename(destDir)}`);
             return { skipped: 1, synced: 0, backedUp: 0 };
         }
     }
 
     if (options.dryRun) {
-        log(options, `[dry-run] 将同步全局 Skill: ${targetName}/${path.basename(destDir)}`);
+        log(options, `[dry-run] 将同步全局 Skill: ${destination.id}/${path.basename(destDir)}`);
         return { skipped: 0, synced: 0, backedUp: exists ? 1 : 0 };
     }
 
     let backedUp = 0;
     if (exists) {
-        backupSkillDirectory(targetName, path.basename(destDir), destDir, timestamp, options);
+        backupSkillDirectory(destination.id, path.basename(destDir), destDir, timestamp, options);
         backedUp = 1;
     }
 
     const logger = options.quiet ? (() => {}) : log.bind(null, options);
     AtomicWriter.atomicCopyDir(srcDir, destDir, { logger });
-    log(options, `✅ 已同步全局 Skill: ${targetName}/${path.basename(destDir)}`);
+    log(options, `✅ 已同步全局 Skill: ${destination.id}/${path.basename(destDir)}`);
 
     return { skipped: 0, synced: 1, backedUp };
 }
 
 function syncGlobalSkillsFromRoot(targetName, skillsRoot, timestamp, options) {
-    const destRoot = resolveGlobalSkillRoot(targetName);
+    const destinations = getGlobalDestinations(targetName);
     const skillNames = listSkillDirectories(skillsRoot);
     if (skillNames.length === 0) {
         throw new Error(`未检测到可同步的 Skills: ${skillsRoot}`);
     }
 
     if (options.dryRun) {
-        log(options, `[dry-run] 将同步 ${skillNames.length} 个全局 Skills -> ${destRoot}`);
+        for (const destination of destinations) {
+            log(options, `[dry-run] 将同步 ${skillNames.length} 个全局 Skills -> ${destination.skillsRoot}`);
+        }
     }
 
     let synced = 0;
     let skipped = 0;
     let backedUp = 0;
+    const destinationResults = [];
 
-    for (const skillName of skillNames) {
-        const srcDir = path.join(skillsRoot, skillName);
-        const destDir = path.join(destRoot, skillName);
-        const result = syncSkillDirectory(targetName, srcDir, destDir, timestamp, options);
-        synced += result.synced;
-        skipped += result.skipped;
-        backedUp += result.backedUp;
+    for (const destination of destinations) {
+        let destinationSynced = 0;
+        let destinationSkipped = 0;
+        let destinationBackedUp = 0;
+
+        for (const skillName of skillNames) {
+            const srcDir = path.join(skillsRoot, skillName);
+            const destDir = path.join(destination.skillsRoot, skillName);
+            const result = syncSkillDirectory(destination, srcDir, destDir, timestamp, options);
+            synced += result.synced;
+            skipped += result.skipped;
+            backedUp += result.backedUp;
+            destinationSynced += result.synced;
+            destinationSkipped += result.skipped;
+            destinationBackedUp += result.backedUp;
+        }
+
+        destinationResults.push({
+            targetName: destination.id,
+            family: destination.targetName,
+            destRoot: destination.skillsRoot,
+            total: skillNames.length,
+            synced: destinationSynced,
+            skipped: destinationSkipped,
+            backedUp: destinationBackedUp,
+        });
     }
 
-    return { total: skillNames.length, synced, skipped, backedUp, destRoot };
+    return {
+        total: skillNames.length * destinations.length,
+        skillsPerDestination: skillNames.length,
+        synced,
+        skipped,
+        backedUp,
+        destinations: destinationResults,
+    };
 }
 
 function applyGlobalSync(targetName, agentDir, timestamp, options) {
@@ -1116,7 +1180,9 @@ async function commandGlobalSync(options) {
             const result = applyGlobalSync(target, agentDir, timestamp, options);
             if (!options.dryRun) {
                 log(options, `📊 全局同步完成 [${target}]：总计 ${result.total}，新增/覆盖 ${result.synced}，跳过 ${result.skipped}，备份 ${result.backedUp}`);
-                log(options, `   目标路径: ${result.destRoot}`);
+                for (const item of result.destinations) {
+                    log(options, `   - ${item.targetName}: ${item.destRoot}（每目标 ${item.total} 个 Skills）`);
+                }
             }
         }
     } finally {
@@ -1152,6 +1218,7 @@ function commandGlobalStatus(options) {
 
     for (const item of summary.targets) {
         console.log(`\n[${item.targetName}:global]`);
+        console.log(`   家族: ${item.family}`);
         console.log(`   状态: ${item.state}`);
         console.log(`   路径: ${item.skillsRoot}`);
         if (item.state === "installed") {
