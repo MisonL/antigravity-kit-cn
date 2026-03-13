@@ -4,8 +4,8 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
 export const metadata: Metadata = {
-    title: "文档 | Antigravity Kit",
-    description: "Antigravity Kit 完整文档：技能（Skills）、智能体（Agents）与工作流（Workflows）模板集合。",
+    title: "文档 | 灵轨（Ling）",
+    description: "灵轨（Ling） 完整文档：技能（Skills）、智能体（Agents）与工作流（Workflows）模板集合。",
 };
 
 export default function DocsLayout({

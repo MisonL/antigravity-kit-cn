@@ -36,7 +36,7 @@ export default function DonateDialog({ className }: DonateDialogProps) {
                         href="https://buymeacoffee.com/vudovn"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all group"
+                        className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors group"
                     >
                         <div className="flex items-center justify-center w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/20">
                             <CoffeeIcon className="w-5 h-5 text-amber-600 dark:text-amber-500" />
@@ -53,7 +53,7 @@ export default function DonateDialog({ className }: DonateDialogProps) {
                     {/* Bank Transfer with QR */}
                     <button
                         onClick={() => setShowQR(!showQR)}
-                        className="w-full flex items-center gap-3 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all group text-left"
+                        className="w-full flex items-center gap-3 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors group text-left"
                     >
                         <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/20">
                             <QrCodeIcon className="w-5 h-5 text-blue-600 dark:text-blue-500" />
@@ -101,7 +101,7 @@ export default function DonateDialog({ className }: DonateDialogProps) {
                         href="https://www.linkedin.com/in/vudovn" // Assuming this link based on username, user can update
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-blue-500/50 dark:hover:border-blue-500/50 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all group"
+                        className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-blue-500/50 dark:hover:border-blue-500/50 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors group"
                     >
                         <div className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/20">
                             <span className="text-xl">

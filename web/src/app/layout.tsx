@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Antigravity Kit - AI Agent 能力扩展工具包",
+  title: "灵轨（Ling） - AI Agent 能力扩展工具包",
   description: "包含技能、规则与工作流的 AI Agent 模板集合，帮助 Antigravity 编码助手提效。",
   metadataBase: new URL("https://antigravity-kit.vercel.app/"),
   robots: {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "zh_CN",
     url: "https://antigravity-kit.vercel.app/",
-    siteName: "Antigravity Kit",
+    siteName: "灵轨（Ling）",
     images: ["/images/logo.png"],
   },
 };

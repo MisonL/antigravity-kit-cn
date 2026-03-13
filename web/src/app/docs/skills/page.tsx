@@ -4,7 +4,7 @@ import skillsData from "@/services/skills.json";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Agent 技能 - Antigravity Kit 文档",
+  title: "Agent 技能 - 灵轨（Ling） 文档",
   description: "了解如何通过技能扩展您的 Agent 能力。",
 };
 
@@ -102,7 +102,7 @@ export default function SkillsPage() {
                 </p>
                 <div className="mt-4 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/20 p-4">
                     <p className="text-sm text-amber-900 dark:text-amber-100">
-                        <strong className="font-semibold">Ag-Kit 注记：</strong>本仓库模板源统一放在 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agents/</code>。
+                        <strong className="font-semibold">灵轨 注记：</strong>本仓库模板源统一放在 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agents/</code>。
                         当目标为 Gemini/Antigravity 时，CLI 会将模板投影到工作区的 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agent/</code>，
                         全局同步仍写入 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">~/.gemini/antigravity/skills/</code>。
                     </p>
@@ -119,12 +119,12 @@ export default function SkillsPage() {
                     <li>在文件夹中添加 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">SKILL.md</code> 文件。</li>
                 </ol>
                 <div className="relative group mb-6">
-                    <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                        <code className="text-zinc-100">{`.agent/skills/
-└── my-skill/
-    └── SKILL.md`}</code>
-                    </pre>
-                </div>
+	                    <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+	                        <code className="text-zinc-100">{`.agent/skills/
+	- my-skill/
+	  - SKILL.md`}</code>
+	                    </pre>
+	                </div>
 
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
                     每个技能都必须包含带有 YAML frontmatter 的 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">SKILL.md</code>：
@@ -193,14 +193,14 @@ Step-by-step guidance, conventions, and patterns the agent should follow.`}</cod
                     除 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">SKILL.md</code> 外，还可以包含：
                 </p>
                 <div className="relative group mb-6">
-                    <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                        <code className="text-zinc-100">{`.agent/skills/my-skill/
-├── SKILL.md       # 主指引（必需）
-├── scripts/       # 辅助脚本（可选）
-├── examples/      # 参考实现（可选）
-└── resources/     # 模板与资源（可选）`}</code>
-                    </pre>
-                </div>
+	                    <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+	                        <code className="text-zinc-100">{`.agent/skills/my-skill/
+	- SKILL.md       # 主指引（必需）
+	- scripts/       # 辅助脚本（可选）
+	- examples/      # 参考实现（可选）
+	- resources/     # 模板与资源（可选）`}</code>
+	                    </pre>
+	                </div>
                 <p className="text-base text-zinc-600 dark:text-zinc-400">
                     Agent 会在执行技能时读取这些文件。
                 </p>
@@ -337,18 +337,18 @@ When reviewing code, follow these steps:
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/rules-workflows"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">规则与工作流 →</h3>
+	                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">规则与工作流 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             使用规则与流程约束 Agent
                         </p>
                     </Link>
                     <Link
                         href="/docs/mcp"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">MCP 集成 →</h3>
+	                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">MCP 集成 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             连接外部上下文与工具
                         </p>

@@ -16,7 +16,7 @@ export default function CLIPage() {
                     CLI 参考
                 </h1>
                 <p className="text-lg text-zinc-600 dark:text-zinc-400">
-                    用于管理 Antigravity Kit 安装的命令行工具。
+                    用于管理 灵轨（Ling） 安装的命令行工具。
                 </p>
             </div>
 
@@ -26,7 +26,7 @@ export default function CLIPage() {
                     概览
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code> CLI 用于在多个项目中管理 Antigravity Kit 安装。请先按安装指南完成本仓库本地安装。
+                    <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ling</code> CLI 用于在多个项目中管理 灵轨（Ling） 安装。请先按安装指南完成本仓库本地安装。
                 </p>
             </section>
 
@@ -40,26 +40,26 @@ export default function CLIPage() {
                     {/* init */}
                     <div>
                         <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
-                            <code className="font-mono">ag-kit init</code>
+                            <code className="font-mono">ling init</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
-                            通过安装 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent</code> 文件夹在项目中初始化 Antigravity Kit。
+                            通过安装 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">.agent</code> 文件夹在项目中初始化 灵轨（Ling）。
                         </p>
 
                         <div className="relative group mb-4">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit init</code>
+                                <code className="text-zinc-100">ling init</code>
                             </pre>
                         </div>
 
                         <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
                             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
-                                <li>• 在当前目录创建 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 文件夹</li>
-                                <li>• 默认从当前 CLI 包内置模板复制内容（指定 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--branch</code> 时从 GitHub 拉取）</li>
-                                <li>• 若已存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 则跳过（使用 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--force</code> 覆盖）</li>
-                                <li>• 自动扫描并清理 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gitignore</code> 中会忽略 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的规则</li>
-                                <li>• 自动检测全局是否存在上游英文版 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">@vudovn/ag-kit</code>，并提示命令冲突风险；在全局安装阶段可交互确认是否自动卸载</li>
+                                <li>在当前目录创建 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 文件夹</li>
+                                <li>默认从当前 CLI 包内置模板复制内容（指定 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--branch</code> 时从 GitHub 拉取）</li>
+                                <li>若已存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent/</code> 则跳过（使用 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">--force</code> 覆盖）</li>
+                                <li>自动扫描并清理 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.gitignore</code> 中会忽略 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的规则</li>
+                                <li>自动检测全局是否存在上游英文版 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">@vudovn/ag-kit</code>，并提示命令冲突风险；在全局安装阶段可交互确认是否自动卸载</li>
                             </ul>
                         </div>
                     </div>
@@ -67,15 +67,15 @@ export default function CLIPage() {
                     {/* update */}
                     <div>
                         <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
-                            <code className="font-mono">ag-kit update</code>
+                            <code className="font-mono">ling update</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
-                            将现有的 Antigravity Kit 升级到最新版本。
+                            将现有的 灵轨（Ling） 升级到最新版本。
                         </p>
 
                         <div className="relative group mb-4">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit update</code>
+                                <code className="text-zinc-100">ling update</code>
                             </pre>
                         </div>
 
@@ -89,7 +89,7 @@ export default function CLIPage() {
                     {/* update-all */}
                     <div>
                         <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
-                            <code className="font-mono">ag-kit update-all</code>
+                            <code className="font-mono">ling update-all</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
                             根据全局索引批量更新所有已登记的工作区。
@@ -97,18 +97,18 @@ export default function CLIPage() {
 
                         <div className="relative group mb-4">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit update-all</code>
+                                <code className="text-zinc-100">ling update-all</code>
                             </pre>
                         </div>
 
                         <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
                             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">行为</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
-                                <li>• 读取全局索引文件（macOS / Linux / WSL：<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">~/.ag-kit/workspaces.json</code>；Windows：<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">%USERPROFILE%\.ag-kit\workspaces.json</code>）</li>
-                                <li>• 对每个已登记且存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的工作区执行更新</li>
-                                <li>• 输出批量更新汇总（成功/跳过/失败）</li>
-                                <li>• 默认自动排除 antigravity-kit 源码目录，避免索引冲突</li>
-                                <li>• 历史项目需先执行一次 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">ag-kit update</code> 才会被纳入索引</li>
+	                                <li>读取全局索引文件（macOS / Linux / WSL：<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">~/.ling/workspaces.json</code>；Windows：<code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">%USERPROFILE%\.ling\workspaces.json</code>）</li>
+                                <li>对每个已登记且存在 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">.agent</code> 的工作区执行更新</li>
+                                <li>输出批量更新汇总（成功/跳过/失败）</li>
+                                <li>默认自动排除 antigravity-kit 源码目录，避免索引冲突</li>
+                                <li>历史项目需先执行一次 <code className="px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono text-xs">ling update</code> 才会被纳入索引</li>
                             </ul>
                         </div>
                     </div>
@@ -116,7 +116,7 @@ export default function CLIPage() {
                     {/* exclude */}
                     <div>
                         <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
-                            <code className="font-mono">ag-kit exclude</code>
+                            <code className="font-mono">ling exclude</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
                             管理全局索引排除清单，用于阻止特定目录（或目录树）被登记或批量更新。
@@ -124,13 +124,13 @@ export default function CLIPage() {
 
                         <div className="space-y-3">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit exclude list</code>
+                                <code className="text-zinc-100">ling exclude list</code>
                             </pre>
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit exclude add --path /path/to/dir</code>
+                                <code className="text-zinc-100">ling exclude add --path /path/to/dir</code>
                             </pre>
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit exclude remove --path /path/to/dir</code>
+                                <code className="text-zinc-100">ling exclude remove --path /path/to/dir</code>
                             </pre>
                         </div>
                     </div>
@@ -138,7 +138,7 @@ export default function CLIPage() {
                     {/* status */}
                     <div>
                         <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
-                            <code className="font-mono">ag-kit status</code>
+                            <code className="font-mono">ling status</code>
                         </h3>
                         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
                             查看当前安装状态与版本信息。
@@ -146,18 +146,18 @@ export default function CLIPage() {
 
                         <div className="relative group mb-4">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit status</code>
+                                <code className="text-zinc-100">ling status</code>
                             </pre>
                         </div>
 
                         <div className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
                             <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50 mb-2">输出内容</div>
                             <ul className="text-sm text-zinc-600 dark:text-zinc-400 space-y-1">
-                                <li>• 安装状态（已安装/未安装）</li>
-                                <li>• 当前版本</li>
-                                <li>• 智能体数量</li>
-                                <li>• 技能数量</li>
-                                <li>• 工作流数量</li>
+                                <li>安装状态（已安装/未安装）</li>
+                                <li>当前版本</li>
+                                <li>智能体数量</li>
+                                <li>技能数量</li>
+                                <li>工作流数量</li>
                             </ul>
                         </div>
                     </div>
@@ -248,7 +248,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit init --force</code>
+                                <code className="text-zinc-100">ling init --force</code>
                             </pre>
                         </div>
                     </div>
@@ -259,7 +259,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit init --path ./my-project</code>
+                                <code className="text-zinc-100">ling init --path ./my-project</code>
                             </pre>
                         </div>
                     </div>
@@ -270,7 +270,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit init --branch dev</code>
+                                <code className="text-zinc-100">ling init --branch dev</code>
                             </pre>
                         </div>
                     </div>
@@ -281,7 +281,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit init --quiet --force</code>
+                                <code className="text-zinc-100">ling init --quiet --force</code>
                             </pre>
                         </div>
                     </div>
@@ -292,7 +292,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit update-all</code>
+                                <code className="text-zinc-100">ling update-all</code>
                             </pre>
                         </div>
                     </div>
@@ -303,7 +303,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit update-all --prune-missing</code>
+                                <code className="text-zinc-100">ling update-all --prune-missing</code>
                             </pre>
                         </div>
                     </div>
@@ -314,7 +314,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit exclude add --path /path/to/dir</code>
+                                <code className="text-zinc-100">ling exclude add --path /path/to/dir</code>
                             </pre>
                         </div>
                     </div>
@@ -325,7 +325,7 @@ export default function CLIPage() {
                         </h3>
                         <div className="relative group">
                             <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                                <code className="text-zinc-100">ag-kit exclude list</code>
+                                <code className="text-zinc-100">ling exclude list</code>
                             </pre>
                         </div>
                     </div>
@@ -342,8 +342,9 @@ export default function CLIPage() {
                             卸载全局 CLI
                         </h3>
                         <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                            <code className="text-zinc-100">{`npm uninstall -g antigravity-kit-cn
-npm uninstall -g antigravity-kit @vudovn/ag-kit`}</code>
+                            <code className="text-zinc-100">{`npm uninstall -g @mison/ling
+# 旧包 @mison/ag-kit-cn 已停止维护，可按需清理
+npm uninstall -g @mison/ag-kit-cn`}</code>
                         </pre>
                     </div>
 
@@ -371,7 +372,7 @@ rmdir /s /q .agent`}</code>
                             清理批量更新索引（可选）
                         </h3>
                         <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                            <code className="text-zinc-100">ag-kit exclude add --path /path/to/your-project</code>
+                            <code className="text-zinc-100">ling exclude add --path /path/to/your-project</code>
                         </pre>
                     </div>
                 </div>
@@ -385,20 +386,20 @@ rmdir /s /q .agent`}</code>
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/installation"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">安装指南 →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">安装指南 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             完整的安装说明
                         </p>
                     </Link>
                     <a
-                        href="https://github.com/MisonL/antigravity-kit-cn"
+                        href="https://github.com/MisonL/Ling"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">查看 GitHub →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">查看 GitHub -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             源码与贡献指南
                         </p>
@@ -418,7 +419,7 @@ rmdir /s /q .agent`}</code>
                     工作流
                 </Link>
                 <a
-                    href="https://github.com/MisonL/antigravity-kit-cn"
+                    href="https://github.com/MisonL/Ling"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm font-medium text-zinc-900 dark:text-zinc-50 hover:underline flex items-center gap-1"

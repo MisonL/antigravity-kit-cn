@@ -43,18 +43,18 @@ export default function TaskGroupsPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/agent-modes-settings"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Agent 模式与设置 →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Agent 模式与设置 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             了解规划模式的适用场景
                         </p>
                     </Link>
                     <Link
                         href="/docs/browser-subagent"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">浏览器子智能体 →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">浏览器子智能体 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             了解浏览器任务如何被执行
                         </p>

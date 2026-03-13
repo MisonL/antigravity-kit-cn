@@ -1,11 +1,11 @@
-# Antigravity Kit
+# 灵轨（Ling）
 
 > 包含 Skills（技能）、Agents（智能体）与 Workflows（工作流）的 AI Agent 模板
 
 <div  align="center">
-    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit?theme=dark" alt="Antigravity Kit - Nổi bật trên Unikorn.vn" style="width: 210px; height: 54px;" width="210" height="54" /></a>
-    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit/rank?theme=dark&type=daily" alt="Antigravity Kit - Hàng ngày" style="width: 250px; height: 64px;" width="250" height="64" /></a>
-    <a href="https://launch.j2team.dev/products/antigravity-kit" target="_blank"><img src="https://launch.j2team.dev/badge/antigravity-kit/dark" alt="Antigravity Kit on J2TEAM Launch" width="250" height="54" /></a>
+    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit?theme=dark" alt="灵轨（Ling） - Nổi bật trên Unikorn.vn" style="width: 210px; height: 54px;" width="210" height="54" /></a>
+    <a href="https://unikorn.vn/p/antigravity-kit?ref=unikorn" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/antigravity-kit/rank?theme=dark&type=daily" alt="灵轨（Ling） - Hàng ngày" style="width: 250px; height: 64px;" width="250" height="64" /></a>
+    <a href="https://launch.j2team.dev/products/antigravity-kit" target="_blank"><img src="https://launch.j2team.dev/badge/antigravity-kit/dark" alt="灵轨（Ling） on J2TEAM Launch" width="250" height="54" /></a>
 </div>
 
 ## 快速安装
@@ -31,13 +31,13 @@ ag-kit init
 
 ```
 你："添加 JWT 认证"
-AI：🤖 正在应用 @security-auditor + @backend-specialist...
+AI：正在应用 @security-auditor + @backend-specialist...
 
 你："修复深色模式按钮"
-AI：🤖 正在使用 @frontend-specialist...
+AI：正在使用 @frontend-specialist...
 
 你："登录返回 500 错误"
-AI：🤖 正在使用 @debugger 进行系统化分析...
+AI：正在使用 @debugger 进行系统化分析...
 ```
 
 **工作原理：**
@@ -50,10 +50,10 @@ AI：🤖 正在使用 @debugger 进行系统化分析...
 
 **优势：**
 
-- ✅ 零学习曲线：描述需求即可
-- ✅ 始终获得专家响应
-- ✅ 透明：显示正在使用的智能体
-- ✅ 仍可显式提及智能体进行覆盖
+- 零学习曲线：描述需求即可
+- 始终获得专家响应
+- 透明：显示正在使用的智能体
+- 仍可显式提及智能体进行覆盖
 
 ### 使用工作流
 
@@ -89,6 +89,14 @@ AI：🤖 正在使用 @debugger 进行系统化分析...
 
 | 命令         | 描述                               |
 | --------------- | ----------------------------------------- |
+| `ling init`   | 安装 `.agent` 目录到你的项目 |
+| `ling update` | 更新到最新版本              |
+| `ling status` | 检查安装状态                 |
+
+兼容命令（与上游文档一致）：
+
+| 命令         | 描述                               |
+| --------------- | ----------------------------------------- |
 | `ag-kit init`   | 安装 `.agent` 目录到你的项目 |
 | `ag-kit update` | 更新到最新版本              |
 | `ag-kit status` | 检查安装状态                 |
@@ -96,11 +104,11 @@ AI：🤖 正在使用 @debugger 进行系统化分析...
 ### 常用选项
 
 ```bash
-ag-kit init --force        # 覆盖现有 .agent 目录
-ag-kit init --path ./myapp # 安装到指定目录
-ag-kit init --branch dev   # 使用指定分支
-ag-kit init --quiet        # 静默输出（用于 CI/CD）
-ag-kit init --dry-run      # 预览操作但不执行
+ling init --force        # 覆盖现有 .agent 目录
+ling init --path ./myapp # 安装到指定目录
+ling init --branch dev   # 使用指定分支
+ling init --quiet        # 静默输出（用于 CI/CD）
+ling init --dry-run      # 预览操作但不执行
 ```
 
 ## 文档

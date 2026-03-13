@@ -108,18 +108,18 @@ export default function AgentModesSettingsPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/task-groups"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">任务组 →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">任务组 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             了解规划模式下的任务拆分
                         </p>
                     </Link>
                     <Link
                         href="/docs/rules-workflows"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">规则与工作流 →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">规则与工作流 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             掌控约束与可复用流程
                         </p>

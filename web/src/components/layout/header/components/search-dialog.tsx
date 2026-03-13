@@ -34,6 +34,12 @@ interface SearchGroup {
     items: SearchItem[];
 }
 
+function isMacPlatform() {
+    if (typeof navigator === 'undefined') return false;
+    const platform = String(navigator.platform || '').toLowerCase();
+    return platform.includes('mac') || platform.includes('iphone') || platform.includes('ipad') || platform.includes('ipod');
+}
+
 const searchGroups: SearchGroup[] = [
     {
         value: '快速开始',
@@ -195,6 +201,7 @@ const searchGroups: SearchGroup[] = [
 
 export default function SearchDialog() {
     const [open, setOpen] = useState(false);
+    const [isMac, setIsMac] = useState(false);
     const router = useRouter();
 
     function handleItemClick(item: SearchItem) {
@@ -203,6 +210,7 @@ export default function SearchDialog() {
     }
 
     useEffect(() => {
+        setIsMac(isMacPlatform());
         const down = (e: KeyboardEvent) => {
             if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
@@ -247,7 +255,7 @@ export default function SearchDialog() {
                 </svg>
                 <span className="flex-1 text-left">搜索文档...</span>
                 <KbdGroup className="hidden sm:inline-flex">
-                    <Kbd>⌘</Kbd>
+                    <Kbd>{isMac ? 'Cmd' : 'Ctrl'}</Kbd>
                     <Kbd>K</Kbd>
                 </KbdGroup>
             </CommandDialogTrigger>

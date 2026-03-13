@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "示例：生产部署 | Antigravity Kit",
+  title: "示例：生产部署 | 灵轨（Ling）",
   description: "学习如何使用 /deploy 进行严格且安全的部署。",
 };
 
@@ -35,14 +35,14 @@ import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips
     智能体自动审计项目健康状况。
 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-      <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
-        <h4 className="text-sm font-semibold mb-1">🛡️ 安全</h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">扫描漏洞与密钥泄露</p>
-      </div>
-      <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
-        <h4 className="text-sm font-semibold mb-1">📋 质量</h4>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">执行 Lint 与类型安全检查</p>
-      </div>
+	      <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
+	        <h4 className="text-sm font-semibold mb-1">安全</h4>
+	        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">扫描漏洞与密钥泄露</p>
+	      </div>
+	      <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3">
+	        <h4 className="text-sm font-semibold mb-1">质量</h4>
+	        <p className="text-xs text-zinc-500 dark:text-zinc-400 m-0">执行 Lint 与类型安全检查</p>
+	      </div>
     </div>
   </Step>
   <Step number={3} title="发布">
@@ -56,24 +56,24 @@ import { Callout, StepList, Step, Terminal, TerminalLine, TerminalBlock, ProTips
   <TerminalLine type="user">/deploy</TerminalLine>
 
   <TerminalBlock>
-    <TerminalLine type="agent">**正在运行起飞前检查...**</TerminalLine>
-    <div className="space-y-1 mt-2">
-      <div>🔄 安全扫描... <span className="text-green-400">通过</span></div>
-      <div>🔄 Lint 检查... <span className="text-green-400">通过</span></div>
-      <div>🔄 类型校验... <span className="text-green-400">通过</span></div>
-    </div>
-    <br/>
-    <span className="text-green-400">✅ 全部通过！</span>
-    正在部署到 Vercel...
-  </TerminalBlock>
+	    <TerminalLine type="agent">**正在运行起飞前检查...**</TerminalLine>
+	    <div className="space-y-1 mt-2">
+	      <div>安全扫描... <span className="text-green-400">通过</span></div>
+	      <div>Lint 检查... <span className="text-green-400">通过</span></div>
+	      <div>类型校验... <span className="text-green-400">通过</span></div>
+	    </div>
+	    <br/>
+	    <span className="text-green-400">全部通过</span>
+	    正在部署到 Vercel...
+	  </TerminalBlock>
 
-  <TerminalBlock highlight>
-    <TerminalLine type="agent">**🚀 部署完成！**</TerminalLine>
-    <div className="space-y-1 mt-2">
-      <div>🌐 地址：<span className="text-blue-400">https://my-app.vercel.app</span></div>
-      <div>💚 健康检查：<span className="text-green-400">OK</span></div>
-    </div>
-  </TerminalBlock>
+	  <TerminalBlock highlight>
+	    <TerminalLine type="agent">**部署完成**</TerminalLine>
+	    <div className="space-y-1 mt-2">
+	      <div>地址：<span className="text-blue-400">https://my-app.vercel.app</span></div>
+	      <div>健康检查：<span className="text-green-400">OK</span></div>
+	    </div>
+	  </TerminalBlock>
 </Terminal>
 
 ## 专家建议

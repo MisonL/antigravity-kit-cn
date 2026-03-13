@@ -180,10 +180,7 @@ function AnchoredToasts() {
 
   return (
     <Toast.Portal data-slot="toast-portal-anchored">
-      <Toast.Viewport
-        className="outline-none"
-        data-slot="toast-viewport-anchored"
-      >
+      <Toast.Viewport data-slot="toast-viewport-anchored">
         {toasts.map((toast) => {
           const Icon = toast.type
             ? TOAST_ICONS[toast.type as keyof typeof TOAST_ICONS]

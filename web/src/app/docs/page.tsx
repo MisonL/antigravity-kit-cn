@@ -13,21 +13,21 @@ export default function DocsPage() {
                 </h1>
                 <p className="text-lg text-zinc-600 dark:text-zinc-400">
                     欢迎来到 <span className="before:-inset-x-1 before:-rotate-1 relative z-4 before:pointer-events-none before:absolute before:inset-y-0 before:z-4 before:bg-linear-to-r before:from-blue-500 before:via-cyan-500 before:to-orange-500 before:opacity-16 before:mix-blend-hard-light">
-                        Antigravity Kit
+                        灵轨（Ling）
                     </span> 文档。
                 </p>
             </div>
 
-            {/* What is Antigravity Kit */}
+            {/* What is 灵轨（Ling） */}
             <section className="mb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
                     什么是 <span className="before:-inset-x-1 before:-rotate-1 relative z-4 before:pointer-events-none before:absolute before:inset-y-0 before:z-4 before:bg-linear-to-r before:from-blue-500 before:via-cyan-500 before:to-orange-500 before:opacity-16 before:mix-blend-hard-light">
-                        Antigravity Kit
+                        灵轨（Ling）
                     </span>？
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
                     <span className="before:-inset-x-1 before:-rotate-1 relative z-4 before:pointer-events-none before:absolute before:inset-y-0 before:z-4 before:bg-linear-to-r before:from-blue-500 before:via-cyan-500 before:to-orange-500 before:opacity-16 before:mix-blend-hard-light">
-                        Antigravity Kit
+                        灵轨（Ling）
                     </span>{" "}
                     是一套包含 Skills、Agents 与 Workflows 的 AI Agent 模板集合，旨在为{" "}
                     <a
@@ -39,7 +39,7 @@ export default function DocsPage() {
                     提供更强的开发辅助能力。
                 </p>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-4">
-                    无论你是个人开发者还是团队成员，Antigravity Kit 都能通过 {skills.length}+ 个技能、{agents.length}+ 位专家智能体与 {workflows.length}+ 条生产级工作流，帮助你更快构建更好的软件。
+                    无论你是个人开发者还是团队成员，灵轨（Ling） 都能通过 {skills.length}+ 个技能、{agents.length}+ 位专家智能体与 {workflows.length}+ 条生产级工作流，帮助你更快构建更好的软件。
                 </p>
             </section>
 
@@ -132,7 +132,7 @@ export default function DocsPage() {
                     </div>
                 </div>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    使用侧边栏浏览内容，或使用 <kbd className="px-2 py-1 text-xs font-mono rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">Ctrl+K / ⌘K</kbd> 快速搜索。
+                    使用侧边栏浏览内容，或使用 <kbd className="px-2 py-1 text-xs font-mono rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">Ctrl+K / Cmd+K</kbd> 快速搜索。
                 </p>
             </section>
 
@@ -144,10 +144,10 @@ export default function DocsPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/installation"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
                         <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50">安装 →</h3>
+	                            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50">安装 -&gt;</h3>
                         </div>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             一分钟内完成安装
@@ -155,10 +155,10 @@ export default function DocsPage() {
                     </Link>
                     <Link
                         href="/docs/agents"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
                         <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50">了解核心概念 →</h3>
+	                            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50">了解核心概念 -&gt;</h3>
                         </div>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             理解智能体、技能与规则/工作流

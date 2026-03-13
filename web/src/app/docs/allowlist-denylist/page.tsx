@@ -64,18 +64,18 @@ export default function AllowlistDenylistPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/strict-mode"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Strict Mode →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">Strict Mode -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             查看严格模式下的安全收敛策略
                         </p>
                     </Link>
                     <Link
                         href="/docs/browser-subagent"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">浏览器子智能体 →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">浏览器子智能体 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             了解浏览器任务执行机制
                         </p>

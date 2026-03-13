@@ -5,8 +5,8 @@ import skills from "@/services/skills.json";
 import workflows from "@/services/workflows.json";
 
 export const metadata = {
-  title: "安装 | Antigravity Kit",
-  description: "一分钟内完成 Antigravity Kit 安装。",
+  title: "安装 | 灵轨（Ling）",
+  description: "一分钟内完成 灵轨（Ling） 安装。",
 };
 
 export default function InstallationPage() {
@@ -23,7 +23,7 @@ export default function InstallationPage() {
           安装
         </h1>
         <p className="text-lg text-zinc-600 dark:text-zinc-400">
-          一分钟内完成 Antigravity Kit 安装。
+          一分钟内完成 灵轨（Ling） 安装。
         </p>
       </div>
 
@@ -32,35 +32,38 @@ export default function InstallationPage() {
           快速开始
         </h2>
         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-          当前中文版本需要先克隆仓库，再进行本地安装：
+          推荐直接从 npm 安装 CLI：
         </p>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
-{`git clone https://github.com/MisonL/antigravity-kit-cn.git
-cd antigravity-kit-cn`}
+{`npm install -g @mison/ling
+
+cd /path/to/your-project
+ling init`}
         </pre>
 
         <Callout type="info">
-          <strong>提示：</strong>完成克隆后，请继续执行下方的 CLI 安装步骤。
+          <strong>提示：</strong>如需从源码开发或自定义构建，可查看下方「从源码安装」。
         </Callout>
       </section>
 
       <section id="global-install" className="mb-12 scroll-mt-16">
         <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-4">
-          安装 CLI 到本机
+          从源码安装
         </h2>
         <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-          在仓库根目录执行本地全局安装，即可在任意位置使用 <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono">ag-kit</code>：
+          适用于参与开发或需要在本机修改后再安装：
         </p>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-2 text-sm font-mono text-zinc-100">
-{`cd antigravity-kit-cn
+{`git clone https://github.com/MisonL/Ling.git
+cd Ling
 npm install -g .`}
         </pre>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
 {`cd /path/to/your-project
-ag-kit init`}
+ling init`}
         </pre>
 
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
@@ -68,8 +71,8 @@ ag-kit init`}
         </p>
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
-{`cd /path/to/antigravity-kit-cn
-node bin/ag-kit.js init --path /path/to/your-project`}
+{`cd /path/to/Ling
+node bin/ling.js init --path /path/to/your-project`}
         </pre>
 
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
@@ -81,7 +84,7 @@ node bin/ag-kit.js init --path /path/to/your-project`}
         </Callout>
 
         <Callout type="info">
-          <strong>批量更新：</strong>每次执行 <code>ag-kit init</code> / <code>ag-kit update</code> 都会自动登记工作区到全局索引，后续可直接用 <code>ag-kit update-all</code> 一键批量更新所有已登记工作区。默认会排除工具包源码目录；也可用 <code>ag-kit exclude add/remove/list</code> 维护自定义排除清单。默认索引路径为 macOS / Linux / WSL 的 <code>~/.ag-kit/workspaces.json</code>、Windows 的 <code>%USERPROFILE%\.ag-kit\workspaces.json</code>，也可通过 <code>AG_KIT_INDEX_PATH</code> 自定义。冲突检测会在 <code>npm install -g .</code> 阶段（postinstall）和 CLI 执行阶段双重检查上游英文版 <code>@vudovn/ag-kit</code>；安装阶段会询问是否自动卸载，若选择不卸载会提示“最后安装的版本生效”并继续安装。
+          <strong>批量更新：</strong>每次执行 <code>ling init</code> / <code>ling update</code> 都会自动登记工作区到全局索引，后续可直接用 <code>ling update-all</code> 一键批量更新所有已登记工作区。默认会排除工具包源码目录；也可用 <code>ling exclude add/remove/list</code> 维护自定义排除清单。默认索引路径为 macOS / Linux / WSL 的 <code>~/.ling/workspaces.json</code>、Windows 的 <code>%USERPROFILE%\.ling\workspaces.json</code>，也可通过 <code>LING_INDEX_PATH</code> 自定义。冲突检测会在安装阶段（postinstall）和 CLI 执行阶段双重检查上游英文版 <code>@vudovn/ag-kit</code>；安装阶段会询问是否自动卸载，若选择不卸载会提示“最后安装的版本生效”并继续安装。
         </Callout>
       </section>
 
@@ -95,11 +98,11 @@ node bin/ag-kit.js init --path /path/to/your-project`}
 
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
 {`.agent/
-├── agents/          # ${agents.length} 个专家智能体
-├── skills/          # ${skills.length}+ 个技能
-├── workflows/       # ${workflows.length} 个斜杠命令
-├── rules/           # 工作区规则
-└── ARCHITECTURE.md  # 架构文档`}
+- agents/          # ${agents.length} 个专家智能体
+- skills/          # ${skills.length}+ 个技能
+- workflows/       # ${workflows.length} 个斜杠命令
+- rules/           # 工作区规则
+- ARCHITECTURE.md  # 架构文档`}
         </pre>
 
         <div className="space-y-4">
@@ -142,8 +145,9 @@ node bin/ag-kit.js init --path /path/to/your-project`}
           卸载全局 CLI
         </h3>
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
-{`npm uninstall -g antigravity-kit-cn
-npm uninstall -g antigravity-kit @vudovn/ag-kit`}
+{`npm uninstall -g @mison/ling
+# 旧包 @mison/ag-kit-cn 已停止维护，可按需清理
+npm uninstall -g @mison/ag-kit-cn`}
         </pre>
 
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-2">
@@ -168,7 +172,7 @@ rmdir /s /q .agent`}
           清理索引（可选）
         </h3>
         <pre className="p-4 rounded-lg bg-zinc-950 overflow-x-auto mb-4 text-sm font-mono text-zinc-100">
-ag-kit exclude add --path /path/to/your-project
+ling exclude add --path /path/to/your-project
         </pre>
 
         <Callout type="info">
@@ -212,18 +216,18 @@ ag-kit exclude add --path /path/to/your-project
         <div className="grid gap-4 sm:grid-cols-2">
           <Link
             href="/docs/agents"
-            className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+            className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
           >
-            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">智能体 →</h3>
+	            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">智能体 -&gt;</h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               了解专家智能体
             </p>
           </Link>
           <Link
             href="/docs/skills"
-            className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+            className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
           >
-            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">技能 →</h3>
+	            <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">技能 -&gt;</h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               查看领域知识技能
             </p>

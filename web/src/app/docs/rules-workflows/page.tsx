@@ -65,9 +65,9 @@ export default function RulesWorkflowsPage() {
                         </ul>
                         <div className="mt-4 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/20 p-4">
                             <p className="text-sm text-amber-900 dark:text-amber-100">
-                                <strong className="font-semibold">Ag-Kit 注记：</strong>本仓库模板源统一放在 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agents/</code>，
+                                <strong className="font-semibold">灵轨 注记：</strong>本仓库模板源统一放在 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agents/</code>，
                                 但 Gemini/Antigravity 的规则与工作流仍遵循官方的 <code className="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/50 text-xs font-mono">.agent/</code> 工作区路径。
-                                为避免副作用，Ag-Kit 的全局同步仅覆盖 Skills，不写全局 Rules/Workflows。
+                                为避免副作用，灵轨 的全局同步仅覆盖 Skills，不写全局 Rules/Workflows。
                             </p>
                         </div>
                     </div>
@@ -138,18 +138,18 @@ export default function RulesWorkflowsPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/workflows"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">斜杠工作流 →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">斜杠工作流 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             查看可复用的命令流程
                         </p>
                     </Link>
                     <Link
                         href="/docs/skills"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">技能 →</h3>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">技能 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             了解技能规范与目录结构
                         </p>

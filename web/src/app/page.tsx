@@ -3,10 +3,10 @@ import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Antigravity Kit - AI Agent 扩展包",
+    title: "灵轨（Ling） - AI Agent 扩展包",
     description: "企业级 AI Agent 开发模板，助力高效编码。",
     openGraph: {
-        title: "Antigravity Kit - AI Agent 扩展包",
+        title: "灵轨（Ling） - AI Agent 扩展包",
         description: "企业级 AI Agent 开发模板，助力高效编码。",
     },
 };
@@ -474,7 +474,7 @@ export default function Home() {
                 <Image
                     className="dark:invert"
                     src="/images/logo.png"
-                    alt="Antigravity Kit 标志"
+                    alt="灵轨（Ling） 标志"
                     width={100}
                     height={20}
                     style={{ width: "auto", height: "auto" }}
@@ -482,11 +482,11 @@ export default function Home() {
                 <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
                     <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
                         <span className="before:-inset-x-1 before:-rotate-1 relative z-4 before:pointer-events-none before:absolute before:inset-y-0 before:z-4 before:bg-linear-to-r before:from-blue-500 before:via-cyan-500 before:to-orange-500 before:opacity-16 before:mix-blend-hard-light">
-                            Antigravity Kit
+                            灵轨（Ling）
                         </span>
                     </h1>
                     <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-                        面向 Antigravity Google 的 AI Agent 模板，包含
+                        面向 Gemini CLI、Antigravity 与 Codex 的 AI Agent 模板，包含
                         Skills、Agents 与 Workflows，适用于{" "}
                         <a
                             href="https://antigravity.google/t"
@@ -502,7 +502,7 @@ export default function Home() {
                 <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
                     <a
                         className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-                        href="https://github.com/MisonL/antigravity-kit-cn"
+                        href="https://github.com/MisonL/Ling"
                         target="_blank"
                         rel="noopener noreferrer"
                     >

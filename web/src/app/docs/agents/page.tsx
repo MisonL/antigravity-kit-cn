@@ -33,10 +33,10 @@ export default function AgentsPage() {
                     智能体是具备特定领域知识、工具与行为模式的专业 AI 角色，每个智能体都针对某一类软件开发问题优化。
                 </p>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    当你发起请求时，Antigravity Kit 的<strong>智能路由</strong>会自动识别需要哪些智能体并激活它们。你也可以点名某个智能体来覆盖自动路由。
+                    当你发起请求时，灵轨（Ling） 的<strong>智能路由</strong>会自动识别需要哪些智能体并激活它们。你也可以点名某个智能体来覆盖自动路由。
                 </p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-500">
-                    说明：此页介绍的是 Antigravity Kit 的专家智能体。如需了解 Antigravity 平台级 Agent，请前往 <Link className="text-zinc-900 dark:text-zinc-50 underline underline-offset-4" href="/docs/agent">Agent 介绍</Link>。
+                    说明：此页介绍的是 灵轨（Ling） 的专家智能体。如需了解 Antigravity 平台级 Agent，请前往 <Link className="text-zinc-900 dark:text-zinc-50 underline underline-offset-4" href="/docs/agent">Agent 介绍</Link>。
                 </p>
             </section>
 
@@ -50,17 +50,17 @@ export default function AgentsPage() {
                 </p>
 
                 <div className="relative group mb-6">
-                    <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
-                        <code className="text-zinc-100">{`你: "添加 JWT 认证"
-AI: 🤖 正在应用 @security-auditor + @backend-specialist...
+	                    <pre className="p-4 rounded-lg bg-zinc-900 dark:bg-zinc-950 overflow-x-auto border border-zinc-800 font-mono text-sm">
+	                        <code className="text-zinc-100">{`你: "添加 JWT 认证"
+	AI: 正在应用 @security-auditor + @backend-specialist...
 
-你: "修复深色模式按钮"
-AI: 🤖 正在使用 @frontend-specialist...
+	你: "修复深色模式按钮"
+	AI: 正在使用 @frontend-specialist...
 
-你: "登录返回 500 错误"
-AI: 🤖 正在使用 @debugger 进行系统化分析...`}</code>
-                    </pre>
-                </div>
+	你: "登录返回 500 错误"
+	AI: 正在使用 @debugger 进行系统化分析...`}</code>
+	                    </pre>
+	                </div>
 
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
                     当然，你仍然可以通过点名来<strong>覆盖</strong>该行为：
@@ -86,14 +86,14 @@ AI: 🤖 正在使用 @debugger 进行系统化分析...`}</code>
                     可用智能体
                 </h2>
                 <p className="text-base text-zinc-600 dark:text-zinc-400 mb-6">
-                    Antigravity Kit 当前包含 {agents.length} 个专家智能体：
+                    灵轨（Ling） 当前包含 {agents.length} 个专家智能体：
                 </p>
 
                 <div className="space-y-4">
                     {agents.map((agent) => (
                         <div
                             key={agent.name}
-                            className="p-5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                            className="p-5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                         >
                             <div className="flex items-start justify-between gap-4 mb-2">
                                 <code className="text-base font-mono font-semibold text-zinc-900 dark:text-zinc-50">
@@ -145,18 +145,18 @@ skills: nextjs-react-expert, tailwind-patterns, frontend-design
                 <div className="grid gap-4 sm:grid-cols-2">
                     <Link
                         href="/docs/skills"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">技能 →</h3>
+	                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">技能 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             了解领域知识模块
                         </p>
                     </Link>
                     <Link
                         href="/docs/workflows"
-                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                        className="group p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">工作流 →</h3>
+	                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-50 mb-2">工作流 -&gt;</h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             查看斜杠命令流程
                         </p>
