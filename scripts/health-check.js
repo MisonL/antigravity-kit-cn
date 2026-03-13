@@ -12,6 +12,7 @@ function logStep(message) {
 }
 
 function runCommand(command, options = {}) {
+    const allowedStatuses = options.allowedStatuses || [0];
     const result = spawnSync(command, {
         cwd: options.cwd || ROOT_DIR,
         env: {
@@ -22,9 +23,11 @@ function runCommand(command, options = {}) {
         shell: true,
     });
 
-    if (result.status !== 0) {
+    if (!allowedStatuses.includes(result.status)) {
         const detail = result.stderr || result.stdout || "";
-        throw new Error(`${command}\n${detail}`.trim());
+        throw new Error(
+            `${command}\n(exit=${result.status})\n${detail}`.trim(),
+        );
     }
 
     return result.stdout || "";
@@ -106,7 +109,10 @@ function main() {
             throw new Error(`spec status 结果异常: ${specStatus}`);
         }
         runCommand("node bin/ling.js spec disable --target codex --quiet", { env });
-        const specStatusAfterDisable = runCommand("node bin/ling.js spec status --quiet", { env }).trim();
+        const specStatusAfterDisable = runCommand("node bin/ling.js spec status --quiet", {
+            env,
+            allowedStatuses: [0, 2],
+        }).trim();
         if (specStatusAfterDisable !== "missing") {
             throw new Error(`spec disable 后状态异常: ${specStatusAfterDisable}`);
         }
