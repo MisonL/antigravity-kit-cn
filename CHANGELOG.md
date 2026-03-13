@@ -7,6 +7,27 @@
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-03-13
+
+### 重大变更
+
+- **仓库模板源统一**：仓库内统一收敛到 `.agents/` 作为唯一 Canonical 模板源；旧 `.agent/` 仅保留输入兼容，不再作为主路径。
+- **项目级 Codex 体系稳定化**：Codex 项目安装/更新统一落到 `.agents/`，并继续支持从遗留 `.codex/` 自动迁移。
+- **全局安装模型重构**：`ag-kit global sync/status` 成为统一的全局 Skills 安装/更新入口。
+
+### 新增
+
+- **全局 Skills 同步**：
+  - `codex` 同步到 `~/.codex/skills/`
+  - `gemini` 同时同步到 `~/.gemini/skills/` 与 `~/.gemini/antigravity/skills/`
+- **状态契约收紧**：`ag-kit status --quiet` 与 `ag-kit global status --quiet` 统一输出 `installed / broken / missing`，并使用固定退出码 `0 / 1 / 2`。
+- **跨平台验证增强**：新增 `ci:verify`、Node 版 `health-check` 与 GitHub Actions 跨平台工作流。
+
+### 修复
+
+- **旧索引兼容**：`update-all` 现在能自动归一化历史索引中的 `targets.full`，不再要求手工清理索引。
+- **全局路径对齐真实工具**：修正之前全局路径和真实消费端不一致的问题，确保文档、测试、CI 与实际工具行为一致。
+
 
 ## [2.0.2] - 2026-02-04
 
