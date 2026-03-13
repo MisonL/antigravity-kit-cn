@@ -9,7 +9,7 @@ describe("Clean Script", () => {
     let tempRoot;
 
     beforeEach(() => {
-        tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-clean-test-"));
+        tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-clean-test-"));
     });
 
     afterEach(() => {

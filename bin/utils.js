@@ -49,7 +49,7 @@ function cloneBranchAgentDir(branch, options) {
         throw new Error(`非法分支名: ${branch}`);
     }
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ling-"));
     const logFn = options && options.logger ? options.logger : console.log;
 
     if (!options.quiet) logFn(`[download] 正在从 ${REPO_URL} 拉取分支 ${safeBranch} ...`);

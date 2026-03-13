@@ -140,11 +140,11 @@ class CodexAdapter extends BaseAdapter {
         if (!isCodexPrebuilt) {
             if (hasSkillsDir) {
                 this.log("[build] 检测到模板目录格式，正在构建 Codex 结构...");
-                const mockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-root-"));
+                const mockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-build-root-"));
                 const mockAgents = path.join(mockRoot, ".agents");
                 this._copyDir(installSource, mockAgents);
 
-                buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-out-"));
+                buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ling-build-out-"));
                 CodexBuilder.build(mockRoot, buildTemp);
                 installSource = buildTemp;
                 sourceLabel = `${sourceLabel}:compiled`;
@@ -157,7 +157,7 @@ class CodexAdapter extends BaseAdapter {
                 };
             } else if (hasAgentsRoot) {
                 this.log("[build] 检测到仓库根目录格式(.agents)，正在构建 Codex 结构...");
-                buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-out-"));
+                buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ling-build-out-"));
                 CodexBuilder.build(installSource, buildTemp);
                 installSource = buildTemp;
                 sourceLabel = `${sourceLabel}:compiled`;
@@ -169,11 +169,11 @@ class CodexAdapter extends BaseAdapter {
                 };
             } else if (hasLegacyAgentRoot) {
                 this.log("[build] 检测到旧版仓库根目录格式(.agent)，正在构建 Codex 结构...");
-                const mockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-root-"));
+                const mockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-build-root-"));
                 const mockAgents = path.join(mockRoot, ".agents");
                 this._copyDir(path.join(installSource, ".agent"), mockAgents);
 
-                buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-out-"));
+                buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ling-build-out-"));
                 CodexBuilder.build(mockRoot, buildTemp);
                 installSource = buildTemp;
                 sourceLabel = `${sourceLabel}:compiled`;
@@ -191,7 +191,7 @@ class CodexAdapter extends BaseAdapter {
     }
 
     _createStaging(installSource, sourceLabel) {
-        const stagingDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-codex-stage-"));
+        const stagingDir = fs.mkdtempSync(path.join(os.tmpdir(), "ling-codex-stage-"));
         this._copyDir(installSource, stagingDir);
 
         const manifestPath = path.join(stagingDir, "manifest.json");

@@ -11,14 +11,14 @@
 ## 快速安装
 
 ```bash
-npx @vudovn/ag-kit init
+npx @mison/ling init --target gemini
 ```
 
 或全局安装：
 
 ```bash
-npm install -g @vudovn/ag-kit
-ag-kit init
+npm install -g @mison/ling
+ling init --target gemini
 ```
 
 这会把包含全部模板的 `.agent` 目录安装到你的项目中。
@@ -92,14 +92,6 @@ AI：正在使用 @debugger 进行系统化分析...
 | `ling init`   | 安装 `.agent` 目录到你的项目 |
 | `ling update` | 更新到最新版本              |
 | `ling status` | 检查安装状态                 |
-
-兼容命令（与上游文档一致）：
-
-| 命令         | 描述                               |
-| --------------- | ----------------------------------------- |
-| `ag-kit init`   | 安装 `.agent` 目录到你的项目 |
-| `ag-kit update` | 更新到最新版本              |
-| `ag-kit status` | 检查安装状态                 |
 
 ### 常用选项
 

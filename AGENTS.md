@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## 项目结构与模块组织
-- `bin/`：CLI 主入口与核心逻辑。`bin/ag-kit.js` 负责命令分发，`bin/core/` 处理构建/转换，`bin/adapters/` 处理 `gemini`/`codex` 目标差异，`bin/utils/` 放通用工具。
+- `bin/`：CLI 主入口与核心逻辑。`bin/ling-cli.js` 负责命令分发，`bin/core/` 处理构建/转换，`bin/adapters/` 处理 `gemini`/`codex` 目标差异，`bin/utils/` 放通用工具。
 - `scripts/`：维护脚本（如 `clean.js`、`health-check.sh`、`postinstall-check.js`）。
 - `tests/`：Node 内置测试（`*.test.js`），覆盖 CLI、适配器、生成器、清理与健康检查。
 - `docs/` 与 `reference/`：规范文档与参考资料。

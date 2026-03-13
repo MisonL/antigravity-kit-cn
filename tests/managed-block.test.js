@@ -25,7 +25,7 @@ describe("ManagedBlock", () => {
         assert.strictEqual(result.action, "appended");
         const content = fs.readFileSync(targetFile, "utf8");
         assert.ok(content.includes("User Content"));
-        assert.ok(content.includes("BEGIN AG-KIT MANAGED BLOCK: codex-core-rules"));
+        assert.ok(content.includes("BEGIN LING MANAGED BLOCK: codex-core-rules"));
         assert.ok(content.includes("managed line"));
     });
 
@@ -37,5 +37,22 @@ describe("ManagedBlock", () => {
         const content = fs.readFileSync(targetFile, "utf8");
         assert.ok(content.includes("v2"));
         assert.ok(!content.includes("v1"));
+    });
+
+    test("should migrate legacy AG-KIT markers when updating managed block", () => {
+        fs.writeFileSync(
+            targetFile,
+            `# User Content\n\n<!-- BEGIN AG-KIT MANAGED BLOCK: codex-core-rules -->\nlegacy\n<!-- END AG-KIT MANAGED BLOCK: codex-core-rules -->\n`,
+            "utf8",
+        );
+
+        const result = upsertManagedBlock(targetFile, "codex-core-rules", "v2");
+
+        assert.strictEqual(result.action, "updated");
+        const content = fs.readFileSync(targetFile, "utf8");
+        assert.ok(content.includes("BEGIN LING MANAGED BLOCK: codex-core-rules"));
+        assert.ok(!content.includes("BEGIN AG-KIT MANAGED BLOCK: codex-core-rules"));
+        assert.ok(content.includes("v2"));
+        assert.ok(!content.includes("legacy"));
     });
 });

@@ -70,7 +70,7 @@ class GeminiAdapter extends BaseAdapter {
             }
 
             if (this._samePath(installSource, targetDir) && !this.options.dryRun) {
-                const tempSource = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-gemini-src-"));
+                const tempSource = fs.mkdtempSync(path.join(os.tmpdir(), "ling-gemini-src-"));
                 this._copyDir(installSource, tempSource);
                 const oldCleanup = cleanup;
                 cleanup = () => {

@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require("./ag-kit.js");
+require("./ling-cli.js");

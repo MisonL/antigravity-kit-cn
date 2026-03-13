@@ -16,8 +16,6 @@ const { selectTargets, createConflictPrompter } = require("./interactive");
 const BUNDLED_AGENT_DIR = path.resolve(__dirname, "../.agents");
 const BUNDLED_SPEC_DIR = path.resolve(__dirname, "../.spec");
 const PRIMARY_CLI_NAME = "ling";
-const LEGACY_CLI_NAME = "ag-kit";
-const CURRENT_CLI_BASENAME = path.basename(process.argv[1] || "", path.extname(process.argv[1] || "")) || PRIMARY_CLI_NAME;
 const WORKSPACE_INDEX_VERSION = 2;
 const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
 const TOOLKIT_PACKAGE_NAMES = new Set(["@mison/ling", "@mison/ag-kit-cn", "antigravity-kit-cn", "antigravity-kit"]);
@@ -67,36 +65,11 @@ function getVersionTag() {
 }
 
 function getControlHomeDir() {
-    const preferred = path.join(os.homedir(), ".ling");
-    const legacy = path.join(os.homedir(), ".ag-kit");
-
-    if (fs.existsSync(preferred)) {
-        return preferred;
-    }
-    if (fs.existsSync(legacy)) {
-        return legacy;
-    }
-    return preferred;
-}
-
-function migrateLegacyControlHomeDir() {
-    if (process.env.LING_INDEX_PATH || process.env.AG_KIT_INDEX_PATH) {
-        return null;
-    }
-
-    const preferred = path.join(os.homedir(), ".ling");
-    const legacy = path.join(os.homedir(), ".ag-kit");
-
-    if (fs.existsSync(preferred) || !fs.existsSync(legacy)) {
-        return null;
-    }
-
-    copyDirRecursive(legacy, preferred);
-    return { from: legacy, to: preferred };
+    return path.join(os.homedir(), ".ling");
 }
 
 function getWorkspaceIndexPath() {
-    const customPath = process.env.LING_INDEX_PATH || process.env.AG_KIT_INDEX_PATH;
+    const customPath = process.env.LING_INDEX_PATH;
     if (customPath) {
         return path.resolve(process.cwd(), customPath);
     }
@@ -113,7 +86,7 @@ function createEmptyWorkspaceIndex() {
 }
 
 function resolveGlobalRootDir() {
-    const customRoot = process.env.LING_GLOBAL_ROOT || process.env.AG_KIT_GLOBAL_ROOT;
+    const customRoot = process.env.LING_GLOBAL_ROOT;
     if (typeof customRoot === "string" && customRoot.trim()) {
         return path.resolve(process.cwd(), customRoot);
     }
@@ -444,10 +417,10 @@ function isPathExcludedByList(excludedPaths, workspacePath) {
 
 function isToolkitSourceDirectory(workspacePath) {
     const packageJsonPath = path.join(workspacePath, "package.json");
-    const legacyCliPath = path.join(workspacePath, "bin", "ag-kit.js");
+    const cliPath = path.join(workspacePath, "bin", "ling-cli.js");
     const primaryCliPath = path.join(workspacePath, "bin", "ling.js");
 
-    if (!fs.existsSync(packageJsonPath) || (!fs.existsSync(legacyCliPath) && !fs.existsSync(primaryCliPath))) {
+    if (!fs.existsSync(packageJsonPath) || (!fs.existsSync(cliPath) && !fs.existsSync(primaryCliPath))) {
         return false;
     }
 
@@ -872,7 +845,7 @@ function maybeWarnUpstreamGlobalConflict(command, options) {
     if (options.quiet) {
         return;
     }
-    if (process.env.LING_SKIP_UPSTREAM_CHECK === "1" || process.env.AG_KIT_SKIP_UPSTREAM_CHECK === "1") {
+    if (process.env.LING_SKIP_UPSTREAM_CHECK === "1") {
         return;
     }
     const shouldWarn =
@@ -895,20 +868,8 @@ function maybeWarnUpstreamGlobalConflict(command, options) {
     }
 
     log(options, `[warn] 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}。`);
-    log(options, `[warn] 上游英文版与当前版本共用 \`${LEGACY_CLI_NAME}\` 兼容命令名，后安装者会覆盖该入口。`);
-    log(options, `[hint] 建议执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
-    log(options, `[info] 正式命令已切换为 \`${PRIMARY_CLI_NAME}\`。若你通过 bun install -g 安装，Bun 默认会阻止本包 postinstall；因此这里会在首次执行 CLI 时再次提醒。`);
-}
-
-function maybeWarnLegacyCliAlias(options) {
-    if (options.quiet) {
-        return;
-    }
-    if (CURRENT_CLI_BASENAME !== LEGACY_CLI_NAME) {
-        return;
-    }
-
-    console.log(`[warn] \`${LEGACY_CLI_NAME}\` 已进入兼容模式，请改用 \`${PRIMARY_CLI_NAME}\`.`);
+    log(options, `[hint] 如需仅保留一个来源，请执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
+    log(options, `[info] 当前项目的正式命令为 \`${PRIMARY_CLI_NAME}\`。`);
 }
 
 function normalizeTargets(rawTargets) {
@@ -1239,7 +1200,7 @@ function planGlobalSyncTasks(targetName, agentDir) {
     const destinations = getGlobalDestinations(targetName);
 
     if (targetName === "codex") {
-        const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-global-codex-"));
+        const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-global-codex-"));
         const mockRoot = path.join(tempRoot, "source");
         const mockAgent = path.join(mockRoot, ".agents");
         const outputDir = path.join(tempRoot, "out");
@@ -1334,7 +1295,7 @@ function summarizeGlobalSync(tasks) {
 
 function applyGlobalSync(targetName, agentDir, timestamp, options) {
     if (targetName === "codex") {
-        const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-global-codex-"));
+        const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-global-codex-"));
         const mockRoot = path.join(tempRoot, "source");
         const mockAgent = path.join(mockRoot, ".agents");
         const outputDir = path.join(tempRoot, "out");
@@ -1966,7 +1927,7 @@ async function commandInit(options) {
                 let shouldSkip = false;
 
                 for (const conflict of conflicts) {
-                    const action = prompter ? await prompter.resolveConflict(conflict) : "remove";
+                    const action = prompter ? await prompter.resolveConflict(conflict) : "backup";
                     if (action === "keep") {
                         log(options, `[skip] 已保留现有资产，跳过初始化: ${conflict.label}`);
                         shouldSkip = true;
@@ -1999,6 +1960,58 @@ async function commandInit(options) {
     }
 }
 
+function evaluateCodexUpdateConflict(activeDir) {
+    const manifestPath = path.join(activeDir, "manifest.json");
+    const details = {
+        hasConflict: false,
+        manifestMissing: false,
+        modifiedCount: 0,
+        unknownCount: 0,
+    };
+
+    if (!fs.existsSync(manifestPath)) {
+        details.hasConflict = true;
+        details.manifestMissing = true;
+        return details;
+    }
+
+    try {
+        const manager = new ManifestManager(manifestPath, { target: "codex" });
+        manager.load();
+        const drift = manager.checkDrift(activeDir);
+        if (drift.modified.length > 0) {
+            details.hasConflict = true;
+            details.modifiedCount = drift.modified.length;
+        }
+
+        const manifestFiles = manager.manifest.files || {};
+        const stack = [activeDir];
+        while (stack.length > 0) {
+            const dir = stack.pop();
+            const entries = fs.readdirSync(dir, { withFileTypes: true });
+            for (const entry of entries) {
+                const fullPath = path.join(dir, entry.name);
+                if (entry.isDirectory()) {
+                    stack.push(fullPath);
+                    continue;
+                }
+                const relPath = path.relative(activeDir, fullPath).split(path.sep).join("/");
+                if (!manifestFiles[relPath]) {
+                    details.unknownCount += 1;
+                }
+            }
+        }
+        if (details.unknownCount > 0) {
+            details.hasConflict = true;
+        }
+    } catch (err) {
+        details.hasConflict = true;
+        details.manifestMissing = true;
+    }
+
+    return details;
+}
+
 async function commandUpdate(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
     const targets = resolveTargetsForUpdate(workspaceRoot, options);
@@ -2023,85 +2036,51 @@ async function commandUpdate(options) {
 
         const runOptions = { ...options, force: true };
 
-        if (prompter) {
-            const timestamp = nowISO().replace(/[:.]/g, "-");
-            if (target === "gemini") {
-                const agentDir = path.join(workspaceRoot, ".agent");
-                if (fs.existsSync(agentDir) && !areDirectoriesEqual(BUNDLED_AGENT_DIR, agentDir)) {
-                    const action = await prompter.resolveConflict({
+        const timestamp = nowISO().replace(/[:.]/g, "-");
+        if (target === "gemini") {
+            const agentDir = path.join(workspaceRoot, ".agent");
+            if (fs.existsSync(agentDir) && !areDirectoriesEqual(BUNDLED_AGENT_DIR, agentDir)) {
+                let action = "backup";
+                if (prompter) {
+                    action = await prompter.resolveConflict({
                         category: "project:gemini",
                         label: ".agent",
                         path: agentDir,
                         target,
                     });
-                    if (action === "keep") {
-                        log(options, "[skip] 已保留现有资产，跳过更新: .agent");
-                        continue;
-                    }
-                    if (action === "backup") {
-                        backupWorkspaceDir(workspaceRoot, agentDir, ".agent-backup", timestamp, options, "工作区资产 .agent");
-                    }
+                }
+                if (action === "keep") {
+                    log(options, "[skip] 已保留现有资产，跳过更新: .agent");
+                    continue;
+                }
+                if (action === "backup") {
+                    backupWorkspaceDir(workspaceRoot, agentDir, ".agent-backup", timestamp, options, "工作区资产 .agent");
                 }
             }
+        }
 
-            if (target === "codex") {
-                const managedDir = path.join(workspaceRoot, ".agents");
-                const legacyDir = path.join(workspaceRoot, ".codex");
-                const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
-                const manifestPath = path.join(activeDir, "manifest.json");
-                let hasConflict = false;
-
-                if (!fs.existsSync(manifestPath)) {
-                    hasConflict = true;
-                } else {
-                    try {
-                        const manager = new ManifestManager(manifestPath, { target: "codex" });
-                        manager.load();
-                        const drift = manager.checkDrift(activeDir);
-                        if (drift.modified.length > 0) {
-                            hasConflict = true;
-                        }
-                        const manifestFiles = manager.manifest.files || {};
-                        const unknownFiles = [];
-                        const stack = [activeDir];
-                        while (stack.length > 0) {
-                            const dir = stack.pop();
-                            const entries = fs.readdirSync(dir, { withFileTypes: true });
-                            for (const entry of entries) {
-                                const fullPath = path.join(dir, entry.name);
-                                if (entry.isDirectory()) {
-                                    stack.push(fullPath);
-                                    continue;
-                                }
-                                const relPath = path.relative(activeDir, fullPath).split(path.sep).join("/");
-                                if (!manifestFiles[relPath]) {
-                                    unknownFiles.push(relPath);
-                                }
-                            }
-                        }
-                        if (unknownFiles.length > 0) {
-                            hasConflict = true;
-                        }
-                    } catch (err) {
-                        hasConflict = true;
-                    }
-                }
-
-                if (hasConflict) {
-                    const action = await prompter.resolveConflict({
+        if (target === "codex") {
+            const managedDir = path.join(workspaceRoot, ".agents");
+            const legacyDir = path.join(workspaceRoot, ".codex");
+            const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
+            const conflict = evaluateCodexUpdateConflict(activeDir);
+            if (conflict.hasConflict) {
+                let action = "backup";
+                if (prompter) {
+                    action = await prompter.resolveConflict({
                         category: "project:codex",
                         label: fs.existsSync(managedDir) ? ".agents" : ".codex",
                         path: activeDir,
                         target,
                     });
-                    if (action === "keep") {
-                        log(options, `[skip] 已保留现有资产，跳过更新: ${path.basename(activeDir)}`);
-                        continue;
-                    }
-                    if (action === "backup") {
-                        const backupRootName = fs.existsSync(managedDir) ? ".agents-backup" : ".agents-backup";
-                        backupWorkspaceDir(workspaceRoot, activeDir, backupRootName, timestamp, options, `工作区资产 ${path.basename(activeDir)}`);
-                    }
+                }
+                if (action === "keep") {
+                    log(options, `[skip] 已保留现有资产，跳过更新: ${path.basename(activeDir)}`);
+                    continue;
+                }
+                if (action === "backup") {
+                    const backupRootName = ".agents-backup";
+                    backupWorkspaceDir(workspaceRoot, activeDir, backupRootName, timestamp, options, `工作区资产 ${path.basename(activeDir)}`);
                 }
             }
         }
@@ -2233,83 +2212,49 @@ async function commandUpdateAll(options) {
                     silentIndexLog: true,
                 };
 
-                if (prompter) {
-                    const timestampForBackup = nowISO().replace(/[:.]/g, "-");
+                const timestampForBackup = nowISO().replace(/[:.]/g, "-");
 
-                    if (target === "gemini") {
-                        const agentDir = path.join(workspacePath, ".agent");
-                        if (fs.existsSync(agentDir) && !areDirectoriesEqual(BUNDLED_AGENT_DIR, agentDir)) {
-                            const action = await prompter.resolveConflict({
+                if (target === "gemini") {
+                    const agentDir = path.join(workspacePath, ".agent");
+                    if (fs.existsSync(agentDir) && !areDirectoriesEqual(BUNDLED_AGENT_DIR, agentDir)) {
+                        let action = "backup";
+                        if (prompter) {
+                            action = await prompter.resolveConflict({
                                 category: "update-all:project:gemini",
                                 label: `.agent (${workspacePath})`,
                                 path: agentDir,
                             });
-                            if (action === "keep") {
-                                log(options, `[skip] [${i + 1}/${records.length}] 已保留现有资产，跳过更新: ${workspacePath} [gemini]`);
-                                continue;
-                            }
-                            if (action === "backup") {
-                                backupWorkspaceDir(workspacePath, agentDir, ".agent-backup", timestampForBackup, options, `工作区资产 .agent (${workspacePath})`);
-                            }
+                        }
+                        if (action === "keep") {
+                            log(options, `[skip] [${i + 1}/${records.length}] 已保留现有资产，跳过更新: ${workspacePath} [gemini]`);
+                            continue;
+                        }
+                        if (action === "backup") {
+                            backupWorkspaceDir(workspacePath, agentDir, ".agent-backup", timestampForBackup, options, `工作区资产 .agent (${workspacePath})`);
                         }
                     }
+                }
 
-                    if (target === "codex") {
-                        const managedDir = path.join(workspacePath, ".agents");
-                        const legacyDir = path.join(workspacePath, ".codex");
-                        const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
-                        const manifestPath = path.join(activeDir, "manifest.json");
-                        let hasConflict = false;
-
-                        if (!fs.existsSync(manifestPath)) {
-                            hasConflict = true;
-                        } else {
-                            try {
-                                const manager = new ManifestManager(manifestPath, { target: "codex" });
-                                manager.load();
-                                const drift = manager.checkDrift(activeDir);
-                                if (drift.modified.length > 0) {
-                                    hasConflict = true;
-                                }
-                                const manifestFiles = manager.manifest.files || {};
-                                const unknownFiles = [];
-                                const stack = [activeDir];
-                                while (stack.length > 0) {
-                                    const dir = stack.pop();
-                                    const entries = fs.readdirSync(dir, { withFileTypes: true });
-                                    for (const entry of entries) {
-                                        const fullPath = path.join(dir, entry.name);
-                                        if (entry.isDirectory()) {
-                                            stack.push(fullPath);
-                                            continue;
-                                        }
-                                        const relPath = path.relative(activeDir, fullPath).split(path.sep).join("/");
-                                        if (!manifestFiles[relPath]) {
-                                            unknownFiles.push(relPath);
-                                        }
-                                    }
-                                }
-                                if (unknownFiles.length > 0) {
-                                    hasConflict = true;
-                                }
-                            } catch (err) {
-                                hasConflict = true;
-                            }
-                        }
-
-                        if (hasConflict) {
-                            const action = await prompter.resolveConflict({
+                if (target === "codex") {
+                    const managedDir = path.join(workspacePath, ".agents");
+                    const legacyDir = path.join(workspacePath, ".codex");
+                    const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
+                    const conflict = evaluateCodexUpdateConflict(activeDir);
+                    if (conflict.hasConflict) {
+                        let action = "backup";
+                        if (prompter) {
+                            action = await prompter.resolveConflict({
                                 category: "update-all:project:codex",
                                 label: `${path.basename(activeDir)} (${workspacePath})`,
                                 path: activeDir,
                             });
-                            if (action === "keep") {
-                                log(options, `[skip] [${i + 1}/${records.length}] 已保留现有资产，跳过更新: ${workspacePath} [codex]`);
-                                continue;
-                            }
-                            if (action === "backup") {
-                                backupWorkspaceDir(workspacePath, activeDir, ".agents-backup", timestampForBackup, options, `工作区资产 ${path.basename(activeDir)} (${workspacePath})`);
-                            }
+                        }
+                        if (action === "keep") {
+                            log(options, `[skip] [${i + 1}/${records.length}] 已保留现有资产，跳过更新: ${workspacePath} [codex]`);
+                            continue;
+                        }
+                        if (action === "backup") {
+                            backupWorkspaceDir(workspacePath, activeDir, ".agents-backup", timestampForBackup, options, `工作区资产 ${path.basename(activeDir)} (${workspacePath})`);
                         }
                     }
                 }
@@ -2685,13 +2630,7 @@ function commandStatus(options) {
 
 async function main() {
     try {
-        const migration = migrateLegacyControlHomeDir();
         const { command, options, providedFlags } = parseArgs(process.argv.slice(2));
-
-        if (migration && !options.quiet) {
-            console.log(`[migrate] 已迁移控制目录: ${migration.from} -> ${migration.to}`);
-        }
-        maybeWarnLegacyCliAlias(options);
 
         if (!command || command === "--help" || command === "-h") {
             printUsage();

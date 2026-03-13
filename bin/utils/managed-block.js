@@ -12,6 +12,14 @@ function detectLineEnding(content) {
 function buildMarkers(blockId) {
     const id = String(blockId || "default").trim();
     return {
+        begin: `<!-- BEGIN LING MANAGED BLOCK: ${id} -->`,
+        end: `<!-- END LING MANAGED BLOCK: ${id} -->`,
+    };
+}
+
+function buildLegacyMarkers(blockId) {
+    const id = String(blockId || "default").trim();
+    return {
         begin: `<!-- BEGIN AG-KIT MANAGED BLOCK: ${id} -->`,
         end: `<!-- END AG-KIT MANAGED BLOCK: ${id} -->`,
     };
@@ -29,10 +37,9 @@ function upsertManagedBlock(filePath, blockId, body, options = {}) {
     const lineEnding = detectLineEnding(original);
     const managedBlock = buildManagedBlock(blockId, body, lineEnding);
     const markers = buildMarkers(blockId);
-    const blockRegex = new RegExp(
-        `${escapeRegex(markers.begin)}[\\s\\S]*?${escapeRegex(markers.end)}`,
-        "m",
-    );
+    const legacyMarkers = buildLegacyMarkers(blockId);
+    const blockRegex = new RegExp(`${escapeRegex(markers.begin)}[\\s\\S]*?${escapeRegex(markers.end)}`, "m");
+    const legacyRegex = new RegExp(`${escapeRegex(legacyMarkers.begin)}[\\s\\S]*?${escapeRegex(legacyMarkers.end)}`, "m");
 
     let next = "";
     let action = "unchanged";
@@ -43,6 +50,12 @@ function upsertManagedBlock(filePath, blockId, body, options = {}) {
     } else if (blockRegex.test(original)) {
         next = original.replace(blockRegex, managedBlock);
         action = next === original ? "unchanged" : "updated";
+        if (next && !/\r?\n$/.test(next)) {
+            next += lineEnding;
+        }
+    } else if (legacyRegex.test(original)) {
+        next = original.replace(legacyRegex, managedBlock);
+        action = "updated";
         if (next && !/\r?\n$/.test(next)) {
             next += lineEnding;
         }

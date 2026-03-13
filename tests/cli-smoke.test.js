@@ -27,6 +27,37 @@ describe("CLI Smoke", () => {
     let workspaceDir;
     let indexPath;
 
+    function findFirstTimestampDir(backupRoot) {
+        if (!fs.existsSync(backupRoot)) {
+            return "";
+        }
+        const entries = fs
+            .readdirSync(backupRoot, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+            .sort();
+        return entries.length > 0 ? path.join(backupRoot, entries[entries.length - 1]) : "";
+    }
+
+    function findTimestampDirContaining(backupRoot, relPath) {
+        if (!fs.existsSync(backupRoot)) {
+            return "";
+        }
+        const entries = fs
+            .readdirSync(backupRoot, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+            .sort();
+
+        for (const name of entries) {
+            const candidate = path.join(backupRoot, name, relPath);
+            if (fs.existsSync(candidate)) {
+                return path.join(backupRoot, name);
+            }
+        }
+        return "";
+    }
+
     beforeEach(() => {
         tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ling-cli-test-"));
         workspaceDir = path.join(tempDir, "workspace");
@@ -271,6 +302,60 @@ describe("CLI Smoke", () => {
             { env: { LING_INDEX_PATH: indexPath } },
         );
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+    });
+
+    test("init --force should create preflight backup for existing gemini .agent", () => {
+        const agentDir = path.join(workspaceDir, ".agent");
+        fs.mkdirSync(agentDir, { recursive: true });
+        fs.writeFileSync(path.join(agentDir, "custom.txt"), "custom", "utf8");
+
+        const result = runCli(
+            ["init", "--target", "gemini", "--path", workspaceDir, "--force", "--quiet"],
+            { env: { LING_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+
+        const backupRoot = path.join(workspaceDir, ".agent-backup");
+        const tsDir = findFirstTimestampDir(backupRoot);
+        assert.ok(tsDir, "expected .agent-backup timestamp directory to exist");
+        assert.ok(fs.existsSync(path.join(tsDir, "preflight", ".agent", "custom.txt")));
+    });
+
+    test("update should create preflight backup for gemini when overwriting in non-interactive mode", () => {
+        const agentDir = path.join(workspaceDir, ".agent");
+        fs.mkdirSync(agentDir, { recursive: true });
+        fs.writeFileSync(path.join(agentDir, "custom.txt"), "custom", "utf8");
+
+        const result = runCli(
+            ["update", "--target", "gemini", "--path", workspaceDir, "--quiet"],
+            { env: { LING_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+
+        const backupRoot = path.join(workspaceDir, ".agent-backup");
+        const tsDir = findFirstTimestampDir(backupRoot);
+        assert.ok(tsDir, "expected .agent-backup timestamp directory to exist");
+        assert.ok(fs.existsSync(path.join(tsDir, "preflight", ".agent", "custom.txt")));
+    });
+
+    test("update should create preflight backup for codex when unknown files exist in managed dir", () => {
+        const initResult = runCli(
+            ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
+            { env: { LING_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+        fs.writeFileSync(path.join(workspaceDir, ".agents", "unknown.txt"), "unknown", "utf8");
+
+        const updateResult = runCli(
+            ["update", "--target", "codex", "--path", workspaceDir, "--quiet"],
+            { env: { LING_INDEX_PATH: indexPath } },
+        );
+        assert.strictEqual(updateResult.status, 0, updateResult.stderr || updateResult.stdout);
+
+        const backupRoot = path.join(workspaceDir, ".agents-backup");
+        const tsDir = findTimestampDirContaining(backupRoot, path.join("preflight", ".agents", "unknown.txt"));
+        assert.ok(tsDir, "expected .agents-backup preflight backup to exist");
     });
 
     test("status --quiet should report missing with exit code 2 when nothing is installed", () => {

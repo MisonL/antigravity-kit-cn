@@ -70,6 +70,27 @@ ling global status
 - npm 包版本遵循 SemVer（`package.json`）
 - git tag 与 CLI `--version` 显示使用 `ling-<SemVer>`（例如 `ling-1.0.0`）
 
+### 已有资产冲突处理（交互确认 + 备份回退）
+
+当检测到目标目录已存在且内容不同（或 Codex 目录存在漂移、缺失 `manifest.json`、包含未知文件）时，`ling` 会在交互终端中逐项询问处理方式：
+
+- `k` 保留（跳过此资产）
+- `b` 备份后移除（推荐）
+- `r` 直接移除（不备份）
+
+同一类别的冲突可选择“一键复用”，后续遇到同类资产不再重复询问。
+
+备份落盘位置：
+- 项目级预备份：
+  - Gemini：`<project>/.agent-backup/<timestamp>/preflight/.agent/`
+  - Codex：`<project>/.agents-backup/<timestamp>/preflight/.agents/` 或 `<project>/.agents-backup/<timestamp>/preflight/.codex/`
+- 全局 Skills：`$HOME/.ling/backups/global/<timestamp>/...`
+- Spec Profile：`$HOME/.ling/backups/spec/<timestamp>/before/...`
+
+非交互环境（无 TTY 或 `--non-interactive`）不会进入询问：
+- `update`/`update-all`/`global sync`/`spec enable` 在需要覆盖时默认执行“备份后覆盖”
+- `init` 在检测到已有资产且未指定 `--force` 时会报错提示改用交互终端或显式 `--force`
+
 ### Spec Profile（可选进阶能力）
 
 - 默认关闭，不随 `ling init / update / global sync` 自动安装

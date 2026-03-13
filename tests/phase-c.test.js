@@ -66,9 +66,9 @@ describe('Phase C Integration', () => {
         // Verification 4: Workspace managed block injection
         const workspaceAgents = fs.readFileSync(path.join(workDir, 'AGENTS.md'), 'utf8');
         const workspaceRules = fs.readFileSync(path.join(workDir, 'ling.rules'), 'utf8');
-        assert.ok(workspaceAgents.includes('BEGIN AG-KIT MANAGED BLOCK: codex-core-rules'));
+        assert.ok(workspaceAgents.includes('BEGIN LING MANAGED BLOCK: codex-core-rules'));
         assert.ok(workspaceAgents.includes('test-skill'));
-        assert.ok(workspaceRules.includes('BEGIN AG-KIT MANAGED BLOCK: codex-risk-controls'));
+        assert.ok(workspaceRules.includes('BEGIN LING MANAGED BLOCK: codex-risk-controls'));
 
         const codexJson = JSON.parse(fs.readFileSync(path.join(codexDir, 'codex.json'), 'utf8'));
         assert.strictEqual(codexJson.version, pkg.version);

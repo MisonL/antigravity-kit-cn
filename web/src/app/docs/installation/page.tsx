@@ -84,7 +84,7 @@ node bin/ling.js init --path /path/to/your-project`}
         </Callout>
 
         <Callout type="info">
-          <strong>批量更新：</strong>每次执行 <code>ling init</code> / <code>ling update</code> 都会自动登记工作区到全局索引，后续可直接用 <code>ling update-all</code> 一键批量更新所有已登记工作区。默认会排除工具包源码目录；也可用 <code>ling exclude add/remove/list</code> 维护自定义排除清单。默认索引路径为 macOS / Linux / WSL 的 <code>~/.ling/workspaces.json</code>、Windows 的 <code>%USERPROFILE%\.ling\workspaces.json</code>，也可通过 <code>LING_INDEX_PATH</code> 自定义。冲突检测会在安装阶段（postinstall）和 CLI 执行阶段双重检查上游英文版 <code>@vudovn/ag-kit</code>；安装阶段会询问是否自动卸载，若选择不卸载会提示“最后安装的版本生效”并继续安装。
+          <strong>批量更新：</strong>每次执行 <code>ling init</code> / <code>ling update</code> 都会自动登记工作区到全局索引，后续可直接用 <code>ling update-all</code> 一键批量更新所有已登记工作区。默认会排除工具包源码目录；也可用 <code>ling exclude add/remove/list</code> 维护自定义排除清单。默认索引路径为 macOS / Linux / WSL 的 <code>~/.ling/workspaces.json</code>、Windows 的 <code>%USERPROFILE%\.ling\workspaces.json</code>，也可通过 <code>LING_INDEX_PATH</code> 自定义。冲突检测会在安装阶段（postinstall）和 CLI 执行阶段双重提示上游英文版 <code>@vudovn/ag-kit</code>；安装阶段会询问是否自动卸载，以避免来源混用。
         </Callout>
       </section>
 

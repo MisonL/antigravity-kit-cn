@@ -20,6 +20,9 @@ cd web && npm install && npm run lint
 ### 项目级（功能最完整）
 - `gemini`：项目根目录 `.agent/`
 - `codex`：项目根目录 `.agents/`（受管）+ `.agents-backup/`（漂移覆盖备份）
+- 项目级预备份（覆盖前快照）：
+  - Gemini：`<project>/.agent-backup/<timestamp>/preflight/.agent/`
+  - Codex：`<project>/.agents-backup/<timestamp>/preflight/.agents/` 或 `<project>/.agents-backup/<timestamp>/preflight/.codex/`
 
 ### 全局级（仅同步 Skills）
 - `codex`：`$HOME/.codex/skills/`
@@ -31,8 +34,15 @@ cd web && npm install && npm run lint
 ## 端到端链路（简述）
 ### 项目安装 / 更新
 - `init`：选择目标 -> 适配器 `install()` -> 落盘目标目录（Gemini: `.agent/`；Codex: `.agents/`）->（Codex）注入托管区块到工作区 `AGENTS.md` 与 `ling.rules`
-- `update`：自动检测已安装目标（或通过 `--target/--targets` 指定）-> 适配器 `update()` ->（Codex）漂移检测与备份 -> 原子替换
+- `update`：自动检测已安装目标（或通过 `--target/--targets` 指定）->（冲突时交互确认或默认预备份）-> 适配器 `update()` ->（Codex）漂移检测与备份 -> 原子替换
 - `doctor`：检查完整性；`--fix` 尝试修复（Codex 支持迁移 `.codex/` 与重写托管区块）
+
+### 已有资产冲突处理（项目级）
+- 触发条件：
+  - `gemini`：`.agent/` 已存在且与内置模板不一致
+  - `codex`：`.agents/` 或 `.codex/` 已存在且存在漂移、缺失 `manifest.json` 或包含未知文件
+- 交互终端会逐项询问处理方式：保留 / 备份后移除 / 直接移除，并支持按资产类别复用选择
+- 非交互环境不会进入询问：需要覆盖时默认执行“备份后覆盖”；`init` 若检测到已有资产且未显式 `--force` 则报错
 
 ### Codex 构建（Workflow -> Skill）
 - 输入：`.agents/skills/` 与 `.agents/workflows/`

@@ -9,7 +9,7 @@ describe("ResourceTransformer", () => {
     let tempDir;
 
     beforeEach(() => {
-        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-transformer-test-"));
+        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ling-transformer-test-"));
     });
 
     afterEach(() => {
