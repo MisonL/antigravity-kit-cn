@@ -36,7 +36,6 @@ ling init --target codex    # 安装 Codex 结构（.agents + 托管规则注入
 
 说明：
 - npm 安装的主命令入口为 `ling`。
-- 为兼容历史用法与上游文档，本包仍提供 `ag-kit` 命令别名。
 
 可选：不做全局安装，直接在仓库目录执行：
 
@@ -331,7 +330,7 @@ rmdir /s /q .codex
 ling exclude add --path /path/to/your-project
 ```
 
-说明：全局卸载只会移除 `ling` 命令；兼容入口 `ag-kit` 也会一并消失，但不会删除你本地 clone 的源码目录。
+说明：全局卸载只会移除 `ling` 命令，不会删除你本地 clone 的源码目录。
 
 ## 请我喝咖啡
 

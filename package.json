@@ -1,6 +1,6 @@
 {
   "name": "@mison/ling",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "AI Agent templates - Skills, Agents, and Workflows for enhanced coding assistance",
   "repository": {
     "type": "git",
@@ -50,7 +50,6 @@
     "docs/TECH.md"
   ],
   "bin": {
-    "ling": "bin/ling.js",
-    "ag-kit": "bin/ag-kit.js"
+    "ling": "bin/ling.js"
   }
 }

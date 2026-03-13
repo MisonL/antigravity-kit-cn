@@ -7,6 +7,12 @@
 
 ## [Unreleased]
 
+## [ling-1.0.2] - 2026-03-13
+
+### 变更
+
+- npm 全局命令：移除 `ag-kit` bin 别名，仅保留 `ling`。
+
 ## [ling-1.0.1] - 2026-03-13
 
 ### 修复
@@ -50,6 +56,7 @@
 
 本项目在 Ling 重启前的 2.x/3.x 版本记录已冻结，不再维护。
 
-[Unreleased]: https://github.com/MisonL/Ling/compare/ling-1.0.1...HEAD
+[Unreleased]: https://github.com/MisonL/Ling/compare/ling-1.0.2...HEAD
+[ling-1.0.2]: https://github.com/MisonL/Ling/releases/tag/ling-1.0.2
 [ling-1.0.1]: https://github.com/MisonL/Ling/releases/tag/ling-1.0.1
 [ling-1.0.0]: https://github.com/MisonL/Ling/releases/tag/ling-1.0.0
