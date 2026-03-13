@@ -143,24 +143,34 @@ File to edit: UserService.ts
 
 > [CRITICAL]  **核心要求：** 每个代理完成后仅运行所属技能脚本。
 
+### 脚本路径约定
+
+下表中的 `<skills_root>` 代表 Skills 根目录，常见取值：
+
+- Ling 仓库源码：`.agents/skills`
+- Gemini 工作区：`.agent/skills`
+- Codex 全局：`~/.codex/skills`
+- Gemini CLI 全局：`~/.gemini/skills`
+- Antigravity 全局：`~/.gemini/antigravity/skills`
+
 ### 代理 -> 脚本映射
 
 | 代理 | 脚本 | 命令 |
 |-------|--------|---------|
-| **frontend-specialist** | UX Audit | `python .agent/skills/frontend-design/scripts/ux_audit.py .` |
-| **frontend-specialist** | A11y Check | `python .agent/skills/frontend-design/scripts/accessibility_checker.py .` |
-| **backend-specialist** | API Validator | `python .agent/skills/api-patterns/scripts/api_validator.py .` |
-| **mobile-developer** | Mobile Audit | `python .agent/skills/mobile-design/scripts/mobile_audit.py .` |
-| **database-architect** | Schema Validate | `python .agent/skills/database-design/scripts/schema_validator.py .` |
-| **security-auditor** | Security Scan | `python .agent/skills/vulnerability-scanner/scripts/security_scan.py .` |
-| **seo-specialist** | SEO Check | `python .agent/skills/seo-fundamentals/scripts/seo_checker.py .` |
-| **seo-specialist** | GEO Check | `python .agent/skills/geo-fundamentals/scripts/geo_checker.py .` |
-| **performance-optimizer** | Lighthouse | `python .agent/skills/performance-profiling/scripts/lighthouse_audit.py <url>` |
-| **test-engineer** | Test Runner | `python .agent/skills/testing-patterns/scripts/test_runner.py .` |
-| **test-engineer** | Playwright | `python .agent/skills/webapp-testing/scripts/playwright_runner.py <url>` |
-| **Any agent** | Lint Check | `python .agent/skills/lint-and-validate/scripts/lint_runner.py .` |
-| **Any agent** | Type Coverage | `python .agent/skills/lint-and-validate/scripts/type_coverage.py .` |
-| **Any agent** | i18n Check | `python .agent/skills/i18n-localization/scripts/i18n_checker.py .` |
+| **frontend-specialist** | UX Audit | `python <skills_root>/frontend-design/scripts/ux_audit.py .` |
+| **frontend-specialist** | A11y Check | `python <skills_root>/frontend-design/scripts/accessibility_checker.py .` |
+| **backend-specialist** | API Validator | `python <skills_root>/api-patterns/scripts/api_validator.py .` |
+| **mobile-developer** | Mobile Audit | `python <skills_root>/mobile-design/scripts/mobile_audit.py .` |
+| **database-architect** | Schema Validate | `python <skills_root>/database-design/scripts/schema_validator.py .` |
+| **security-auditor** | Security Scan | `python <skills_root>/vulnerability-scanner/scripts/security_scan.py .` |
+| **seo-specialist** | SEO Check | `python <skills_root>/seo-fundamentals/scripts/seo_checker.py .` |
+| **seo-specialist** | GEO Check | `python <skills_root>/geo-fundamentals/scripts/geo_checker.py .` |
+| **performance-optimizer** | Lighthouse | `python <skills_root>/performance-profiling/scripts/lighthouse_audit.py <url>` |
+| **test-engineer** | Test Runner | `python <skills_root>/testing-patterns/scripts/test_runner.py .` |
+| **test-engineer** | Playwright | `python <skills_root>/webapp-testing/scripts/playwright_runner.py <url>` |
+| **Any agent** | Lint Check | `python <skills_root>/lint-and-validate/scripts/lint_runner.py .` |
+| **Any agent** | Type Coverage | `python <skills_root>/lint-and-validate/scripts/type_coverage.py .` |
+| **Any agent** | i18n Check | `python <skills_root>/i18n-localization/scripts/i18n_checker.py .` |
 
 > [FAIL]  **错误做法：** `test-engineer` 运行 `ux_audit.py`
 > [OK]  **正确做法：** `frontend-specialist` 运行 `ux_audit.py`

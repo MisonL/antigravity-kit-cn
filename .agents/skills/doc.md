@@ -18,7 +18,11 @@
 
 | 范围 | 路径 | 说明 |
 |---------|-----------|-------|
-| **Workspace（工作区）** | `<workspace-root>/.agent/skills/` | 仅作用于当前项目 |
+| **Ling 仓库源码（Canonical）** | `<ling-repo>/.agents/skills/` | 模板源，用于构建与分发 |
+| **Workspace（工作区）** | `<workspace-root>/.agent/skills/` | 仅作用于当前项目（Gemini/Antigravity） |
+| **Global（全局）** | `~/.codex/skills/`、`~/.gemini/skills/`、`~/.gemini/antigravity/skills/` | 跨项目复用（按目标工具读取） |
+
+> 约定：下文示例使用 `<skills_root>` 表示 Skills 根目录；请按你的安装方式替换为上表路径。
 
 ### 技能目录结构
 
@@ -39,7 +43,7 @@ my-skill/
 ### 步骤 1：创建目录
 
 ```bash
-mkdir -p .agent/skills/code-review
+mkdir -p <skills_root>/code-review
 ```
 
 ### 步骤 2：创建 SKILL.md
@@ -119,12 +123,12 @@ Agent（智能体）会自动识别 `code-review` 技能，加载信息并按指
 ### 步骤 1：创建目录
 
 ```bash
-mkdir -p .agent/skills/license-header-adder/resources
+mkdir -p <skills_root>/license-header-adder/resources
 ```
 
 ### 步骤 2：创建模板文件
 
-**`.agent/skills/license-header-adder/resources/HEADER.txt`**：
+**`<skills_root>/license-header-adder/resources/HEADER.txt`**：
 
 ```
 /*
@@ -136,7 +140,7 @@ mkdir -p .agent/skills/license-header-adder/resources
 
 ### 步骤 3：创建 SKILL.md
 
-**`.agent/skills/license-header-adder/SKILL.md`**：
+**`<skills_root>/license-header-adder/SKILL.md`**：
 
 ```markdown
 ---
