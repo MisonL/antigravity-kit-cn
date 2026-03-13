@@ -7,6 +7,18 @@
 
 ## [Unreleased]
 
+## [ling-1.1.0] - 2026-03-13
+
+### 新增
+
+- 已有资产冲突处理：`init/update/update-all/global sync/spec enable` 在交互终端逐项确认（保留 / 备份后移除 / 直接移除），并支持按资产类别复用选择。
+- 预备份与回退：项目级覆盖前快照落盘到 `.agent-backup/.agents-backup`；全局与 Spec 维持快照备份路径。
+
+### 维护
+
+- ag-kit 更名清理：内部 CLI 入口更名为 `bin/ling-cli.js`，并移除 `AG_KIT_*` 兼容环境变量与 `~/.ag-kit` 控制目录迁移逻辑。
+- 托管区块标记更名为 `LING MANAGED BLOCK`，并兼容识别旧 `AG-KIT` 标记后自动迁移。
+
 ## [ling-1.0.2] - 2026-03-13
 
 ### 变更
@@ -22,7 +34,7 @@
 
 ### 维护
 
-- CLI 入口权限：`bin/ling.js` 设置为可执行，保持与 `bin/ag-kit.js` 一致。
+- CLI 入口权限：`bin/ling.js` 设置为可执行，保持与 `bin/ling-cli.js` 一致。
 
 ## [ling-1.0.0] - 2026-03-13
 
@@ -35,7 +47,6 @@
 
 - 品牌更名基础设施：
   - 主命令切换为 `ling`
-  - `ag-kit` 保留兼容入口
   - 目标目录结构：`gemini -> .agent/`，`codex -> .agents/`
   - 控制目录、索引和备份默认迁移到 `~/.ling/`
   - `antigravity.rules` 收敛为 `ling.rules`
@@ -56,7 +67,8 @@
 
 本项目在 Ling 重启前的 2.x/3.x 版本记录已冻结，不再维护。
 
-[Unreleased]: https://github.com/MisonL/Ling/compare/ling-1.0.2...HEAD
+[Unreleased]: https://github.com/MisonL/Ling/compare/ling-1.1.0...HEAD
+[ling-1.1.0]: https://github.com/MisonL/Ling/releases/tag/ling-1.1.0
 [ling-1.0.2]: https://github.com/MisonL/Ling/releases/tag/ling-1.0.2
 [ling-1.0.1]: https://github.com/MisonL/Ling/releases/tag/ling-1.0.1
 [ling-1.0.0]: https://github.com/MisonL/Ling/releases/tag/ling-1.0.0

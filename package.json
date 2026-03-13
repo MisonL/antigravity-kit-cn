@@ -1,6 +1,6 @@
 {
   "name": "@mison/ling",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "面向 Gemini CLI、Antigravity 与 Codex 的中文 AI Agent 模板工具包",
   "repository": {
     "type": "git",
