@@ -80,6 +80,10 @@ ling global status
 
 规划与边界细节见：`docs/PLAN.md`（规划）与 `docs/TECH.md`（技术）。
 
+版本与发布约定：
+- npm 包版本遵循 SemVer（`package.json`）
+- git tag 与 CLI `--version` 显示使用 `ling-<SemVer>`（例如 `ling-1.0.0`）
+
 ### Spec Profile（可选进阶能力）
 
 - 默认关闭，不随 `ling init / update / global sync` 自动安装

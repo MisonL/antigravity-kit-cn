@@ -56,9 +56,14 @@ const QUIET_STATUS_EXIT_CODES = {
 };
 const SPEC_STATE_VERSION = 1;
 const SPEC_SKILL_NAMES = ["harness-engineering", "cybernetic-systems-engineering"];
+const VERSION_TAG_PREFIX = "ling-";
 
 function nowISO() {
     return new Date().toISOString();
+}
+
+function getVersionTag() {
+    return `${VERSION_TAG_PREFIX}${pkg.version}`;
 }
 
 function getControlHomeDir() {
@@ -186,7 +191,7 @@ function printUsage() {
 }
 
 function printVersion() {
-    console.log(`${PRIMARY_CLI_NAME} version ${pkg.version}`);
+    console.log(`${PRIMARY_CLI_NAME} version ${getVersionTag()}`);
 }
 
 function parseArgs(argv) {
@@ -212,7 +217,7 @@ function parseArgs(argv) {
 
     let startIndex = 1;
     if (command === "exclude" || command === "global") {
-    if (argv.length > 1 && !argv[1].startsWith("--")) {
+        if (argv.length > 1 && !argv[1].startsWith("--")) {
             options.subcommand = argv[1];
             startIndex = 2;
         } else {
@@ -2133,7 +2138,7 @@ function commandStatus(options) {
     }
 
     console.log(summary.state === "installed" ? "[ok] Ling 状态正常" : "[warn] Ling 存在问题");
-    console.log(`   CLI 版本: ${pkg.version}`);
+    console.log(`   CLI 版本: ${getVersionTag()}`);
     console.log(`   工作区: ${workspaceRoot}`);
     console.log(`   总体状态: ${summary.state}`);
     console.log(`   Targets: ${summary.targets.map((item) => item.targetName).join(", ")}`);

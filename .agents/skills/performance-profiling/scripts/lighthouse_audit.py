@@ -14,6 +14,7 @@ import os
 import tempfile
 import shutil
 import platform
+from typing import List, Optional
 
 # Fix Windows console encoding
 try:
@@ -22,7 +23,7 @@ except Exception:
     pass
 
 
-def resolve_lighthouse_command() -> list[str] | None:
+def resolve_lighthouse_command() -> Optional[List[str]]:
     """Resolve a runnable lighthouse command.
 
     Preference:
@@ -40,6 +41,7 @@ def resolve_lighthouse_command() -> list[str] | None:
         return ["npx", "--yes", "lighthouse"]
 
     return None
+
 
 def run_lighthouse(url: str) -> dict:
     """Run Lighthouse audit on URL."""
@@ -97,6 +99,7 @@ def run_lighthouse(url: str) -> dict:
     except FileNotFoundError:
         return {"error": "Lighthouse command could not be executed"}
 
+
 def get_summary(categories: dict) -> str:
     """Generate summary based on scores."""
     perf = categories.get("performance", {}).get("score", 0) * 100
@@ -106,6 +109,7 @@ def get_summary(categories: dict) -> str:
         return "[!] Needs improvement"
     else:
         return "[X] Poor performance"
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
