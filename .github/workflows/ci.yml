@@ -34,3 +34,6 @@ jobs:
 
       - name: CI end-to-end verify
         run: bun run ci:verify
+
+      - name: Health check
+        run: bun run health-check

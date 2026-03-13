@@ -89,22 +89,22 @@ class CodexAdapter extends BaseAdapter {
                 const candidates = this._collectBackupCandidates(currentDataDir, incomingFiles);
                 const backupResult = this._backupCandidates(currentDataDir, candidates);
                 if (backupResult) {
-                    this.log(`📦 已备份覆盖前文件: ${backupResult.summary}`);
+                    this.log(`[backup] 已备份覆盖前文件: ${backupResult.summary}`);
                 }
             }
 
             AtomicWriter.atomicCopyDir(stagingDir, managedDir, { logger: this.log.bind(this) });
-            this.log(`⚡️ ${MANAGED_DIR_NAME} 原子更新完成`);
+            this.log(`[ok] ${MANAGED_DIR_NAME} 原子更新完成`);
 
             if (legacyExists) {
                 fs.rmSync(legacyDir, { recursive: true, force: true });
-                this.log(`🧹 已移除遗留 ${LEGACY_DIR_NAME} 目录`);
+                this.log(`[clean] 已移除遗留 ${LEGACY_DIR_NAME} 目录`);
             }
 
             this._syncWorkspaceManagedFiles(managedDir);
             this._cleanupGitIgnore();
 
-            this.log(`✅ [Codex] ${mode === "install" ? "安装" : "更新"}完成`);
+            this.log(`[ok] [Codex] ${mode === "install" ? "安装" : "更新"}完成`);
         } finally {
             if (stagingDir) {
                 fs.rmSync(stagingDir, { recursive: true, force: true });
@@ -139,7 +139,7 @@ class CodexAdapter extends BaseAdapter {
 
         if (!isCodexPrebuilt) {
             if (hasSkillsDir) {
-                this.log("🛠️ 检测到模板目录格式，正在构建 Codex 结构...");
+                this.log("[build] 检测到模板目录格式，正在构建 Codex 结构...");
                 const mockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-root-"));
                 const mockAgents = path.join(mockRoot, ".agents");
                 this._copyDir(installSource, mockAgents);
@@ -156,7 +156,7 @@ class CodexAdapter extends BaseAdapter {
                     fs.rmSync(buildTemp, { recursive: true, force: true });
                 };
             } else if (hasAgentsRoot) {
-                this.log("🛠️ 检测到仓库根目录格式(.agents)，正在构建 Codex 结构...");
+                this.log("[build] 检测到仓库根目录格式(.agents)，正在构建 Codex 结构...");
                 buildTemp = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-out-"));
                 CodexBuilder.build(installSource, buildTemp);
                 installSource = buildTemp;
@@ -168,7 +168,7 @@ class CodexAdapter extends BaseAdapter {
                     fs.rmSync(buildTemp, { recursive: true, force: true });
                 };
             } else if (hasLegacyAgentRoot) {
-                this.log("🛠️ 检测到旧版仓库根目录格式(.agent)，正在构建 Codex 结构...");
+                this.log("[build] 检测到旧版仓库根目录格式(.agent)，正在构建 Codex 结构...");
                 const mockRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-build-root-"));
                 const mockAgents = path.join(mockRoot, ".agents");
                 this._copyDir(path.join(installSource, ".agent"), mockAgents);
@@ -275,7 +275,7 @@ class CodexAdapter extends BaseAdapter {
             const result = upsertManagedBlock(outputPath, "codex-core-rules", body, {
                 dryRun: this.options.dryRun,
             });
-            this.log(`🧩 AGENTS.md 托管区块同步: ${result.action}`);
+            this.log(`[managed] AGENTS.md 托管区块同步: ${result.action}`);
         }
 
         if (fs.existsSync(managedRulesPath)) {
@@ -284,14 +284,14 @@ class CodexAdapter extends BaseAdapter {
             const result = upsertManagedBlock(outputPath, "codex-risk-controls", body, {
                 dryRun: this.options.dryRun,
             });
-            this.log(`🧩 antigravity.rules 托管区块同步: ${result.action}`);
+            this.log(`[managed] antigravity.rules 托管区块同步: ${result.action}`);
         }
     }
 
     _cleanupGitIgnore() {
         const cleanupResult = GitHelper.removeIgnoreRules(this.workspaceRoot, [MANAGED_DIR_NAME, LEGACY_DIR_NAME], this.options);
         if (cleanupResult.removedCount > 0) {
-            this.log(`🧹 已从 .gitignore 移除 ${cleanupResult.removedCount} 条规则`);
+            this.log(`[clean] 已从 .gitignore 移除 ${cleanupResult.removedCount} 条规则`);
         }
     }
 

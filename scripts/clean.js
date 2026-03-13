@@ -81,16 +81,16 @@ function runClean(options = {}) {
     if (!normalizedOptions.quiet) {
         for (const item of results) {
             if (item.action === "removed") {
-                console.log(`🧹 已清理: ${item.path}`);
+                console.log(`[clean] 已清理: ${item.path}`);
                 continue;
             }
             if (item.action === "would_remove") {
                 console.log(`[dry-run] 将清理: ${item.path}`);
                 continue;
             }
-            console.log(`⏭️ 已跳过: ${item.path} (${item.reason})`);
+            console.log(`[skip] 已跳过: ${item.path} (${item.reason})`);
         }
-        console.log(`📊 清理完成: removed=${removedCount}, dryRun=${wouldRemoveCount}, skipped=${skippedCount}`);
+        console.log(`[summary] 清理完成: removed=${removedCount}, dryRun=${wouldRemoveCount}, skipped=${skippedCount}`);
     }
 
     return {
@@ -111,7 +111,7 @@ if (require.main === module) {
         }
         runClean(options);
     } catch (err) {
-        console.error(`❌ ${err.message}`);
+        console.error(`[error] ${err.message}`);
         process.exit(1);
     }
 }

@@ -731,7 +731,7 @@ function previewWorkspaceIndexRegistration(workspaceRoot, targetName, options) {
 function registerWorkspaceTarget(workspaceRoot, targetName, options) {
     if (options.noIndex) {
         if (!options.silentIndexLog) {
-            log(options, `⏭️ 已跳过索引登记: ${normalizeAbsolutePath(workspaceRoot)}`);
+            log(options, `[skip] 已跳过索引登记: ${normalizeAbsolutePath(workspaceRoot)}`);
             log(options, "   原因: 启用了 --no-index");
         }
         return;
@@ -772,10 +772,10 @@ function registerWorkspaceTarget(workspaceRoot, targetName, options) {
 
     if (excluded) {
         if (!options.silentIndexLog) {
-            log(options, `⏭️ 已跳过索引登记: ${normalizedPath}`);
+            log(options, `[skip] 已跳过索引登记: ${normalizedPath}`);
             log(options, `   原因: ${exclusionReason}`);
             if (removedCount > 0) {
-                log(options, `🧹 已清理旧索引记录: ${normalizedPath}`);
+                log(options, `[clean] 已清理旧索引记录: ${normalizedPath}`);
             }
             log(options, `   索引文件: ${indexPath}`);
         }
@@ -783,7 +783,7 @@ function registerWorkspaceTarget(workspaceRoot, targetName, options) {
     }
 
     if (!options.silentIndexLog) {
-        log(options, `🗂️ 已登记工作区索引: ${normalizedPath} [${targetName}]`);
+        log(options, `[index] 已登记工作区索引: ${normalizedPath} [${targetName}]`);
         log(options, `   索引文件: ${indexPath}`);
     }
 }
@@ -813,10 +813,10 @@ function maybeWarnUpstreamGlobalConflict(command, options) {
         return;
     }
 
-    log(options, `⚠️ 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}。`);
-    log(options, "⚠️ 上游英文版与当前中文版共用 `ag-kit` 命令名，后安装者会覆盖命令入口。");
-    log(options, `👉 建议执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
-    log(options, "ℹ️ 若你通过 bun install -g 安装，Bun 默认会阻止本包 postinstall；因此这里会在首次执行 CLI 时再次提醒。");
+    log(options, `[warn] 检测到全局已安装上游英文版 ${UPSTREAM_GLOBAL_PACKAGE}。`);
+    log(options, "[warn] 上游英文版与当前中文版共用 `ag-kit` 命令名，后安装者会覆盖命令入口。");
+    log(options, `[hint] 建议执行: npm uninstall -g ${UPSTREAM_GLOBAL_PACKAGE}`);
+    log(options, "[info] 若你通过 bun install -g 安装，Bun 默认会阻止本包 postinstall；因此这里会在首次执行 CLI 时再次提醒。");
 }
 
 function normalizeTargets(rawTargets) {
@@ -1057,14 +1057,14 @@ function backupSkillDirectory(targetName, skillName, sourceDir, timestamp, optio
     const backupDir = path.join(backupRoot, targetName, skillName);
     fs.mkdirSync(path.dirname(backupDir), { recursive: true });
     copyDirRecursive(sourceDir, backupDir);
-    log(options, `📦 已备份 ${targetName} 全局 Skill: ${skillName} -> ${backupDir}`);
+    log(options, `[backup] 已备份 ${targetName} 全局 Skill: ${skillName} -> ${backupDir}`);
 }
 
 function syncSkillDirectory(destination, srcDir, destDir, timestamp, options) {
     const exists = fs.existsSync(destDir);
     if (exists) {
         if (areDirectoriesEqual(srcDir, destDir)) {
-            log(options, `⏭️ 全局 Skill 已最新，无需同步: ${destination.id}/${path.basename(destDir)}`);
+            log(options, `[skip] 全局 Skill 已最新，无需同步: ${destination.id}/${path.basename(destDir)}`);
             return { skipped: 1, synced: 0, backedUp: 0 };
         }
     }
@@ -1082,7 +1082,7 @@ function syncSkillDirectory(destination, srcDir, destDir, timestamp, options) {
 
     const logger = options.quiet ? (() => {}) : log.bind(null, options);
     AtomicWriter.atomicCopyDir(srcDir, destDir, { logger });
-    log(options, `✅ 已同步全局 Skill: ${destination.id}/${path.basename(destDir)}`);
+    log(options, `[ok] 已同步全局 Skill: ${destination.id}/${path.basename(destDir)}`);
 
     return { skipped: 0, synced: 1, backedUp };
 }
@@ -1174,12 +1174,12 @@ async function commandGlobalSync(options) {
     const timestamp = nowISO().replace(/[:.]/g, "-");
 
     try {
-        log(options, `🌍 全局同步源: ${sourceLabel}`);
+        log(options, `[global] 全局同步源: ${sourceLabel}`);
         for (const target of targets) {
-            log(options, `📦 正在同步全局目标 [${target}] ...`);
+            log(options, `[sync] 正在同步全局目标 [${target}] ...`);
             const result = applyGlobalSync(target, agentDir, timestamp, options);
             if (!options.dryRun) {
-                log(options, `📊 全局同步完成 [${target}]：总计 ${result.total}，新增/覆盖 ${result.synced}，跳过 ${result.skipped}，备份 ${result.backedUp}`);
+                log(options, `[summary] 全局同步完成 [${target}]：总计 ${result.total}，新增/覆盖 ${result.synced}，跳过 ${result.skipped}，备份 ${result.backedUp}`);
                 for (const item of result.destinations) {
                     log(options, `   - ${item.targetName}: ${item.destRoot}（每目标 ${item.total} 个 Skills）`);
                 }
@@ -1198,7 +1198,7 @@ function commandGlobalStatus(options) {
             console.log("missing");
         }
         if (!options.quiet) {
-            console.log("❌ 未检测到全局安装的 Skills");
+            console.log("[error] 未检测到全局安装的 Skills");
             console.log(`   全局根目录: ${summary.globalRoot}`);
         }
         setQuietStatusExitCode("missing");
@@ -1211,7 +1211,7 @@ function commandGlobalStatus(options) {
         return;
     }
 
-    console.log(summary.state === "installed" ? "✅ 全局 Skills 状态正常" : "⚠️ 全局 Skills 存在问题");
+    console.log(summary.state === "installed" ? "[ok] 全局 Skills 状态正常" : "[warn] 全局 Skills 存在问题");
     console.log(`   全局根目录: ${summary.globalRoot}`);
     console.log(`   总体状态: ${summary.state}`);
     console.log(`   Targets: ${summary.targets.map((item) => item.targetName).join(", ")}`);
@@ -1250,13 +1250,13 @@ async function commandInit(options) {
 
     for (const target of targets) {
         const adapter = createAdapter(target, workspaceRoot, options);
-        log(options, `📦 正在初始化目标 [${target}] ...`);
+        log(options, `[sync] 正在初始化目标 [${target}] ...`);
         adapter.install(BUNDLED_AGENT_DIR);
         registerWorkspaceTarget(workspaceRoot, target, options);
     }
 
     if (targets.length > 0) {
-        log(options, `✅ 初始化完成 (Targets: ${targets.join(", ")})`);
+        log(options, `[ok] 初始化完成 (Targets: ${targets.join(", ")})`);
     }
 }
 
@@ -1268,7 +1268,7 @@ async function commandUpdate(options) {
         throw new Error("此目录未检测到 Antigravity Kit 安装，无法更新。请先执行 init。");
     }
 
-    log(options, `🔄 正在更新 Antigravity Kit (Targets: ${targets.join(", ")})...`);
+    log(options, `[update] 正在更新 Antigravity Kit (Targets: ${targets.join(", ")})...`);
 
     let updatedAny = false;
     for (const target of targets) {
@@ -1276,13 +1276,13 @@ async function commandUpdate(options) {
             throw new Error(`目标未安装: ${target}`);
         }
         if (!isTargetInstalled(workspaceRoot, target)) {
-            log(options, `⏭️ 目标未安装，跳过: ${target}`);
+            log(options, `[skip] 目标未安装，跳过: ${target}`);
             continue;
         }
 
         const runOptions = { ...options, force: true };
         const adapter = createAdapter(target, workspaceRoot, runOptions);
-        log(options, `📦 更新 [${target}] ...`);
+        log(options, `[sync] 更新 [${target}] ...`);
         adapter.update(BUNDLED_AGENT_DIR);
         registerWorkspaceTarget(workspaceRoot, target, runOptions);
         updatedAny = true;
@@ -1323,13 +1323,13 @@ async function commandUpdateAll(options) {
     const records = index.workspaces || [];
 
     if (records.length === 0) {
-        log(options, "ℹ️ 全局索引为空，没有可批量更新的工作区。");
+        log(options, "[info] 全局索引为空，没有可批量更新的工作区。");
         log(options, "   先在项目中执行 ag-kit init 或 ag-kit update 建立索引。");
         return;
     }
 
-    log(options, `🔄 开始批量更新工作区（共 ${records.length} 个）...`);
-    log(options, `📚 索引文件: ${indexPath}`);
+    log(options, `[update] 开始批量更新工作区（共 ${records.length} 个）...`);
+    log(options, `[index] 索引文件: ${indexPath}`);
 
     let updated = 0;
     let skipped = 0;
@@ -1351,7 +1351,7 @@ async function commandUpdateAll(options) {
             if (options.dryRun) {
                 log(options, `[dry-run] [${i + 1}/${records.length}] 将从批量索引移除排除路径: ${workspacePath}（${exclusion.reason}）`);
             } else {
-                log(options, `🧽 [${i + 1}/${records.length}] 已从批量索引中移除排除路径: ${workspacePath}（${exclusion.reason}）`);
+                log(options, `[clean] [${i + 1}/${records.length}] 已从批量索引中移除排除路径: ${workspacePath}（${exclusion.reason}）`);
             }
             continue;
         }
@@ -1360,10 +1360,10 @@ async function commandUpdateAll(options) {
             if (options.pruneMissing) {
                 removedMissing += 1;
                 removedRecordKeys.add(pathCompareKey(workspacePath));
-                log(options, `🧽 [${i + 1}/${records.length}] 已移除失效工作区索引: ${workspacePath}`);
+                log(options, `[clean] [${i + 1}/${records.length}] 已移除失效工作区索引: ${workspacePath}`);
             } else {
                 skipped += 1;
-                log(options, `⏭️ [${i + 1}/${records.length}] 工作区不存在，已跳过: ${workspacePath}`);
+                log(options, `[skip] [${i + 1}/${records.length}] 工作区不存在，已跳过: ${workspacePath}`);
                 nextRecords.push(item);
             }
             continue;
@@ -1380,17 +1380,17 @@ async function commandUpdateAll(options) {
 
         if (targets.length === 0) {
             skipped += 1;
-            log(options, `⏭️ [${i + 1}/${records.length}] 未检测到可更新目标，已跳过: ${workspacePath}`);
+            log(options, `[skip] [${i + 1}/${records.length}] 未检测到可更新目标，已跳过: ${workspacePath}`);
             nextRecords.push(item);
             continue;
         }
 
-        log(options, `📦 [${i + 1}/${records.length}] 更新: ${workspacePath} [${targets.join(", ")}]`);
+        log(options, `[sync] [${i + 1}/${records.length}] 更新: ${workspacePath} [${targets.join(", ")}]`);
 
         const updatedTargets = [];
         for (const target of targets) {
             if (!isTargetInstalled(workspacePath, target)) {
-                log(options, `⏭️ [${i + 1}/${records.length}] 目标未安装，跳过: ${target}`);
+                log(options, `[skip] [${i + 1}/${records.length}] 目标未安装，跳过: ${target}`);
                 continue;
             }
 
@@ -1407,7 +1407,7 @@ async function commandUpdateAll(options) {
             } catch (err) {
                 failed += 1;
                 if (!options.quiet) {
-                    console.error(`❌ 更新失败: ${workspacePath} [${target}]`);
+                    console.error(`[error] 更新失败: ${workspacePath} [${target}]`);
                     console.error(`   ${err.message}`);
                 }
             }
@@ -1447,7 +1447,7 @@ async function commandUpdateAll(options) {
         });
     }
 
-    log(options, "📊 批量更新完成");
+    log(options, "[summary] 批量更新完成");
     log(options, `   成功: ${updated}`);
     log(options, `   跳过: ${skipped}`);
     log(options, `   失败: ${failed}`);
@@ -1478,7 +1478,7 @@ async function commandDoctor(options) {
         throw new Error("未检测到已安装的目标。请指定 --target 或先执行 init。");
     }
 
-    log(options, `🩺 开始诊断 (Targets: ${targets.join(", ")})...`);
+    log(options, `[doctor] 开始诊断 (Targets: ${targets.join(", ")})...`);
 
     let hasIssue = false;
     for (const target of targets) {
@@ -1487,12 +1487,12 @@ async function commandDoctor(options) {
 
         let result = adapter.checkIntegrity();
         if (result.status === "ok") {
-            out("  ✅ 状态正常");
+            out("  [ok] 状态正常");
             continue;
         }
 
         let targetHasIssue = true;
-        out(`  ❌ 状态: ${result.status}`);
+        out(`  [error] 状态: ${result.status}`);
         for (const issue of result.issues || []) {
             out(`     - ${issue}`);
         }
@@ -1500,20 +1500,20 @@ async function commandDoctor(options) {
         if (options.fix) {
             const fixRes = adapter.fixIntegrity();
             if (fixRes && fixRes.fixed) {
-                out(`  🛠️ 已修复: ${fixRes.summary}`);
+                out(`  [fix] 已修复: ${fixRes.summary}`);
                 result = adapter.checkIntegrity();
                 if (result.status === "ok") {
-                    out("  ✅ 修复后状态正常");
+                    out("  [ok] 修复后状态正常");
                     targetHasIssue = false;
                 } else {
-                    out(`  ⚠️ 修复后仍有问题: ${result.status}`);
+                    out(`  [warn] 修复后仍有问题: ${result.status}`);
                     for (const issue of result.issues || []) {
                         out(`     - ${issue}`);
                     }
                     targetHasIssue = true;
                 }
             } else {
-                out(`  ℹ️ 自动修复未执行: ${fixRes ? fixRes.summary : "无可用修复"}`);
+                out(`  [info] 自动修复未执行: ${fixRes ? fixRes.summary : "无可用修复"}`);
             }
         }
 
@@ -1545,7 +1545,7 @@ function commandExcludeList(options) {
         return;
     }
 
-    console.log("🛡️ 工作区排除清单");
+    console.log("[exclude] 工作区排除清单");
     console.log(`   索引文件: ${indexPath}`);
     console.log("   默认规则: 自动排除 Ag-Kit 工具包源码目录与系统临时目录（无需手动添加）");
 
@@ -1608,15 +1608,15 @@ function commandExcludeAdd(options) {
     }
 
     if (existed) {
-        log(options, `ℹ️ 排除路径已存在: ${normalizedTarget}`);
+        log(options, `[info] 排除路径已存在: ${normalizedTarget}`);
     } else {
-        log(options, `✅ 已新增排除路径: ${normalizedTarget}`);
+        log(options, `[ok] 已新增排除路径: ${normalizedTarget}`);
     }
 
     if (matchedCount > 0) {
-        log(options, `🧹 已移除 ${matchedCount} 条已登记工作区记录（位于排除路径下）。`);
+        log(options, `[clean] 已移除 ${matchedCount} 条已登记工作区记录（位于排除路径下）。`);
     }
-    log(options, `📚 索引文件: ${indexPath}`);
+    log(options, `[index] 索引文件: ${indexPath}`);
 }
 
 function commandExcludeRemove(options) {
@@ -1632,7 +1632,7 @@ function commandExcludeRemove(options) {
     });
 
     if (!existed) {
-        log(options, `ℹ️ 排除路径不存在: ${normalizedTarget}`);
+        log(options, `[info] 排除路径不存在: ${normalizedTarget}`);
         return;
     }
 
@@ -1648,8 +1648,8 @@ function commandExcludeRemove(options) {
         writeWorkspaceIndex(indexPath, index);
     });
 
-    log(options, `✅ 已移除排除路径: ${normalizedTarget}`);
-    log(options, `📚 索引文件: ${indexPath}`);
+    log(options, `[ok] 已移除排除路径: ${normalizedTarget}`);
+    log(options, `[index] 索引文件: ${indexPath}`);
 }
 
 function commandExclude(options) {
@@ -1700,7 +1700,7 @@ function commandStatus(options) {
             console.log("missing");
         }
         if (!options.quiet) {
-            console.log("❌ 未检测到 Antigravity Kit 安装");
+            console.log("[error] 未检测到 Antigravity Kit 安装");
             console.log(`   目标目录: ${workspaceRoot}`);
         }
         setQuietStatusExitCode("missing");
@@ -1713,7 +1713,7 @@ function commandStatus(options) {
         return;
     }
 
-    console.log(summary.state === "installed" ? "✅ Antigravity Kit 状态正常" : "⚠️ Antigravity Kit 存在问题");
+    console.log(summary.state === "installed" ? "[ok] Antigravity Kit 状态正常" : "[warn] Antigravity Kit 存在问题");
     console.log(`   CLI 版本: ${pkg.version}`);
     console.log(`   工作区: ${workspaceRoot}`);
     console.log(`   总体状态: ${summary.state}`);
@@ -1823,7 +1823,7 @@ async function main() {
         printUsage();
         process.exitCode = 1;
     } catch (err) {
-        console.error(`❌ ${err.message}`);
+        console.error(`[error] ${err.message}`);
         process.exitCode = 1;
     }
 }

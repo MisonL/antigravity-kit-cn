@@ -78,7 +78,7 @@ class GeminiAdapter extends BaseAdapter {
                     fs.rmSync(tempSource, { recursive: true, force: true });
                 };
                 installSource = tempSource;
-                this.log("ℹ️ 检测到源目录与目标目录相同，已切换为临时副本执行覆盖更新。");
+                this.log("[info] 检测到源目录与目标目录相同，已切换为临时副本执行覆盖更新。");
             }
             
             // Log logic handled by caller mostly, but validation here
@@ -90,7 +90,7 @@ class GeminiAdapter extends BaseAdapter {
                      this.log(`[dry-run] 将删除: ${targetDir}`);
                  } else {
                      fs.rmSync(targetDir, { recursive: true, force: true });
-                     this.log(`🗑️  已删除旧目录: ${targetDir}`);
+                     this.log(`[clean] 已删除旧目录: ${targetDir}`);
                  }
             }
     
@@ -105,10 +105,10 @@ class GeminiAdapter extends BaseAdapter {
             this._copyDir(installSource, targetDir);
             const cleanupResult = GitHelper.removeIgnoreRules(this.workspaceRoot, [".agent"], this.options);
             if(cleanupResult.removedCount > 0) {
-                 this.log(`🧹 已从 .gitignore 移除 ${cleanupResult.removedCount} 条规则`);
+                 this.log(`[clean] 已从 .gitignore 移除 ${cleanupResult.removedCount} 条规则`);
             }
             
-            this.log("✅ [Gemini] 安装完成 (.agent)");
+            this.log("[ok] [Gemini] 安装完成 (.agent)");
         } finally {
             if (cleanup) cleanup();
         }

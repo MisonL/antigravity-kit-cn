@@ -30,7 +30,7 @@ async function selectTargets(options) {
     const rl = createInterface();
     
     try {
-        console.log("\n🎯 请选择要安装的目标 (多选请用逗号分隔):");
+        console.log("\n[select] 请选择要安装的目标 (多选请用逗号分隔):");
         console.log("   1. Gemini (适用于 Cursor/VSCode)");
         console.log("   2. Codex (兼容性增强版)");
         

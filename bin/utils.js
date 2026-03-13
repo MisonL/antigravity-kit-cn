@@ -52,7 +52,7 @@ function cloneBranchAgentDir(branch, options) {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-kit-"));
     const logFn = options && options.logger ? options.logger : console.log;
 
-    if (!options.quiet) logFn(`📥 正在从 ${REPO_URL} 拉取分支 ${safeBranch} ...`);
+    if (!options.quiet) logFn(`[download] 正在从 ${REPO_URL} 拉取分支 ${safeBranch} ...`);
 
     try {
         execSync(`git clone --depth 1 --branch ${safeBranch} ${REPO_URL} "${tempDir}"`, {

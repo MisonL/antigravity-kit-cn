@@ -88,8 +88,8 @@ function main() {
 
 try {
     main();
-    console.log("✅ CI 全链路演练通过");
+    console.log("[ok] CI 全链路演练通过");
 } catch (err) {
-    console.error(`❌ ${err.message}`);
+    console.error(`[error] ${err.message}`);
     process.exit(1);
 }

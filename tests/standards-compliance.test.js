@@ -17,6 +17,25 @@ function collectTokens(content, regex) {
     return tokens;
 }
 
+function collectFiles(rootDir, matcher) {
+    const matches = [];
+    const stack = [rootDir];
+    while (stack.length > 0) {
+        const current = stack.pop();
+        for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+            const abs = path.join(current, entry.name);
+            if (entry.isDirectory()) {
+                stack.push(abs);
+                continue;
+            }
+            if (matcher(abs)) {
+                matches.push(abs);
+            }
+        }
+    }
+    return matches.sort();
+}
+
 describe('Standards Compliance', () => {
     test('all skill directories should include SKILL.md', () => {
         const skillsRoot = path.resolve('.agents/skills');
@@ -170,6 +189,24 @@ describe('Standards Compliance', () => {
         // Keep this focused on managed path constants that must remain path.join-driven.
         assert.ok(content.includes('path.join'), 'codex adapter should use path.join for managed paths');
         assert.ok(content.includes('os.tmpdir()'), 'codex adapter should use os.tmpdir() for temp paths');
+    });
+
+    test('cli and maintenance scripts should avoid emoji output markers', () => {
+        const targetFiles = [
+            ...collectFiles(path.resolve('bin'), (abs) => abs.endsWith('.js')),
+            ...collectFiles(path.resolve('scripts'), (abs) => abs.endsWith('.js')),
+        ];
+        const emojiRegex = /[\u{2600}-\u{27BF}\u{1F300}-\u{1FAFF}]/u;
+        const offenders = [];
+
+        for (const file of targetFiles) {
+            const content = fs.readFileSync(file, 'utf8');
+            if (emojiRegex.test(content)) {
+                offenders.push(path.relative(process.cwd(), file));
+            }
+        }
+
+        assert.deepStrictEqual(offenders, [], `cli/script files should not contain emoji markers:\n${offenders.join('\n')}`);
     });
 
     test('official antigravity docs baselines should be present in localized pages', () => {

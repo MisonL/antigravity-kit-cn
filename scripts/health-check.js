@@ -121,12 +121,12 @@ function main() {
         runCommand("npm run clean:dry-run --silent");
     }
 
-    console.log("✅ 健康检查通过");
+    console.log("[ok] 健康检查通过");
 }
 
 try {
     main();
 } catch (err) {
-    console.error(`❌ ${err.message}`);
+    console.error(`[error] ${err.message}`);
     process.exit(1);
 }
