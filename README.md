@@ -348,4 +348,4 @@ ling exclude add --path /path/to/your-project
 
 ## 许可证
 
-MIT © Vudovn, Mison
+MIT © [vudovn](https://github.com/vudovn), [Mison](https://github.com/MisonL), [2217173240](https://github.com/2217173240)
