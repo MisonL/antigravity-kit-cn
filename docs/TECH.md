@@ -65,19 +65,27 @@ cd web && npm install && npm run lint
 ### 测试隔离
 - `LING_GLOBAL_ROOT`：替代 `$HOME`（用于测试与 CI，避免污染真实用户目录）
 
-## Spec Profile：`ling spec enable/disable/status`
+## Spec Profile：`ling spec ...`
 ### 当前范围
-- 当前只实现全局层：
+- 全局 Spec Profile（机器级）：
   - `ling spec enable [--target codex|gemini] [--dry-run] [--quiet]`
   - `ling spec disable [--target codex|gemini] [--dry-run] [--quiet]`
   - `ling spec status [--quiet]`
-- 默认目标：未指定 `--target/--targets` 时启用 `codex + gemini`
-- 当前 Spec 源目录：`.spec/`
+  - 默认目标：未指定 `--target/--targets` 时启用 `codex + gemini`
+- 项目级 Spec 资产（工作区级）：
+  - `ling spec init [--path <dir>] [--target codex|gemini|--targets codex,gemini] [--branch <name>] [--dry-run] [--quiet]`
+    - 未指定 `--path` 时，默认初始化 Spec 工作区目录：`$HOME/.ling/spec-workspace`
+    - 指定 `--targets` 时，会同时执行对应目标的 `ling init` 安装（`.agent/.agents`）
+    - 指定 `--branch` 时，Spec 资产将从该分支的 `.spec/` 拉取（用于验证或灰度 Spec 模板）
+  - `ling spec doctor [--path <dir>] [--quiet]`
+    - 会校验 `issues.csv` 表头与状态枚举，并检查 `.ling/spec/` 目录是否完整
+- Spec 源目录：`.spec/`
 
 ### 落盘与状态
 - Spec 状态文件：`$HOME/.ling/spec/state.json`
 - Spec templates：`$HOME/.ling/spec/templates/`
 - Spec references：`$HOME/.ling/spec/references/`
+- Spec profiles：`$HOME/.ling/spec/profiles/`
 - Spec 备份目录：`$HOME/.ling/backups/spec/<timestamp>/before/...`
 
 ### 当前安装内容
@@ -94,6 +102,10 @@ cd web && npm install && npm run lint
   - `harness-engineering-digest.md`
   - `gda-framework.md`
   - 相关 quickstart / README
+- Profiles：
+  - `codex/AGENTS.spec.md`
+  - `codex/ling.spec.rules.md`
+  - `gemini/GEMINI.spec.md`
 
 ### 状态契约
 - `ling spec status --quiet` 输出：
@@ -108,11 +120,13 @@ cd web && npm install && npm run lint
 ### 回退语义
 - `spec enable`：
   - 若目标位置已存在同名 Skill，会先备份再覆盖
-  - 若 `templates/` 或 `references/` 已存在，也会先备份
+  - 若 `templates/`、`references/` 或 `profiles/` 已存在，也会先备份
 - `spec disable`：
   - 若存在备份，恢复启用前快照
   - 若启用前不存在资源，则删除由 Spec 安装的目录
-- 当前尚未实现项目级 `spec init / remove / doctor`
+- `spec init`：
+  - 会在工作区内写入 `.ling/spec/`（templates/references/profiles）与 `issues.csv`，并创建 `docs/reviews`、`docs/handoff`
+  - 当检测到冲突资产时，支持保留 / 备份后覆盖 / 直接覆盖
 
 ## 状态契约（自动化）
 - `ling status --quiet` / `ling global status --quiet` 只输出三态：
@@ -168,6 +182,7 @@ cp -a "$HOME/.ling/backups/global/$ts/antigravity/$skill" "$HOME/.gemini/antigra
 - `LING_INDEX_PATH`：工作区索引文件路径（默认 `~/.ling/workspaces.json`）
 - `LING_GLOBAL_ROOT`：全局目录根（替代 `$HOME`）
 - `LING_SKIP_UPSTREAM_CHECK`：跳过上游同名包安装提示（测试用）
+- `LING_REPO_URL`：覆盖默认仓库地址（主要用于测试与私有镜像）
 
 ## 安装提示机制
 - npm 全局安装：`postinstall` 会尽力检测并提示上游英文版 `@vudovn/ag-kit` 冲突。
