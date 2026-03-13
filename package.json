@@ -25,7 +25,7 @@
     "clean:dry-run": "node scripts/clean.js --dry-run",
     "health-check": "node scripts/health-check.js",
     "postinstall": "node scripts/postinstall-check.js",
-    "test": "node --test \"tests/**/*.test.js\"",
+    "test": "node scripts/run-tests.js",
     "ci:verify": "node scripts/ci-verify.js"
   },
   "publishConfig": {
@@ -39,6 +39,7 @@
     "scripts/health-check.js",
     "scripts/health-check.sh",
     "scripts/postinstall-check.js",
+    "scripts/run-tests.js",
     "tests/**/*.test.js",
     "README.md",
     "LICENSE",

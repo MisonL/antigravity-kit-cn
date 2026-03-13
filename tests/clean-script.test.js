@@ -71,7 +71,7 @@ describe("Clean Script", () => {
         const packageJsonPath = path.resolve(__dirname, "..", "package.json");
         const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
-        assert.strictEqual(packageJson.scripts.test, "node --test \"tests/**/*.test.js\"");
+        assert.strictEqual(packageJson.scripts.test, "node scripts/run-tests.js");
         assert.strictEqual(packageJson.scripts.clean, "node scripts/clean.js");
     });
 });
