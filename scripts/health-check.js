@@ -113,7 +113,7 @@ function main() {
         }
 
         const globalChecks = [
-            path.join(globalRoot, ".codex", "skills", "workflow-plan", "SKILL.md"),
+            path.join(globalRoot, ".agents", "skills", "workflow-plan", "SKILL.md"),
             path.join(globalRoot, ".gemini", "skills", "clean-code", "SKILL.md"),
             path.join(globalRoot, ".gemini", "antigravity", "skills", "clean-code", "SKILL.md"),
         ];
