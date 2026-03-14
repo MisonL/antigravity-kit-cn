@@ -48,17 +48,12 @@ function main() {
         throw new Error("缺少命令: node");
     }
 
-    const packageRunner = commandExists("bun --version") ? "bun" : "npm";
-    if (!commandExists(`${packageRunner} --version`)) {
-        throw new Error(`缺少命令: ${packageRunner}`);
+    if (!commandExists("npm --version")) {
+        throw new Error("缺少命令: npm");
     }
 
     logStep("执行测试套件");
-    if (packageRunner === "bun") {
-        runCommand("bun run test");
-    } else {
-        runCommand("npm test --silent");
-    }
+    runCommand("npm test --silent");
 
     logStep("验证 CLI 核心链路");
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "ling-health-check-"));
@@ -132,11 +127,7 @@ function main() {
     }
 
     logStep("执行清理预检");
-    if (packageRunner === "bun") {
-        runCommand("bun run clean:dry-run");
-    } else {
-        runCommand("npm run clean:dry-run --silent");
-    }
+    runCommand("npm run clean:dry-run --silent");
 
     console.log("[ok] 健康检查通过");
 }

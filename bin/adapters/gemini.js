@@ -7,7 +7,11 @@ const GitHelper = require("../utils/git-helper");
 
 class GeminiAdapter extends BaseAdapter {
     get targetName() {
-        return "gemini";
+        return this.options.targetName || "gemini";
+    }
+
+    get targetLabel() {
+        return this.targetName === "antigravity" ? "Antigravity" : "Gemini";
     }
 
     getInstalledVersion() {
@@ -108,7 +112,7 @@ class GeminiAdapter extends BaseAdapter {
                  this.log(`[clean] 已从 .gitignore 移除 ${cleanupResult.removedCount} 条规则`);
             }
             
-            this.log("[ok] [Gemini] 安装完成 (.agent)");
+            this.log(`[ok] [${this.targetLabel}] 安装完成 (.agent)`);
         } finally {
             if (cleanup) cleanup();
         }

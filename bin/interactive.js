@@ -22,7 +22,7 @@ function isInteractiveTerminal() {
 /**
  * Prompt user to select targets from a list.
  * Supports multiple selection by comma separated numbers or names.
- * Currently simplified for 'gemini' and 'codex'.
+ * Currently supports 'gemini', 'antigravity', and 'codex'.
  * @param {object} options CLI options
  * @returns {Promise<string[]>} List of selected targets
  */
@@ -40,7 +40,8 @@ async function selectTargets(options) {
     try {
         console.log("\n[select] 请选择要安装的目标 (多选请用逗号分隔):");
         console.log("   1. Gemini (适用于 Cursor/VSCode)");
-        console.log("   2. Codex (兼容性增强版)");
+        console.log("   2. Antigravity (独立体系，项目级复用 .agent)");
+        console.log("   3. Codex (兼容性增强版)");
         
         const answer = await askQuestion(rl, "\n请输入序号或名称（必填）: ");
         const input = answer.trim();
@@ -55,11 +56,12 @@ async function selectTargets(options) {
         for (const part of parts) {
             const p = part.toLowerCase();
             if (p === "1" || p === "gemini") selection.push("gemini");
-            else if (p === "2" || p === "codex") selection.push("codex");
+            else if (p === "2" || p === "antigravity") selection.push("antigravity");
+            else if (p === "3" || p === "codex") selection.push("codex");
         }
 
         if (selection.length === 0) {
-            throw new Error("无效的目标选择，请输入 1 / 2 / gemini / codex（可多选）");
+            throw new Error("无效的目标选择，请输入 1 / 2 / 3 / gemini / antigravity / codex（可多选）");
         }
 
         return [...new Set(selection)];

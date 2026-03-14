@@ -63,7 +63,7 @@ describe("Global Sync", () => {
         assert.ok(fs.existsSync(path.join(skillsRoot, "workflow-plan", "SKILL.md")), "missing expected workflow skill: workflow-plan");
     });
 
-    test("global sync should default to syncing codex and gemini when no target is provided", () => {
+    test("global sync should default to syncing codex, gemini, and antigravity when no target is provided", () => {
         const result = runCli(["global", "sync", "--quiet"], {
             env: { LING_GLOBAL_ROOT: tempDir },
         });
@@ -93,7 +93,7 @@ describe("Global Sync", () => {
         assert.strictEqual((statusResult.stdout || "").trim(), "installed");
     });
 
-    test("global sync should install gemini skills into both ~/.gemini/skills and ~/.gemini/antigravity/skills", () => {
+    test("global sync should install gemini skills only into ~/.gemini/skills", () => {
         const result = runCli(["global", "sync", "--target", "gemini", "--quiet"], {
             env: { LING_GLOBAL_ROOT: tempDir },
         });
@@ -102,6 +102,19 @@ describe("Global Sync", () => {
         const geminiCliRoot = path.join(tempDir, ".gemini", "skills");
         assert.ok(fs.existsSync(geminiCliRoot), "missing global gemini-cli skills root");
         assert.ok(fs.existsSync(path.join(geminiCliRoot, "clean-code", "SKILL.md")), "missing expected gemini-cli skill: clean-code");
+
+        const antigravityRoot = path.join(tempDir, ".gemini", "antigravity", "skills");
+        assert.ok(!fs.existsSync(antigravityRoot), "gemini sync should not create antigravity skills root");
+    });
+
+    test("global sync should install antigravity skills only into ~/.gemini/antigravity/skills", () => {
+        const result = runCli(["global", "sync", "--target", "antigravity", "--quiet"], {
+            env: { LING_GLOBAL_ROOT: tempDir },
+        });
+        assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+
+        const geminiCliRoot = path.join(tempDir, ".gemini", "skills");
+        assert.ok(!fs.existsSync(geminiCliRoot), "antigravity sync should not create gemini-cli skills root");
 
         const antigravityRoot = path.join(tempDir, ".gemini", "antigravity", "skills");
         assert.ok(fs.existsSync(antigravityRoot), "missing global antigravity skills root");

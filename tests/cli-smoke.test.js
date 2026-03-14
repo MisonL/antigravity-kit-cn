@@ -338,6 +338,48 @@ describe("CLI Smoke", () => {
         assert.ok(fs.existsSync(path.join(tsDir, "preflight", ".agent", "custom.txt")));
     });
 
+    test("init should allow registering antigravity independently on shared .agent", () => {
+        const localWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ling-antigravity-init-"));
+        try {
+            const result = runCli(
+                ["init", "--target", "antigravity", "--path", localWorkspace, "--quiet"],
+                { env: { LING_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+            assert.ok(fs.existsSync(path.join(localWorkspace, ".agent")), "shared .agent should be created");
+
+            const indexData = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+            const record = (indexData.workspaces || []).find((item) => item.path === localWorkspace);
+            assert.ok(record, "workspace should be indexed");
+            assert.ok(record.targets && record.targets.antigravity, "antigravity target should be indexed");
+            assert.ok(!record.targets.gemini, "gemini target should not be auto-indexed");
+        } finally {
+            fs.rmSync(localWorkspace, { recursive: true, force: true });
+        }
+    });
+
+    test("status should reflect antigravity target when workspace is registered as antigravity", () => {
+        const localWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ling-antigravity-status-"));
+        try {
+            const initResult = runCli(
+                ["init", "--target", "antigravity", "--path", localWorkspace, "--quiet"],
+                { env: { LING_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+            const result = runCli(
+                ["status", "--path", localWorkspace],
+                { env: { LING_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+            assert.match(result.stdout || "", /Targets: antigravity/);
+            assert.match(result.stdout || "", /\[antigravity\]/);
+            assert.doesNotMatch(result.stdout || "", /\[gemini\]/);
+        } finally {
+            fs.rmSync(localWorkspace, { recursive: true, force: true });
+        }
+    });
+
     test("update should create preflight backup for codex when unknown files exist in managed dir", () => {
         const initResult = runCli(
             ["init", "--target", "codex", "--path", workspaceDir, "--quiet"],
@@ -497,6 +539,49 @@ describe("CLI Smoke", () => {
             const record = (indexData.workspaces || []).find((item) => item.path === localWorkspace);
             assert.ok(record, "workspace should remain in index");
             assert.ok(record.targets && record.targets.codex, "codex target should be refreshed into index");
+        } finally {
+            fs.rmSync(localWorkspace, { recursive: true, force: true });
+        }
+    });
+
+    test("update-all should allow explicit antigravity target on shared .agent workspace", () => {
+        const localWorkspace = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ling-update-all-antigravity-"));
+        try {
+            const initResult = runCli(
+                ["init", "--target", "gemini", "--path", localWorkspace, "--quiet"],
+                { env: { LING_INDEX_PATH: indexPath } },
+            );
+            assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+            const now = new Date().toISOString();
+            const seedIndex = {
+                version: 2,
+                updatedAt: now,
+                workspaces: [
+                    {
+                        path: localWorkspace,
+                        targets: {
+                            gemini: {
+                                version: "2.0.1",
+                                installedAt: now,
+                                updatedAt: now,
+                            },
+                        },
+                    },
+                ],
+                excludedPaths: [],
+            };
+            fs.writeFileSync(indexPath, `${JSON.stringify(seedIndex, null, 2)}\n`, "utf8");
+
+            const result = runCli(["update-all", "--targets", "antigravity", "--quiet"], {
+                env: { LING_INDEX_PATH: indexPath },
+            });
+            assert.strictEqual(result.status, 0, result.stderr || result.stdout);
+
+            const indexData = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+            const record = (indexData.workspaces || []).find((item) => item.path === localWorkspace);
+            assert.ok(record, "workspace should remain in index");
+            assert.ok(record.targets && record.targets.antigravity, "antigravity target should be added into index");
         } finally {
             fs.rmSync(localWorkspace, { recursive: true, force: true });
         }

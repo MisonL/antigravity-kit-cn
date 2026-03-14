@@ -62,6 +62,64 @@ describe("Spec init/doctor", () => {
         assert.strictEqual((doctorResult.stdout || "").trim(), "installed");
     });
 
+    test("spec init --csv-only should generate issues.csv and rely on global spec assets", () => {
+        const env = {
+            LING_GLOBAL_ROOT: tempRoot,
+            LING_INDEX_PATH: path.join(tempRoot, "workspaces.json"),
+        };
+
+        const enableResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
+
+        const initResult = runCli(["spec", "init", "--path", workspaceRoot, "--csv-only", "--quiet"], { env });
+        assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+        assert.ok(fs.existsSync(path.join(workspaceRoot, "issues.csv")), "issues.csv should be created");
+        assert.ok(fs.existsSync(path.join(workspaceRoot, "docs", "reviews")), "docs/reviews should exist");
+        assert.ok(fs.existsSync(path.join(workspaceRoot, "docs", "handoff")), "docs/handoff should exist");
+        assert.ok(!fs.existsSync(path.join(workspaceRoot, ".ling", "spec")), "spec assets should not be created in csv-only mode");
+
+        const doctorResult = runCli(["spec", "doctor", "--path", workspaceRoot, "--quiet"], { env });
+        assert.strictEqual(doctorResult.status, 0, doctorResult.stderr || doctorResult.stdout);
+        assert.strictEqual((doctorResult.stdout || "").trim(), "installed");
+    });
+
+    test("spec init without --path should initialize default spec-workspace and include targets", () => {
+        const nonTempRoot = fs.mkdtempSync(path.join(REPO_ROOT, ".tmp-ling-spec-global-"));
+        const indexPath = path.join(nonTempRoot, "workspaces.json");
+        const env = {
+            LING_GLOBAL_ROOT: nonTempRoot,
+            LING_INDEX_PATH: indexPath,
+        };
+
+        try {
+            const initResult = runCli(["spec", "init", "--spec-workspace", "--quiet"], { env });
+            assert.strictEqual(initResult.status, 0, initResult.stderr || initResult.stdout);
+
+            const defaultWorkspace = path.join(nonTempRoot, ".ling", "spec-workspace");
+            assert.ok(fs.existsSync(path.join(defaultWorkspace, "issues.csv")), "default workspace should include issues.csv");
+            assert.ok(
+                fs.existsSync(path.join(defaultWorkspace, ".ling", "spec", "templates", "driver-prompt.md")),
+                "default workspace should include spec templates",
+            );
+            assert.ok(fs.existsSync(path.join(defaultWorkspace, ".agent")), "default workspace should include gemini .agent");
+            assert.ok(fs.existsSync(path.join(defaultWorkspace, ".agents")), "default workspace should include codex .agents");
+
+            const doctorResult = runCli(["spec", "doctor", "--spec-workspace", "--quiet"], { env });
+            assert.strictEqual(doctorResult.status, 0, doctorResult.stderr || doctorResult.stdout);
+            assert.strictEqual((doctorResult.stdout || "").trim(), "installed");
+
+            assert.ok(fs.existsSync(indexPath), "workspace index should be created for non-temp global root");
+            const index = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+            assert.ok(
+                (index.workspaces || []).some((workspace) => workspace && workspace.path === defaultWorkspace),
+                "default spec-workspace should be registered into index",
+            );
+        } finally {
+            fs.rmSync(nonTempRoot, { recursive: true, force: true });
+        }
+    });
+
     test("spec doctor should report broken when multiple tasks are in 进行中", () => {
         const env = {
             LING_GLOBAL_ROOT: tempRoot,

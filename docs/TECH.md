@@ -12,13 +12,14 @@ cd web && npm install && npm run lint
 ## 核心目录与职责
 - `.agents/`：仓库模板源（Canonical）
 - `bin/ling.js`：CLI 入口与命令分发
-- `bin/adapters/`：目标差异（`gemini` / `codex`）
+- `bin/adapters/`：目标差异（`gemini` / `antigravity` / `codex`）
 - `bin/core/`：构建/转换（将 Workflows 投影为 Codex Skills 等）
 - `bin/utils/`：原子写入、manifest、托管区块等通用能力
 
 ## 路径映射（最重要）
 ### 项目级（功能最完整）
 - `gemini`：项目根目录 `.agent/`
+- `antigravity`：项目根目录 `.agent/`（与 Gemini 复用目录，但索引与状态独立）
 - `codex`：项目根目录 `.agents/`（受管）+ `.agents-backup/`（漂移覆盖备份）
 - 项目级预备份（覆盖前快照）：
   - Gemini：`<project>/.agent-backup/<timestamp>/preflight/.agent/`
@@ -33,13 +34,13 @@ cd web && npm install && npm run lint
 
 ## 端到端链路（简述）
 ### 项目安装 / 更新
-- `init`：选择目标 -> 适配器 `install()` -> 落盘目标目录（Gemini: `.agent/`；Codex: `.agents/`）->（Codex）注入托管区块到工作区 `AGENTS.md` 与 `ling.rules`
+- `init`：选择目标 -> 适配器 `install()` -> 落盘目标目录（Gemini/Antigravity: `.agent/`；Codex: `.agents/`）->（Codex）注入托管区块到工作区 `AGENTS.md` 与 `ling.rules`
 - `update`：自动检测已安装目标（或通过 `--target/--targets` 指定）->（冲突时交互确认或默认预备份）-> 适配器 `update()` ->（Codex）漂移检测与备份 -> 原子替换
 - `doctor`：检查完整性；`--fix` 尝试修复（Codex 支持迁移 `.codex/` 与重写托管区块）
 
 ### 已有资产冲突处理（项目级）
 - 触发条件：
-  - `gemini`：`.agent/` 已存在且与内置模板不一致
+  - `gemini` / `antigravity`：`.agent/` 已存在且与内置模板不一致
   - `codex`：`.agents/` 或 `.codex/` 已存在且存在漂移、缺失 `manifest.json` 或包含未知文件
 - 交互终端会逐项询问处理方式：保留 / 备份后移除 / 直接移除，并支持按资产类别复用选择
 - 非交互环境不会进入询问：需要覆盖时默认执行“备份后覆盖”；`init` 若检测到已有资产且未显式 `--force` 则报错
@@ -51,8 +52,8 @@ cd web && npm install && npm run lint
 
 ## 全局同步：`ling global sync/status`
 ### 默认目标
-- 未指定 `--target/--targets`：默认同步 `codex + gemini`
-- `--target gemini` / `--targets codex,gemini` 中的 `gemini` 会同时写入 gemini-cli 与 antigravity 两个消费端目录
+- 未指定 `--target/--targets`：默认同步 `codex + gemini + antigravity`
+- `--target gemini` 只写入 gemini-cli；`--target antigravity` 只写入 antigravity
 
 ### 来源与覆盖策略
 - 来源：默认使用本包内置 `.agents/`；也可用 `--branch <name>` 从远端分支拉取模板源
@@ -65,21 +66,30 @@ cd web && npm install && npm run lint
 ### 测试隔离
 - `LING_GLOBAL_ROOT`：替代 `$HOME`（用于测试与 CI，避免污染真实用户目录）
 
-## Spec Profile：`ling spec ...`
+## Spec：`ling spec ...`
 ### 当前范围
 - 全局 Spec Profile（机器级）：
-  - `ling spec enable [--target codex|gemini] [--dry-run] [--quiet]`
-  - `ling spec disable [--target codex|gemini] [--dry-run] [--quiet]`
+  - `ling spec enable [--target codex|gemini|antigravity] [--dry-run] [--quiet]`
+  - `ling spec disable [--target codex|gemini|antigravity] [--dry-run] [--quiet]`
   - `ling spec status [--quiet]`
-  - 默认目标：未指定 `--target/--targets` 时启用 `codex + gemini`
+  - 默认目标：未指定 `--target/--targets` 时启用 `codex + gemini + antigravity`
 - 项目级 Spec 资产（工作区级）：
-  - `ling spec init [--path <dir>] [--target codex|gemini|--targets codex,gemini] [--branch <name>] [--dry-run] [--quiet]`
-    - 未指定 `--path` 时，默认初始化 Spec 工作区目录：`$HOME/.ling/spec-workspace`
+  - `ling spec init [--path <dir>] [--spec-workspace] [--csv-only] [--target codex|gemini|antigravity|--targets codex,gemini,antigravity] [--branch <name>] [--dry-run] [--quiet]`
+    - 默认初始化当前目录
+    - `--path <dir>`：初始化指定项目目录
+    - `--spec-workspace`：初始化 `$HOME/.ling/spec-workspace`（本机独立演练工作区，默认会包含 `.agent/.agents`）
     - 指定 `--targets` 时，会同时执行对应目标的 `ling init` 安装（`.agent/.agents`）
     - 指定 `--branch` 时，Spec 资产将从该分支的 `.spec/` 拉取（用于验证或灰度 Spec 模板）
-  - `ling spec doctor [--path <dir>] [--quiet]`
-    - 会校验 `issues.csv` 表头与状态枚举，并检查 `.ling/spec/` 目录是否完整
+    - `--csv-only`：仅生成 `issues.csv` 与 `docs/*`，不写入 `.ling/spec/`（适用于依赖全局 Spec 模板的项目）
+  - `ling spec doctor [--path <dir>] [--spec-workspace] [--quiet]`
+    - 会校验 `issues.csv` 表头与状态枚举
+    - 当项目缺少 `.ling/spec/` 但已启用全局 Spec 时，会使用全局 Spec 资产作为后备
 - Spec 源目录：`.spec/`
+
+### 心智模型
+- `ling spec enable`：给这台电脑安装 Spec 工具箱
+- `ling spec init`：给当前项目创建真正要用的 `issues.csv`
+- `issues.csv` 永远在项目根目录；全局 Spec 不保存项目任务
 
 ### 落盘与状态
 - Spec 状态文件：`$HOME/.ling/spec/state.json`

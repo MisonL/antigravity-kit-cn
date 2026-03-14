@@ -114,6 +114,22 @@ describe("Spec Profile", () => {
         assert.ok(fs.existsSync(path.join(codexSkillDir, "SKILL.md")), "spec skill should be repaired");
     });
 
+    test("spec enable should install antigravity skills independently", () => {
+        const env = { LING_GLOBAL_ROOT: tempRoot };
+
+        const enableResult = runCli(["spec", "enable", "--target", "antigravity", "--quiet"], { env });
+        assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
+
+        const antigravitySkill = path.join(tempRoot, ".gemini", "antigravity", "skills", "harness-engineering", "SKILL.md");
+        const geminiSkill = path.join(tempRoot, ".gemini", "skills", "harness-engineering", "SKILL.md");
+        assert.ok(fs.existsSync(antigravitySkill), "missing installed antigravity spec skill");
+        assert.ok(!fs.existsSync(geminiSkill), "antigravity spec enable should not install gemini skill");
+
+        const statusResult = runCli(["spec", "status", "--quiet"], { env });
+        assert.strictEqual(statusResult.status, 0);
+        assert.strictEqual((statusResult.stdout || "").trim(), "installed");
+    });
+
     test("spec status should report broken when an asset file is missing", () => {
         const env = { LING_GLOBAL_ROOT: tempRoot };
 

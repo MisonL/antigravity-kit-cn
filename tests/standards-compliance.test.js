@@ -144,6 +144,27 @@ describe('Standards Compliance', () => {
         assert.ok(!content.includes('$HOME/.agents/skills/'), 'should not contain deprecated global path: $HOME/.agents/skills/');
     });
 
+    test('README spec section should reflect implemented spec commands', () => {
+        const file = path.resolve('README.md');
+        const content = fs.readFileSync(file, 'utf8');
+
+        assert.ok(content.includes('ling spec init'), 'README should mention ling spec init');
+        assert.ok(content.includes('ling spec doctor'), 'README should mention ling spec doctor');
+        assert.ok(content.includes('~/.ling/spec/profiles/'), 'README should mention spec profiles path');
+        assert.ok(!content.includes('本版本尚未开放'), 'README should not claim spec project commands are unavailable');
+        assert.ok(!content.includes('spec init/remove/doctor'), 'README should not mention unsupported spec remove subcommand');
+    });
+
+    test('docs should describe gemini and antigravity as separate command targets', () => {
+        const readme = fs.readFileSync(path.resolve('README.md'), 'utf8');
+        const tech = fs.readFileSync(path.resolve('docs/TECH.md'), 'utf8');
+
+        assert.ok(readme.includes('ling init --target antigravity'), 'README should document project antigravity target');
+        assert.ok(readme.includes('ling global sync --target antigravity'), 'README should document global antigravity target');
+        assert.ok(tech.includes('`--target gemini` 只写入 gemini-cli；`--target antigravity` 只写入 antigravity'), 'TECH should describe split global targets');
+        assert.ok(!tech.includes('gemini 会同时写入 gemini-cli 与 antigravity'), 'TECH should not describe gemini as bundled antigravity target');
+    });
+
     test('.agents script files should stay identical to reference snapshot', { skip: !HAS_REF_SCRIPTS_ROOT }, () => {
         const refScriptsRoot = REF_SCRIPTS_ROOT;
         const mismatches = [];

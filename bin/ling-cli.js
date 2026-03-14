@@ -19,7 +19,8 @@ const PRIMARY_CLI_NAME = "ling";
 const WORKSPACE_INDEX_VERSION = 2;
 const UPSTREAM_GLOBAL_PACKAGE = "@vudovn/ag-kit";
 const TOOLKIT_PACKAGE_NAMES = new Set(["@mison/ling", "@mison/ag-kit-cn", "antigravity-kit-cn", "antigravity-kit"]);
-const SUPPORTED_TARGETS = ["gemini", "codex"];
+const SUPPORTED_TARGETS = ["gemini", "antigravity", "codex"];
+const SHARED_AGENT_TARGETS = ["gemini", "antigravity"];
 const LEGACY_INDEX_TARGET_ALIASES = {
     full: "gemini",
 };
@@ -37,6 +38,8 @@ const GLOBAL_TARGET_DESTINATIONS = {
             rootParts: [".gemini", "skills"],
             skillsParts: [".gemini", "skills"],
         },
+    ],
+    antigravity: [
         {
             id: "antigravity",
             rootParts: [".gemini", "antigravity"],
@@ -170,13 +173,13 @@ function printUsage() {
     console.log(`  ${PRIMARY_CLI_NAME} update [--path <dir>] [--branch <name>] [--target <name>|--targets <a,b>] [--no-index] [--quiet] [--dry-run]`);
     console.log(`  ${PRIMARY_CLI_NAME} update-all [--branch <name>] [--targets <a,b>] [--prune-missing] [--quiet] [--dry-run]`);
     console.log(`  ${PRIMARY_CLI_NAME} doctor [--path <dir>] [--target <name>|--targets <a,b>] [--fix] [--quiet]`);
-    console.log(`  ${PRIMARY_CLI_NAME} global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]  # 默认同步 codex + gemini(cli+antigravity)`);
+    console.log(`  ${PRIMARY_CLI_NAME} global sync [--target <name>|--targets <a,b>] [--branch <name>] [--quiet] [--dry-run]  # 默认同步 codex + gemini + antigravity`);
     console.log(`  ${PRIMARY_CLI_NAME} global status [--quiet]`);
     console.log(`  ${PRIMARY_CLI_NAME} spec enable [--target <name>|--targets <a,b>] [--quiet] [--dry-run]`);
     console.log(`  ${PRIMARY_CLI_NAME} spec disable [--target <name>|--targets <a,b>] [--quiet] [--dry-run]`);
     console.log(`  ${PRIMARY_CLI_NAME} spec status [--quiet]`);
-    console.log(`  ${PRIMARY_CLI_NAME} spec init [--path <dir>] [--target <name>|--targets <a,b>] [--branch <name>] [--force] [--non-interactive] [--no-index] [--quiet] [--dry-run]`);
-    console.log(`  ${PRIMARY_CLI_NAME} spec doctor [--path <dir>] [--quiet]`);
+    console.log(`  ${PRIMARY_CLI_NAME} spec init [--path <dir>] [--spec-workspace] [--csv-only] [--target <name>|--targets <a,b>] [--branch <name>] [--force] [--non-interactive] [--no-index] [--quiet] [--dry-run]`);
+    console.log(`  ${PRIMARY_CLI_NAME} spec doctor [--path <dir>] [--spec-workspace] [--quiet]`);
     console.log(`  ${PRIMARY_CLI_NAME} exclude list [--quiet]`);
     console.log(`  ${PRIMARY_CLI_NAME} exclude add --path <dir> [--dry-run] [--quiet]`);
     console.log(`  ${PRIMARY_CLI_NAME} exclude remove --path <dir> [--dry-run] [--quiet]`);
@@ -202,6 +205,8 @@ function parseArgs(argv) {
         nonInteractive: false,
         noIndex: false,
         fix: false,
+        csvOnly: false,
+        specWorkspace: false,
         subcommand: "",
         path: "",
         branch: "",
@@ -252,6 +257,12 @@ function parseArgs(argv) {
         } else if (arg === "--fix") {
             providedFlags.push(arg);
             options.fix = true;
+        } else if (arg === "--csv-only") {
+            providedFlags.push(arg);
+            options.csvOnly = true;
+        } else if (arg === "--spec-workspace") {
+            providedFlags.push(arg);
+            options.specWorkspace = true;
         } else if (arg === "--path") {
             providedFlags.push(arg);
             if (i + 1 >= argv.length) {
@@ -295,8 +306,8 @@ const COMMAND_ALLOWED_FLAGS = {
     "spec:enable": ["--target", "--targets", "--quiet", "--dry-run"],
     "spec:disable": ["--target", "--targets", "--quiet", "--dry-run"],
     "spec:status": ["--quiet"],
-    "spec:init": ["--force", "--path", "--branch", "--target", "--targets", "--non-interactive", "--no-index", "--quiet", "--dry-run"],
-    "spec:doctor": ["--path", "--quiet"],
+    "spec:init": ["--force", "--path", "--spec-workspace", "--branch", "--csv-only", "--target", "--targets", "--non-interactive", "--no-index", "--quiet", "--dry-run"],
+    "spec:doctor": ["--path", "--spec-workspace", "--quiet"],
     "exclude:list": ["--quiet"],
     "exclude:add": ["--path", "--dry-run", "--quiet"],
     "exclude:remove": ["--path", "--dry-run", "--quiet"],
@@ -387,6 +398,12 @@ function pathCompareKey(inputPath) {
         return normalized.toLowerCase();
     }
     return normalized;
+}
+
+function findWorkspaceRecord(index, workspaceRoot) {
+    const normalizedPath = normalizeAbsolutePath(workspaceRoot);
+    const targetKey = pathCompareKey(normalizedPath);
+    return (index.workspaces || []).find((item) => pathCompareKey(item.path) === targetKey) || null;
 }
 
 function normalizePathList(items) {
@@ -906,25 +923,65 @@ function normalizeTargets(rawTargets) {
     return result;
 }
 
+function resolveIndexedWorkspaceTargets(workspaceRoot) {
+    try {
+        const { index } = readWorkspaceIndex();
+        const record = findWorkspaceRecord(index, workspaceRoot);
+        if (!record) {
+            return [];
+        }
+        return normalizeTargets(Object.keys(record.targets || {}));
+    } catch (_err) {
+        return [];
+    }
+}
+
 function detectInstalledTargets(workspaceRoot) {
     const targets = [];
+    const indexedTargets = resolveIndexedWorkspaceTargets(workspaceRoot);
     if (fs.existsSync(path.join(workspaceRoot, ".agent"))) {
-        targets.push("gemini");
+        const sharedTargets = indexedTargets.filter((target) => SHARED_AGENT_TARGETS.includes(target));
+        if (sharedTargets.length > 0) {
+            targets.push(...sharedTargets);
+        } else {
+            targets.push("gemini");
+        }
     }
     if (fs.existsSync(path.join(workspaceRoot, ".agents")) || fs.existsSync(path.join(workspaceRoot, ".codex"))) {
         targets.push("codex");
     }
-    return targets;
+    return normalizeTargets(targets);
 }
 
 function isTargetInstalled(workspaceRoot, targetName) {
-    if (targetName === "gemini") {
+    if (SHARED_AGENT_TARGETS.includes(targetName)) {
         return fs.existsSync(path.join(workspaceRoot, ".agent"));
     }
     if (targetName === "codex") {
         return fs.existsSync(path.join(workspaceRoot, ".agents")) || fs.existsSync(path.join(workspaceRoot, ".codex"));
     }
     return false;
+}
+
+function groupTargetsByInstallSurface(targets) {
+    const normalizedTargets = normalizeTargets(targets);
+    const groups = [];
+    const sharedTargets = normalizedTargets.filter((target) => SHARED_AGENT_TARGETS.includes(target));
+    if (sharedTargets.length > 0) {
+        groups.push({
+            installSurface: ".agent",
+            adapterTarget: sharedTargets.includes("gemini") ? "gemini" : "antigravity",
+            logicalTargets: sharedTargets,
+        });
+    }
+    if (normalizedTargets.includes("codex")) {
+        groups.push({
+            installSurface: ".agents",
+            adapterTarget: "codex",
+            logicalTargets: ["codex"],
+        });
+    }
+    return groups;
 }
 
 function setQuietStatusExitCode(state) {
@@ -1022,8 +1079,11 @@ function evaluateGlobalState() {
 }
 
 function createAdapter(targetName, workspaceRoot, options) {
-    if (targetName === "gemini") {
-        return new GeminiAdapter(workspaceRoot, options);
+    if (SHARED_AGENT_TARGETS.includes(targetName)) {
+        return new GeminiAdapter(workspaceRoot, {
+            ...options,
+            targetName,
+        });
     }
     if (targetName === "codex") {
         return new CodexAdapter(workspaceRoot, options);
@@ -1067,8 +1127,7 @@ function resolveTargetsForGlobalSync(options) {
     if (requested.length > 0) {
         return requested;
     }
-    // 保持 global sync 简洁：默认同步 codex + gemini；其中 gemini 会展开为 gemini-cli 与 antigravity。
-    return ["codex", "gemini"];
+    return [...SUPPORTED_TARGETS];
 }
 
 function resolveAgentInstallSource(options) {
@@ -1235,7 +1294,7 @@ function planGlobalSyncTasks(targetName, agentDir) {
         };
     }
 
-    if (targetName === "gemini") {
+    if (SHARED_AGENT_TARGETS.includes(targetName)) {
         const skillsRoot = path.join(agentDir, "skills");
         const skillNames = listSkillDirectories(skillsRoot);
         const tasks = [];
@@ -1317,7 +1376,7 @@ function applyGlobalSync(targetName, agentDir, timestamp, options) {
         }
     }
 
-    if (targetName === "gemini") {
+    if (SHARED_AGENT_TARGETS.includes(targetName)) {
         const skillsRoot = path.join(agentDir, "skills");
         return syncGlobalSkillsFromRoot(targetName, skillsRoot, timestamp, options);
     }
@@ -2092,9 +2151,21 @@ function checkSpecProjectIntegrity(workspaceRoot) {
     const profilesDir = path.join(specDir, "profiles");
 
     const hasSpecDir = fs.existsSync(specDir);
+    const globalSpecSummary = !hasSpecDir && issuesResult.status !== "missing" ? evaluateSpecState() : null;
+    const canFallbackToGlobalSpec = Boolean(globalSpecSummary && globalSpecSummary.state === "installed");
     if (!hasSpecDir) {
         if (issuesResult.status !== "missing") {
-            issues.push("Missing .ling/spec directory (run: ling spec init)");
+            if (!canFallbackToGlobalSpec) {
+                issues.push("Missing .ling/spec directory (run: ling spec init)");
+                if (globalSpecSummary && globalSpecSummary.state === "missing") {
+                    issues.push("Global Spec is not enabled (run: ling spec enable)");
+                } else if (globalSpecSummary && globalSpecSummary.state === "broken") {
+                    issues.push("Global Spec is broken (run: ling spec enable)");
+                    for (const issue of globalSpecSummary.issues || []) {
+                        issues.push(`Global Spec issue: ${issue}`);
+                    }
+                }
+            }
         }
     } else {
         if (issuesResult.status === "missing") {
@@ -2141,7 +2212,10 @@ function resolveWorkspaceSpecBackupRoot(workspaceRoot, timestamp) {
 }
 
 async function commandSpecInit(options) {
-    const workspaceRoot = options.path ? resolveWorkspaceRoot(options.path) : getSpecWorkspaceDir();
+    const workspaceRoot = options.path
+        ? resolveWorkspaceRoot(options.path)
+        : (options.specWorkspace ? getSpecWorkspaceDir() : resolveWorkspaceRoot());
+    const csvOnly = Boolean(options.csvOnly);
     const prompter = createConflictPrompter(options);
     const timestamp = nowISO().replace(/[:.]/g, "-");
     const backupRoot = resolveWorkspaceSpecBackupRoot(workspaceRoot, timestamp);
@@ -2175,39 +2249,49 @@ async function commandSpecInit(options) {
     try {
         fs.mkdirSync(workspaceRoot, { recursive: true });
 
-        for (const [assetName, config] of Object.entries(assets)) {
-            const exists = fs.existsSync(config.destDir);
-            if (exists && areDirectoriesEqual(config.sourceDir, config.destDir)) {
-                log(options, `[skip] Spec ${assetName} 已最新，无需覆盖: ${config.destDir}`);
-                continue;
-            }
+        if (!csvOnly) {
+            for (const [assetName, config] of Object.entries(assets)) {
+                const exists = fs.existsSync(config.destDir);
+                if (exists && areDirectoriesEqual(config.sourceDir, config.destDir)) {
+                    log(options, `[skip] Spec ${assetName} 已最新，无需覆盖: ${config.destDir}`);
+                    continue;
+                }
 
-            let action = exists ? "backup" : "";
-            if (exists && prompter) {
-                action = await prompter.resolveConflict({
-                    category: "spec:project:assets",
-                    label: `Spec ${assetName}`,
-                    path: config.destDir,
-                });
-            } else if (exists && !prompter && (options.force || options.nonInteractive || !process.stdin.isTTY)) {
-                action = "backup";
-            }
+                let action = exists ? "backup" : "";
+                if (exists && prompter) {
+                    action = await prompter.resolveConflict({
+                        category: "spec:project:assets",
+                        label: `Spec ${assetName}`,
+                        path: config.destDir,
+                    });
+                } else if (exists && !prompter && (options.force || options.nonInteractive || !process.stdin.isTTY)) {
+                    action = "backup";
+                }
 
-            if (action === "keep") {
-                log(options, `[skip] 已保留 Spec ${assetName} 资产，不覆盖: ${config.destDir}`);
-                continue;
-            }
+                if (action === "keep") {
+                    log(options, `[skip] 已保留 Spec ${assetName} 资产，不覆盖: ${config.destDir}`);
+                    continue;
+                }
 
-            if (exists && action !== "remove") {
-                backupDirSnapshot(config.destDir, path.join(backupRoot, "assets", assetName), options, `Spec ${assetName}`);
-            } else if (exists && action === "remove") {
-                removeDirIfExists(config.destDir, options, `Spec ${assetName}`);
+                if (exists && action !== "remove") {
+                    backupDirSnapshot(config.destDir, path.join(backupRoot, "assets", assetName), options, `Spec ${assetName}`);
+                } else if (exists && action === "remove") {
+                    removeDirIfExists(config.destDir, options, `Spec ${assetName}`);
+                }
+                applyDirSnapshot(config.sourceDir, config.destDir, options, `Spec ${assetName}`);
             }
-            applyDirSnapshot(config.sourceDir, config.destDir, options, `Spec ${assetName}`);
         }
 
         const issuesPath = path.join(workspaceRoot, "issues.csv");
-        const issuesTemplatePath = path.join(specSourceDir, "templates", "issues.template.csv");
+        let issuesTemplatePath = path.join(specSourceDir, "templates", "issues.template.csv");
+        if (csvOnly && !options.branch) {
+            const globalTemplatePath = path.join(getSpecHomeDir(), "templates", "issues.template.csv");
+            if (fs.existsSync(globalTemplatePath)) {
+                issuesTemplatePath = globalTemplatePath;
+            } else if (!options.quiet) {
+                log(options, "[warn] 未检测到全局 Spec templates，已使用内置模板生成 issues.csv。可执行: ling spec enable");
+            }
+        }
         const issuesTemplate = stripUtf8Bom(fs.readFileSync(issuesTemplatePath, "utf8"));
         const hasIssues = fs.existsSync(issuesPath);
         if (hasIssues) {
@@ -2246,7 +2330,8 @@ async function commandSpecInit(options) {
         }
 
         const requestedTargets = normalizeTargets(options.targets);
-        const shouldInitTargets = options.path ? requestedTargets.length > 0 : true;
+        const isSpecWorkspaceMode = Boolean(!options.path && options.specWorkspace);
+        const shouldInitTargets = isSpecWorkspaceMode ? true : requestedTargets.length > 0;
         const targets = shouldInitTargets ? (requestedTargets.length > 0 ? requestedTargets : [...SUPPORTED_TARGETS]) : [];
         if (targets.length > 0) {
             await initTargets(workspaceRoot, targets, options, prompter);
@@ -2260,7 +2345,9 @@ async function commandSpecInit(options) {
 }
 
 function commandSpecDoctor(options) {
-    const workspaceRoot = options.path ? resolveWorkspaceRoot(options.path) : getSpecWorkspaceDir();
+    const workspaceRoot = options.path
+        ? resolveWorkspaceRoot(options.path)
+        : (options.specWorkspace ? getSpecWorkspaceDir() : resolveWorkspaceRoot());
     const result = checkSpecProjectIntegrity(workspaceRoot);
     const state = result.status === "ok" ? "installed" : result.status;
 
@@ -2279,6 +2366,21 @@ function commandSpecDoctor(options) {
 
     console.log(state === "installed" ? "[ok] Spec 项目资产状态正常" : "[warn] Spec 项目资产存在问题");
     console.log(`   工作区: ${workspaceRoot}`);
+    const specDir = path.join(workspaceRoot, ".ling", "spec");
+    const hasSpecDir = fs.existsSync(specDir);
+    const issuesPath = path.join(workspaceRoot, "issues.csv");
+    const hasIssues = fs.existsSync(issuesPath);
+    if (hasSpecDir) {
+        console.log("   模式: project");
+        console.log(`   Spec 根目录: ${specDir}`);
+    } else if (hasIssues) {
+        const globalSpecSummary = evaluateSpecState();
+        const fallback = globalSpecSummary.state === "installed";
+        console.log(`   模式: csv-only${fallback ? " (global fallback)" : ""}`);
+        if (fallback) {
+            console.log(`   Spec 根目录: ${getSpecHomeDir()}`);
+        }
+    }
     console.log(`   任务数: ${result.stats.total}`);
     console.log(`   进行中: ${result.stats.inProgress}`);
     for (const issue of result.issues || []) {
@@ -2368,23 +2470,23 @@ async function commandSpec(options) {
 }
 
 async function initTargets(workspaceRoot, targets, options, prompter) {
-    for (const target of targets) {
+    for (const group of groupTargetsByInstallSurface(targets)) {
         const runOptions = { ...options };
         const conflicts = [];
 
-        if (target === "gemini") {
+        if (group.installSurface === ".agent") {
             const agentDir = path.join(workspaceRoot, ".agent");
             if (fs.existsSync(agentDir)) {
                 conflicts.push({
-                    category: "project:gemini",
+                    category: "project:shared-agent",
                     label: ".agent",
                     path: agentDir,
-                    target,
+                    target: group.logicalTargets.join(","),
                 });
             }
         }
 
-        if (target === "codex") {
+        if (group.adapterTarget === "codex") {
             const managedDir = path.join(workspaceRoot, ".agents");
             const legacyDir = path.join(workspaceRoot, ".codex");
             if (fs.existsSync(managedDir) || fs.existsSync(legacyDir)) {
@@ -2435,10 +2537,12 @@ async function initTargets(workspaceRoot, targets, options, prompter) {
             }
         }
 
-        const adapter = createAdapter(target, workspaceRoot, runOptions);
-        log(options, `[sync] 正在初始化目标 [${target}] ...`);
+        const adapter = createAdapter(group.adapterTarget, workspaceRoot, runOptions);
+        log(options, `[sync] 正在初始化目标 [${group.logicalTargets.join(", ")}] ...`);
         adapter.install(BUNDLED_AGENT_DIR);
-        registerWorkspaceTarget(workspaceRoot, target, runOptions);
+        for (const target of group.logicalTargets) {
+            registerWorkspaceTarget(workspaceRoot, target, runOptions);
+        }
     }
 }
 
@@ -2523,71 +2627,72 @@ async function commandUpdate(options) {
 
     let updatedAny = false;
     try {
-        for (const target of targets) {
-        if (!isTargetInstalled(workspaceRoot, target) && options.targets.length > 0) {
-            throw new Error(`目标未安装: ${target}`);
-        }
-        if (!isTargetInstalled(workspaceRoot, target)) {
-            log(options, `[skip] 目标未安装，跳过: ${target}`);
-            continue;
-        }
+        for (const group of groupTargetsByInstallSurface(targets)) {
+            if (!isTargetInstalled(workspaceRoot, group.adapterTarget) && options.targets.length > 0) {
+                throw new Error(`目标未安装: ${group.logicalTargets.join(", ")}`);
+            }
+            if (!isTargetInstalled(workspaceRoot, group.adapterTarget)) {
+                log(options, `[skip] 目标未安装，跳过: ${group.logicalTargets.join(", ")}`);
+                continue;
+            }
 
-        const runOptions = { ...options, force: true };
+            const runOptions = { ...options, force: true };
+            const timestamp = nowISO().replace(/[:.]/g, "-");
 
-        const timestamp = nowISO().replace(/[:.]/g, "-");
-        if (target === "gemini") {
-            const agentDir = path.join(workspaceRoot, ".agent");
-            if (fs.existsSync(agentDir) && !areDirectoriesEqual(BUNDLED_AGENT_DIR, agentDir)) {
-                let action = "backup";
-                if (prompter) {
-                    action = await prompter.resolveConflict({
-                        category: "project:gemini",
-                        label: ".agent",
-                        path: agentDir,
-                        target,
-                    });
-                }
-                if (action === "keep") {
-                    log(options, "[skip] 已保留现有资产，跳过更新: .agent");
-                    continue;
-                }
-                if (action === "backup") {
-                    backupWorkspaceDir(workspaceRoot, agentDir, ".agent-backup", timestamp, options, "工作区资产 .agent");
+            if (group.installSurface === ".agent") {
+                const agentDir = path.join(workspaceRoot, ".agent");
+                if (fs.existsSync(agentDir) && !areDirectoriesEqual(BUNDLED_AGENT_DIR, agentDir)) {
+                    let action = "backup";
+                    if (prompter) {
+                        action = await prompter.resolveConflict({
+                            category: "project:shared-agent",
+                            label: ".agent",
+                            path: agentDir,
+                            target: group.logicalTargets.join(","),
+                        });
+                    }
+                    if (action === "keep") {
+                        log(options, "[skip] 已保留现有资产，跳过更新: .agent");
+                        continue;
+                    }
+                    if (action === "backup") {
+                        backupWorkspaceDir(workspaceRoot, agentDir, ".agent-backup", timestamp, options, "工作区资产 .agent");
+                    }
                 }
             }
-        }
 
-        if (target === "codex") {
-            const managedDir = path.join(workspaceRoot, ".agents");
-            const legacyDir = path.join(workspaceRoot, ".codex");
-            const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
-            const conflict = evaluateCodexUpdateConflict(activeDir);
-            if (conflict.hasConflict) {
-                let action = "backup";
-                if (prompter) {
-                    action = await prompter.resolveConflict({
-                        category: "project:codex",
-                        label: fs.existsSync(managedDir) ? ".agents" : ".codex",
-                        path: activeDir,
-                        target,
-                    });
-                }
-                if (action === "keep") {
-                    log(options, `[skip] 已保留现有资产，跳过更新: ${path.basename(activeDir)}`);
-                    continue;
-                }
-                if (action === "backup") {
-                    const backupRootName = ".agents-backup";
-                    backupWorkspaceDir(workspaceRoot, activeDir, backupRootName, timestamp, options, `工作区资产 ${path.basename(activeDir)}`);
+            if (group.adapterTarget === "codex") {
+                const managedDir = path.join(workspaceRoot, ".agents");
+                const legacyDir = path.join(workspaceRoot, ".codex");
+                const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
+                const conflict = evaluateCodexUpdateConflict(activeDir);
+                if (conflict.hasConflict) {
+                    let action = "backup";
+                    if (prompter) {
+                        action = await prompter.resolveConflict({
+                            category: "project:codex",
+                            label: fs.existsSync(managedDir) ? ".agents" : ".codex",
+                            path: activeDir,
+                            target: group.logicalTargets.join(","),
+                        });
+                    }
+                    if (action === "keep") {
+                        log(options, `[skip] 已保留现有资产，跳过更新: ${path.basename(activeDir)}`);
+                        continue;
+                    }
+                    if (action === "backup") {
+                        backupWorkspaceDir(workspaceRoot, activeDir, ".agents-backup", timestamp, options, `工作区资产 ${path.basename(activeDir)}`);
+                    }
                 }
             }
-        }
 
-        const adapter = createAdapter(target, workspaceRoot, runOptions);
-        log(options, `[sync] 更新 [${target}] ...`);
-        adapter.update(BUNDLED_AGENT_DIR);
-        registerWorkspaceTarget(workspaceRoot, target, runOptions);
-        updatedAny = true;
+            const adapter = createAdapter(group.adapterTarget, workspaceRoot, runOptions);
+            log(options, `[sync] 更新 [${group.logicalTargets.join(", ")}] ...`);
+            adapter.update(BUNDLED_AGENT_DIR);
+            for (const target of group.logicalTargets) {
+                registerWorkspaceTarget(workspaceRoot, target, runOptions);
+            }
+            updatedAny = true;
         }
     } finally {
         if (prompter) prompter.close();
@@ -2680,7 +2785,7 @@ async function commandUpdateAll(options) {
         const installedTargets = detectInstalledTargets(workspacePath);
         let targets = [];
         if (requestedTargets.length > 0) {
-            targets = installedTargets.filter((target) => requestedTargets.includes(target));
+            targets = requestedTargets.filter((target) => isTargetInstalled(workspacePath, target));
         } else {
             targets = [...Object.keys(item.targets || {}), ...installedTargets];
         }
@@ -2696,9 +2801,9 @@ async function commandUpdateAll(options) {
         log(options, `[sync] [${i + 1}/${records.length}] 更新: ${workspacePath} [${targets.join(", ")}]`);
 
         const updatedTargets = [];
-        for (const target of targets) {
-            if (!isTargetInstalled(workspacePath, target)) {
-                log(options, `[skip] [${i + 1}/${records.length}] 目标未安装，跳过: ${target}`);
+        for (const group of groupTargetsByInstallSurface(targets)) {
+            if (!isTargetInstalled(workspacePath, group.adapterTarget)) {
+                log(options, `[skip] [${i + 1}/${records.length}] 目标未安装，跳过: ${group.logicalTargets.join(", ")}`);
                 continue;
             }
 
@@ -2712,19 +2817,19 @@ async function commandUpdateAll(options) {
 
                 const timestampForBackup = nowISO().replace(/[:.]/g, "-");
 
-                if (target === "gemini") {
+                if (group.installSurface === ".agent") {
                     const agentDir = path.join(workspacePath, ".agent");
                     if (fs.existsSync(agentDir) && !areDirectoriesEqual(BUNDLED_AGENT_DIR, agentDir)) {
                         let action = "backup";
                         if (prompter) {
                             action = await prompter.resolveConflict({
-                                category: "update-all:project:gemini",
+                                category: "update-all:project:shared-agent",
                                 label: `.agent (${workspacePath})`,
                                 path: agentDir,
                             });
                         }
                         if (action === "keep") {
-                            log(options, `[skip] [${i + 1}/${records.length}] 已保留现有资产，跳过更新: ${workspacePath} [gemini]`);
+                            log(options, `[skip] [${i + 1}/${records.length}] 已保留现有资产，跳过更新: ${workspacePath} [${group.logicalTargets.join(", ")}]`);
                             continue;
                         }
                         if (action === "backup") {
@@ -2733,7 +2838,7 @@ async function commandUpdateAll(options) {
                     }
                 }
 
-                if (target === "codex") {
+                if (group.adapterTarget === "codex") {
                     const managedDir = path.join(workspacePath, ".agents");
                     const legacyDir = path.join(workspacePath, ".codex");
                     const activeDir = fs.existsSync(managedDir) ? managedDir : legacyDir;
@@ -2757,13 +2862,13 @@ async function commandUpdateAll(options) {
                     }
                 }
 
-                const adapter = createAdapter(target, workspacePath, runOptions);
+                const adapter = createAdapter(group.adapterTarget, workspacePath, runOptions);
                 adapter.update(BUNDLED_AGENT_DIR);
-                updatedTargets.push(target);
+                updatedTargets.push(...group.logicalTargets);
             } catch (err) {
                 failed += 1;
                 if (!options.quiet) {
-                    console.error(`[error] 更新失败: ${workspacePath} [${target}]`);
+                    console.error(`[error] 更新失败: ${workspacePath} [${group.logicalTargets.join(", ")}]`);
                     console.error(`   ${err.message}`);
                 }
             }
@@ -3068,6 +3173,25 @@ function countSkillsRecursive(dir) {
     return count;
 }
 
+function printSharedAgentTargetStatus(workspaceRoot, targetState, label) {
+    const agentDir = path.join(workspaceRoot, ".agent");
+    const agentsCount = countFilesIfExists(path.join(agentDir, "agents"), (name) => name.endsWith(".md"));
+    const workflowsCount = countFilesIfExists(path.join(agentDir, "workflows"), (name) => name.endsWith(".md"));
+    const skillsCount = countSkillsRecursive(path.join(agentDir, "skills"));
+    console.log(`\n[${label}]`);
+    console.log(`   状态: ${targetState.state}`);
+    console.log(`   路径: ${agentDir}`);
+    if (targetState.state === "installed") {
+        console.log(`   Agents: ${agentsCount}`);
+        console.log(`   Skills: ${skillsCount}`);
+        console.log(`   Workflows: ${workflowsCount}`);
+        return;
+    }
+    for (const issue of targetState.integrity.issues || []) {
+        console.log(`   Issue: ${issue}`);
+    }
+}
+
 function commandStatus(options) {
     const workspaceRoot = resolveWorkspaceRoot(options.path);
     const summary = evaluateWorkspaceState(workspaceRoot, options);
@@ -3098,22 +3222,12 @@ function commandStatus(options) {
 
     const geminiState = summary.targets.find((item) => item.targetName === "gemini");
     if (geminiState) {
-        const agentDir = path.join(workspaceRoot, ".agent");
-        const agentsCount = countFilesIfExists(path.join(agentDir, "agents"), (name) => name.endsWith(".md"));
-        const workflowsCount = countFilesIfExists(path.join(agentDir, "workflows"), (name) => name.endsWith(".md"));
-        const skillsCount = countSkillsRecursive(path.join(agentDir, "skills"));
-        console.log("\n[gemini]");
-        console.log(`   状态: ${geminiState.state}`);
-        console.log(`   路径: ${agentDir}`);
-        if (geminiState.state === "installed") {
-            console.log(`   Agents: ${agentsCount}`);
-            console.log(`   Skills: ${skillsCount}`);
-            console.log(`   Workflows: ${workflowsCount}`);
-        } else {
-            for (const issue of geminiState.integrity.issues || []) {
-                console.log(`   Issue: ${issue}`);
-            }
-        }
+        printSharedAgentTargetStatus(workspaceRoot, geminiState, "gemini");
+    }
+
+    const antigravityState = summary.targets.find((item) => item.targetName === "antigravity");
+    if (antigravityState) {
+        printSharedAgentTargetStatus(workspaceRoot, antigravityState, "antigravity");
     }
 
     const codexState = summary.targets.find((item) => item.targetName === "codex");
