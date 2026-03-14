@@ -20,7 +20,7 @@
 - 命令：`ling global sync` / `ling global status`
 - 默认行为：`ling global sync` 未指定 `--target/--targets` 时，同步 `codex + gemini + antigravity`
 - 目标路径：
-  - `codex` -> `$HOME/.codex/skills/`
+  - `codex` -> `$HOME/.agents/skills/`
   - `gemini` -> `$HOME/.gemini/skills/`
   - `antigravity` -> `$HOME/.gemini/antigravity/skills/`
 - 安全边界：全局只同步 Skills，不写入全局 Rules/Agents/Workflows。

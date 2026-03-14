@@ -96,10 +96,10 @@ function main() {
         throw new Error(`spec disable 后状态异常: ${specStatusAfterDisable}`);
     }
 
-    const codexSkill = path.join(globalRoot, ".codex", "skills", "workflow-plan", "SKILL.md");
+    const codexSkill = path.join(globalRoot, ".agents", "skills", "workflow-plan", "SKILL.md");
     const geminiCliSkill = path.join(globalRoot, ".gemini", "skills", "clean-code", "SKILL.md");
     const antigravitySkill = path.join(globalRoot, ".gemini", "antigravity", "skills", "clean-code", "SKILL.md");
-    const specCodexSkill = path.join(globalRoot, ".codex", "skills", "harness-engineering");
+    const specCodexSkill = path.join(globalRoot, ".agents", "skills", "harness-engineering");
     ensureExists(codexSkill, "全局 Codex workflow-plan Skill");
     ensureExists(geminiCliSkill, "全局 Gemini CLI clean-code Skill");
     ensureExists(antigravitySkill, "全局 Antigravity clean-code Skill");

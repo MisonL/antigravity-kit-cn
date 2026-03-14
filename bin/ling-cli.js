@@ -28,8 +28,8 @@ const GLOBAL_TARGET_DESTINATIONS = {
     codex: [
         {
             id: "codex",
-            rootParts: [".codex"],
-            skillsParts: [".codex", "skills"],
+            rootParts: [".agents"],
+            skillsParts: [".agents", "skills"],
         },
     ],
     gemini: [
@@ -1154,6 +1154,22 @@ function evaluateGlobalState() {
         };
     }).filter((item) => item.state !== "missing");
 
+    const legacyCodexSkillsRoot = path.join(globalRoot, ".codex", "skills");
+    const hasCurrentCodexRoot = targetStates.some((item) => item.targetName === "codex");
+    if (!hasCurrentCodexRoot && fs.existsSync(legacyCodexSkillsRoot)) {
+        targetStates.push({
+            targetName: "codex",
+            family: "codex",
+            state: "broken",
+            rootDir: path.join(globalRoot, ".codex"),
+            skillsRoot: legacyCodexSkillsRoot,
+            skillsCount: countSkillsRecursive(legacyCodexSkillsRoot),
+            issues: [
+                "检测到旧版 Codex 全局 Skill 目录；当前版本改用 ~/.agents/skills（运行: ling global sync --target codex）",
+            ],
+        });
+    }
+
     if (targetStates.length === 0) {
         return {
             globalRoot,
@@ -1626,15 +1642,121 @@ function createEmptySpecState() {
     };
 }
 
+function rewriteLegacyCodexGlobalSkillPath(targetPath) {
+    if (typeof targetPath !== "string" || targetPath === "") {
+        return targetPath;
+    }
+    const normalizedPath = targetPath.replace(/\\/g, "/");
+    if (!normalizedPath.includes("/.codex/skills")) {
+        return targetPath;
+    }
+    return targetPath.replace(/([\\/])\.codex([\\/])skills/g, "$1.agents$2skills");
+}
+
+function normalizeSpecSkillState(targetName, consumerId, skillState) {
+    if (!skillState || typeof skillState !== "object" || typeof skillState.name !== "string" || !skillState.name) {
+        return null;
+    }
+    const destPath = typeof skillState.destPath === "string" ? skillState.destPath : "";
+    return {
+        name: skillState.name,
+        destPath: targetName === "codex" && consumerId === "codex"
+            ? rewriteLegacyCodexGlobalSkillPath(destPath)
+            : destPath,
+        backupPath: typeof skillState.backupPath === "string" ? skillState.backupPath : "",
+        mode: normalizeSpecAssetMode(skillState),
+    };
+}
+
+function normalizeSpecConsumerState(targetName, consumerId, consumerState) {
+    const skills = [];
+    let migrated = false;
+    for (const skillState of Array.isArray(consumerState && consumerState.skills) ? consumerState.skills : []) {
+        const normalizedSkill = normalizeSpecSkillState(targetName, consumerId, skillState);
+        if (normalizedSkill) {
+            skills.push(normalizedSkill);
+            if (normalizedSkill.destPath !== (typeof skillState.destPath === "string" ? skillState.destPath : "")) {
+                migrated = true;
+            }
+        }
+    }
+    return { skills, migrated };
+}
+
+function normalizeSpecTargetState(targetName, targetState) {
+    const allowedConsumers = new Set(getGlobalDestinations(targetName).map((destination) => destination.id));
+    const consumers = {};
+    let migrated = false;
+    for (const consumerId of allowedConsumers) {
+        if (targetState && targetState.consumers && targetState.consumers[consumerId]) {
+            const normalizedConsumerState = normalizeSpecConsumerState(targetName, consumerId, targetState.consumers[consumerId]);
+            consumers[consumerId] = { skills: normalizedConsumerState.skills };
+            if (normalizedConsumerState.migrated) {
+                migrated = true;
+            }
+        }
+    }
+    return {
+        enabledAt: targetState && typeof targetState.enabledAt === "string" ? targetState.enabledAt : "",
+        consumers,
+        migrated,
+    };
+}
+
+function normalizeSpecTargets(rawTargets) {
+    const normalizedTargets = {};
+    let migrated = false;
+
+    for (const targetName of SUPPORTED_TARGETS) {
+        if (rawTargets && rawTargets[targetName] && typeof rawTargets[targetName] === "object") {
+            normalizedTargets[targetName] = rawTargets[targetName];
+        }
+    }
+
+    const geminiState = normalizedTargets.gemini;
+    if (
+        geminiState
+        && geminiState.consumers
+        && geminiState.consumers.antigravity
+        && !normalizedTargets.antigravity
+    ) {
+        normalizedTargets.antigravity = {
+            enabledAt: typeof geminiState.enabledAt === "string" ? geminiState.enabledAt : "",
+            consumers: {
+                antigravity: geminiState.consumers.antigravity,
+            },
+        };
+        delete geminiState.consumers.antigravity;
+        migrated = true;
+    }
+
+    const finalTargets = {};
+    for (const targetName of Object.keys(normalizedTargets)) {
+        const normalizedTargetState = normalizeSpecTargetState(targetName, normalizedTargets[targetName]);
+        const consumerIds = Object.keys(normalizedTargetState.consumers);
+        const rawConsumerIds = Object.keys((normalizedTargets[targetName] && normalizedTargets[targetName].consumers) || {});
+        if (consumerIds.length !== rawConsumerIds.length || rawConsumerIds.some((consumerId) => !consumerIds.includes(consumerId))) {
+            migrated = true;
+        }
+        if (normalizedTargetState.migrated) {
+            migrated = true;
+        }
+        finalTargets[targetName] = normalizedTargetState;
+        delete finalTargets[targetName].migrated;
+    }
+
+    return { targets: finalTargets, migrated };
+}
+
 function readSpecState() {
     const statePath = getSpecStatePath();
     if (!fs.existsSync(statePath)) {
-        return { statePath, state: createEmptySpecState() };
+        return { statePath, state: createEmptySpecState(), migrated: false };
     }
 
     const raw = fs.readFileSync(statePath, "utf8").trim();
     if (!raw) {
-        return { statePath, state: createEmptySpecState() };
+        return { statePath, state: createEmptySpecState(), migrated: false };
     }
 
     let parsed;
@@ -1646,9 +1768,10 @@ function readSpecState() {
 
     const state = createEmptySpecState();
     state.updatedAt = typeof parsed.updatedAt === "string" ? parsed.updatedAt : "";
-    state.targets = parsed && typeof parsed.targets === "object" && parsed.targets ? parsed.targets : {};
+    const normalizedTargets = normalizeSpecTargets(parsed && typeof parsed.targets === "object" && parsed.targets ? parsed.targets : {});
+    state.targets = normalizedTargets.targets;
     state.assets = parsed && typeof parsed.assets === "object" && parsed.assets ? parsed.assets : {};
-    return { statePath, state };
+    return { statePath, state, migrated: normalizedTargets.migrated };
 }
 
 function writeSpecState(statePath, state) {

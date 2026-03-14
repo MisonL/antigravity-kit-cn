@@ -47,7 +47,7 @@ describe("Spec Profile", () => {
         const enableResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
         assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
 
-        const codexSkill = path.join(tempRoot, ".codex", "skills", "harness-engineering", "SKILL.md");
+        const codexSkill = path.join(tempRoot, ".agents", "skills", "harness-engineering", "SKILL.md");
         const stateFile = path.join(tempRoot, ".ling", "spec", "state.json");
         const templatesDir = path.join(tempRoot, ".ling", "spec", "templates");
         const referencesDir = path.join(tempRoot, ".ling", "spec", "references");
@@ -66,7 +66,7 @@ describe("Spec Profile", () => {
 
         const disableResult = runCli(["spec", "disable", "--target", "codex", "--quiet"], { env });
         assert.strictEqual(disableResult.status, 0, disableResult.stderr || disableResult.stdout);
-        assert.ok(!fs.existsSync(path.join(tempRoot, ".codex", "skills", "harness-engineering")), "spec skill should be removed");
+        assert.ok(!fs.existsSync(path.join(tempRoot, ".agents", "skills", "harness-engineering")), "spec skill should be removed");
         assert.ok(!fs.existsSync(stateFile), "spec state should be removed after final disable");
         assert.ok(!fs.existsSync(templatesDir), "spec templates should be removed after final disable");
         assert.ok(!fs.existsSync(referencesDir), "spec references should be removed after final disable");
@@ -75,7 +75,7 @@ describe("Spec Profile", () => {
 
     test("spec disable should restore pre-existing skill backup", () => {
         const env = { LING_GLOBAL_ROOT: tempRoot };
-        const skillDir = path.join(tempRoot, ".codex", "skills", "harness-engineering");
+        const skillDir = path.join(tempRoot, ".agents", "skills", "harness-engineering");
         fs.mkdirSync(skillDir, { recursive: true });
         fs.writeFileSync(path.join(skillDir, "SKILL.md"), "legacy skill", "utf8");
 
@@ -95,7 +95,7 @@ describe("Spec Profile", () => {
         assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
 
         const templatesDir = path.join(tempRoot, ".ling", "spec", "templates");
-        const codexSkillDir = path.join(tempRoot, ".codex", "skills", "harness-engineering");
+        const codexSkillDir = path.join(tempRoot, ".agents", "skills", "harness-engineering");
         fs.rmSync(templatesDir, { recursive: true, force: true });
         fs.rmSync(codexSkillDir, { recursive: true, force: true });
 
@@ -128,6 +128,53 @@ describe("Spec Profile", () => {
         const statusResult = runCli(["spec", "status", "--quiet"], { env });
         assert.strictEqual(statusResult.status, 0);
         assert.strictEqual((statusResult.stdout || "").trim(), "installed");
+    });
+
+    test("spec enable should install gemini skills independently", () => {
+        const env = { LING_GLOBAL_ROOT: tempRoot };
+
+        const enableResult = runCli(["spec", "enable", "--target", "gemini", "--quiet"], { env });
+        assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
+
+        const geminiSkill = path.join(tempRoot, ".gemini", "skills", "harness-engineering", "SKILL.md");
+        const antigravitySkill = path.join(tempRoot, ".gemini", "antigravity", "skills", "harness-engineering", "SKILL.md");
+        assert.ok(fs.existsSync(geminiSkill), "missing installed gemini spec skill");
+        assert.ok(!fs.existsSync(antigravitySkill), "gemini spec enable should not install antigravity skill");
+    });
+
+    test("spec enable should migrate legacy codex global skill path to ~/.agents/skills", () => {
+        const env = { LING_GLOBAL_ROOT: tempRoot };
+        const stateDir = path.join(tempRoot, ".ling", "spec");
+        fs.mkdirSync(stateDir, { recursive: true });
+        fs.writeFileSync(path.join(stateDir, "state.json"), JSON.stringify({
+            version: 1,
+            updatedAt: new Date().toISOString(),
+            targets: {
+                codex: {
+                    enabledAt: new Date().toISOString(),
+                    consumers: {
+                        codex: {
+                            skills: [
+                                {
+                                    name: "harness-engineering",
+                                    destPath: path.join(tempRoot, ".codex", "skills", "harness-engineering"),
+                                    backupPath: "",
+                                    mode: "created",
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+            assets: {},
+        }, null, 2), "utf8");
+
+        const enableResult = runCli(["spec", "enable", "--target", "codex", "--quiet"], { env });
+        assert.strictEqual(enableResult.status, 0, enableResult.stderr || enableResult.stdout);
+
+        const state = JSON.parse(fs.readFileSync(path.join(stateDir, "state.json"), "utf8"));
+        const skillState = state.targets.codex.consumers.codex.skills.find((skill) => skill.name === "harness-engineering");
+        assert.ok(skillState.destPath.includes(`${path.sep}.agents${path.sep}skills${path.sep}harness-engineering`), "legacy codex path should be migrated to .agents/skills");
     });
 
     test("spec status should report broken when an asset file is missing", () => {

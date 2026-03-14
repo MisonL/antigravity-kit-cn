@@ -137,11 +137,11 @@ describe('Standards Compliance', () => {
         const file = path.resolve('docs/TECH.md');
         const content = fs.readFileSync(file, 'utf8');
 
-        assert.ok(content.includes('$HOME/.codex/skills/'), 'missing global skill path: $HOME/.codex/skills/');
+        assert.ok(content.includes('$HOME/.agents/skills/'), 'missing global skill path: $HOME/.agents/skills/');
         assert.ok(content.includes('$HOME/.gemini/skills/'), 'missing global skill path: $HOME/.gemini/skills/');
         assert.ok(content.includes('$HOME/.gemini/antigravity/skills/'), 'missing global skill path: $HOME/.gemini/antigravity/skills/');
         assert.ok(content.includes('.agents/skills'), 'missing repo skill path: .agents/skills');
-        assert.ok(!content.includes('$HOME/.agents/skills/'), 'should not contain deprecated global path: $HOME/.agents/skills/');
+        assert.ok(!content.includes('$HOME/.codex/skills/'), 'should not contain deprecated global path: $HOME/.codex/skills/');
     });
 
     test('README spec section should reflect implemented spec commands', () => {

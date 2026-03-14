@@ -42,7 +42,7 @@ describe("Global Sync", () => {
     });
 
     test("global status should report broken when target root exists but skills are incomplete", () => {
-        fs.mkdirSync(path.join(tempDir, ".codex"), { recursive: true });
+        fs.mkdirSync(path.join(tempDir, ".agents"), { recursive: true });
 
         const result = runCli(["global", "status", "--quiet"], {
             env: { LING_GLOBAL_ROOT: tempDir },
@@ -51,13 +51,25 @@ describe("Global Sync", () => {
         assert.strictEqual((result.stdout || "").trim(), "broken");
     });
 
-    test("global sync should install codex skills into $HOME/.codex/skills", () => {
+    test("global status should report broken when only legacy ~/.codex/skills exists", () => {
+        const legacySkillDir = path.join(tempDir, ".codex", "skills", "legacy-skill");
+        fs.mkdirSync(legacySkillDir, { recursive: true });
+        fs.writeFileSync(path.join(legacySkillDir, "SKILL.md"), "legacy", "utf8");
+
+        const result = runCli(["global", "status", "--quiet"], {
+            env: { LING_GLOBAL_ROOT: tempDir },
+        });
+        assert.strictEqual(result.status, 1);
+        assert.strictEqual((result.stdout || "").trim(), "broken");
+    });
+
+    test("global sync should install codex skills into $HOME/.agents/skills", () => {
         const result = runCli(["global", "sync", "--target", "codex", "--quiet"], {
             env: { LING_GLOBAL_ROOT: tempDir },
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
-        const skillsRoot = path.join(tempDir, ".codex", "skills");
+        const skillsRoot = path.join(tempDir, ".agents", "skills");
         assert.ok(fs.existsSync(skillsRoot), "missing global codex skills root");
         assert.ok(fs.existsSync(path.join(skillsRoot, "clean-code", "SKILL.md")), "missing expected skill: clean-code");
         assert.ok(fs.existsSync(path.join(skillsRoot, "workflow-plan", "SKILL.md")), "missing expected workflow skill: workflow-plan");
@@ -69,7 +81,7 @@ describe("Global Sync", () => {
         });
         assert.strictEqual(result.status, 0, result.stderr || result.stdout);
 
-        const codexRoot = path.join(tempDir, ".codex", "skills");
+        const codexRoot = path.join(tempDir, ".agents", "skills");
         assert.ok(fs.existsSync(path.join(codexRoot, "clean-code", "SKILL.md")), "missing expected codex skill: clean-code");
         assert.ok(fs.existsSync(path.join(codexRoot, "workflow-plan", "SKILL.md")), "missing expected codex workflow skill: workflow-plan");
 
@@ -122,7 +134,7 @@ describe("Global Sync", () => {
     });
 
     test("global sync should create backup when overwriting an existing skill", () => {
-        const skillsRoot = path.join(tempDir, ".codex", "skills", "clean-code");
+        const skillsRoot = path.join(tempDir, ".agents", "skills", "clean-code");
         fs.mkdirSync(skillsRoot, { recursive: true });
         fs.writeFileSync(path.join(skillsRoot, "SKILL.md"), "modified", "utf8");
 

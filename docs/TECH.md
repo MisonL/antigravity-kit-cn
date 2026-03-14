@@ -27,7 +27,7 @@ cd web && npm install && npm run lint
   - Codex：`<project>/.agents-backup/<timestamp>/preflight/.agents/` 或 `<project>/.agents-backup/<timestamp>/preflight/.codex/`
 
 ### 全局级（仅同步 Skills）
-- `codex`：`$HOME/.codex/skills/`
+- `codex`：`$HOME/.agents/skills/`
 - `gemini-cli`：`$HOME/.gemini/skills/`
 - `antigravity`：`$HOME/.gemini/antigravity/skills/`
 
@@ -154,7 +154,7 @@ cd web && npm install && npm run lint
 ## 手动回滚（全局 Skills）
 1. 找到备份目录：`$HOME/.ling/backups/global/<timestamp>/...`
 2. 按 Skill 回滚（推荐一次只处理一个 Skill 目录）：
-   - Codex 目标：恢复到 `$HOME/.codex/skills/<skill>/`
+   - Codex 目标：恢复到 `$HOME/.agents/skills/<skill>/`
    - Gemini CLI：恢复到 `$HOME/.gemini/skills/<skill>/`
    - Antigravity：恢复到 `$HOME/.gemini/antigravity/skills/<skill>/`
 
@@ -162,8 +162,8 @@ macOS / Linux 示例（把某个 Skill 回滚为备份版本）：
 ```bash
 ts="2026-03-12T12-00-00-000Z"
 skill="clean-code"
-rm -rf "$HOME/.codex/skills/$skill"
-cp -a "$HOME/.ling/backups/global/$ts/codex/$skill" "$HOME/.codex/skills/$skill"
+rm -rf "$HOME/.agents/skills/$skill"
+cp -a "$HOME/.ling/backups/global/$ts/codex/$skill" "$HOME/.agents/skills/$skill"
 ```
 
 Windows PowerShell 示例：

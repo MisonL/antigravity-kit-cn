@@ -47,7 +47,7 @@ ling global sync --target antigravity
 | 你要做什么 | 命令 | 结果 |
 | --- | --- | --- |
 | 给当前项目安装完整资产 | `ling init` | 项目内生成 `.agent/` / `.agents/`；共享 `.agent/` 时会维护 `.ling/install-state.json` |
-| 给电脑全局同步可复用 Skills | `ling global sync` | 写入 `~/.codex/skills/`、`~/.gemini/skills/` 等 |
+| 给电脑全局同步可复用 Skills | `ling global sync` | 写入 `~/.agents/skills/`、`~/.gemini/skills/` 等 |
 | 给项目启用 Spec 工作流 | `ling spec init` | 项目内生成 `issues.csv` 等 Spec 资产 |
 
 一句话区分：
@@ -89,7 +89,7 @@ ling global sync --target antigravity
 ling global status
 ```
 
-- `codex` -> `~/.codex/skills/`
+- `codex` -> `~/.agents/skills/`
 - `gemini` -> `~/.gemini/skills/`
 - `antigravity` -> `~/.gemini/antigravity/skills/`
 
