@@ -7,6 +7,14 @@
 
 ## [Unreleased]
 
+## [ling-1.2.1] - 2026-03-14
+
+### 修复
+
+- 修正 Codex 全局 Skill 安装根目录：`ling global sync --target codex` 与 `ling spec enable --target codex` 现在统一写入官方要求的 `~/.agents/skills/`，不再误写到旧的 `~/.codex/skills/`。
+- 兼容旧版 Spec 状态：历史 `state.json` 中记录的 `~/.codex/skills/...` 路径会在读取时自动迁移为 `~/.agents/skills/...`，避免修复后仍引用旧路径。
+- 增加旧路径诊断：若用户机器上只存在旧版 `~/.codex/skills/`，`ling global status` 会返回 `broken` 并提示执行 `ling global sync --target codex` 修复。
+
 ## [ling-1.2.0] - 2026-03-14
 
 ### 新增
@@ -98,7 +106,8 @@
 
 本项目在 Ling 重启前的 2.x/3.x 版本记录已冻结，不再维护。
 
-[Unreleased]: https://github.com/MisonL/Ling/compare/ling-1.2.0...HEAD
+[Unreleased]: https://github.com/MisonL/Ling/compare/ling-1.2.1...HEAD
+[ling-1.2.1]: https://github.com/MisonL/Ling/releases/tag/ling-1.2.1
 [ling-1.2.0]: https://github.com/MisonL/Ling/releases/tag/ling-1.2.0
 [ling-1.1.1]: https://github.com/MisonL/Ling/releases/tag/ling-1.1.1
 [ling-1.1.0]: https://github.com/MisonL/Ling/releases/tag/ling-1.1.0
