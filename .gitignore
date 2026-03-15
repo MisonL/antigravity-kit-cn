@@ -1,6 +1,8 @@
 # Ignore
 node_modules/
 .temp_ag_kit/
+.temp-ling-*/
+.tmp-ling-*/
 antigravity-doc
 others
 __pycache__/
@@ -8,7 +10,15 @@ __pycache__/
 *.pyo
 *.pyd
 .DS_Store
+*.log
+*.tmp
+.eslintcache
+.turbo/
+coverage/
+dist/
 *.tgz
+web/.next/
+web/tsconfig.tsbuildinfo
 reference/*
 !reference/.gitignore
 !reference/docs-archive/
