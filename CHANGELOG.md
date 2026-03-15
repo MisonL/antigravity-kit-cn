@@ -7,9 +7,15 @@
 
 ## [Unreleased]
 
+## [ling-1.2.4] - 2026-03-15
+
 ### 修复
 
 - 修复 `ling spec enable` 在全局 `codex` Skills 已存在时重新写回 Gemini CLI 重复 Skill 的问题，并避免将仅同名但内容不同的 Gemini 专用 Skill 误判为重复副本。
+
+### 维护
+
+- 完善仓库根 `.gitignore`，补充测试临时目录、日志缓存和 Web 构建产物忽略规则。
 
 ## [ling-1.2.3] - 2026-03-15
 
