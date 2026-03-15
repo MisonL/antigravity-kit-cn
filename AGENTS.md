@@ -21,6 +21,8 @@
 - `gemini` 与 `antigravity` 共用 `.agent/`，但逻辑目标身份必须通过项目内 `.ling/install-state.json` 区分；涉及共享 `.agent/` 的逻辑时，不要退回“默认全算 gemini”的旧行为。
 - `codex` 受管目录是 `.agents/`；遗留 `.codex/` 只作为兼容迁移输入，不再作为主输出。
 - 全局同步默认目标是 `codex + gemini + antigravity`；`gemini` 与 `antigravity` 不能再互相隐式代管。
+- 全局 `codex` Skills 根目录是 `~/.agents/skills/`；若 `~/.gemini/skills/` 与 universal 根目录存在内容完全相同的同名 Skill，需要执行去重清理；若同名但内容不同，必须保留 Gemini 专用版本。
+- `ling spec enable` 若涉及 `codex` 或 `gemini`，必须与全局去重逻辑保持一致，不能在启用 Spec 后重新写回 Gemini CLI 重复 Skill。
 - 文档、测试、CLI 帮助文本必须与实际命令行为一致；改命令行为时同步更新 `README.md`、`docs/TECH.md`、`docs/PLAN.md` 与相关测试。
 
 ## 构建、测试与验证
@@ -48,7 +50,7 @@
 - 当修改 `reference/` 跟踪策略时，同步更新 `tests/standards-compliance.test.js`。
 
 ## 参考资料与忽略规则
-- 不要提交 `__pycache__/`、`*.pyc`、`.DS_Store`、`.next/`、临时 tarball、临时工作区或其他构建噪声。
+- 不要提交 `__pycache__/`、`*.pyc`、`.DS_Store`、`.next/`、`*.log`、`*.tmp`、`.eslintcache`、`.turbo/`、`coverage/`、`dist/`、`web/tsconfig.tsbuildinfo`、临时 tarball、测试临时工作区（如 `.temp-ling-*`、`.tmp-ling-*`）或其他构建噪声。
 - `reference/` 使用白名单忽略策略：保留需要受管的官方资料与归档文档，其余快照默认忽略。
 - 不要重新引入 `reference/official-docs/` 这类重复目录；官方资料只保留一份。
 
@@ -63,6 +65,7 @@
   - `cd web && npm run lint`
   - `npm pack --dry-run`
 - 发布时同步更新 `CHANGELOG.md`，内容必须覆盖自上一标签以来的实际提交。
+- 正式发版顺序保持一致：先提交并推送 `main`，再推送 `ling-<semver>` 标签，随后发布 npm，最后创建 GitHub Release；不得出现 npm 版本领先于远端提交或标签的情况。
 
 ## 提交规范
 - 使用 Conventional Commits，例如：
